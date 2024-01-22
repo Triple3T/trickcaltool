@@ -6,7 +6,7 @@ i18n
   .use(LanguaeDetector)
   .use(initReactI18next)
   .init({
-    debug: true,
+    debug: import.meta.env.DEV,
     fallbackLng: "ko",
     interpolation: {
       escapeValue: false,
