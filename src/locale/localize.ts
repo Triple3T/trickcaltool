@@ -60,6 +60,12 @@ i18n
             index: {
               title: '트릭컬 툴',
               description: '트릭컬 잡동사니 툴 모음집',
+              theme: {
+                title: '테마',
+                light: '라이트',
+                dark: '다크',
+                system: '시스템',
+              },
               personality: '성격',
               defaultstar: '초기 성급',
               attack: '공격 타입',
