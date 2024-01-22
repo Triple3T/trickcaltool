@@ -14,11 +14,15 @@ export default defineConfig({
       manifest: {
         name: "트릭컬툴",
         description: "Trickcal Tools by TripleLab",
-        theme_color: "#6ccde7",
+        theme_color: "#a2dd73",
+        background_color: "#09090b",
         icons: icons.map(({ src, sizes }) => ({
           src: `/AppImages/${src}`,
+          type: "image/png",
           sizes,
         })),
+        display: "standalone",
+        scope: "/",
       },
     }),
   ],
