@@ -130,7 +130,7 @@ const boardDataClickActionHandler = (
     ...state.user,
     b: {
       ...state.user.b,
-      [action.payload.charaName]: board[action.payload.charaName].b.map(
+      [action.payload.charaName]: state.user.b[action.payload.charaName].map(
         (a, i) =>
           i === boardIndex
             ? a.map((b, j) =>
@@ -143,7 +143,8 @@ const boardDataClickActionHandler = (
   saveBoardData(JSON.stringify(outIfUserData));
   return {
     ...state,
-    board: state.board.map((nthboard) => {
+    board: state.board.map((nthboard, n) => {
+      if (n !== boardIndex) return nthboard;
       return Object.fromEntries(
         Object.entries(nthboard).map(([bt, { charas }]) => {
           return [
@@ -309,9 +310,7 @@ const BoardStatStatistic = ({
               />
               <span
                 className={`${
-                  cur === max
-                    ? "text-red-600 dark:text-red-500"
-                    : "inherit"
+                  cur === max ? "text-red-600 dark:text-red-400" : "inherit"
                 }`}
               >
                 {cur}
@@ -338,7 +337,9 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
       </div>
       <div className="flex flex-col flex-1 gap-1 -ml-8">
         <div className="bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
-          <div className="text-left flex-auto">{t(`ui.board.usedCountLabel`)}</div>
+          <div className="text-left flex-auto">
+            {t(`ui.board.usedCountLabel`)}
+          </div>
           <div className="text-right flex-auto">
             {statStatistic.reduce((a, b, i) => a + b * (i + 1), 0) * 2}
             {t("ui.board.crayonCountUnit")}
