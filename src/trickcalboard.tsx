@@ -28,7 +28,6 @@ import {
   Race,
 } from "@/types/enums";
 import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { t } from "i18next";
 
 const BOARD_KEY = "board";
 
@@ -279,6 +278,7 @@ const BoardStatStatistic = ({
   stat: string;
   data: BoardDataPropsBoard[];
 }) => {
+  const { t } = useTranslation();
   const statStatistic = data.map((d) => {
     const cur = d.charas.filter((c) => c.checked).length;
     const max = d.charas.length;
@@ -324,6 +324,7 @@ const BoardStatStatistic = ({
 };
 
 const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
+  const { t } = useTranslation();
   const statStatistic = data.map((d) => {
     return d.charas.filter((c) => c.checked).length;
   });
