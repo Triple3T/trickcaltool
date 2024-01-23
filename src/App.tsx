@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
 import "./App.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
+import MainMenuCard from "./components/parts/main-menu-card";
 
 function App() {
   const [backgroundImage, setBackgroundImage] = useState(
@@ -44,70 +44,59 @@ function App() {
           <ModeToggle />
         </div>
       </div>
-      <div className="flex flex-col min-h-screen relative">
+      <div className="flex flex-col min-h-screen relative font-onemobile">
         <main className="flex flex-col flex-1 p-4 md:p-6 items-center justify-center">
-          <section className="flex flex-col items-center justify-center space-y-4 text-center">
+          <section className="flex flex-col items-center justify-center space-y-4 text-center pt-6 md:pt-0">
             <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
               이름못정함
             </h2>
             <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
               이름좀정해주실분ㅎㅎ;;
             </p>
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Link to="/board">
-                <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
-                  {/* <PackageIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
-                  <img
-                    src="/icons/Item_Crayon4.png"
-                    className="h-6 w-6 lg:h-8 lg:w-8"
-                  />
-                  <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
-                    황크 칠하기
-                  </h3>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    전체 8% 보드 현황을 체크합니다.<br />나만 황크 안 나와
-                  </p>
-                </div>
-              </Link>
-              <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
-                {/* <GaugeIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
-                <img
-                  src="/icons/Item_Crayon3.png"
-                  className="h-6 w-6 lg:h-8 lg:w-8"
-                />
-                <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
-                  보크 칠하기
-                </h3>
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  전체 스탯 고정치 보드 현황을 체크합니다.<br />은근 필요해
-                </p>
-              </div>
-              <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
-                {/* <BarChartIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
-                <img
-                  src="/itemslot/Tab_Equip_Default.png"
-                  className="h-6 w-6 lg:h-8 lg:w-8 bg-greenicon rounded-full"
-                />
-                <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
-                  랭크 메모장
-                </h3>
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  사도들의 장비 랭크를 메모해 둡니다.<br />메모 안 하면 헷갈려
-                </p>
-              </div>
-              <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
-                {/* <HelpCircleIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
-                <img
-                  src="/mainlobby/HousingButton.png"
-                  className="h-6 w-6 lg:h-8 lg:w-8"
-                />
-                <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
-                  교단 레벨업
-                </h3>
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  교단의 각종 레벨업 현황을 체크합니다.<br />루포야 일하자
-                </p>
-              </div>
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-12 sm:pt-14 md:pt-16 lg:pt-20">
+              <MainMenuCard
+                title="황크 칠하기"
+                description={
+                  <>
+                    전체 8% 보드 현황을 체크합니다.
+                    <br />
+                    나만 황크 안 나와
+                  </>
+                }
+                icon="/icons/Item_Crayon4.png"
+                to="/board"
+              />
+              <MainMenuCard
+                title="보크 칠하기"
+                description={<>전체 스탯 고정치 보드 현황을 체크합니다.<br />은근 필요해</>}
+                icon="/icons/Item_Crayon3.png"
+                // to="/board"
+              />
+              <MainMenuCard
+                title="랭크 메모장"
+                description={
+                  <>
+                    사도들의 장비 랭크를 메모해 둡니다.
+                    <br />
+                    메모 안 하면 헷갈려
+                  </>
+                }
+                icon="/itemslot/Tab_Equip_Default.png"
+                // to="/board"
+                greenIcon
+              />
+              <MainMenuCard
+                title="교단 레벨업"
+                description={
+                  <>
+                    교단의 각종 레벨업 현황을 체크합니다.
+                    <br />
+                    루포야 일하자
+                  </>
+                }
+                icon="/mainlobby/HousingButton.png"
+                // to="/board"
+              />
             </div>
           </section>
         </main>
