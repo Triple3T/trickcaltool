@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -28,6 +28,7 @@ import {
   Position,
   Race,
 } from "@/types/enums";
+import SelectChara from "./components/parts/select-chara";
 
 const BOARD_KEY = "board";
 
@@ -310,11 +311,8 @@ const BoardStatStatistic = ({
               />
               <span
                 className={`${
-                  cur === max
-                    ? "text-red-600 dark:text-red-500"
-                    : "text-slate-900"
+                  cur === max ? "text-red-600 dark:text-red-400" : ""
                 }`}
-                style={{ textShadow: Array(10).fill("0 0 1px #fff").join(",") }}
               >
                 {cur}
               </span>
@@ -358,12 +356,7 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
                 }Lv.png`}
                 className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
               />
-              <span
-                className="text-slate-900"
-                style={{ textShadow: Array(10).fill("0 0 1px #fff").join(",") }}
-              >
-                {count}
-              </span>
+              <span>{count}</span>
             </div>
           ))}
         </div>
@@ -400,6 +393,7 @@ const TrickcalBoard = () => {
     boardDataReducer,
     undefined
   );
+  const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(board);
@@ -458,6 +452,11 @@ const TrickcalBoard = () => {
     });
   }, []);
   useEffect(initFromUserData, [initFromUserData]);
+  const saveSelectChara = useCallback(() => {
+    setCharaDrawerOpen(false);
+    initFromUserData();
+  }, [initFromUserData]);
+
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -476,7 +475,11 @@ const TrickcalBoard = () => {
                 <div className="flex flex-col gap-2">
                   <div>{t("ui.board.unownedCharacters")}</div>
                   <div>
-                    <Button>{t("ui.board.selectCharacter")}...</Button>
+                    <SelectChara
+                      isOpen={charaDrawerOpen}
+                      onOpenChange={setCharaDrawerOpen}
+                      saveAndClose={saveSelectChara}
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -906,7 +909,7 @@ const TrickcalBoard = () => {
                     );
                   })}
                 </div>
-                <div className="mt-4 flex gap-2 sm:gap-3">
+                <div className="mt-6 flex gap-1 sm:gap-2 lg:gap-3">
                   <div
                     className="flex-initial aspect-square h-full bg-cover relative w-[60px]"
                     style={{
@@ -933,7 +936,7 @@ const TrickcalBoard = () => {
                         2}
                     </div>
                   </div>
-                  <div className="flex-1 flex flex-col gap-1">
+                  <div className="flex-1 flex flex-col gap-1 mt-[-0.75px]">
                     <div className="flex justify-end items-center">
                       <img src={`/icons/Icon_${bt}.png`} className="h-6 mr-1" />
                       <span>
@@ -971,19 +974,19 @@ const TrickcalBoard = () => {
                         }}
                       />
                     </div>
-                    <div className="flex">
-                      <div className="flex-auto text-left">
-                        <div className="bg-[#50ca30] dark:bg-[#80ca50] border-slate-900 dark:border-slate-50 border mr-1.5 text-xs py-0.5 w-10 inline-block text-center rounded">
+                    <div className="flex gap-0.5">
+                      <div className="flex gap-1 flex-none text-left">
+                        <div className="bg-[#50ca30] dark:bg-[#80ca50] border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded">
                           {currentBoard.charas.filter((c) => c.checked).length}
                         </div>
-                        <div className="bg-[#50ca307f] dark:bg-[#80ca507f] border-slate-900 dark:border-slate-50 border mr-1.5 text-xs py-0.5 w-10 inline-block text-center rounded">
+                        <div className="bg-[#50ca307f] dark:bg-[#80ca507f] border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded">
                           {
                             currentBoard.charas.filter(
                               (c) => !c.checked && !c.unowned
                             ).length
                           }
                         </div>
-                        <div className="bg-slate-300 dark:bg-slate-700 border-slate-900 dark:border-slate-50 border mr-1.5 text-xs py-0.5 w-10 inline-block text-center rounded">
+                        <div className="bg-slate-300 dark:bg-slate-700 border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded">
                           {currentBoard.charas.filter((c) => c.unowned).length}
                         </div>
                         {/* {t("ui.board.usedCount", {
@@ -994,8 +997,8 @@ const TrickcalBoard = () => {
                             2,
                         })} */}
                       </div>
-                      <div className="flex-auto text-right">
-                        <span className="align-middle">
+                      <div className="flex flex-1 items-center justify-end overflow-hidden">
+                        <div className="align-middle text-sm md:text-base whitespace-nowrap">
                           {currentBoard.charas.length ===
                           currentBoard.charas.filter((c) => c.checked).length
                             ? t("ui.board.usedMax")
@@ -1014,7 +1017,7 @@ const TrickcalBoard = () => {
                           )
                             ? ""
                             : "?"}
-                        </span>
+                        </div>
                       </div>
                     </div>
                   </div>

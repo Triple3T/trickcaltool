@@ -95,6 +95,18 @@ i18n
               remainToMax: "MAX-{{0}}개",
               dataIncompleteStatus: "(데이터 미완성 {{0}}/{{1}})",
             },
+            charaSelect: {
+              title: "캐릭터 선택",
+              owned: "보유중",
+              unowned: "미보유",
+              allOwned: "모두 보유",
+              allUnowned: "모두 미보유",
+              searchByName: "이름으로 검색",
+              reset: "초기화",
+              select: "선택",
+              apply: "적용",
+              cancel: "취소",
+            },
             rank: {
               title: '랭크 노트',
             },
