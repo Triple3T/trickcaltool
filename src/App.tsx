@@ -55,7 +55,7 @@ function App() {
             </p>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-12 sm:pt-14 md:pt-16 lg:pt-20">
               <MainMenuCard
-                title="황크 칠하기"
+                title="최상급 보드 노트"
                 description={
                   <>
                     전체 8% 보드 현황을 체크합니다.
@@ -67,7 +67,7 @@ function App() {
                 to="/board"
               />
               <MainMenuCard
-                title="보크 칠하기"
+                title="상급 보드 노트"
                 description={<>전체 스탯 고정치 보드 현황을 체크합니다.<br />은근 필요해</>}
                 icon="/icons/Item_Crayon3.png"
                 // to="/board"
