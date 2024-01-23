@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import "./App.css";
+import { Card } from "@/components/ui/card";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ModeToggle } from "./components/mode-toggle";
-import { Card } from "./components/ui/card";
+import { ModeToggle } from "@/components/mode-toggle";
 
 function App() {
   const [backgroundImage, setBackgroundImage] = useState(
@@ -49,12 +50,12 @@ function App() {
         <h3>누가좀정해주세요감사합니다</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
           <div className="xs:px-10 px-5 py-4">
-            <a href="/board">
+            <Link to="/board">
               <Card className="p-4 text-left">
                 <div className="text-2xl">황크 칠하기</div>
                 <div>나만 황크 안 나와</div>
               </Card>
-            </a>
+            </Link>
           </div>
           <div className="xs:px-10 px-5 py-4">
             <Card className="p-4 text-left">
