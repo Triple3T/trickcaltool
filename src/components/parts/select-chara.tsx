@@ -170,6 +170,7 @@ const SelectChara = ({
                       !userData?.u.includes(chara) &&
                       (search ? board[chara].n.includes(search) : true)
                   )
+                  .sort((a,b) => board[a].n.localeCompare(board[b].n))
                   .map((chara) => {
                     return (
                       <div className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square">
@@ -205,6 +206,7 @@ const SelectChara = ({
                   .filter((chara) =>
                     search ? board[chara].n.includes(search) : true
                   )
+                  .sort((a,b) => board[a].n.localeCompare(board[b].n))
                   .map((chara) => {
                     return (
                       <div className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square">
