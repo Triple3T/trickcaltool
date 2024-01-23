@@ -54,16 +54,33 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         greenicon: "hsl(var(--greenicon))",
-        personalityCool: "hsl(var(--personality-cool-bg))",
-        personalityGloomy: "hsl(var(--personality-gloomy-bg))",
-        personalityJolly: "hsl(var(--personality-jolly-bg))",
-        personalityMad: "hsl(var(--personality-mad-bg))",
-        personalityNaive: "hsl(var(--personality-naive-bg))",
-        personalityCoolDisabled: "hsl(var(--personality-cool-bg-grayscale-90))",
-        personalityGloomyDisabled: "hsl(var(--personality-gloomy-bg-grayscale-90))",
-        personalityJollyDisabled: "hsl(var(--personality-jolly-bg-grayscale-90))",
-        personalityMadDisabled: "hsl(var(--personality-mad-bg-grayscale-90))",
-        personalityNaiveDisabled: "hsl(var(--personality-naive-bg-grayscale-90))",
+        personality: {
+          Cool: {
+            DEFAULT: "hsl(var(--personality-cool-bg))",
+            disabled: "hsl(var(--personality-cool-bg-grayscale-90))",
+            marked: "hsl(var(--personality-cool-bg-marked))",
+          },
+          Gloomy: {
+            DEFAULT: "hsl(var(--personality-gloomy-bg))",
+            disabled: "hsl(var(--personality-gloomy-bg-grayscale-90))",
+            marked: "hsl(var(--personality-gloomy-bg-marked))",
+          },
+          Jolly: {
+            DEFAULT: "hsl(var(--personality-jolly-bg))",
+            disabled: "hsl(var(--personality-jolly-bg-grayscale-90))",
+            marked: "hsl(var(--personality-jolly-bg-marked))",
+          },
+          Mad: {
+            DEFAULT: "hsl(var(--personality-mad-bg))",
+            disabled: "hsl(var(--personality-mad-bg-grayscale-90))",
+            marked: "hsl(var(--personality-mad-bg-marked))",
+          },
+          Naive: {
+            DEFAULT: "hsl(var(--personality-naive-bg))",
+            disabled: "hsl(var(--personality-naive-bg-grayscale-90))",
+            marked: "hsl(var(--personality-naive-bg-marked))",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

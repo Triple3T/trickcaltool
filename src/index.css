@@ -36,14 +36,19 @@
 
     --personality-cool-bg: 190 86% 67%;
     --personality-cool-bg-grayscale-90: 192 12% 75%;
+    --personality-cool-bg-marked: 190 86% 85%;
     --personality-gloomy-bg: 257 68% 71%;
     --personality-gloomy-bg-grayscale-90: 258 8% 76%;
+    --personality-gloomy-bg-marked: 256 68% 85%;
     --personality-jolly-bg: 53 79% 63%;
     --personality-jolly-bg-grayscale-90: 52 12% 75%;
+    --personality-jolly-bg-marked: 54 83% 77%;
     --personality-mad-bg: 1 73% 71%;
     --personality-mad-bg-grayscale-90: 0 9% 76%;
+    --personality-mad-bg-marked: 0 73% 85%;
     --personality-naive-bg: 110 55% 65%;
     --personality-naive-bg-grayscale-90: 108 8% 75%;
+    --personality-naive-bg-marked: 110 55% 83%;
  
     --radius: 0.5rem;
   }
@@ -81,14 +86,19 @@
 
     --personality-cool-bg: 190 84% 52%;
     --personality-cool-bg-grayscale-90: 189 16% 74%;
+    --personality-cool-bg-marked: 190 78% 39%;
     --personality-gloomy-bg: 257 69% 58%;
     --personality-gloomy-bg-grayscale-90: 256 12% 75%;
+    --personality-gloomy-bg-marked: 257 50% 43%;
     --personality-jolly-bg: 52 93% 46%;
     --personality-jolly-bg-grayscale-90: 52 16% 73%;
+    --personality-jolly-bg-marked: 53 47% 47%;
     --personality-mad-bg: 0 71% 58%;
     --personality-mad-bg-grayscale-90: 0 12% 75%;
+    --personality-mad-bg-marked: 0 51% 44%;
     --personality-naive-bg: 111 54% 50%;
     --personality-naive-bg-grayscale-90: 111 10% 74%;
+    --personality-naive-bg-marked: 110 54% 37%;
   }
 }
  

@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useTranslation } from "react-i18next";
@@ -27,7 +28,6 @@ import {
   Position,
   Race,
 } from "@/types/enums";
-import { Tabs, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 const BOARD_KEY = "board";
 
@@ -310,8 +310,11 @@ const BoardStatStatistic = ({
               />
               <span
                 className={`${
-                  cur === max ? "text-red-600 dark:text-red-400" : "inherit"
+                  cur === max
+                    ? "text-red-600 dark:text-red-500"
+                    : "text-slate-900"
                 }`}
+                style={{ textShadow: Array(10).fill("0 0 1px #fff").join(",") }}
               >
                 {cur}
               </span>
@@ -355,7 +358,12 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
                 }Lv.png`}
                 className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
               />
-              <span className="inherit">{count}</span>
+              <span
+                className="text-slate-900"
+                style={{ textShadow: Array(10).fill("0 0 1px #fff").join(",") }}
+              >
+                {count}
+              </span>
             </div>
           ))}
         </div>
@@ -393,7 +401,7 @@ const TrickcalBoard = () => {
     undefined
   );
 
-  useEffect(() => {
+  const initFromUserData = useCallback(() => {
     const charaList = Object.keys(board);
     const userDataProto = localStorage.getItem(BOARD_KEY);
     if (!userDataProto) {
@@ -449,6 +457,7 @@ const TrickcalBoard = () => {
       },
     });
   }, []);
+  useEffect(initFromUserData, [initFromUserData]);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -478,29 +487,52 @@ const TrickcalBoard = () => {
                       className="w-full"
                     >
                       <TabsList className="w-full flex">
-                        {Array.from(Array(3).keys()).map((v) => (
-                          <TabsTrigger
-                            key={v}
-                            value={`${v}`}
-                            className="flex-1"
-                            onClick={() =>
-                              dispatchBoardData({ type: "index", payload: v })
-                            }
-                          >
-                            {t(`ui.board.board${v + 1}`)}
-                            {!Object.values(board).every(
-                              (b) => b.b[v] && b.b[v].length
-                            ) &&
-                              t("ui.board.dataIncompleteStatus", {
-                                0: Object.values(board).filter(
-                                  (b) => b.b[v] && b.b[v].length
-                                ).length,
-                                1: Object.values(board).length,
-                              })}
-                          </TabsTrigger>
-                        ))}
+                        {Array.from(Array(3).keys()).map((v) => {
+                          const isCompleted = Object.values(board).every(
+                            (b) => b.b[v] && b.b[v].length
+                          );
+                          return (
+                            <TabsTrigger
+                              key={v}
+                              value={`${v}`}
+                              className="flex-1"
+                              onClick={() =>
+                                dispatchBoardData({ type: "index", payload: v })
+                              }
+                            >
+                              <div>{t(`ui.board.board${v + 1}`)}</div>
+                              {!isCompleted && (
+                                <div className="text-red-700 dark:text-red-400">
+                                  *
+                                </div>
+                              )}
+                            </TabsTrigger>
+                          );
+                        })}
                       </TabsList>
                     </Tabs>
+
+                    {!Object.values(board).every(
+                      (b) =>
+                        b.b[boardData?.boardIndex ?? 0] &&
+                        b.b[boardData?.boardIndex ?? 0].length
+                    ) ? (
+                      <div className="mt-1 text-sm text-red-700 dark:text-red-400 w-full text-right">
+                        *
+                        {t("ui.board.dataIncompleteStatus", {
+                          0: Object.values(board).filter(
+                            (b) =>
+                              b.b[boardData?.boardIndex ?? 0] &&
+                              b.b[boardData?.boardIndex ?? 0].length
+                          ).length,
+                          1: Object.values(board).length,
+                        })}
+                      </div>
+                    ) : (
+                      <div className="mt-1 text-sm text-red-700 dark:text-red-400">
+                        &nbsp;
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/* <div className="flex flex-col gap-2">
@@ -748,46 +780,68 @@ const TrickcalBoard = () => {
                               "max-w-24",
                             ];
                             const imgClassNames = ["w-full"];
-                            switch (board[name].t[0]) {
-                              case "0":
-                                bgClassNames.push(
-                                  unowned
-                                    ? "bg-personalityCoolDisabled"
-                                    : "bg-personalityCool"
-                                );
+                            switch (Personality[Number(board[name].t[0])]) {
+                              case "Cool":
+                                if (unowned)
+                                  bgClassNames.push(
+                                    "bg-personality-Cool-disabled"
+                                  );
+                                else if (checked)
+                                  bgClassNames.push(
+                                    "bg-personality-Cool-marked"
+                                  );
+                                else bgClassNames.push("bg-personality-Cool");
                                 break;
-                              case "1":
-                                bgClassNames.push(
-                                  unowned
-                                    ? "bg-personalityGloomyDisabled"
-                                    : "bg-personalityGloomy"
-                                );
+                              case "Gloomy":
+                                if (unowned)
+                                  bgClassNames.push(
+                                    "bg-personality-Gloomy-disabled"
+                                  );
+                                else if (checked)
+                                  bgClassNames.push(
+                                    "bg-personality-Gloomy-marked"
+                                  );
+                                else bgClassNames.push("bg-personality-Gloomy");
                                 break;
-                              case "2":
-                                bgClassNames.push(
-                                  unowned
-                                    ? "bg-personalityJollyDisabled"
-                                    : "bg-personalityJolly"
-                                );
+                              case "Jolly":
+                                if (unowned)
+                                  bgClassNames.push(
+                                    "bg-personality-Jolly-disabled"
+                                  );
+                                else if (checked)
+                                  bgClassNames.push(
+                                    "bg-personality-Jolly-marked"
+                                  );
+                                else bgClassNames.push("bg-personality-Jolly");
                                 break;
-                              case "3":
-                                bgClassNames.push(
-                                  unowned
-                                    ? "bg-personalityMadDisabled"
-                                    : "bg-personalityMad"
-                                );
+                              case "Mad":
+                                if (unowned)
+                                  bgClassNames.push(
+                                    "bg-personality-Mad-disabled"
+                                  );
+                                else if (checked)
+                                  bgClassNames.push(
+                                    "bg-personality-Mad-marked"
+                                  );
+                                else bgClassNames.push("bg-personality-Mad");
                                 break;
-                              case "4":
-                                bgClassNames.push(
-                                  unowned
-                                    ? "bg-personalityNaiveDisabled"
-                                    : "bg-personalityNaive"
-                                );
+                              case "Naive":
+                                if (unowned)
+                                  bgClassNames.push(
+                                    "bg-personality-Naive-disabled"
+                                  );
+                                else if (checked)
+                                  bgClassNames.push(
+                                    "bg-personality-Naive-marked"
+                                  );
+                                else bgClassNames.push("bg-personality-Naive");
                                 break;
                             }
-                            if (unowned) imgClassNames.push("grayscale-[90%]");
-                            if (checked)
-                              bgClassNames.push("brightness-125", "opacity-50");
+                            if (unowned) {
+                              imgClassNames.push("grayscale-[90%]");
+                            } else if (checked) {
+                              imgClassNames.push("opacity-50");
+                            }
                             return (
                               <div
                                 key={`${name}${ldx}${bdx}`}
@@ -853,17 +907,31 @@ const TrickcalBoard = () => {
                   })}
                 </div>
                 <div className="mt-4 flex gap-2 sm:gap-3">
-                  <div className="aspect-square flex-none h-full">
-                    <img
-                      className="w-full"
-                      src="/AppImages/android/android-launchericon-72-72.png"
-                      srcSet={[48, 72, 96, 144, 192]
-                        .map(
-                          (v) =>
-                            `/AppImages/android/android-launchericon-${v}-${v}.png w${v}`
-                        )
-                        .join(", ")}
+                  <div
+                    className="flex-initial aspect-square h-full bg-cover relative w-[60px]"
+                    style={{
+                      backgroundImage:
+                        "url(/AppImages/windows11/Square44x44Logo.scale-200.png)",
+                    }}
+                  >
+                    <div
+                      className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain"
+                      style={{
+                        aspectRatio: "196/28",
+                        backgroundImage:
+                          "url(/itemslot/ItemSlot_ValueBase.png)",
+                      }}
                     />
+                    <div
+                      className="absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900 text-sm"
+                      style={{
+                        textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
+                      }}
+                    >
+                      {currentBoard.charas.filter((c) => c.checked).length *
+                        (boardData.boardIndex + 1) *
+                        2}
+                    </div>
                   </div>
                   <div className="flex-1 flex flex-col gap-1">
                     <div className="flex justify-end items-center">
@@ -895,7 +963,7 @@ const TrickcalBoard = () => {
                         }}
                       />
                       <div
-                        className={"bg-slate-500 opacity-50"}
+                        className={"bg-slate-300 dark:bg-slate-700"}
                         style={{
                           flex: `${
                             currentBoard.charas.filter((c) => c.unowned).length
@@ -905,33 +973,48 @@ const TrickcalBoard = () => {
                     </div>
                     <div className="flex">
                       <div className="flex-auto text-left">
-                        {t("ui.board.usedCount", {
+                        <div className="bg-[#50ca30] dark:bg-[#80ca50] border-slate-900 dark:border-slate-50 border mr-1.5 text-xs py-0.5 w-10 inline-block text-center rounded">
+                          {currentBoard.charas.filter((c) => c.checked).length}
+                        </div>
+                        <div className="bg-[#50ca307f] dark:bg-[#80ca507f] border-slate-900 dark:border-slate-50 border mr-1.5 text-xs py-0.5 w-10 inline-block text-center rounded">
+                          {
+                            currentBoard.charas.filter(
+                              (c) => !c.checked && !c.unowned
+                            ).length
+                          }
+                        </div>
+                        <div className="bg-slate-300 dark:bg-slate-700 border-slate-900 dark:border-slate-50 border mr-1.5 text-xs py-0.5 w-10 inline-block text-center rounded">
+                          {currentBoard.charas.filter((c) => c.unowned).length}
+                        </div>
+                        {/* {t("ui.board.usedCount", {
                           0:
                             currentBoard.charas.filter((c) => c.checked)
                               .length *
                             (boardData.boardIndex + 1) *
                             2,
-                        })}
+                        })} */}
                       </div>
                       <div className="flex-auto text-right">
-                        {currentBoard.charas.length ===
-                        currentBoard.charas.filter((c) => c.checked).length
-                          ? t("ui.board.usedMax")
-                          : t("ui.board.remainToMax", {
-                              0:
-                                (currentBoard.charas.length -
-                                  currentBoard.charas.filter((c) => c.checked)
-                                    .length) *
-                                (boardData.boardIndex + 1) *
-                                2,
-                            })}
-                        {Object.values(board).every(
-                          (b) =>
-                            b.b[boardData.boardIndex] &&
-                            b.b[boardData.boardIndex].length
-                        )
-                          ? ""
-                          : "?"}
+                        <span className="align-middle">
+                          {currentBoard.charas.length ===
+                          currentBoard.charas.filter((c) => c.checked).length
+                            ? t("ui.board.usedMax")
+                            : t("ui.board.remainToMax", {
+                                0:
+                                  (currentBoard.charas.length -
+                                    currentBoard.charas.filter((c) => c.checked)
+                                      .length) *
+                                  (boardData.boardIndex + 1) *
+                                  2,
+                              })}
+                          {Object.values(board).every(
+                            (b) =>
+                              b.b[boardData.boardIndex] &&
+                              b.b[boardData.boardIndex].length
+                          )
+                            ? ""
+                            : "?"}
+                        </span>
                       </div>
                     </div>
                   </div>
