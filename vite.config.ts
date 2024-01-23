@@ -12,8 +12,9 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       registerType: "autoUpdate",
       manifest: {
-        name: "트릭컬툴",
-        description: "Trickcal Tools by TripleLab",
+        name: "트릭컬 노트",
+        short_name: "트릭컬 노트",
+        description: "트릭컬 노트 by TripleLab",
         theme_color: "#a2dd73",
         background_color: "#09090b",
         icons: icons.map(({ src, sizes }) => ({
