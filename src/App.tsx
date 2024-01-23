@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import "./App.css";
-import { Card } from "@/components/ui/card";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 
@@ -45,30 +44,98 @@ function App() {
           <ModeToggle />
         </div>
       </div>
-      <div className="p-16 relative flex justify-between flex-col items-center w-full h-full">
-        <h1 className="text-3xl">이름못정함</h1>
-        <h3 className="text-sm">누가좀정해주세요감사합니다</h3>
-        <h3 className="text-sm">아말쩝ㅎ;;</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full gap-4 mt-12">
-          <Link to="/board">
-            <Card className="p-4 text-left">
-              <div className="text-2xl">황크 칠하기</div>
-              <div>나만 황크 안 나와</div>
-            </Card>
-          </Link>
-          <Card className="p-4 text-left">
-            <div className="text-2xl">보크 칠하기</div>
-            <div>생각보다 많이 필요하대</div>
-          </Card>
-          <Card className="p-4 text-left">
-            <div className="text-2xl">랭크 올리기</div>
-            <div>어디 적어두기 귀찮아</div>
-          </Card>
-          <Card className="p-4 text-left">
-            <div className="text-2xl">교단 업그레이드</div>
-            <div>루포야 일할 시간이야</div>
-          </Card>
-        </div>
+      <div className="flex flex-col min-h-screen relative">
+        <main className="flex flex-col flex-1 p-4 md:p-6 items-center justify-center">
+          <section className="flex flex-col items-center justify-center space-y-4 text-center">
+            <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
+              이름못정함
+            </h2>
+            <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
+              이름좀정해주실분ㅎㅎ;;
+            </p>
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Link to="/board">
+                <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
+                  {/* <PackageIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
+                  <img
+                    src="/icons/Item_Crayon4.png"
+                    className="h-6 w-6 lg:h-8 lg:w-8"
+                  />
+                  <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
+                    황크 칠하기
+                  </h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    전체 8% 보드 현황을 체크합니다.<br />나만 황크 안 나와
+                  </p>
+                </div>
+              </Link>
+              <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
+                {/* <GaugeIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
+                <img
+                  src="/icons/Item_Crayon3.png"
+                  className="h-6 w-6 lg:h-8 lg:w-8"
+                />
+                <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
+                  보크 칠하기
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  전체 스탯 고정치 보드 현황을 체크합니다.<br />은근 필요해
+                </p>
+              </div>
+              <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
+                {/* <BarChartIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
+                <img
+                  src="/itemslot/Tab_Equip_Default.png"
+                  className="h-6 w-6 lg:h-8 lg:w-8 bg-greenicon rounded-full"
+                />
+                <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
+                  랭크 메모장
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  사도들의 장비 랭크를 메모해 둡니다.<br />메모 안 하면 헷갈려
+                </p>
+              </div>
+              <div className="flex flex-col bg-gray-200/50 p-4 rounded-lg shadow-md space-y-4">
+                {/* <HelpCircleIcon className="h-6 w-6 lg:h-8 lg:w-8 text-blue-500" /> */}
+                <img
+                  src="/mainlobby/HousingButton.png"
+                  className="h-6 w-6 lg:h-8 lg:w-8"
+                />
+                <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
+                  교단 레벨업
+                </h3>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  교단의 각종 레벨업 현황을 체크합니다.<br />루포야 일하자
+                </p>
+              </div>
+            </div>
+          </section>
+        </main>
+        <footer className="flex items-center justify-center py-4 bg-gray-500 shadow-md dark:bg-gray-800 fixed bottom-0 left-0 right-0">
+          <p className="text-xs text-white dark:text-gray-400">
+            Trickcal copyrighted by EPIDGames, Trickcal Tool powered by Triple
+          </p>
+          {/* <nav className="ml-4 flex space-x-2">
+            <Link
+              className="text-xs text-white dark:text-gray-400 hover:underline"
+              to="#"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              className="text-xs text-white dark:text-gray-400 hover:underline"
+              to="#"
+            >
+              Service Agreement
+            </Link>
+            <Link
+              className="text-xs text-white dark:text-gray-400 hover:underline"
+              to="#"
+            >
+              About Us
+            </Link>
+          </nav> */}
+        </footer>
       </div>
     </ThemeProvider>
   );
