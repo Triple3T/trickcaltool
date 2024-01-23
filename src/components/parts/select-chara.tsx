@@ -191,9 +191,11 @@ const SelectChara = ({
                         break;
                     }
                     return (
-                      <div className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden">
+                      <div
+                        key={chara}
+                        className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden"
+                      >
                         <img
-                          key={chara}
                           src={`/charas/${chara}.png`}
                           className={imgClassNames.join(" ")}
                           onClick={() => {
@@ -245,9 +247,11 @@ const SelectChara = ({
                         break;
                     }
                     return (
-                      <div className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden">
+                      <div
+                        key={chara}
+                        className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden"
+                      >
                         <img
-                          key={chara}
                           src={`/charas/${chara}.png`}
                           className={imgClassNames.join(" ")}
                           onClick={() => {
