@@ -15,6 +15,9 @@ export default defineConfig({
         name: "트릭컬 노트",
         short_name: "트릭컬 노트",
         description: "트릭컬 노트 by TripleLab",
+        lang: "ko",
+        orientation: "any",
+        dir: "ltr",
         theme_color: "#a2dd73",
         background_color: "#09090b",
         icons: icons.map(({ src, sizes }) => ({
@@ -23,7 +26,15 @@ export default defineConfig({
           sizes,
         })),
         display: "standalone",
+        display_override: ["standalone"],
         scope: "/",
+        shortcuts: [
+          {
+            name: "최상급 보드 노트",
+            url: "/board",
+            description: "전체 8% 보드 현황을 체크합니다.",
+          },
+        ],
       },
     }),
   ],
