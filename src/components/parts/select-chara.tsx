@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import board from "@/data/board";
+import chara from "@/data/chara";
 
 const BOARD_KEY = "board";
 
@@ -68,7 +69,7 @@ const userDataReducerMini = (
       if (!state) return state;
       return {
         ...state,
-        u: state.u.filter((chara) => chara !== action.chara),
+        u: state.u.filter((c) => c !== action.chara),
         c: state.c,
       };
     case "unown":
@@ -125,12 +126,10 @@ const SelectChara = ({
   const setToUserData = useCallback((u: UserDataProps | undefined) => {
     if (!u) return;
     u.b = Object.fromEntries(
-      [...Object.keys(board).filter((chara) => !u.u.includes(chara))].map(
-        (chara) => {
-          if (u.b[chara]) return [chara, u.b[chara]];
-          return [chara, board[chara].b.map((a) => a.map(() => 0))];
-        }
-      )
+      [...Object.keys(board).filter((c) => !u.u.includes(c))].map((c) => {
+        if (u.b[c]) return [c, u.b[c]];
+        return [c, board[c].b.map((a) => a.map(() => 0))];
+      })
     );
     localStorage.setItem(BOARD_KEY, JSON.stringify(u));
   }, []);
@@ -166,14 +165,14 @@ const SelectChara = ({
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
                 {Object.keys(board)
                   .filter(
-                    (chara) =>
-                      !userData?.u.includes(chara) &&
-                      (search ? board[chara].n.includes(search) : true)
+                    (c) =>
+                      !userData?.u.includes(c) &&
+                      (search ? chara[c].n.includes(search) : true)
                   )
-                  .sort((a, b) => board[a].n.localeCompare(board[b].n))
-                  .map((chara) => {
+                  .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
+                  .map((c) => {
                     const imgClassNames = ["w-full", "aspect-square"];
-                    switch (board[chara].t[0]) {
+                    switch (chara[c].t[0]) {
                       case "0":
                         imgClassNames.push("bg-personality-Cool");
                         break;
@@ -192,18 +191,18 @@ const SelectChara = ({
                     }
                     return (
                       <div
-                        key={chara}
+                        key={c}
                         className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden"
                       >
                         <img
-                          src={`/charas/${chara}.png`}
+                          src={`/charas/${c}.png`}
                           className={imgClassNames.join(" ")}
                           onClick={() => {
-                            dispatchUserData({ type: "unown", chara: chara });
+                            dispatchUserData({ type: "unown", chara: c });
                           }}
                         />
                         <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-center text-xs py-0.5">
-                          {board[chara].n}
+                          {chara[c].n}
                         </div>
                       </div>
                     );
@@ -223,13 +222,11 @@ const SelectChara = ({
             <ScrollArea className="mt-2 p-1 w-full h-80 sm:h-96 bg-gray-400/50 rounded-lg">
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
                 {userData?.u
-                  .filter((chara) =>
-                    search ? board[chara].n.includes(search) : true
-                  )
-                  .sort((a, b) => board[a].n.localeCompare(board[b].n))
-                  .map((chara) => {
+                  .filter((c) => (search ? chara[c].n.includes(search) : true))
+                  .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
+                  .map((c) => {
                     const imgClassNames = ["w-full", "aspect-square"];
-                    switch (board[chara].t[0]) {
+                    switch (chara[c].t[0]) {
                       case "0":
                         imgClassNames.push("bg-personality-Cool");
                         break;
@@ -248,18 +245,18 @@ const SelectChara = ({
                     }
                     return (
                       <div
-                        key={chara}
+                        key={c}
                         className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden"
                       >
                         <img
-                          src={`/charas/${chara}.png`}
+                          src={`/charas/${c}.png`}
                           className={imgClassNames.join(" ")}
                           onClick={() => {
-                            dispatchUserData({ type: "own", chara: chara });
+                            dispatchUserData({ type: "own", chara: c });
                           }}
                         />
                         <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-center text-xs py-0.5">
-                          {board[chara].n}
+                          {chara[c].n}
                         </div>
                       </div>
                     );

@@ -19,6 +19,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useTranslation } from "react-i18next";
 import board from "@/data/board";
+import chara from "@/data/chara";
 import clonefactory from "@/data/clonefactory";
 import {
   Attack,
@@ -48,13 +49,6 @@ interface BoardDataPropsCore {
   board: {
     [key: string]: BoardDataPropsBoard; // 보드 종류별로
   }[]; // [1차보드, 2차보드, 3차보드]
-  chara: {
-    [key: string]: {
-      n: string;
-      t: string;
-      b: number[][];
-    };
-  };
   user: {
     b: { [key: string]: number[][] }; // 보드 차수별 데이터 (bitmask)
     u: string[]; // 미보유 캐릭터 목록
@@ -397,7 +391,7 @@ const TrickcalBoard = () => {
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
 
   const initFromUserData = useCallback(() => {
-    const charaList = Object.keys(board);
+    const charaList = Object.keys(chara);
     const userDataProto = localStorage.getItem(BOARD_KEY);
     if (!userDataProto) {
       localStorage.setItem(
@@ -409,7 +403,7 @@ const TrickcalBoard = () => {
       ? JSON.parse(userDataProto)
       : { b: {}, u: charaList, c: 0 };
     const sortedCharaList = [...charaList].sort(
-      (a, b) => Number(board[b].t[userData.c]) - Number(board[a].t[userData.c])
+      (a, b) => Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c])
     );
     const boardTypes = Object.values(BoardType).filter(
       (bt) => typeof bt === "string"
@@ -446,7 +440,6 @@ const TrickcalBoard = () => {
       type: "restore",
       payload: {
         board: boardDataSkel,
-        chara: board,
         user: userData,
         boardIndex: 0,
       },
@@ -711,7 +704,7 @@ const TrickcalBoard = () => {
                       bt
                     ].charas.filter(
                       ({ name }) =>
-                        board[name].t[boardData.user.c] ===
+                        chara[name].t[boardData.user.c] ===
                         `${
                           (
                             [
@@ -784,7 +777,7 @@ const TrickcalBoard = () => {
                               "max-w-24",
                             ];
                             const imgClassNames = ["w-full"];
-                            switch (Personality[Number(board[name].t[0])]) {
+                            switch (Personality[Number(chara[name].t[0])]) {
                               case "Cool":
                                 if (unowned)
                                   bgClassNames.push(
