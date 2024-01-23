@@ -28,7 +28,8 @@ import {
   Position,
   Race,
 } from "@/types/enums";
-import SelectChara from "./components/parts/select-chara";
+import SelectChara from "@/components/parts/select-chara";
+import SubtitleBar from "@/components/parts/subtitlebar";
 
 const BOARD_KEY = "board";
 
@@ -473,7 +474,7 @@ const TrickcalBoard = () => {
             <AccordionContent className="text-base">
               <div className="w-full flex flex-col gap-4 px-2">
                 <div className="flex flex-col gap-2">
-                  <div>{t("ui.board.unownedCharacters")}</div>
+                  <SubtitleBar>{t("ui.board.unownedCharacters")}</SubtitleBar>
                   <div>
                     <SelectChara
                       isOpen={charaDrawerOpen}
@@ -483,8 +484,8 @@ const TrickcalBoard = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <div>{t("ui.board.selectBoard")}</div>
-                  <div className="w-full px-2">
+                  <SubtitleBar>{t("ui.board.selectBoard")}</SubtitleBar>
+                  <div className="w-full px-4">
                     <Tabs
                       value={`${boardData?.boardIndex ?? 0}`}
                       className="w-full"
@@ -539,12 +540,12 @@ const TrickcalBoard = () => {
                   </div>
                 </div>
                 {/* <div className="flex flex-col gap-2">
-                  <div>{t("ui.board.mainClassification")}</div>
+                  <SubtitleBar>{t("ui.board.mainClassification")}</SubtitleBar>
                   <div></div>
                 </div> */}
                 <div className="flex flex-col gap-2">
-                  <div>{t("ui.board.subClassification")}</div>
-                  <div className="w-full px-2">
+                  <SubtitleBar>{t("ui.board.subClassification")}</SubtitleBar>
+                  <div className="w-full px-4">
                     <Select
                       value={`${boardData?.user.c ?? 0}`}
                       onValueChange={(v) =>
@@ -588,8 +589,8 @@ const TrickcalBoard = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <div>{t("ui.board.backUpAndRestore")}</div>
-                  <div className="flex flex-row gap-2 max-w-xl w-full px-2">
+                  <SubtitleBar>{t("ui.board.backUpAndRestore")}</SubtitleBar>
+                  <div className="flex flex-row gap-2 max-w-xl w-full px-4">
                     <Button className="flex-1">{t("ui.board.backUp")}</Button>
                     <Button className="flex-1">{t("ui.board.restore")}</Button>
                   </div>
