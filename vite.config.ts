@@ -26,7 +26,7 @@ export default defineConfig({
           sizes,
         })),
         display: "standalone",
-        display_override: ["standalone"],
+        display_override: ["standalone", "window-controls-overlay"],
         scope: "/",
         shortcuts: [
           {
