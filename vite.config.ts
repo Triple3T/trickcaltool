@@ -14,7 +14,7 @@ export default defineConfig({
       manifest: {
         name: "트릭컬 노트",
         short_name: "트릭컬 노트",
-        description: "트릭컬 노트 by TripleLab",
+        description: "내 성장 현황 메모하기",
         lang: "ko",
         orientation: "any",
         dir: "ltr",

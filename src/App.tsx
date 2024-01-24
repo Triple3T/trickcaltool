@@ -48,10 +48,10 @@ function App() {
         <main className="flex flex-col flex-1 p-4 md:p-6 items-center justify-center">
           <section className="flex flex-col items-center justify-center space-y-4 text-center pt-6 md:pt-0">
             <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
-              이름못정함
+              트릭컬 노트
             </h2>
             <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
-              이름좀정해주실분ㅎㅎ;;
+              내 성장 현황 메모하기
             </p>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-12 sm:pt-14 md:pt-16 lg:pt-20">
               <MainMenuCard
@@ -82,7 +82,7 @@ function App() {
                   </>
                 }
                 icon="/itemslot/Tab_Equip_Default.png"
-                // to="/board"
+                to="/eqrank"
                 greenIcon
               />
               <MainMenuCard
