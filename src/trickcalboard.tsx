@@ -430,7 +430,7 @@ const TrickcalBoard = () => {
             <AccordionContent className="text-base">
               <div className="w-full flex flex-col gap-2 px-2">
                 <div className="flex flex-col gap-2">
-                  <SubtitleBar>{t("ui.board.unownedCharacters")}</SubtitleBar>
+                  <SubtitleBar>{t("ui.common.unownedCharacters")}</SubtitleBar>
                   <div>
                     <SelectChara
                       isOpen={charaDrawerOpen}
@@ -545,14 +545,14 @@ const TrickcalBoard = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <SubtitleBar>{t("ui.board.backUpAndRestore")}</SubtitleBar>
+                  <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
                   <div className="flex flex-row gap-2 max-w-xl w-full px-4">
                     <div className="flex-1">
                       <Button
                         className="w-full"
                         onClick={() => dataFileWrite()}
                       >
-                        {t("ui.board.backUp")}
+                        {t("ui.common.backUp")}
                       </Button>
                     </div>
                     <div className="flex-1">
@@ -560,7 +560,7 @@ const TrickcalBoard = () => {
                         className="w-full"
                         onClick={() => fileInput.current?.click()}
                       >
-                        {t("ui.board.restore")}
+                        {t("ui.common.restore")}
                       </Button>
                       <input
                         type="file"
