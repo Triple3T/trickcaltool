@@ -101,8 +101,8 @@ function App() {
           </section>
         </main>
         <footer className="flex items-center justify-center py-4 bg-gray-500 shadow-md dark:bg-gray-800 fixed bottom-0 left-0 right-0">
-          <p className="text-xs text-white dark:text-gray-400">
-            Trickcal copyrighted by EPIDGames, Trickcal Tool powered by Triple
+          <p className="text-[0.625rem] text-white dark:text-gray-400">
+            Trickcal copyrighted by EPIDGames, Trickcal Note powered by Triple
           </p>
           {/* <nav className="ml-4 flex space-x-2">
             <Link
