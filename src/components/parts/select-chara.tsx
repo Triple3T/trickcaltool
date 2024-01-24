@@ -115,7 +115,7 @@ const SelectChara = ({
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange}>
       <DrawerTrigger>
-        <Button variant="outline">{t("ui.board.selectCharacter")}...</Button>
+        <Button variant="outline">{t("ui.charaSelect.title")}...</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="px-4 mt-4 font-onemobile relative">
