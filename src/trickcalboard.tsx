@@ -93,8 +93,8 @@ const boardDataClickActionHandler = (
     const inIfUserData = {
       b: {
         ...state.user.b,
-        [action.payload.charaName]: board.c[action.payload.charaName].b.map((a) =>
-          a.map(() => 0)
+        [action.payload.charaName]: board.c[action.payload.charaName].b.map(
+          (a) => a.map(() => 0)
         ),
       },
       c: state.user.c,
@@ -253,7 +253,11 @@ const BoardStatStatistic = ({
         <div className="bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
           <div className="text-left flex-auto">{t(`board.${stat}`)}</div>
           <div className="text-right flex-auto">
-            {statStatistic.reduce((a, b) => a + b.cur, 0) * 8}%
+            {statStatistic.reduce(
+              (a, b, i) => a + b.cur * board.b[BoardType[stat as keyof typeof BoardType]][i],
+              0
+            )}
+            %
           </div>
         </div>
         <div className="bg-gradient-to-r from-transparent via-[#e9f5cf] dark:via-[#169a2d] via-[28px] to-[#e9f5cf] dark:to-[#169a2d] py-px pr-2.5 pl-8 rounded-r-[11px] flex flex-row gap-1 text-sm dark:contrast-125 dark:brightness-80">
@@ -929,7 +933,7 @@ const TrickcalBoard = () => {
                       <span>
                         {t(`board.${bt}`)} +
                         {currentBoard.charas.filter((c) => c.checked).length *
-                          8}
+                          board.b[BoardType[bt as keyof typeof BoardType]][boardData.boardIndex]}
                         %
                       </span>
                     </div>
