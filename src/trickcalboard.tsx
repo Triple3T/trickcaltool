@@ -426,7 +426,7 @@ const TrickcalBoard = () => {
           <AccordionItem value="item-1">
             <AccordionTrigger>{t("ui.board.settings")}</AccordionTrigger>
             <AccordionContent className="text-base">
-              <div className="w-full flex flex-col gap-4 px-2">
+              <div className="w-full flex flex-col gap-2 px-2">
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.unownedCharacters")}</SubtitleBar>
                   <div>
