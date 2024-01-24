@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 interface SubtitleBarProps {
-  children: string | ReactNode | ReactNode[];
+  children?: string | ReactNode | ReactNode[];
 }
 
 const SubtitleBar = ({ children }: SubtitleBarProps) => {
