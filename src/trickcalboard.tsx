@@ -364,7 +364,9 @@ const TrickcalBoard = () => {
         });
     }
     const sortedCharaList = [...charaList].sort(
-      (a, b) => Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c])
+      (a, b) =>
+        Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c]) ||
+        Number(chara[b].t) - Number(chara[a].t)
     );
     const boardTypes = Object.values(BoardType).filter(
       (bt) => typeof bt === "string"
@@ -565,14 +567,16 @@ const TrickcalBoard = () => {
                         accept=".txt"
                         className="hidden"
                         ref={fileInput}
-                        onChange={(e) => dataFileRead(e.target.files).then((v) => {
-                          if (v.success) {
-                            toast.success(t("ui.index.fileSync.success"));
-                            initFromUserData();
-                          } else {
-                            toast.error(t(v.reason));
-                          }
-                        })}
+                        onChange={(e) =>
+                          dataFileRead(e.target.files).then((v) => {
+                            if (v.success) {
+                              toast.success(t("ui.index.fileSync.success"));
+                              initFromUserData();
+                            } else {
+                              toast.error(t(v.reason));
+                            }
+                          })
+                        }
                       />
                     </div>
                   </div>
