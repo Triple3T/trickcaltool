@@ -13,8 +13,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import board from "@/data/board";
 import chara from "@/data/chara";
-
-const BOARD_KEY = "board";
+import userdata from "@/utils/userdata";
+import { UserDataUnowned } from "@/types/types";
 
 interface SelectCharaProp {
   isOpen: boolean;
@@ -22,15 +22,9 @@ interface SelectCharaProp {
   saveAndClose: (charaList: string[]) => void;
 }
 
-interface UserDataProps {
-  b: { [key: string]: number[][] };
-  u: string[];
-  c: number;
-}
-
 interface UserDataImport {
   type: "import";
-  data: UserDataProps;
+  data: UserDataUnowned;
 }
 
 interface UserDataAddOwn {
@@ -59,39 +53,35 @@ type UserDataReduceActionMini =
   | UserDataAllUnown;
 
 const userDataReducerMini = (
-  state: UserDataProps | undefined,
+  state: UserDataUnowned | undefined,
   action: UserDataReduceActionMini
-): UserDataProps | undefined => {
+): UserDataUnowned | undefined => {
   switch (action.type) {
     case "import":
       return action.data;
     case "own":
       if (!state) return state;
       return {
-        ...state,
         u: state.u.filter((c) => c !== action.chara),
-        c: state.c,
+        o: [...state.o, action.chara],
       };
     case "unown":
       if (!state) return state;
       return {
-        ...state,
         u: [...state.u, action.chara],
-        c: state.c,
+        o: state.o.filter((c) => c !== action.chara),
       };
     case "allOwn":
       if (!state) return state;
       return {
-        ...state,
         u: [],
-        c: state.c,
+        o: Object.keys(board),
       };
     case "allUnown":
       if (!state) return state;
       return {
-        ...state,
         u: Object.keys(board),
-        c: state.c,
+        o: [],
       };
   }
 };
@@ -109,29 +99,13 @@ const SelectChara = ({
   const [search, setSearch] = useState("");
 
   const getFromUserData = useCallback(() => {
-    const charaList = Object.keys(board);
-    const userDataProto = localStorage.getItem(BOARD_KEY);
-    if (!userDataProto) {
-      localStorage.setItem(
-        BOARD_KEY,
-        JSON.stringify({ b: {}, u: charaList, c: 0 })
-      );
-    }
-    const userData = userDataProto
-      ? JSON.parse(userDataProto)
-      : { b: {}, u: charaList, c: 0 };
-    dispatchUserData({ type: "import", data: userData });
+    const ud = userdata.unowned.load();
+    dispatchUserData({ type: "import", data: ud });
   }, []);
 
-  const setToUserData = useCallback((u: UserDataProps | undefined) => {
+  const setToUserData = useCallback((u: UserDataUnowned | undefined) => {
     if (!u) return;
-    u.b = Object.fromEntries(
-      [...Object.keys(board).filter((c) => !u.u.includes(c))].map((c) => {
-        if (u.b[c]) return [c, u.b[c]];
-        return [c, board[c].b.map((a) => a.map(() => 0))];
-      })
-    );
-    localStorage.setItem(BOARD_KEY, JSON.stringify(u));
+    userdata.unowned.save(u);
   }, []);
 
   useEffect(() => {
@@ -163,12 +137,8 @@ const SelectChara = ({
             <div className="text-lg">{t("ui.charaSelect.owned")}</div>
             <ScrollArea className="mt-2 p-1 w-full h-80 sm:h-96 bg-gray-400/50 rounded-lg">
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
-                {Object.keys(board)
-                  .filter(
-                    (c) =>
-                      !userData?.u.includes(c) &&
-                      (search ? chara[c].n.includes(search) : true)
-                  )
+                {userData?.o
+                  .filter((c) => (search ? chara[c].n.includes(search) : true))
                   .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
                   .map((c) => {
                     const imgClassNames = ["w-full", "aspect-square"];
@@ -284,7 +254,10 @@ const SelectChara = ({
           >
             {t("ui.charaSelect.apply")}
           </Button>
-          <DrawerClose className="font-onemobile inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+          <DrawerClose
+            className="font-onemobile inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+            onClick={getFromUserData}
+          >
             {t("ui.charaSelect.cancel")}
           </DrawerClose>
         </DrawerFooter>
