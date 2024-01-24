@@ -165,46 +165,6 @@ const boardDataClickActionHandler = (
   };
 };
 
-interface BoardDataNotOwnedAction {
-  type: "notowned";
-  payload: string;
-}
-
-const boardDataNotOwnedActionHandler = (
-  state: NonNullable<BoardDataProps>,
-  action: BoardDataNotOwnedAction
-): BoardDataProps => {
-  const userData = {
-    b: Object.fromEntries(
-      Object.entries(state.user.b).filter(([key]) => key !== action.payload)
-    ),
-    c: state.user.c,
-    o: state.user.o.filter((c) => c !== action.payload),
-    u: [...state.user.u, action.payload],
-  };
-  saveBoardData(userData);
-  return {
-    ...state,
-    board: state.board.map((nthboard) => {
-      return Object.fromEntries(
-        Object.entries(nthboard).map(([bt, { charas }]) => {
-          return [
-            bt,
-            {
-              charas: charas.map((c) => ({
-                ...c,
-                unowned: c.name === action.payload ? false : c.unowned,
-                checked: c.name === action.payload ? false : c.checked,
-              })),
-            },
-          ];
-        })
-      );
-    }),
-    user: userData,
-  };
-};
-
 interface BoardDataChangeClassificationAction {
   type: "classification";
   payload: number;
@@ -245,7 +205,6 @@ const boardDataChangeIndexActionHandler = (
 type BoardDataReduceAction =
   | BoardDataRestoreAction
   | BoardDataClickAction
-  | BoardDataNotOwnedAction
   | BoardDataChangeClassificationAction
   | BoardDataChangeIndex;
 
@@ -260,8 +219,6 @@ const boardDataReducer = (
   switch (action.type) {
     case "click":
       return boardDataClickActionHandler(state, action);
-    case "notowned":
-      return boardDataNotOwnedActionHandler(state, action);
     case "classification":
       return boardDataChangeClassificationActionHandler(state, action);
     case "index":
