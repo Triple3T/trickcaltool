@@ -93,7 +93,7 @@ const boardDataClickActionHandler = (
     const inIfUserData = {
       b: {
         ...state.user.b,
-        [action.payload.charaName]: board[action.payload.charaName].b.map((a) =>
+        [action.payload.charaName]: board.c[action.payload.charaName].b.map((a) =>
           a.map(() => 0)
         ),
       },
@@ -360,7 +360,7 @@ const TrickcalBoard = () => {
       userData.o
         .filter((c) => !userData.b[c])
         .forEach((c) => {
-          userData.b[c] = board[c].b.map((a) => a.map(() => 0));
+          userData.b[c] = board.c[c].b.map((a) => a.map(() => 0));
         });
     }
     const sortedCharaList = [...charaList].sort(
@@ -379,7 +379,7 @@ const TrickcalBoard = () => {
       )
     );
     sortedCharaList.forEach((c) => {
-      const charaBoard = board[c].b;
+      const charaBoard = board.c[c].b;
       charaBoard.forEach((cb, i) => {
         cb.forEach((cbi, j) => {
           const cba = cbi.toString(10).split("");
@@ -448,7 +448,7 @@ const TrickcalBoard = () => {
                     >
                       <TabsList className="w-full flex">
                         {Array.from(Array(3).keys()).map((v) => {
-                          const isCompleted = Object.values(board).every(
+                          const isCompleted = Object.values(board.c).every(
                             (b) => b.b[v] && b.b[v].length
                           );
                           return (
@@ -472,7 +472,7 @@ const TrickcalBoard = () => {
                       </TabsList>
                     </Tabs>
 
-                    {!Object.values(board).every(
+                    {!Object.values(board.c).every(
                       (b) =>
                         b.b[boardData?.boardIndex ?? 0] &&
                         b.b[boardData?.boardIndex ?? 0].length
@@ -480,7 +480,7 @@ const TrickcalBoard = () => {
                       <div className="mt-1 text-sm text-red-700 dark:text-red-400 w-full text-right">
                         *
                         {t("ui.board.dataIncompleteStatus", {
-                          0: Object.values(board).filter(
+                          0: Object.values(board.c).filter(
                             (b) =>
                               b.b[boardData?.boardIndex ?? 0] &&
                               b.b[boardData?.boardIndex ?? 0].length
@@ -997,7 +997,7 @@ const TrickcalBoard = () => {
                                   (boardData.boardIndex + 1) *
                                   2,
                               })}
-                          {Object.values(board).every(
+                          {Object.values(board.c).every(
                             (b) =>
                               b.b[boardData.boardIndex] &&
                               b.b[boardData.boardIndex].length
