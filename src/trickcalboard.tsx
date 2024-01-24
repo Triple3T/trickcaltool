@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useTranslation } from "react-i18next";
@@ -32,7 +33,9 @@ import {
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
 
-const BOARD_KEY = "board";
+import userdata from "@/utils/userdata";
+import { UserDataBoard, UserDataUnowned } from "./types/types";
+import { dataFileRead, dataFileWrite } from "./utils/dataRW";
 
 interface BoardDataPropsBoard {
   charas: {
@@ -49,18 +52,16 @@ interface BoardDataPropsCore {
   board: {
     [key: string]: BoardDataPropsBoard; // 보드 종류별로
   }[]; // [1차보드, 2차보드, 3차보드]
-  user: {
-    b: { [key: string]: number[][] }; // 보드 차수별 데이터 (bitmask)
-    u: string[]; // 미보유 캐릭터 목록
-    c: number; // subClassification
-  };
+  user: UserDataBoard & UserDataUnowned;
   boardIndex: number;
 }
 
 type BoardDataProps = BoardDataPropsCore | undefined;
 
-const saveBoardData = (boardData: string) => {
-  localStorage.setItem(BOARD_KEY, boardData);
+const saveBoardData = (boardData: UserDataBoard & UserDataUnowned) => {
+  const { b, c, o, u } = boardData;
+  userdata.board.save({ b, c });
+  userdata.unowned.save({ o, u });
 };
 
 interface BoardDataRestoreAction {
@@ -96,10 +97,11 @@ const boardDataClickActionHandler = (
           a.map(() => 0)
         ),
       },
-      u: state.user.u.filter((c) => c !== action.payload.charaName),
       c: state.user.c,
+      o: [...state.user.o, action.payload.charaName],
+      u: state.user.u.filter((c) => c !== action.payload.charaName),
     };
-    saveBoardData(JSON.stringify(inIfUserData));
+    saveBoardData(inIfUserData);
     return {
       ...state,
       board: state.board.map((nthboard) => {
@@ -135,7 +137,7 @@ const boardDataClickActionHandler = (
       ),
     },
   };
-  saveBoardData(JSON.stringify(outIfUserData));
+  saveBoardData(outIfUserData);
   return {
     ...state,
     board: state.board.map((nthboard, n) => {
@@ -176,10 +178,11 @@ const boardDataNotOwnedActionHandler = (
     b: Object.fromEntries(
       Object.entries(state.user.b).filter(([key]) => key !== action.payload)
     ),
-    u: [...state.user.u, action.payload],
     c: state.user.c,
+    o: state.user.o.filter((c) => c !== action.payload),
+    u: [...state.user.u, action.payload],
   };
-  saveBoardData(JSON.stringify(userData));
+  saveBoardData(userData);
   return {
     ...state,
     board: state.board.map((nthboard) => {
@@ -213,10 +216,11 @@ const boardDataChangeClassificationActionHandler = (
 ): BoardDataProps => {
   const userData = {
     b: state.user.b,
-    u: state.user.u,
     c: action.payload,
+    o: state.user.o,
+    u: state.user.u,
   };
-  saveBoardData(JSON.stringify(userData));
+  saveBoardData(userData);
   return {
     ...state,
     user: userData,
@@ -392,16 +396,16 @@ const TrickcalBoard = () => {
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
-    const userDataProto = localStorage.getItem(BOARD_KEY);
-    if (!userDataProto) {
-      localStorage.setItem(
-        BOARD_KEY,
-        JSON.stringify({ b: {}, u: charaList, c: 0 })
-      );
+    const userDataBoardProto = userdata.board.load();
+    const userDataUnownedProto = userdata.unowned.load();
+    const userData = { ...userDataBoardProto, ...userDataUnownedProto };
+    if (!userData.o.every((c) => userData.b[c])) {
+      userData.o
+        .filter((c) => !userData.b[c])
+        .forEach((c) => {
+          userData.b[c] = board[c].b.map((a) => a.map(() => 0));
+        });
     }
-    const userData = userDataProto
-      ? JSON.parse(userDataProto)
-      : { b: {}, u: charaList, c: 0 };
     const sortedCharaList = [...charaList].sort(
       (a, b) => Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c])
     );
@@ -450,7 +454,7 @@ const TrickcalBoard = () => {
     setCharaDrawerOpen(false);
     initFromUserData();
   }, [initFromUserData]);
-
+  const fileInput = useRef<HTMLInputElement>(null);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -584,8 +588,36 @@ const TrickcalBoard = () => {
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.backUpAndRestore")}</SubtitleBar>
                   <div className="flex flex-row gap-2 max-w-xl w-full px-4">
-                    <Button className="flex-1">{t("ui.board.backUp")}</Button>
-                    <Button className="flex-1">{t("ui.board.restore")}</Button>
+                    <div className="flex-1">
+                      <Button
+                        className="w-full"
+                        onClick={() => dataFileWrite()}
+                      >
+                        {t("ui.board.backUp")}
+                      </Button>
+                    </div>
+                    <div className="flex-1">
+                      <Button
+                        className="w-full"
+                        onClick={() => fileInput.current?.click()}
+                      >
+                        {t("ui.board.restore")}
+                      </Button>
+                      <input
+                        type="file"
+                        accept=".txt"
+                        className="hidden"
+                        ref={fileInput}
+                        onChange={(e) => dataFileRead(e.target.files).then((v) => {
+                          if (v.success) {
+                            toast.success(t("ui.index.fileSync.success"));
+                            initFromUserData();
+                          } else {
+                            toast.error(t(v.reason));
+                          }
+                        })}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

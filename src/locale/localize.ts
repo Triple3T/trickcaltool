@@ -72,6 +72,13 @@ i18n
               position: '배치 열',
               class: '역할군',
               race: '종족',
+              fileSync: {
+                success: '성공적으로 데이터를 가져왔습니다.',
+                notProperSignature: '파일 형식이 올바르지 않습니다.',
+                incorrectPadding: '파일 패딩이 올바르지 않습니다.',
+                noFileProvided: '파일이 제공되지 않았습니다.',
+                invalidFileInput: '파일이 올바르지 않습니다.',
+              },
             },
             board: {
               title: "크레용 노트",
