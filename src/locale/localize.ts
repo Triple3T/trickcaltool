@@ -97,6 +97,17 @@ i18n
               remainToMax: "MAX-{{0}}개",
               dataIncompleteStatus: "(데이터 미완성 {{0}}/{{1}})",
             },
+            equiprank: {
+              title: "랭크 메모장",
+              rankText: "RANK {{0}}",
+              reqLevel: "RANK {{0}} 필요 레벨: {{1}}",
+              targetStat: "목표 스탯",
+              input: "랭크 입력",
+              rankView: "랭크 보기",
+              targetView: "목표 보기",
+              rankMinMax: "최소/최대 랭크",
+              applyMinMax: "최소/최대 랭크 적용",
+            },
             charaSelect: {
               title: "캐릭터 선택",
               owned: "보유중",

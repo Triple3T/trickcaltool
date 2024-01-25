@@ -6,8 +6,9 @@ import App from "./App";
 import "./index.css";
 import "./font.css";
 import TrickcalBoard from "./trickcalboard";
+import EquipRank from "./equiprank";
 
-import '@/locale/localize';
+import "@/locale/localize";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/board",
     element: <TrickcalBoard />,
+  },
+  {
+    path: "/eqrank",
+    element: <EquipRank />,
   },
 ]);
 

@@ -1,7 +1,8 @@
 import chara from "@/data/chara";
-import { UserDataBoard, UserDataUnowned } from "@/types/types";
+import { UserDataBoard, UserDataEqRank, UserDataUnowned } from "@/types/types";
 
 const BOARD_KEY = "trn.board";
+const EQRANK_KEY = "trn.eqrank";
 const UNOWNED_KEY = "trn.unown";
 const saveBoardData = (data: UserDataBoard) => {
   localStorage.setItem(BOARD_KEY, JSON.stringify(data));
@@ -14,6 +15,21 @@ const loadBoardData = (): UserDataBoard => {
   };
   if (!data) {
     saveBoardData(defaultData);
+    return defaultData;
+  }
+  return { ...defaultData, ...JSON.parse(data) };
+};
+const saveEqRankData = (data: UserDataEqRank) => {
+  localStorage.setItem(EQRANK_KEY, JSON.stringify(data));
+};
+const loadEqRankData = (): UserDataEqRank => {
+  const data = localStorage.getItem(EQRANK_KEY);
+  const defaultData = {
+    r: {},
+    s: [0, 0, 0],
+  };
+  if (!data) {
+    saveEqRankData(defaultData);
     return defaultData;
   }
   return { ...defaultData, ...JSON.parse(data) };
@@ -57,6 +73,10 @@ const userdata = {
   board: {
     save: saveBoardData,
     load: loadBoardData,
+  },
+  eqrank: {
+    save: saveEqRankData,
+    load: loadEqRankData,
   },
   unowned: {
     save: saveUnownedData,
