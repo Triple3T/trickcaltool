@@ -254,7 +254,9 @@ const BoardStatStatistic = ({
           <div className="text-left flex-auto">{t(`board.${stat}`)}</div>
           <div className="text-right flex-auto">
             {statStatistic.reduce(
-              (a, b, i) => a + b.cur * board.b[BoardType[stat as keyof typeof BoardType]][i],
+              (a, b, i) =>
+                a +
+                b.cur * board.b[BoardType[stat as keyof typeof BoardType]][i],
               0
             )}
             %
@@ -770,10 +772,13 @@ const TrickcalBoard = () => {
                             const { name, ldx, bdx, checked, unowned, clf } = b;
                             const bgClassNames = [
                               "min-w-14",
+                              "min-h-14",
                               "sm:min-w-16",
+                              "sm:min-h-16",
                               "max-w-24",
+                              "aspect-square",
                             ];
-                            const imgClassNames = ["w-full"];
+                            const imgClassNames = ["aspect-square", "w-full"];
                             switch (Personality[Number(chara[name].t[0])]) {
                               case "Cool":
                                 if (unowned)
@@ -839,7 +844,7 @@ const TrickcalBoard = () => {
                             return (
                               <div
                                 key={`${name}${ldx}${bdx}`}
-                                className="sm:min-w-14 md:min-w-16 max-w-24 relative"
+                                className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
                                 onClick={() =>
                                   dispatchBoardData({
                                     type: "click",
@@ -933,7 +938,9 @@ const TrickcalBoard = () => {
                       <span>
                         {t(`board.${bt}`)} +
                         {currentBoard.charas.filter((c) => c.checked).length *
-                          board.b[BoardType[bt as keyof typeof BoardType]][boardData.boardIndex]}
+                          board.b[BoardType[bt as keyof typeof BoardType]][
+                            boardData.boardIndex
+                          ]}
                         %
                       </span>
                     </div>
