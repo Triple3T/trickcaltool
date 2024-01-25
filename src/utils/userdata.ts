@@ -8,15 +8,15 @@ const saveBoardData = (data: UserDataBoard) => {
 };
 const loadBoardData = (): UserDataBoard => {
   const data = localStorage.getItem(BOARD_KEY);
+  const defaultData = {
+    b: {},
+    c: 0,
+  };
   if (!data) {
-    const defaultData = {
-      b: {},
-      c: 0,
-    };
     saveBoardData(defaultData);
     return defaultData;
   }
-  return JSON.parse(data);
+  return { ...defaultData, ...JSON.parse(data) };
 };
 const saveUnownedData = (data: UserDataUnowned) => {
   localStorage.setItem(UNOWNED_KEY, JSON.stringify(data));
