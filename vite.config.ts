@@ -36,6 +36,7 @@ export default defineConfig({
             icons: [
               {
                 src: "/icons/Item_Crayon4.png",
+                sizes: "256x256",
               },
             ],
           },
