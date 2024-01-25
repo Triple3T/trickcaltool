@@ -32,7 +32,7 @@ export default defineConfig({
           {
             name: "최상급 보드 노트",
             url: "/board",
-            description: "전체 8% 보드 현황을 체크합니다.",
+            description: "전체 스탯 % 보드 현황을 체크합니다.",
             icons: [
               {
                 src: "/icons/Item_Crayon4.png",
