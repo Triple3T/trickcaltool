@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import board from "@/data/board";
 import chara from "@/data/chara";
 import userdata from "@/utils/userdata";
 import { UserDataUnowned } from "@/types/types";
@@ -75,12 +74,12 @@ const userDataReducerMini = (
       if (!state) return state;
       return {
         u: [],
-        o: Object.keys(board),
+        o: Object.keys(chara),
       };
     case "allUnown":
       if (!state) return state;
       return {
-        u: Object.keys(board),
+        u: Object.keys(chara),
         o: [],
       };
   }
