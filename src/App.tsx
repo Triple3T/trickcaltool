@@ -46,7 +46,7 @@ function App() {
       </div>
       <div className="flex flex-col min-h-screen relative font-onemobile">
         <main className="flex flex-col flex-1 p-4 md:p-6 items-center justify-center">
-          <section className="flex flex-col items-center justify-center space-y-4 text-center pt-2 md:pt-0">
+          <section className="flex flex-col items-center justify-center space-y-4 text-center">
             <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
               트릭컬 노트
             </h2>
