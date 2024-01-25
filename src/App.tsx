@@ -66,12 +66,12 @@ function App() {
                 icon="/icons/Item_Crayon4.png"
                 to="/board"
               />
-              <MainMenuCard
+              {/* <MainMenuCard
                 title="상급 보드 노트"
                 description={<>전체 스탯 고정치 보드 현황을 체크합니다.<br />은근 필요해</>}
                 icon="/icons/Item_Crayon3.png"
                 // to="/board"
-              />
+              /> */}
               <MainMenuCard
                 title="랭크 메모장"
                 description={
@@ -85,7 +85,7 @@ function App() {
                 to="/eqrank"
                 greenIcon
               />
-              <MainMenuCard
+              {/* <MainMenuCard
                 title="교단 레벨업"
                 description={
                   <>
@@ -96,7 +96,7 @@ function App() {
                 }
                 icon="/mainlobby/HousingButton.png"
                 // to="/board"
-              />
+              /> */}
             </div>
           </section>
         </main>
