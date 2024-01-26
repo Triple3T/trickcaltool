@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -9,11 +8,11 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import chara from "@/data/chara";
 import userdata from "@/utils/userdata";
 import { UserDataUnowned } from "@/types/types";
+import SearchBox from "../common/search-with-icon";
 
 interface SelectCharaProp {
   isOpen: boolean;
@@ -117,20 +116,12 @@ const SelectChara = ({
         <Button variant="outline">{t("ui.charaSelect.title")}...</Button>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="px-4 mt-4 font-onemobile relative">
-          <Input
-            type="text"
-            placeholder={t("ui.charaSelect.searchByName")}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            inputMode="search"
-            style={{ paddingLeft: "2rem" }}
-            // icon={<Search />}
-          />
-          <div className="absolute left-6 top-1/2 -translate-y-1/2">
-            <Search className=" text-gray-500 w-5" />
-          </div>
-        </div>
+        <SearchBox
+          className="px-4 mt-4 font-onemobile"
+          value={search}
+          onValueChange={setSearch}
+          placeholder={t("ui.charaSelect.searchByName")}
+        />
         <div className="flex gap-4 p-4 w-full font-onemobile">
           <div className="w-full">
             <div className="text-lg">{t("ui.charaSelect.owned")}</div>
