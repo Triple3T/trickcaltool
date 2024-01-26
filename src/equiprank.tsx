@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
 import { ModeToggle } from "@/components/mode-toggle";
+import SearchBox from "@/components/common/search-with-icon";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useTranslation } from "react-i18next";
 import chara from "@/data/chara";
@@ -272,6 +273,7 @@ const EquipRank = () => {
   const { t } = useTranslation();
   const [rankData, dispatchRankData] = useReducer(rankDataReducer, undefined);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
@@ -514,7 +516,7 @@ const EquipRank = () => {
       {rankData && (
         <div className="font-onemobile max-w-[1920px]">
           <Tabs value={rankData.viewType} className="w-full">
-            <TabsList className="w-full flex">
+            <TabsList className={`w-full flex${rankData.dirty ? " invisible" : ""}`}>
               <TabsTrigger
                 value="input"
                 className="flex-1"
@@ -546,21 +548,30 @@ const EquipRank = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="input">
-              {rankData.dirty && (
-                <div className="w-full text-right">
-                  <Button
-                    variant="outline"
-                    onClick={() => dispatchRankData({ type: "applyminmax" })}
-                  >
-                    {t("ui.equiprank.applyMinMax")}
-                  </Button>
-                </div>
-              )}
+              <div className="my-4 flex gap-4">
+                <SearchBox
+                  className="font-onemobile flex-auto"
+                  value={search}
+                  onValueChange={setSearch}
+                  placeholder={t("ui.charaSelect.searchByName")}
+                />
+                {rankData.dirty && (
+                  <div className="flex-initial text-right">
+                    <Button
+                      variant="outline"
+                      onClick={() => dispatchRankData({ type: "applyminmax" })}
+                    >
+                      {t("ui.equiprank.applyMinMax")}
+                    </Button>
+                  </div>
+                )}
+              </div>
               <div
                 className={`border w-full p-3 sm:p-4 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(7rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-3 sm:gap-4`}
               >
                 {rankData.user.o
                   .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
+                  .filter((c) => (search ? chara[c].n.includes(search) : true))
                   .map((c) => {
                     return (
                       <div key={c} className="flex flex-col gap-1">
