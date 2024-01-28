@@ -1,4 +1,10 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -19,7 +25,7 @@ import { useTranslation } from "react-i18next";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
-import { BoardType, Personality } from "@/types/enums";
+import { StatType, Personality } from "@/types/enums";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
 
@@ -78,7 +84,7 @@ interface RankDataPropsCore {
   };
   user: UserDataEqRank & UserDataUnowned;
   viewType: "input" | "rankView" | "targetView";
-  targetStat: BoardType; // BoardType이라 써 있지만 스탯 종류
+  targetStat: StatType; // 스탯 종류
   minRank: number;
   maxRank: number;
   dirty: boolean;
@@ -149,7 +155,7 @@ const rankDataSwitchViewTypeActionHandler = (
 
 interface RankDataChangeTargetStat {
   type: "targetstat";
-  payload: BoardType;
+  payload: StatType;
 }
 
 const rankDataChangeTargetStatActionHandler = (
@@ -321,7 +327,7 @@ const EquipRank = () => {
       rankStatList.forEach((singleRankStats, i) => {
         const reqRank = i + 2;
         singleRankStats.forEach((stat) => {
-          const statType = BoardType[stat[0]];
+          const statType = StatType[stat[0]];
           const statValue = stat[1];
           if (rankStat[statType]) {
             rankStat[statType].charas.push({
@@ -350,7 +356,7 @@ const EquipRank = () => {
         charas,
         user: userData,
         viewType: "input",
-        targetStat: userData.s[2] || BoardType.AttackMagic,
+        targetStat: userData.s[2] || StatType.AttackMagic,
         minRank: userData.s[0] || 1,
         maxRank: userData.s[1] || MAX_RANK,
         dirty: Object.values(charas).some(
@@ -376,147 +382,232 @@ const EquipRank = () => {
         </div>
       </div>
       <Card className="p-4 object-cover max-w-xl mt-0 mb-4 gap-2 mx-auto font-onemobile">
-        {/* Settings */}
-        <div className="w-full flex flex-col gap-2 px-2">
-          <div className="flex flex-col gap-2">
-            <SubtitleBar>{t("ui.common.unownedCharacters")}</SubtitleBar>
-            <div>
-              <SelectChara
-                isOpen={charaDrawerOpen}
-                onOpenChange={setCharaDrawerOpen}
-                saveAndClose={saveSelectChara}
-              />
-            </div>
-          </div>
-          {rankData?.viewType === "input" && (
-            <div className="flex flex-col gap-2">
-              <SubtitleBar>{t("ui.equiprank.rankMinMax")}</SubtitleBar>
-              <div className="flex flex-col gap-1 px-4">
-                <div className="flex flex-row gap-2">
-                  <Select
-                    value={`${rankData?.minRank || 1}`}
-                    onValueChange={(v) =>
-                      dispatchRankData({ type: "minrank", payload: Number(v) })
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder={t("ui.equiprank.rankText", { 0: "1" })}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from(Array(MAX_RANK).keys()).map((i) => {
-                        return (
-                          <SelectItem key={i + 1} value={`${i + 1}`}>
-                            {t("ui.equiprank.rankText", { 0: `${i + 1}` })}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={`${rankData?.maxRank || 1}`}
-                    onValueChange={(v) =>
-                      dispatchRankData({ type: "maxrank", payload: Number(v) })
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder={t("ui.equiprank.rankText", { 0: "1" })}
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from(Array(MAX_RANK).keys()).map((i) => {
-                        return (
-                          <SelectItem key={i + 1} value={`${i + 1}`}>
-                            {t("ui.equiprank.rankText", { 0: `${i + 1}` })}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger>{t("ui.equiprank.settings")}</AccordionTrigger>
+            <AccordionContent className="text-base">
+              {/* Settings */}
+              <div className="w-full flex flex-col gap-2 px-2">
+                <div className="flex flex-col gap-2">
+                  <SubtitleBar>{t("ui.common.unownedCharacters")}</SubtitleBar>
+                  <div>
+                    <SelectChara
+                      isOpen={charaDrawerOpen}
+                      onOpenChange={setCharaDrawerOpen}
+                      saveAndClose={saveSelectChara}
+                    />
+                  </div>
                 </div>
-                <div className="text-right text-red-500 dark:text-red-400 text-sm">
-                  {t("ui.equiprank.reqLevel", {
-                    0: `${rankData?.maxRank || 1}`,
-                    1: `${eqrank.q[(rankData?.maxRank || 1) - 1]}`,
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-          <div className="flex flex-col gap-2">
-            <SubtitleBar>{t("ui.equiprank.targetStat")}</SubtitleBar>
-            <div className="px-4">
-              <Select
-                value={`${rankData?.targetStat || 0}`}
-                onValueChange={(v) =>
-                  dispatchRankData({ type: "targetstat", payload: Number(v) })
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder={t("board.AttackMagic")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {(
-                    Object.values(BoardType).filter(
-                      (b) => typeof b === "string"
-                    ) as string[]
-                  ).map((s) => {
-                    return (
-                      <SelectItem
-                        key={s}
-                        value={`${BoardType[s as keyof typeof BoardType]}`}
-                      >
-                        {t(`board.${s}`)}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
-            <div className="flex flex-row gap-2 max-w-xl w-full px-4">
-              <div className="flex-1">
-                <Button className="w-full" onClick={() => dataFileWrite()}>
-                  {t("ui.common.backUp")}
-                </Button>
-              </div>
-              <div className="flex-1">
-                <Button
-                  className="w-full"
-                  onClick={() => fileInput.current?.click()}
-                >
-                  {t("ui.common.restore")}
-                </Button>
-                <input
-                  type="file"
-                  accept=".txt"
-                  className="hidden"
-                  ref={fileInput}
-                  onChange={(e) =>
-                    dataFileRead(e.target.files).then((v) => {
-                      if (v.success) {
-                        toast.success(t("ui.index.fileSync.success"));
-                        initFromUserData();
-                      } else {
-                        toast.error(t(v.reason));
+                {rankData?.viewType === "input" && (
+                  <div className="flex flex-col gap-2">
+                    <SubtitleBar>{t("ui.equiprank.rankMinMax")}</SubtitleBar>
+                    <div className="flex flex-col gap-1 px-4">
+                      <div className="flex flex-row gap-2">
+                        <Select
+                          value={`${rankData?.minRank || 1}`}
+                          onValueChange={(v) =>
+                            dispatchRankData({
+                              type: "minrank",
+                              payload: Number(v),
+                            })
+                          }
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={t("ui.equiprank.rankText", {
+                                0: "1",
+                              })}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from(Array(MAX_RANK).keys()).map((i) => {
+                              return (
+                                <SelectItem key={i + 1} value={`${i + 1}`}>
+                                  {t("ui.equiprank.rankText", {
+                                    0: `${i + 1}`,
+                                  })}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                        <Select
+                          value={`${rankData?.maxRank || 1}`}
+                          onValueChange={(v) =>
+                            dispatchRankData({
+                              type: "maxrank",
+                              payload: Number(v),
+                            })
+                          }
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue
+                              placeholder={t("ui.equiprank.rankText", {
+                                0: "1",
+                              })}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from(Array(MAX_RANK).keys()).map((i) => {
+                              return (
+                                <SelectItem key={i + 1} value={`${i + 1}`}>
+                                  {t("ui.equiprank.rankText", {
+                                    0: `${i + 1}`,
+                                  })}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="text-right text-red-500 dark:text-red-400 text-sm">
+                        {t("ui.equiprank.reqLevel", {
+                          0: `${rankData?.maxRank || 1}`,
+                          1: `${eqrank.q[(rankData?.maxRank || 1) - 1]}`,
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex flex-col gap-2">
+                  <SubtitleBar>{t("ui.equiprank.targetStat")}</SubtitleBar>
+                  <div className="px-4">
+                    <Select
+                      value={`${rankData?.targetStat || 0}`}
+                      onValueChange={(v) =>
+                        dispatchRankData({
+                          type: "targetstat",
+                          payload: Number(v),
+                        })
                       }
-                    })
-                  }
-                />
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={t("stat.AttackMagic")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(
+                          Object.values(StatType).filter(
+                            (b) => typeof b === "string"
+                          ) as string[]
+                        ).map((s) => {
+                          return (
+                            <SelectItem
+                              key={s}
+                              value={`${StatType[s as keyof typeof StatType]}`}
+                            >
+                              {t(`stat.${s}`)}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
+                  <div className="flex flex-row gap-2 max-w-xl w-full px-4">
+                    <div className="flex-1">
+                      <Button
+                        className="w-full"
+                        onClick={() => dataFileWrite()}
+                      >
+                        {t("ui.common.backUp")}
+                      </Button>
+                    </div>
+                    <div className="flex-1">
+                      <Button
+                        className="w-full"
+                        onClick={() => fileInput.current?.click()}
+                      >
+                        {t("ui.common.restore")}
+                      </Button>
+                      <input
+                        type="file"
+                        accept=".txt"
+                        className="hidden"
+                        ref={fileInput}
+                        onChange={(e) =>
+                          dataFileRead(e.target.files).then((v) => {
+                            if (v.success) {
+                              toast.success(t("ui.index.fileSync.success"));
+                              initFromUserData();
+                            } else {
+                              toast.error(t(v.reason));
+                            }
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>
+              {t("ui.equiprank.allStatTotal")}
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
+                {rankData &&
+                  Object.entries(
+                    Object.entries(rankData.charas)
+                      .filter(([, v]) => !v.unowned)
+                      .map(([c, v]) =>
+                        eqrank.r[eqrank.c[c].r]
+                          .slice(0, v.rank - 1)
+                          .flat()
+                          .map((x) => eqrank.s[x])
+                      )
+                      .reduce((p, c) => {
+                        c.forEach((s) => {
+                          if (p[s[0]]) {
+                            p[s[0]] += s[1];
+                          } else {
+                            p[s[0]] = s[1];
+                          }
+                        });
+                        return p;
+                      }, {} as { [key: string]: number })
+                  )
+                    .sort(
+                      (a, b) =>
+                        [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][parseInt(a[0], 10)] -
+                        [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][parseInt(b[0], 10)]
+                    )
+                    .map(([statTypeNum, statValue]) => {
+                      const stat = StatType[parseInt(statTypeNum, 10)];
+                      return (
+                        <div className="flex">
+                          <div className="relative z-10">
+                            <img
+                              className="h-6 mr-2 aspect-square inline-block align-middle"
+                              src={`/icons/Icon_${stat}.png`}
+                            />
+                          </div>
+                          <div className="flex-1 -ml-8 bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
+                            <div className="text-left flex-auto">
+                              {t(`stat.${stat}`)}
+                            </div>
+                            <div className="text-right flex-auto">
+                              {statValue}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </Card>
 
       {rankData && (
         <div className="font-onemobile max-w-[1920px]">
           <Tabs value={rankData.viewType} className="w-full">
-            <TabsList className={`w-full flex${rankData.dirty ? " invisible" : ""}`}>
+            <TabsList
+              className={`w-full flex${rankData.dirty ? " invisible" : ""}`}
+            >
               <TabsTrigger
                 value="input"
                 className="flex-1"
@@ -702,7 +793,7 @@ const EquipRank = () => {
                           className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
                         >
                           {rankData.rankStat[
-                            BoardType[rankData.targetStat]
+                            StatType[rankData.targetStat]
                           ].charas
                             .filter(
                               (c) =>
@@ -766,7 +857,7 @@ const EquipRank = () => {
                                   <div className="flex flex-row gap-2 text-sm">
                                     <img
                                       src={`/icons/Icon_${
-                                        BoardType[rankData.targetStat]
+                                        StatType[rankData.targetStat]
                                       }.png`}
                                       className="w-5 h-5"
                                     />
