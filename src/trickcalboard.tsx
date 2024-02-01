@@ -554,6 +554,7 @@ const TrickcalBoard = () => {
                   <div className="px-4">
                     <ToggleGroup
                       type="multiple"
+                      className="flex-wrap"
                       value={
                         boardData?.visibleBoard.map((b) => BoardType[b]) ??
                         (Object.values(BoardType).filter(
