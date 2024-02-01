@@ -29,6 +29,7 @@ import {
   Personality,
   Position,
   Race,
+  StatType,
 } from "@/types/enums";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
@@ -91,13 +92,13 @@ const boardDataClickActionHandler = (
   const { boardIndex } = state;
   if (state.user.u.includes(action.payload.charaName)) {
     const inIfUserData = {
+      ...state.user,
       b: {
         ...state.user.b,
         [action.payload.charaName]: board.c[action.payload.charaName].b.map(
           (a) => a.map(() => 0)
         ),
       },
-      c: state.user.c,
       o: [...state.user.o, action.payload.charaName],
       u: state.user.u.filter((c) => c !== action.payload.charaName),
     };
@@ -175,10 +176,8 @@ const boardDataChangeClassificationActionHandler = (
   action: BoardDataChangeClassificationAction
 ): BoardDataProps => {
   const userData = {
-    b: state.user.b,
+    ...state.user,
     c: action.payload,
-    o: state.user.o,
-    u: state.user.u,
   };
   saveBoardData(userData);
   return {
@@ -233,14 +232,34 @@ const BoardStatStatistic = ({
   data,
 }: {
   stat: string;
-  data: BoardDataPropsBoard[];
+  data: { [key: string]: BoardDataPropsBoard[] };
 }) => {
   const { t } = useTranslation();
-  const statStatistic = data.map((d) => {
-    const cur = d.charas.filter((c) => c.checked).length;
-    const max = d.charas.length;
-    return { cur, max };
+  const statType = StatType[stat as keyof typeof StatType];
+  const statStatistic = Object.entries(data).map(([b, d]) => {
+    const boardType = BoardType[b as keyof typeof BoardType];
+    const statMult = board.b[boardType][board.s[boardType].indexOf(statType)];
+    const cur = d.map((nth) => nth.charas.filter((c) => c.checked).length);
+    const stat = d.map(
+      (nth, n) => nth.charas.filter((c) => c.checked).length * statMult[n]
+    );
+    const max = d.map((nth) => nth.charas.length);
+    return { cur, max, stat };
   });
+  const statCheckedTotal = statStatistic.reduce(
+    (a, b) => ({
+      cur: Array.from(Array(Math.max(a.cur.length, b.cur.length)).keys()).map(
+        (i) => (a.cur[i] ?? 0) + (b.cur[i] ?? 0)
+      ),
+      max: Array.from(Array(Math.max(a.max.length, b.max.length)).keys()).map(
+        (i) => (a.max[i] ?? 0) + (b.max[i] ?? 0)
+      ),
+    }),
+    {
+      cur: [] as number[],
+      max: [] as number[],
+    }
+  );
   return (
     <div className="flex">
       <div className="relative z-10">
@@ -251,35 +270,37 @@ const BoardStatStatistic = ({
       </div>
       <div className="flex flex-col flex-1 gap-1 -ml-8">
         <div className="bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
-          <div className="text-left flex-auto">{t(`board.${stat}`)}</div>
+          <div className="text-left flex-auto">{t(`stat.${stat}`)}</div>
           <div className="text-right flex-auto">
             {statStatistic.reduce(
-              (a, b, i) =>
-                a +
-                b.cur * board.b[BoardType[stat as keyof typeof BoardType]][i],
+              (a, b) => a + b.stat.reduce((a, b) => a + b, 0),
               0
             )}
             %
           </div>
         </div>
         <div className="bg-gradient-to-r from-transparent via-[#e9f5cf] dark:via-[#169a2d] via-[28px] to-[#e9f5cf] dark:to-[#169a2d] py-px pr-2.5 pl-8 rounded-r-[11px] flex flex-row gap-1 text-sm dark:contrast-125 dark:brightness-80">
-          {statStatistic.map(({ cur, max }, i) => (
-            <div key={i} className="flex-1 text-center">
-              <img
-                src={`/icons/RecordReward_Tab_${
-                  ["Easy", "Herd", "VeryHard"][i]
-                }Lv.png`}
-                className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
-              />
-              <span
-                className={`${
-                  cur === max ? "text-red-600 dark:text-red-400" : ""
-                }`}
-              >
-                {cur}
-              </span>
-            </div>
-          ))}
+          {statCheckedTotal.max.map((m, i) => {
+            const max = m;
+            const cur = statCheckedTotal.cur[i];
+            return (
+              <div key={i} className="flex-1 text-center">
+                <img
+                  src={`/icons/RecordReward_Tab_${
+                    ["Easy", "Herd", "VeryHard"][i]
+                  }Lv.png`}
+                  className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
+                />
+                <span
+                  className={`${
+                    cur === max ? "text-red-600 dark:text-red-400" : ""
+                  }`}
+                >
+                  {cur}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -390,7 +411,7 @@ const TrickcalBoard = () => {
         cb.forEach((cbi, j) => {
           const cba = cbi.toString(10).split("");
           cba.forEach((cbin, k) => {
-            boardDataSkel[i][BoardType[Number(cbin)]].charas.push({
+            boardDataSkel[i][BoardType[parseInt(cbin, 10)]].charas.push({
               name: c,
               ldx: j,
               bdx: k,
@@ -598,22 +619,32 @@ const TrickcalBoard = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
                 {boardData &&
                   (
-                    Object.values(BoardType).filter(
+                    Object.values(StatType).filter(
                       (bt) => typeof bt === "string"
                     ) as string[]
                   )
                     .sort(
                       (a, b) =>
-                        [1, 0, 7, 6, 4, 2, 5, 3, 9].indexOf(
-                          BoardType[a as keyof typeof BoardType]
-                        ) -
-                        [1, 0, 7, 6, 4, 2, 5, 3, 9].indexOf(
-                          BoardType[b as keyof typeof BoardType]
-                        )
+                        [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][
+                          StatType[a as keyof typeof StatType]
+                        ] -
+                        [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][
+                          StatType[b as keyof typeof StatType]
+                        ]
                     )
                     .map((stat) => {
-                      const data = boardData.board.map(
-                        (nthboard) => nthboard[stat]
+                      const statNum = StatType[stat as keyof typeof StatType];
+                      const includedBoards = board.s
+                        .map((s, i) => [s, i] as [number[], number])
+                        .filter(([s]) => s.includes(statNum))
+                        .map(([, i]) => i);
+                      const data = Object.fromEntries(
+                        includedBoards.map((b) => [
+                          BoardType[b],
+                          boardData.board.map(
+                            (nthboard) => nthboard[BoardType[b]]
+                          ),
+                        ])
                       );
                       return (
                         <BoardStatStatistic
@@ -933,16 +964,29 @@ const TrickcalBoard = () => {
                     </div>
                   </div>
                   <div className="flex-1 flex flex-col gap-1 mt-[-0.75px]">
-                    <div className="flex justify-end items-center">
-                      <img src={`/icons/Icon_${bt}.png`} className="h-6 mr-1" />
-                      <span>
-                        {t(`board.${bt}`)} +
-                        {currentBoard.charas.filter((c) => c.checked).length *
-                          board.b[BoardType[bt as keyof typeof BoardType]][
-                            boardData.boardIndex
-                          ]}
-                        %
-                      </span>
+                    <div className="flex flex-col">
+                      {board.s[BoardType[bt as keyof typeof BoardType]].map(
+                        (statNum, statIndex) => {
+                          const stat = StatType[statNum];
+                          return (
+                            <div key={statNum} className="flex justify-end items-center">
+                              <img
+                                src={`/icons/Icon_${stat}.png`}
+                                className="h-6 mr-1"
+                              />
+                              <span>
+                                {t(`stat.${stat}`)} +
+                                {currentBoard.charas.filter((c) => c.checked)
+                                  .length *
+                                  board.b[
+                                    BoardType[bt as keyof typeof BoardType]
+                                  ][statIndex][boardData.boardIndex]}
+                                %
+                              </span>
+                            </div>
+                          );
+                        }
+                      )}
                     </div>
                     <div className="h-1 items-stretch flex">
                       <div

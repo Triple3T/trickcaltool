@@ -1,6 +1,7 @@
 import board from "./board.json";
 export default board as {
-  b: number[][];
+  b: number[][][];
+  s: number[][];
   c: {
     [key: string]: { b: number[][] };
   };

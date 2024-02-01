@@ -1,6 +1,6 @@
 export enum BoardType {
-  AttackMagic = 0,
-  AttackPhysic = 1,
+  AttackBoth = 0,
+  // AttackPhysic = 1,
   CriticalMult = 2,
   CriticalMultResist = 3,
   CriticalRate = 4,

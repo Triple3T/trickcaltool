@@ -15,8 +15,8 @@ i18n
       ko: {
         translation: {
           board: {
-            AttackMagic: "마법 공격력",
-            AttackPhysic: "물리 공격력",
+            AttackBoth: "공격력",
+            // AttackPhysic: "물리 공격력",
             CriticalMult: "치명 피해",
             CriticalMultResist: "치명 피해 저항",
             CriticalRate: "치명타",
