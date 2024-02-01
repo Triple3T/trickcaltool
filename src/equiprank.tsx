@@ -809,78 +809,76 @@ const EquipRank = () => {
                                       c.reqRank === rank &&
                                       rankData.user.o.includes(c.chara)
                                   )
-                                  .sort((a, b) => {
-                                    const aRank =
-                                      rankData.charas[a.chara]!.rank;
-                                    const bRank =
-                                      rankData.charas[b.chara]!.rank;
-                                    const aSort = (aRank + 99 - rank) % 99;
-                                    const bSort = (bRank + 99 - rank) % 99;
-                                    return aRank !== bRank
-                                      ? bSort - aSort
-                                      : chara[a.chara].n.localeCompare(
-                                          chara[b.chara].n
-                                        );
-                                  })
-                                  .map((c) => {
-                                    return (
-                                      <div
-                                        key={`${c.chara}-${c.reqRank}-${stat}`}
-                                        className={`min-w-14 sm:min-w-16`}
-                                      >
-                                        <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
-                                          {rank <=
-                                            rankData.charas[c.chara].rank && (
-                                            <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
-                                              <img
-                                                src="/icons/Stage_RewardChack.png"
-                                                className="w-100 opacity-100"
-                                              />
-                                            </div>
-                                          )}
-                                          <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
-                                            <img
-                                              src={`/charas/${c.chara}.png`}
-                                              className={`${
-                                                personalityBG[
-                                                  Number(
-                                                    chara[c.chara].t[0]
-                                                  ) as Personality
-                                                ]
-                                              } aspect-square w-full${
-                                                rank >
-                                                rankData.charas[c.chara].rank
-                                                  ? ""
-                                                  : " opacity-60"
-                                              }`}
-                                            />
-                                          </div>
-                                        </div>
-                                        <div
-                                          className={`${
-                                            rankClassNames[
-                                              rankData.charas[c.chara].rank - 1
-                                            ][1]
-                                          } text-sm w-full`}
-                                        >
-                                          {t("ui.equiprank.rankText", {
-                                            0: `${
-                                              rankData.charas[c.chara].rank
-                                            }`,
-                                          })}
-                                        </div>
-                                        <div className="flex flex-row gap-2 text-sm">
-                                          <img
-                                            src={`/icons/Icon_${StatType[stat]}.png`}
-                                            className="w-5 h-5"
-                                          />
-                                          <div>+{c.statValue}</div>
-                                        </div>
-                                      </div>
-                                    );
-                                  })
+                                  .map((c) => ({ stat, c }))
                               )
-                              .flat()}
+                              .flat()
+                              .sort((a, b) => {
+                                const aRank =
+                                  rankData.charas[a.c.chara]!.rank;
+                                const bRank =
+                                  rankData.charas[b.c.chara]!.rank;
+                                const aSort = (aRank + 99 - rank) % 99;
+                                const bSort = (bRank + 99 - rank) % 99;
+                                return aRank !== bRank
+                                  ? bSort - aSort
+                                  : (a.stat-b.stat) || chara[a.c.chara].n.localeCompare(
+                                      chara[b.c.chara].n
+                                    );
+                              })
+                              .map(({ stat, c }) => {
+                                return (
+                                  <div
+                                    key={`${c.chara}-${c.reqRank}-${stat}`}
+                                    className={`min-w-14 sm:min-w-16`}
+                                  >
+                                    <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
+                                      {rank <=
+                                        rankData.charas[c.chara].rank && (
+                                        <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
+                                          <img
+                                            src="/icons/Stage_RewardChack.png"
+                                            className="w-100 opacity-100"
+                                          />
+                                        </div>
+                                      )}
+                                      <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
+                                        <img
+                                          src={`/charas/${c.chara}.png`}
+                                          className={`${
+                                            personalityBG[
+                                              Number(
+                                                chara[c.chara].t[0]
+                                              ) as Personality
+                                            ]
+                                          } aspect-square w-full${
+                                            rank > rankData.charas[c.chara].rank
+                                              ? ""
+                                              : " opacity-60"
+                                          }`}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div
+                                      className={`${
+                                        rankClassNames[
+                                          rankData.charas[c.chara].rank - 1
+                                        ][1]
+                                      } text-sm w-full`}
+                                    >
+                                      {t("ui.equiprank.rankText", {
+                                        0: `${rankData.charas[c.chara].rank}`,
+                                      })}
+                                    </div>
+                                    <div className="flex flex-row gap-2 text-sm">
+                                      <img
+                                        src={`/icons/Icon_${StatType[stat]}.png`}
+                                        className="w-5 h-5"
+                                      />
+                                      <div>+{c.statValue}</div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
                           </div>
                         </div>
                       );
