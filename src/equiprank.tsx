@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -84,7 +85,7 @@ interface RankDataPropsCore {
   };
   user: UserDataEqRank & UserDataUnowned;
   viewType: "input" | "rankView" | "targetView";
-  targetStat: StatType; // 스탯 종류
+  targetStat: StatType[]; // 스탯 종류
   minRank: number;
   maxRank: number;
   dirty: boolean;
@@ -93,8 +94,8 @@ interface RankDataPropsCore {
 type RankDataProps = RankDataPropsCore | undefined;
 
 const saveUserData = (rankData: UserDataEqRank & UserDataUnowned) => {
-  const { r, o, u, s } = rankData;
-  userdata.eqrank.save({ r, s });
+  const { r, o, u, s, v } = rankData;
+  userdata.eqrank.save({ r, s, v });
   userdata.unowned.save({ o, u });
 };
 
@@ -154,8 +155,8 @@ const rankDataSwitchViewTypeActionHandler = (
 };
 
 interface RankDataChangeTargetStat {
-  type: "targetstat";
-  payload: StatType;
+  type: "targetstats";
+  payload: StatType[];
 }
 
 const rankDataChangeTargetStatActionHandler = (
@@ -164,7 +165,7 @@ const rankDataChangeTargetStatActionHandler = (
 ) => {
   const userData = {
     ...state.user,
-    s: [state.minRank, state.maxRank, action.payload],
+    v: action.payload,
   };
   saveUserData(userData);
   return {
@@ -223,7 +224,7 @@ const rankDataApplyMinMaxActionHandler = (
         Math.min(Math.max(v.rank, state.minRank), state.maxRank),
       ])
     ),
-    s: [state.minRank, state.maxRank, state.targetStat],
+    s: [state.minRank, state.maxRank],
   };
   saveUserData(userData);
   return {
@@ -264,7 +265,7 @@ const rankDataReducer = (
       return rankDataCharaRankModifyActionHandler(state, action);
     case "viewtype":
       return rankDataSwitchViewTypeActionHandler(state, action);
-    case "targetstat":
+    case "targetstats":
       return rankDataChangeTargetStatActionHandler(state, action);
     case "minrank":
       return rankDataChangeMinRankActionHandler(state, action);
@@ -356,7 +357,7 @@ const EquipRank = () => {
         charas,
         user: userData,
         viewType: "input",
-        targetStat: userData.s[2] || StatType.AttackMagic,
+        targetStat: userData.v || [],
         minRank: userData.s[0] || 1,
         maxRank: userData.s[1] || MAX_RANK,
         dirty: Object.values(charas).some(
@@ -472,35 +473,38 @@ const EquipRank = () => {
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.equiprank.targetStat")}</SubtitleBar>
                   <div className="px-4">
-                    <Select
-                      value={`${rankData?.targetStat || 0}`}
-                      onValueChange={(v) =>
+                    <ToggleGroup
+                      type="multiple"
+                      className="flex-wrap"
+                      value={rankData?.targetStat.map((b) => StatType[b]) ?? []}
+                      onValueChange={(v) => {
                         dispatchRankData({
-                          type: "targetstat",
-                          payload: Number(v),
-                        })
-                      }
+                          type: "targetstats",
+                          payload: v.map(
+                            (b) => StatType[b as keyof typeof StatType]
+                          ),
+                        });
+                      }}
                     >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder={t("stat.AttackMagic")} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {(
-                          Object.values(StatType).filter(
-                            (b) => typeof b === "string"
-                          ) as string[]
-                        ).map((s) => {
-                          return (
-                            <SelectItem
-                              key={s}
-                              value={`${StatType[s as keyof typeof StatType]}`}
-                            >
-                              {t(`stat.${s}`)}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
+                      {(
+                        Object.values(StatType).filter(
+                          (b) => typeof b === "string"
+                        ) as string[]
+                      ).map((bt) => {
+                        return (
+                          <ToggleGroupItem
+                            key={bt}
+                            value={bt}
+                            aria-label={`Toggle ${bt}`}
+                          >
+                            <img
+                              src={`/icons/Icon_${bt}.png`}
+                              className="h-6 w-6 aspect-square"
+                            />
+                          </ToggleGroupItem>
+                        );
+                      })}
+                    </ToggleGroup>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -778,98 +782,110 @@ const EquipRank = () => {
             </TabsContent>
             <TabsContent value="targetView">
               <div className="flex flex-col gap-4">
-                {rankClassNames
-                  .slice(1, rankData.maxRank)
-                  .map((s, i) => ({ rank: i + 2, bg: s[0], txt: s[1] }))
-                  .reverse()
-                  .map((s) => {
-                    const { rank, bg, txt } = s;
-                    return (
-                      <div key={bg}>
-                        <div className={`${txt} text-lg w-full text-left`}>
-                          {t("ui.equiprank.rankText", { 0: `${rank}` })}
-                        </div>
-                        <div
-                          className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
-                        >
-                          {rankData.rankStat[
-                            StatType[rankData.targetStat]
-                          ].charas
-                            .filter(
-                              (c) =>
-                                c.reqRank === rank &&
-                                rankData.user.o.includes(c.chara)
-                            )
-                            .sort((a, b) => {
-                              const aRank = rankData.charas[a.chara]!.rank;
-                              const bRank = rankData.charas[b.chara]!.rank;
-                              const aSort = (aRank + 99 - rank) % 99;
-                              const bSort = (bRank + 99 - rank) % 99;
-                              return aRank !== bRank
-                                ? bSort - aSort
-                                : chara[a.chara].n.localeCompare(
-                                    chara[b.chara].n
-                                  );
-                            })
-                            .map((c) => {
-                              return (
-                                <div
-                                  key={c.chara}
-                                  className={`min-w-14 sm:min-w-16`}
-                                >
-                                  <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
-                                    {rank <= rankData.charas[c.chara].rank && (
-                                      <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
-                                        <img
-                                          src="/icons/Stage_RewardChack.png"
-                                          className="w-100 opacity-100"
-                                        />
+                {rankData.targetStat.length < 1 ? (
+                  <div className="p-4 text-red-500 dark:text-red-400">
+                    {t("ui.equiprank.shouldSetTargetStat")}
+                  </div>
+                ) : (
+                  rankClassNames
+                    .slice(1, rankData.maxRank)
+                    .map((s, i) => ({ rank: i + 2, bg: s[0], txt: s[1] }))
+                    .reverse()
+                    .map((s) => {
+                      const { rank, bg, txt } = s;
+                      return (
+                        <div key={bg}>
+                          <div className={`${txt} text-lg w-full text-left`}>
+                            {t("ui.equiprank.rankText", { 0: `${rank}` })}
+                          </div>
+                          <div
+                            className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
+                          >
+                            {rankData.targetStat
+                              .map((stat) =>
+                                rankData.rankStat[StatType[stat]].charas
+                                  .filter(
+                                    (c) =>
+                                      c.reqRank === rank &&
+                                      rankData.user.o.includes(c.chara)
+                                  )
+                                  .sort((a, b) => {
+                                    const aRank =
+                                      rankData.charas[a.chara]!.rank;
+                                    const bRank =
+                                      rankData.charas[b.chara]!.rank;
+                                    const aSort = (aRank + 99 - rank) % 99;
+                                    const bSort = (bRank + 99 - rank) % 99;
+                                    return aRank !== bRank
+                                      ? bSort - aSort
+                                      : chara[a.chara].n.localeCompare(
+                                          chara[b.chara].n
+                                        );
+                                  })
+                                  .map((c) => {
+                                    return (
+                                      <div
+                                        key={`${c.chara}-${c.reqRank}-${stat}`}
+                                        className={`min-w-14 sm:min-w-16`}
+                                      >
+                                        <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
+                                          {rank <=
+                                            rankData.charas[c.chara].rank && (
+                                            <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
+                                              <img
+                                                src="/icons/Stage_RewardChack.png"
+                                                className="w-100 opacity-100"
+                                              />
+                                            </div>
+                                          )}
+                                          <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
+                                            <img
+                                              src={`/charas/${c.chara}.png`}
+                                              className={`${
+                                                personalityBG[
+                                                  Number(
+                                                    chara[c.chara].t[0]
+                                                  ) as Personality
+                                                ]
+                                              } aspect-square w-full${
+                                                rank >
+                                                rankData.charas[c.chara].rank
+                                                  ? ""
+                                                  : " opacity-60"
+                                              }`}
+                                            />
+                                          </div>
+                                        </div>
+                                        <div
+                                          className={`${
+                                            rankClassNames[
+                                              rankData.charas[c.chara].rank - 1
+                                            ][1]
+                                          } text-sm w-full`}
+                                        >
+                                          {t("ui.equiprank.rankText", {
+                                            0: `${
+                                              rankData.charas[c.chara].rank
+                                            }`,
+                                          })}
+                                        </div>
+                                        <div className="flex flex-row gap-2 text-sm">
+                                          <img
+                                            src={`/icons/Icon_${StatType[stat]}.png`}
+                                            className="w-5 h-5"
+                                          />
+                                          <div>+{c.statValue}</div>
+                                        </div>
                                       </div>
-                                    )}
-                                    <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
-                                      <img
-                                        src={`/charas/${c.chara}.png`}
-                                        className={`${
-                                          personalityBG[
-                                            Number(
-                                              chara[c.chara].t[0]
-                                            ) as Personality
-                                          ]
-                                        } aspect-square w-full${
-                                          rank > rankData.charas[c.chara].rank
-                                            ? ""
-                                            : " opacity-60"
-                                        }`}
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    className={`${
-                                      rankClassNames[
-                                        rankData.charas[c.chara].rank - 1
-                                      ][1]
-                                    } text-sm w-full`}
-                                  >
-                                    {t("ui.equiprank.rankText", {
-                                      0: `${rankData.charas[c.chara].rank}`,
-                                    })}
-                                  </div>
-                                  <div className="flex flex-row gap-2 text-sm">
-                                    <img
-                                      src={`/icons/Icon_${
-                                        StatType[rankData.targetStat]
-                                      }.png`}
-                                      className="w-5 h-5"
-                                    />
-                                    <div>+{c.statValue}</div>
-                                  </div>
-                                </div>
-                              );
-                            })}
+                                    );
+                                  })
+                              )
+                              .flat()}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                )}
               </div>
             </TabsContent>
           </Tabs>

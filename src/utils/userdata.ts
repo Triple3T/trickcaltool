@@ -12,6 +12,7 @@ const loadBoardData = (): UserDataBoard => {
   const defaultData = {
     b: {},
     c: 0,
+    v: [0, 2, 3, 4, 5, 6, 7, 9],
   };
   if (!data) {
     saveBoardData(defaultData);
@@ -27,6 +28,7 @@ const loadEqRankData = (): UserDataEqRank => {
   const defaultData = {
     r: {},
     s: [0, 0, 0],
+    v: [],
   };
   if (!data) {
     saveEqRankData(defaultData);

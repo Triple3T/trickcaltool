@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -55,13 +56,14 @@ interface BoardDataPropsCore {
   }[]; // [1차보드, 2차보드, 3차보드]
   user: UserDataBoard & UserDataUnowned;
   boardIndex: number;
+  visibleBoard: BoardType[];
 }
 
 type BoardDataProps = BoardDataPropsCore | undefined;
 
 const saveBoardData = (boardData: UserDataBoard & UserDataUnowned) => {
-  const { b, c, o, u } = boardData;
-  userdata.board.save({ b, c });
+  const { b, c, o, u, v } = boardData;
+  userdata.board.save({ b, c, v });
   userdata.unowned.save({ o, u });
 };
 
@@ -186,6 +188,27 @@ const boardDataChangeClassificationActionHandler = (
   };
 };
 
+interface boardDataChangeVisibleBoardAction {
+  type: "visible";
+  payload: BoardType[];
+}
+
+const boardDataChangeVisibleBoardActionHandler = (
+  state: NonNullable<BoardDataProps>,
+  action: boardDataChangeVisibleBoardAction
+): BoardDataProps => {
+  const userData = {
+    ...state.user,
+    v: action.payload,
+  };
+  saveBoardData(userData);
+  return {
+    ...state,
+    visibleBoard: action.payload,
+    user: userData,
+  };
+};
+
 interface BoardDataChangeIndex {
   type: "index";
   payload: number;
@@ -205,6 +228,7 @@ type BoardDataReduceAction =
   | BoardDataRestoreAction
   | BoardDataClickAction
   | BoardDataChangeClassificationAction
+  | boardDataChangeVisibleBoardAction
   | BoardDataChangeIndex;
 
 const boardDataReducer = (
@@ -220,6 +244,8 @@ const boardDataReducer = (
       return boardDataClickActionHandler(state, action);
     case "classification":
       return boardDataChangeClassificationActionHandler(state, action);
+    case "visible":
+      return boardDataChangeVisibleBoardActionHandler(state, action);
     case "index":
       return boardDataChangeIndexActionHandler(state, action);
     default:
@@ -432,6 +458,7 @@ const TrickcalBoard = () => {
         board: boardDataSkel,
         user: userData,
         boardIndex: 0,
+        visibleBoard: userData.v,
       },
     });
   }, []);
@@ -467,7 +494,7 @@ const TrickcalBoard = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <SubtitleBar>{t("ui.board.selectBoard")}</SubtitleBar>
+                  <SubtitleBar>{t("ui.board.selectBoardIndex")}</SubtitleBar>
                   <div className="w-full px-4">
                     <Tabs
                       value={`${boardData?.boardIndex ?? 0}`}
@@ -520,6 +547,47 @@ const TrickcalBoard = () => {
                         &nbsp;
                       </div>
                     )}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <SubtitleBar>{t("ui.board.selectBoardType")}</SubtitleBar>
+                  <div className="px-4">
+                    <ToggleGroup
+                      type="multiple"
+                      value={
+                        boardData?.visibleBoard.map((b) => BoardType[b]) ??
+                        (Object.values(BoardType).filter(
+                          (b) => typeof b === "string"
+                        ) as string[])
+                      }
+                      onValueChange={(v) => {
+                        dispatchBoardData({
+                          type: "visible",
+                          payload: v.map(
+                            (b) => BoardType[b as keyof typeof BoardType]
+                          ),
+                        });
+                      }}
+                    >
+                      {(
+                        Object.values(BoardType).filter(
+                          (b) => typeof b === "string"
+                        ) as string[]
+                      ).map((bt) => {
+                        return (
+                          <ToggleGroupItem
+                            key={bt}
+                            value={bt}
+                            aria-label={`Toggle ${bt}`}
+                          >
+                            <img
+                              src={`/boards/Tile_${bt}On.png`}
+                              className="h-6 w-6 aspect-square"
+                            />
+                          </ToggleGroupItem>
+                        );
+                      })}
+                    </ToggleGroup>
                   </div>
                 </div>
                 {/* <div className="flex flex-col gap-2">
@@ -675,7 +743,9 @@ const TrickcalBoard = () => {
         <div className="font-onemobile max-w-[1920px] columns-1 md:columns-2 lg:columns-3 gap-4 p-4">
           {(
             Object.values(BoardType).filter(
-              (bt) => typeof bt === "string"
+              (bt) =>
+                typeof bt === "string" &&
+                boardData.visibleBoard.includes(BoardType[bt as keyof typeof BoardType])
             ) as string[]
           ).map((bt) => {
             const currentBoard = boardData.board[boardData.boardIndex][bt];
@@ -969,7 +1039,10 @@ const TrickcalBoard = () => {
                         (statNum, statIndex) => {
                           const stat = StatType[statNum];
                           return (
-                            <div key={statNum} className="flex justify-end items-center">
+                            <div
+                              key={statNum}
+                              className="flex justify-end items-center"
+                            >
                               <img
                                 src={`/icons/Icon_${stat}.png`}
                                 className="h-6 mr-1"
