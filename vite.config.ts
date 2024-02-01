@@ -16,7 +16,7 @@ export default defineConfig({
         short_name: "트릭컬 노트",
         description: "내 성장 현황 메모하기",
         lang: "ko",
-        orientation: "any",
+        orientation: "natural",
         dir: "ltr",
         theme_color: "#a2dd73",
         background_color: "#09090b",
