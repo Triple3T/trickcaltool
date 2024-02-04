@@ -494,62 +494,6 @@ const TrickcalBoard = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <SubtitleBar>{t("ui.board.selectBoardIndex")}</SubtitleBar>
-                  <div className="w-full px-4">
-                    <Tabs
-                      value={`${boardData?.boardIndex ?? 0}`}
-                      className="w-full"
-                    >
-                      <TabsList className="w-full flex">
-                        {Array.from(Array(3).keys()).map((v) => {
-                          const isCompleted = Object.values(board.c).every(
-                            (b) => b.b[v] && b.b[v].length
-                          );
-                          return (
-                            <TabsTrigger
-                              key={v}
-                              value={`${v}`}
-                              className="flex-1"
-                              onClick={() =>
-                                dispatchBoardData({ type: "index", payload: v })
-                              }
-                            >
-                              <div>{t(`ui.board.board${v + 1}`)}</div>
-                              {!isCompleted && (
-                                <div className="text-red-700 dark:text-red-400">
-                                  *
-                                </div>
-                              )}
-                            </TabsTrigger>
-                          );
-                        })}
-                      </TabsList>
-                    </Tabs>
-
-                    {!Object.values(board.c).every(
-                      (b) =>
-                        b.b[boardData?.boardIndex ?? 0] &&
-                        b.b[boardData?.boardIndex ?? 0].length
-                    ) ? (
-                      <div className="mt-1 text-sm text-red-700 dark:text-red-400 w-full text-right">
-                        *
-                        {t("ui.board.dataIncompleteStatus", {
-                          0: Object.values(board.c).filter(
-                            (b) =>
-                              b.b[boardData?.boardIndex ?? 0] &&
-                              b.b[boardData?.boardIndex ?? 0].length
-                          ).length,
-                          1: Object.values(board).length,
-                        })}
-                      </div>
-                    ) : (
-                      <div className="mt-1 text-sm text-red-700 dark:text-red-400">
-                        &nbsp;
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.selectBoardType")}</SubtitleBar>
                   <div className="px-4">
                     <ToggleGroup
@@ -740,8 +684,60 @@ const TrickcalBoard = () => {
           </AccordionItem>
         </Accordion>
       </Card>
+      <div className="w-full font-onemobile">
+        <Tabs
+          value={`${boardData?.boardIndex ?? 0}`}
+          className="w-full"
+        >
+          <TabsList className="w-full flex">
+            {Array.from(Array(3).keys()).map((v) => {
+              const isCompleted = Object.values(board.c).every(
+                (b) => b.b[v] && b.b[v].length
+              );
+              return (
+                <TabsTrigger
+                  key={v}
+                  value={`${v}`}
+                  className="flex-1"
+                  onClick={() =>
+                    dispatchBoardData({ type: "index", payload: v })
+                  }
+                >
+                  <div>{t(`ui.board.board${v + 1}`)}</div>
+                  {!isCompleted && (
+                    <div className="text-red-700 dark:text-red-400">
+                      *
+                    </div>
+                  )}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+        </Tabs>
+        {!Object.values(board.c).every(
+          (b) =>
+            b.b[boardData?.boardIndex ?? 0] &&
+            b.b[boardData?.boardIndex ?? 0].length
+        ) ? (
+          <div className="mt-1 text-sm text-red-700 dark:text-red-400 w-full text-right">
+            *
+            {t("ui.board.dataIncompleteStatus", {
+              0: Object.values(board.c).filter(
+                (b) =>
+                  b.b[boardData?.boardIndex ?? 0] &&
+                  b.b[boardData?.boardIndex ?? 0].length
+              ).length,
+              1: Object.values(board.c).length,
+            })}
+          </div>
+        ) : (
+          <div className="mt-1 text-sm text-red-700 dark:text-red-400">
+            &nbsp;
+          </div>
+        )}
+      </div>
       {boardData && (
-        <div className="font-onemobile max-w-[1920px] columns-1 md:columns-2 lg:columns-3 gap-4 p-4">
+        <div className="font-onemobile max-w-[1920px] columns-1 md:columns-2 lg:columns-3 gap-4 py-4">
           {(
             Object.values(BoardType).filter(
               (bt) =>

@@ -97,7 +97,7 @@ i18n
               board2: "2차 보드",
               board3: "3차 보드",
               settings: "설정",
-              selectBoardIndex: "보드 차수 선택",
+              // selectBoardIndex: "보드 차수 선택",
               selectBoardType: "보드 종류 선택",
               mainClassification: "대분류",
               subClassification: "소분류",
