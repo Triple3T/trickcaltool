@@ -57,3 +57,11 @@ export enum Race {
   Spirit = 5,
   Witch = 6,
 }
+
+export enum LabEffectCategory {
+  Donation = 0,
+  Production = 1,
+  Schedule = 2,
+  Restaurant = 3,
+  Battle = 4,
+}

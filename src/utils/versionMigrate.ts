@@ -7,7 +7,8 @@ const sigConvert = (fdt: string, sig: string) => {
     const board = { b: d.b ?? {}, c: d.c || 0 };
     const eqrank = { r: {}, s: [0, 0, 0] };
     const unowned = { o: Object.keys(d.b ?? {}), u: d.u ?? [] };
-    return { board, eqrank, unowned };
+    const lab = { 1: 0, 2: 0 };
+    return { board, eqrank, unowned, lab };
   }
 };
 export default sigConvert;

@@ -24,11 +24,12 @@ export const dataFileWrite = () => {
   const bdtp = userdata.board.load();
   const rdtp = userdata.eqrank.load();
   const udtp = userdata.unowned.load();
-  if (!bdtp || !rdtp || !udtp) {
+  const ldtp = userdata.lab.load();
+  if (!bdtp || !rdtp || !udtp || !ldtp) {
     console.error("No user data found");
     throw Error();
   }
-  const rdt = JSON.stringify({ board: bdtp, eqrank: rdtp, unowned: udtp });
+  const rdt = JSON.stringify({ board: bdtp, eqrank: rdtp, unowned: udtp, lab: ldtp });
   // input: 3 * 8(UTF-8), output: 4 * 6(A-Za-z0-9+/).
   const bdt = rdt.split("").map((c) => c.charCodeAt(0));
   const b64grplen = Math.ceil(bdt.length / 3);
@@ -138,6 +139,7 @@ export const dataFileRead = async (files: FileList | null): Promise<DataReadResu
         userdata.board.save(fdt.board);
         userdata.eqrank.save(fdt.eqrank);
         userdata.unowned.save(fdt.unowned);
+        userdata.lab.save(fdt.lab);
         return { success: true };
       }
     } else {

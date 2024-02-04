@@ -1,12 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 import App from "./App";
 import "./index.css";
 import "./font.css";
 import TrickcalBoard from "./trickcalboard";
 import EquipRank from "./equiprank";
+import Lab from "./lab";
 
 import "@/locale/localize";
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/eqrank",
     element: <EquipRank />,
+  },
+  {
+    path: "/lab",
+    element: <Lab />,
   },
 ]);
 

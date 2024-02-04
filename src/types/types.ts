@@ -14,4 +14,8 @@ export interface UserDataUnowned {
   o: string[]; // 보유 캐릭터 목록
   u: string[]; // 미보유 캐릭터 목록
 }
+export interface UserDataLab {
+  1: number;
+  2: number;
+}
 export type UserDataVersion = string;

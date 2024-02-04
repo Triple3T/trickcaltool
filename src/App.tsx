@@ -76,7 +76,7 @@ function App() {
                 title="랭크 메모장"
                 description={
                   <>
-                    사도들의 장비 랭크를 메모해 둡니다.
+                    사도들의 장비 랭크를 메모합니다.
                     <br />
                     메모 안 하면 헷갈려
                   </>
@@ -85,18 +85,18 @@ function App() {
                 to="/eqrank"
                 greenIcon
               />
-              {/* <MainMenuCard
+              <MainMenuCard
                 title="교단 레벨업"
                 description={
                   <>
-                    교단의 각종 레벨업 현황을 체크합니다.
+                    교단의 연구 현황을 체크합니다.
                     <br />
                     루포야 일하자
                   </>
                 }
                 icon="/mainlobby/HousingButton.png"
-                // to="/board"
-              /> */}
+                to="/lab"
+              />
             </div>
           </section>
         </main>
