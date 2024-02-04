@@ -276,6 +276,12 @@ const Lab = () => {
                               }.png`}
                             />
                           </div>
+                          <div className="w-6 h-6 inline-flex align-middle">
+                            <img
+                              className="w-full aspect-square"
+                              src={`/icons/Icon_${StatType[vt.s]}.png`}
+                            />
+                          </div>
                           <div className="flex-1">
                             {t(`lab.effect.${vt.e}`, {
                               0: Object.keys(vt.v)[0],
@@ -298,6 +304,12 @@ const Lab = () => {
                             src={`/lab/Icon_${
                               LabEffectCategory[Math.floor(vt.e / 10)]
                             }.png`}
+                          />
+                        </div>
+                        <div className="w-6 h-6 inline-flex align-middle">
+                          <img
+                            className="w-full aspect-square"
+                            src={`/icons/Icon_${StatType[vt.s]}.png`}
                           />
                         </div>
                         <div className="flex-1">
