@@ -670,7 +670,7 @@ const EquipRank = () => {
                   .map((c) => {
                     return (
                       <div key={c} className="flex flex-col gap-1">
-                        <div className="min-w-28 min-h-28 sm:min-w-32 sm:min-h-32 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden">
+                        <div className="min-w-28 min-h-28 sm:min-w-32 sm:min-h-32 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                           <img
                             src={`/charas/${c}.png`}
                             className={`${
@@ -679,6 +679,9 @@ const EquipRank = () => {
                               ]
                             } aspect-square w-full`}
                           />
+                          <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-sm text-center py-0.5">
+                            {chara[c].n}
+                          </div>
                         </div>
                         <div className="flex flex-row gap-2 pl-2 pr-1 py-1 rounded bg-slate-400 dark:bg-slate-600">
                           <Slider
