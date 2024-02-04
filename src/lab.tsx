@@ -204,7 +204,7 @@ const Lab = () => {
   const [labData, dispatchLabData] = useReducer(labDataReducer, undefined);
   const [materialDepth, setMaterialDepth] = useState<
     "indexDepth1" | "indexDepth2"
-  >("indexDepth1");
+  >("indexDepth2");
   const [page, setPage] = useState(0);
 
   const initFromUserData = useCallback(() => {
@@ -359,18 +359,18 @@ const Lab = () => {
               <Tabs value={materialDepth} className="w-full">
                 <TabsList className="w-full flex">
                   <TabsTrigger
-                    value="indexDepth1"
-                    className="flex-1"
-                    onClick={() => setMaterialDepth("indexDepth1")}
-                  >
-                    <div>{t("lab.remainMaterialsDepth1")}</div>
-                  </TabsTrigger>
-                  <TabsTrigger
                     value="indexDepth2"
                     className="flex-1"
                     onClick={() => setMaterialDepth("indexDepth2")}
                   >
                     <div>{t("lab.remainMaterialsDepth2")}</div>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="indexDepth1"
+                    className="flex-1"
+                    onClick={() => setMaterialDepth("indexDepth1")}
+                  >
+                    <div>{t("lab.remainMaterialsDepth1")}</div>
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
