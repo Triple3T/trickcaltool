@@ -43,11 +43,22 @@ export default defineConfig({
           {
             name: "랭크 메모장",
             url: "/eqrank",
-            description: "사도들의 장비 랭크를 메모해 둡니다.",
+            description: "사도들의 장비 랭크를 메모합니다.",
             icons: [
               {
                 src: "/itemslot/Tab_Equip_Default.png",
                 sizes: "120x120",
+              },
+            ],
+          },
+          {
+            name: "교단 연구 노트",
+            url: "/lab",
+            description: "교단의 연구 현황을 체크합니다.",
+            icons: [
+              {
+                src: "/mainlobby/HousingButton.png",
+                sizes: "144x144",
               },
             ],
           },

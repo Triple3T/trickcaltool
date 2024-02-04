@@ -86,7 +86,7 @@ function App() {
                 greenIcon
               />
               <MainMenuCard
-                title="교단 레벨업"
+                title="교단 연구 노트"
                 description={
                   <>
                     교단의 연구 현황을 체크합니다.
