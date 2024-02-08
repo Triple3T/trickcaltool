@@ -495,6 +495,42 @@ const TrickcalBoard = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.selectBoardType")}</SubtitleBar>
+                  <div className="px-4 flex gap-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        dispatchBoardData({
+                          type: "visible",
+                          payload: (
+                            Object.values(BoardType).filter(
+                              (b) => typeof b === "string"
+                            ) as string[]
+                          ).map((b) => BoardType[b as keyof typeof BoardType]),
+                        })
+                      }
+                    >
+                      {t("ui.board.selectBoardTypeAll")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        dispatchBoardData({
+                          type: "visible",
+                          payload: [
+                            BoardType.AttackBoth,
+                            BoardType.CriticalRate,
+                            BoardType.Hp,
+                          ],
+                        })
+                      }
+                    >
+                      {t("ui.board.selectBoardTypeRecommended")}
+                    </Button>
+                  </div>
                   <div className="px-4">
                     <ToggleGroup
                       type="multiple"
@@ -685,10 +721,7 @@ const TrickcalBoard = () => {
         </Accordion>
       </Card>
       <div className="w-full font-onemobile">
-        <Tabs
-          value={`${boardData?.boardIndex ?? 0}`}
-          className="w-full"
-        >
+        <Tabs value={`${boardData?.boardIndex ?? 0}`} className="w-full">
           <TabsList className="w-full flex">
             {Array.from(Array(3).keys()).map((v) => {
               const isCompleted = Object.values(board.c).every(
@@ -705,9 +738,7 @@ const TrickcalBoard = () => {
                 >
                   <div>{t(`ui.board.board${v + 1}`)}</div>
                   {!isCompleted && (
-                    <div className="text-red-700 dark:text-red-400">
-                      *
-                    </div>
+                    <div className="text-red-700 dark:text-red-400">*</div>
                   )}
                 </TabsTrigger>
               );
@@ -742,7 +773,9 @@ const TrickcalBoard = () => {
             Object.values(BoardType).filter(
               (bt) =>
                 typeof bt === "string" &&
-                boardData.visibleBoard.includes(BoardType[bt as keyof typeof BoardType])
+                boardData.visibleBoard.includes(
+                  BoardType[bt as keyof typeof BoardType]
+                )
             ) as string[]
           ).map((bt) => {
             const currentBoard = boardData.board[boardData.boardIndex][bt];
