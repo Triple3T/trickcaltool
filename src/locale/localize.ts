@@ -136,6 +136,8 @@ i18n
               settings: "설정",
               allStatTotal: "전체 적용 스탯 총합",
               targetStat: "목표 스탯",
+              selectTargetStatAll: "모두 표시",
+              selectTargetStatRecommended: "추천 설정",
               shouldSetTargetStat: "목표 스탯을 먼저 설정해주세요!",
               input: "랭크 입력",
               rankView: "랭크 보기",

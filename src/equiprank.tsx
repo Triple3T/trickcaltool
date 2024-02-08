@@ -472,6 +472,42 @@ const EquipRank = () => {
                 )}
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.equiprank.targetStat")}</SubtitleBar>
+                  <div className="px-4 flex gap-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        dispatchRankData({
+                          type: "targetstats",
+                          payload: (
+                            Object.values(StatType).filter(
+                              (b) => typeof b === "string"
+                            ) as string[]
+                          ).map((b) => StatType[b as keyof typeof StatType]),
+                        })
+                      }
+                    >
+                      {t("ui.equiprank.selectTargetStatAll")}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() =>
+                        dispatchRankData({
+                          type: "targetstats",
+                          payload: [
+                            StatType.AttackMagic,
+                            StatType.AttackPhysic,
+                            StatType.Hp,
+                          ],
+                        })
+                      }
+                    >
+                      {t("ui.equiprank.selectTargetStatRecommended")}
+                    </Button>
+                  </div>
                   <div className="px-4">
                     <ToggleGroup
                       type="multiple"
@@ -816,17 +852,16 @@ const EquipRank = () => {
                               )
                               .flat()
                               .sort((a, b) => {
-                                const aRank =
-                                  rankData.charas[a.c.chara]!.rank;
-                                const bRank =
-                                  rankData.charas[b.c.chara]!.rank;
+                                const aRank = rankData.charas[a.c.chara]!.rank;
+                                const bRank = rankData.charas[b.c.chara]!.rank;
                                 const aSort = (aRank + 99 - rank) % 99;
                                 const bSort = (bRank + 99 - rank) % 99;
                                 return aRank !== bRank
                                   ? bSort - aSort
-                                  : (a.stat-b.stat) || chara[a.c.chara].n.localeCompare(
-                                      chara[b.c.chara].n
-                                    );
+                                  : a.stat - b.stat ||
+                                      chara[a.c.chara].n.localeCompare(
+                                        chara[b.c.chara].n
+                                      );
                               })
                               .map(({ stat, c }) => {
                                 return (
