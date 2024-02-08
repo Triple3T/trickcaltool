@@ -582,7 +582,7 @@ const EquipRank = () => {
                     .map(([statTypeNum, statValue]) => {
                       const stat = StatType[parseInt(statTypeNum, 10)];
                       return (
-                        <div className="flex">
+                        <div className="flex" key={statTypeNum}>
                           <div className="relative z-10">
                             <img
                               className="h-6 mr-2 aspect-square inline-block align-middle"
