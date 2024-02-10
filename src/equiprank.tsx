@@ -901,13 +901,13 @@ const EquipRank = () => {
                                         rankClassNames[
                                           rankData.charas[c.chara].rank - 1
                                         ][1]
-                                      } text-sm w-full`}
+                                      } text-sm w-full text-center`}
                                     >
                                       {t("ui.equiprank.rankText", {
                                         0: `${rankData.charas[c.chara].rank}`,
                                       })}
                                     </div>
-                                    <div className="flex flex-row gap-2 text-sm">
+                                    <div className="flex flex-row gap-1 text-sm justify-center items-center">
                                       <img
                                         src={`/icons/Icon_${StatType[stat]}.png`}
                                         className="w-5 h-5"
