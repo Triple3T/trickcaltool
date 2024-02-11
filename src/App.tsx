@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
+import { ExternalLink } from "lucide-react";
 import "./App.css";
+import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
-import MainMenuCard from "./components/parts/main-menu-card";
+import MainMenuCard from "@/components/parts/main-menu-card";
 
 function App() {
   const [backgroundImage, setBackgroundImage] = useState(
@@ -53,7 +55,17 @@ function App() {
             <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
               내 성장 현황 메모하기
             </p>
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-12 sm:pt-14 md:pt-16 lg:pt-20">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://forms.gle/KRZbrmJ9FG2D19gG7"
+            >
+              <Button variant="outline" size="sm" className="bg-background/30 text-sm">
+                보드판 스크린샷을 제보해 주세요
+                <ExternalLink className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16">
               <MainMenuCard
                 title="최상급 보드 노트"
                 description={
@@ -68,7 +80,7 @@ function App() {
               />
               {/* <MainMenuCard
                 title="상급 보드 노트"
-                description={<>전체 스탯 고정치 보드 현황을 체크합니다.<br />은근 필요해</>}
+                description={<>전체 스탯 고정치 보드 현황을 체크합니다.<br />꽤 많이 필요해</>}
                 icon="/icons/Item_Crayon3.png"
                 // to="/board"
               /> */}
