@@ -22,6 +22,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { useTranslation } from "react-i18next";
 import board from "@/data/board";
 import chara from "@/data/chara";
+import route from "@/data/route";
 import clonefactory from "@/data/clonefactory";
 import {
   Attack,
@@ -34,6 +35,7 @@ import {
 } from "@/types/enums";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
+import BoardInfoDialog from "@/components/parts/board-info-dialog";
 
 import userdata from "@/utils/userdata";
 import { UserDataBoard, UserDataUnowned } from "./types/types";
@@ -976,7 +978,10 @@ const TrickcalBoard = () => {
                               <div
                                 key={`${name}${ldx}${bdx}`}
                                 className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
-                                onClick={() =>
+                                onClick={(e) => {
+                                  // if (e.target !== this) return;
+                                  console.log("click full div");
+                                  console.log(e);
                                   dispatchBoardData({
                                     type: "click",
                                     payload: {
@@ -984,27 +989,55 @@ const TrickcalBoard = () => {
                                       ldx,
                                       bdx,
                                     },
-                                  })
-                                }
+                                  });
+                                }}
+                                onContextMenu={(e) => e.preventDefault()}
                               >
-                                {ldx > 0 && (
-                                  <div className="absolute w-1/4 top-0 left-0 opacity-100 z-10">
-                                    <img
-                                      src="/icons/TutorialPopupLock01.png"
-                                      className="w-100 opacity-100"
-                                    />
-                                  </div>
-                                )}
-                                {ldx > 1 && (
-                                  <div className="absolute w-1/4 top-0 left-1/8 opacity-100 z-10">
-                                    <img
-                                      src="/icons/TutorialPopupLock01.png"
-                                      className="w-100 opacity-100"
-                                    />
-                                  </div>
-                                )}
+                                <div className={bgClassNames.join(" ")}>
+                                  <img
+                                    src={`/charas/${name}.png`}
+                                    className={imgClassNames.join(" ")}
+                                  />
+                                </div>
+                                {!checked &&
+                                  !unowned &&
+                                  chara[name].t[1] !== "1" && (
+                                    <div
+                                      className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      <BoardInfoDialog
+                                        boardIndex={boardData.boardIndex}
+                                        boardTypeString={bt}
+                                        chara={name}
+                                        route={
+                                          route.r[
+                                            Race[Number(chara[name].t[5])]
+                                          ][boardData.boardIndex].b[
+                                            Number(
+                                              board.c[name].r[
+                                                boardData.boardIndex
+                                              ][ldx].split(".")[bdx]
+                                            )
+                                          ]
+                                        }
+                                        rstart={
+                                          route.r[
+                                            Race[Number(chara[name].t[5])]
+                                          ][boardData.boardIndex].s
+                                        }
+                                        blocked={
+                                          ldx === 0
+                                            ? undefined
+                                            : board.c[name].k[
+                                                boardData.boardIndex
+                                              ][ldx - 1].split(".")[bdx]
+                                        }
+                                      />
+                                    </div>
+                                  )}
                                 {checked && (
-                                  <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
+                                  <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
                                     <img
                                       src="/icons/Stage_RewardChack.png"
                                       className="w-100 opacity-100"
@@ -1012,7 +1045,7 @@ const TrickcalBoard = () => {
                                   </div>
                                 )}
                                 {unowned && typeof clf === "number" && (
-                                  <div className="absolute w-2/3 bottom-0 right-0 opacity-100 z-10">
+                                  <div className="absolute w-2/3 bottom-0 right-0 opacity-100">
                                     <img
                                       src="/clonefactoryicon/GradeDungeon_Logo.png"
                                       className="w-100 opacity-100"
@@ -1022,12 +1055,6 @@ const TrickcalBoard = () => {
                                     </div>
                                   </div>
                                 )}
-                                <div className={bgClassNames.join(" ")}>
-                                  <img
-                                    src={`/charas/${name}.png`}
-                                    className={imgClassNames.join(" ")}
-                                  />
-                                </div>
                               </div>
                             );
                           })}

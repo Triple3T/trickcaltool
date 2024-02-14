@@ -128,6 +128,12 @@ i18n
               usedMax: "MAX",
               remainToMax: "MAX-{{0}}개",
               dataIncompleteStatus: "(데이터 미완성 {{0}}/{{1}})",
+              bestRouteExample: "최적 경로 예시",
+              numberOfImportantTiles: "경로상의 중요 칸 수",
+              importantBoardTilesBefore: "경로상의 ",
+              importantBoardTilesAfter: "",
+              importantBoardTilesMultiple: "x",
+              importantBoardCombination: "가능한 특수 칸 조합",
             },
             equiprank: {
               title: "랭크 메모장",
