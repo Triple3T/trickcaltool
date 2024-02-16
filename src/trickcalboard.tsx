@@ -418,6 +418,13 @@ const TrickcalBoard = () => {
           userData.b[c] = board.c[c].b.map((a) => a.map(() => 0));
         });
     }
+    Object.keys(userData.b).forEach((c) => {
+      if (userData.b[c].some((b) => b.length !== board.c[c].b.length)) {
+        userData.b[c] = board.c[c].b.map((a, i) =>
+          a.map((_, j) => userData.b[c][i][j] ?? 0)
+        );
+      }
+    });
     const sortedCharaList = [...charaList].sort(
       (a, b) =>
         Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c]) ||
