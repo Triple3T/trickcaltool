@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Info } from "lucide-react";
+import { Info, Waypoints } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Carousel,
   CarouselContent,
@@ -103,6 +104,13 @@ const BoardInfoDialog = ({
             </div>
           </DialogTitle>
         </DialogHeader>
+        <Alert variant="default">
+          <Waypoints className="h-4 w-4" />
+          <AlertTitle>{t("ui.board.aboutBestRouteTitle")}</AlertTitle>
+          <AlertDescription className="break-keep">
+            {t("ui.board.aboutBestRouteDescription")}
+          </AlertDescription>
+        </Alert>
         <div className="flex gap-2 justify-evenly">
           <div className="flex-auto">
             <SubtitleBar>{t("ui.board.bestRouteExample")}</SubtitleBar>

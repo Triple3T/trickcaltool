@@ -129,6 +129,9 @@ i18n
               remainToMax: "MAX-{{0}}개",
               dataIncompleteStatus: "(데이터 미완성 {{0}}/{{1}})",
               bestRouteExample: "최적 경로 예시",
+              aboutBestRouteTitle: "최적 경로에 대하여",
+              aboutBestRouteDescription:
+                "최적 경로 예시에서는 최상급 크레파스를 가장 적게 사용하는 경로, 같다면 상급 크레파스를 가장 적게 사용하는 경로, 같다면 그 중 가장 짧은 경로를 보여드립니다.",
               numberOfImportantTiles: "경로상의 중요 칸 수",
               importantBoardTilesBefore: "경로상의 ",
               importantBoardTilesAfter: "",
