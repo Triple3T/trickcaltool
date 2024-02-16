@@ -683,7 +683,7 @@ const EquipRank = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="input">
-              <div className="my-4 flex gap-4">
+              <div className="mt-4 flex gap-4">
                 <SearchBox
                   className="font-onemobile flex-auto"
                   value={search}
@@ -693,13 +693,23 @@ const EquipRank = () => {
                 {rankData.dirty && (
                   <div className="flex-initial text-right">
                     <Button
-                      variant="outline"
+                      variant="destructive"
                       onClick={() => dispatchRankData({ type: "applyminmax" })}
                     >
                       {t("ui.equiprank.applyMinMax")}
                     </Button>
                   </div>
                 )}
+              </div>
+              <div className="text-sm text-right opacity-50 py-2">
+                {(rankData.dirty
+                  ? t("ui.equiprank.aboutApplyMinMax")
+                  : t("ui.equiprank.aboutSortingCriteria")
+                )
+                  .split("\n")
+                  .map((l, i) => (
+                    <div key={i}>{l}</div>
+                  ))}
               </div>
               <div
                 className={`border w-full p-3 sm:p-4 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(7rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-3 sm:gap-4`}
