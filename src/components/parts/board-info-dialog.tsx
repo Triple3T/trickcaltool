@@ -115,7 +115,7 @@ const BoardInfoDialog = ({
                         return <div key={j} className="w-4 h-4" />;
                       if (br === "X")
                         return (
-                          <div key={j} className="w-4 h-4 scale-150">
+                          <div key={j} className="w-4 h-4 scale-150 z-10">
                             <img
                               src={`/boards/Rect_03.png`}
                               className="w-full h-full drop-shadow-[0px_0_3px_#dc2626] dark:drop-shadow-[0px_0_3px_#fca5a5]"
