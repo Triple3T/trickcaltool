@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 const BackButton = () => {
   const navigate = useNavigate();
   return (
-    <Button variant="outline" size="icon" onClick={() => navigate(-1)}>
+    <Button variant="outline" size="icon" onClick={() => navigate('..')}>
       <ChevronLeft />
     </Button>
   );
