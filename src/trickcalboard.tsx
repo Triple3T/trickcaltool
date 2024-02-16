@@ -978,10 +978,7 @@ const TrickcalBoard = () => {
                               <div
                                 key={`${name}${ldx}${bdx}`}
                                 className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
-                                onClick={(e) => {
-                                  // if (e.target !== this) return;
-                                  console.log("click full div");
-                                  console.log(e);
+                                onClick={() => {
                                   dispatchBoardData({
                                     type: "click",
                                     payload: {
