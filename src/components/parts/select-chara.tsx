@@ -9,10 +9,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SearchBox from "@/components/common/search-with-icon";
 import chara from "@/data/chara";
 import userdata from "@/utils/userdata";
 import { UserDataUnowned } from "@/types/types";
-import SearchBox from "../common/search-with-icon";
 
 interface SelectCharaProp {
   isOpen: boolean;

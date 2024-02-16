@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Accordion,
   AccordionContent,
@@ -17,9 +18,12 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
+import BackButton from "@/components/common/back-button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
-import { useTranslation } from "react-i18next";
+import SelectChara from "@/components/parts/select-chara";
+import SubtitleBar from "@/components/parts/subtitlebar";
+import BoardInfoDialog from "@/components/parts/board-info-dialog";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import route from "@/data/route";
@@ -33,13 +37,10 @@ import {
   Race,
   StatType,
 } from "@/types/enums";
-import SelectChara from "@/components/parts/select-chara";
-import SubtitleBar from "@/components/parts/subtitlebar";
-import BoardInfoDialog from "@/components/parts/board-info-dialog";
 
 import userdata from "@/utils/userdata";
-import { UserDataBoard, UserDataUnowned } from "./types/types";
-import { dataFileRead, dataFileWrite } from "./utils/dataRW";
+import { UserDataBoard, UserDataUnowned } from "@/types/types";
+import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
   charas: {
@@ -481,6 +482,9 @@ const TrickcalBoard = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="absolute top-0 left-0 p-2 flex gap-2 w-full">
+        <div className="flex-1 flex justify-start">
+          <BackButton />
+        </div>
         <div className="flex-1 flex justify-end">
           <ModeToggle />
         </div>

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Accordion,
   AccordionItem,
@@ -18,11 +19,11 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
+import BackButton from "@/components/common/back-button";
 import LazyInput from "@/components/common/lazy-input";
 import { ModeToggle } from "@/components/mode-toggle";
 import SearchBox from "@/components/common/search-with-icon";
 import { ThemeProvider } from "@/components/theme-provider";
-import { useTranslation } from "react-i18next";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
@@ -378,6 +379,9 @@ const EquipRank = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="absolute top-0 left-0 p-2 flex gap-2 w-full">
+        <div className="flex-1 flex justify-start">
+          <BackButton />
+        </div>
         <div className="flex-1 flex justify-end">
           <ModeToggle />
         </div>

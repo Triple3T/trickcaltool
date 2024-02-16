@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Accordion,
@@ -9,10 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BackButton from "@/components/common/back-button";
 import ItemSlot from "@/components/parts/item-slot";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
-import { useTranslation } from "react-i18next";
 import lab from "@/data/lab";
 import material from "@/data/material";
 import { StatType, Race, LabEffectCategory } from "@/types/enums";
@@ -223,6 +224,9 @@ const Lab = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="absolute top-0 left-0 p-2 flex gap-2 w-full">
+        <div className="flex-1 flex justify-start">
+          <BackButton />
+        </div>
         <div className="flex-1 flex justify-end">
           <ModeToggle />
         </div>
