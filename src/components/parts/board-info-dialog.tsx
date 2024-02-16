@@ -77,7 +77,7 @@ const BoardInfoDialog = ({
               })}
           </div>
           <div className="flex-0 aspect-square">
-            <Info className="h-4 w-4" />
+            <Info className="h-4 w-4 rounded-full" fill="#a0a0a0" />
           </div>
         </div>
       </DialogTrigger>
