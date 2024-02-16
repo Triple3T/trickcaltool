@@ -189,7 +189,7 @@ const BoardInfoDialog = ({
                 <SubtitleBar>
                   {t("ui.board.importantBoardCombination")}
                 </SubtitleBar>
-                <div className="px-12 w-full max-w-44">
+                <div className="px-12 w-full max-w-44 mx-auto">
                   <Carousel>
                     <CarouselContent>
                       {blocking.map((bc, i) => {
