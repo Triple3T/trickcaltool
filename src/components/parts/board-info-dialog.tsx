@@ -63,7 +63,7 @@ const BoardInfoDialog = ({
                       src="/icons/Item_Crayon4.png"
                       alt="crayon4"
                       className="h-4 w-4 absolute"
-                      style={{ top: "0", left: `${i / 2.15}rem` }}
+                      style={{ top: "0", left: `${i / 2.25}rem` }}
                     />
                   );
                 return (
@@ -72,7 +72,7 @@ const BoardInfoDialog = ({
                     src="/icons/Item_Crayon3.png"
                     alt="crayon3"
                     className="h-4 w-4 absolute"
-                    style={{ top: "0", left: `${i / 2.15}rem` }}
+                    style={{ top: "0", left: `${i / 2.25}rem` }}
                   />
                 );
               })}
