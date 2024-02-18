@@ -705,8 +705,12 @@ const EquipRank = () => {
                 className={`border w-full p-3 sm:p-4 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(7rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-3 sm:gap-4`}
               >
                 {rankData.user.o
-                  .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
-                  .filter((c) => (search ? chara[c].n.includes(search) : true))
+                  .sort((a, b) =>
+                    t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                  )
+                  .filter((c) =>
+                    search ? t(`chara.${c}`).includes(search) : true
+                  )
                   .map((c) => {
                     return (
                       <div key={c} className="flex flex-col gap-1">
@@ -720,7 +724,7 @@ const EquipRank = () => {
                             } aspect-square w-full`}
                           />
                           <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-sm text-center py-0.5">
-                            {chara[c].n}
+                            {t(`chara.${c}`)}
                           </div>
                         </div>
                         <div className="flex flex-row gap-2 pl-2 pr-1 py-1 rounded bg-slate-400 dark:bg-slate-600">
@@ -796,7 +800,7 @@ const EquipRank = () => {
                         >
                           {rankData.user.o
                             .sort((a, b) =>
-                              chara[a].n.localeCompare(chara[b].n)
+                              t(`chara.${a}`).localeCompare(t(`chara.${b}`))
                             )
                             .map((c) => {
                               if (rankData.charas[c]?.rank !== rank)
@@ -863,8 +867,8 @@ const EquipRank = () => {
                                 return aRank !== bRank
                                   ? bSort - aSort
                                   : a.stat - b.stat ||
-                                      chara[a.c.chara].n.localeCompare(
-                                        chara[b.c.chara].n
+                                      t(`chara.${a.c.chara}`).localeCompare(
+                                        t(`chara.${b.c.chara}`)
                                       );
                               })
                               .map(({ stat, c }) => {
