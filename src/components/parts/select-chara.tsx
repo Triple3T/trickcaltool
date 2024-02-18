@@ -128,8 +128,8 @@ const SelectChara = ({
             <ScrollArea className="mt-2 p-1 w-full h-80 sm:h-96 bg-gray-400/50 rounded-lg">
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
                 {userData?.o
-                  .filter((c) => (search ? chara[c].n.includes(search) : true))
-                  .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
+                  .filter((c) => (search ? t(`chara.${c}`).includes(search) : true))
+                  .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
                   .map((c) => {
                     const imgClassNames = ["w-full", "aspect-square"];
                     switch (chara[c].t[0]) {
@@ -162,7 +162,7 @@ const SelectChara = ({
                           }}
                         />
                         <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-center text-xs py-0.5">
-                          {chara[c].n}
+                          {t(`chara.${c}`)}
                         </div>
                       </div>
                     );
@@ -182,8 +182,8 @@ const SelectChara = ({
             <ScrollArea className="mt-2 p-1 w-full h-80 sm:h-96 bg-gray-400/50 rounded-lg">
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
                 {userData?.u
-                  .filter((c) => (search ? chara[c].n.includes(search) : true))
-                  .sort((a, b) => chara[a].n.localeCompare(chara[b].n))
+                  .filter((c) => (search ? t(`chara.${c}`).includes(search) : true))
+                  .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
                   .map((c) => {
                     const imgClassNames = ["w-full", "aspect-square"];
                     switch (chara[c].t[0]) {
@@ -216,7 +216,7 @@ const SelectChara = ({
                           }}
                         />
                         <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-center text-xs py-0.5">
-                          {chara[c].n}
+                          {t(`chara.${c}`)}
                         </div>
                       </div>
                     );
