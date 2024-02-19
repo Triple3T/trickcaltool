@@ -997,9 +997,7 @@ const TrickcalBoard = () => {
                                     className={imgClassNames.join(" ")}
                                   />
                                 </div>
-                                {!checked &&
-                                  !unowned &&
-                                  chara[name].t[1] !== "1" && (
+                                {!unowned && (
                                     <div
                                       className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
                                       onClick={(e) => e.stopPropagation()}
