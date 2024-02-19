@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Info, Waypoints } from "lucide-react";
+import { Dot, Info, Waypoints } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Carousel,
@@ -25,6 +25,7 @@ interface BoardInfoDialogProps {
   route: string;
   rstart: number;
   blocked?: string;
+  checked?: boolean;
 }
 
 const BoardInfoDialog = ({
@@ -34,6 +35,7 @@ const BoardInfoDialog = ({
   route,
   rstart,
   blocked,
+  checked,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
   const brLength = route.length;
@@ -98,8 +100,18 @@ const BoardInfoDialog = ({
                   <span className="align-middle">
                     {t(`ui.board.board${boardIndex + 1}`)}
                   </span>
+                  <Dot className="inline-block w-4 h-4 align-middle" />
+                  {t(`chara.${chara}`)}
                 </div>
-                <div className="text-2xl">{t(`board.${boardTypeString}`)}</div>
+                <div className="text-2xl">
+                  {t(`board.${boardTypeString}`)}
+                  {checked && (
+                    <img
+                      src="/icons/Stage_RewardChack.png"
+                      className="w-100 opacity-100 w-6 inline-block ml-2 align-middle"
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </DialogTitle>

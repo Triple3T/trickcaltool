@@ -1029,6 +1029,7 @@ const TrickcalBoard = () => {
                                                 boardData.boardIndex
                                               ][ldx - 1].split(".")[bdx]
                                         }
+                                        checked={checked}
                                       />
                                     </div>
                                   )}
