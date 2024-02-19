@@ -221,6 +221,10 @@ i18n
                 "붉은 색으로 표시된 랭크가 모두 맞는지 확인 후,\n최소/최대 랭크 적용 버튼을 눌러주세요.",
               aboutSortingCriteria:
                 "사도 정렬 순서는 가나다순입니다.\n사도 정렬 기준을 가나다순으로 변경한 후 시작하세요.",
+              allRankBonusesTitle: "랭크 전체 효과",
+              rankSingleText: "RANK",
+              hasSameRankBonusTitle: "같은 랭크 효과를 가진 다른 사도",
+              noSameRankBonus: "같은 랭크 효과를 가진 다른 사도가 없습니다.",
             },
             charaSelect: {
               title: "캐릭터 선택",

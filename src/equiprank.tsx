@@ -26,6 +26,7 @@ import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
 import { StatType, Personality } from "@/types/enums";
+import RankInfoDialog from "@/components/parts/rank-info-dialog";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
 
@@ -808,8 +809,23 @@ const EquipRank = () => {
                               return (
                                 <div
                                   key={c}
-                                  className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden"
+                                  className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative"
                                 >
+                                  <div className="absolute right-0 top-0 p-0.5">
+                                    <RankInfoDialog
+                                      chara={c}
+                                      rank={rank}
+                                      rankStats={eqrank.r[eqrank.c[c].r].map(
+                                        (rs) => rs.map((r) => eqrank.s[r])
+                                      )}
+                                      sameRankBonus={Object.entries(eqrank.c)
+                                        .filter(
+                                          ([k, v]) =>
+                                            k !== c && v.r === eqrank.c[c].r
+                                        )
+                                        .map(([k]) => k)}
+                                    />
+                                  </div>
                                   <img
                                     src={`/charas/${c}.png`}
                                     className={`${
@@ -878,15 +894,6 @@ const EquipRank = () => {
                                     className={`min-w-14 sm:min-w-16`}
                                   >
                                     <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
-                                      {rank <=
-                                        rankData.charas[c.chara].rank && (
-                                        <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
-                                          <img
-                                            src="/icons/Stage_RewardChack.png"
-                                            className="w-100 opacity-100"
-                                          />
-                                        </div>
-                                      )}
                                       <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
                                         <img
                                           src={`/charas/${c.chara}.png`}
@@ -901,6 +908,35 @@ const EquipRank = () => {
                                               ? ""
                                               : " opacity-60"
                                           }`}
+                                        />
+                                      </div>
+                                      {rank <=
+                                        rankData.charas[c.chara].rank && (
+                                        <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
+                                          <img
+                                            src="/icons/Stage_RewardChack.png"
+                                            className="w-100 opacity-100"
+                                          />
+                                        </div>
+                                      )}
+                                      <div className="absolute right-0 top-0 p-0.5">
+                                        <RankInfoDialog
+                                          chara={c.chara}
+                                          rank={rankData.charas[c.chara].rank}
+                                          rankStats={eqrank.r[
+                                            eqrank.c[c.chara].r
+                                          ].map((rs) =>
+                                            rs.map((r) => eqrank.s[r])
+                                          )}
+                                          sameRankBonus={Object.entries(
+                                            eqrank.c
+                                          )
+                                            .filter(
+                                              ([k, v]) =>
+                                                k !== c.chara &&
+                                                v.r === eqrank.c[c.chara].r
+                                            )
+                                            .map(([k]) => k)}
                                         />
                                       </div>
                                     </div>
