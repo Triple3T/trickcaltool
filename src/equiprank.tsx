@@ -785,6 +785,48 @@ const EquipRank = () => {
             </TabsContent>
             <TabsContent value="rankView">
               <div className="flex flex-col gap-4">
+                <div>
+                  <div className="text-lg w-full text-left">
+                    {t("ui.equiprank.rankProgressTitle")}
+                  </div>
+                  <div className="flex flex-col gap-1 items-stretch w-full">
+                    {/* <div></div> */}
+                    <div className="w-full flex flex-row h-1">
+                      {Array.from(Array(rankData.maxRank).keys()).map((i) => {
+                        const count = rankData.user.o.filter(
+                          (c) => rankData.charas[c]?.rank === i + 1
+                        ).length;
+                        if (!count) return null;
+                        return (
+                          <div
+                            key={i}
+                            className={`${rankClassNames[i][0]} h-1`}
+                            style={{
+                              flex: `${count}`,
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                    <div className="flex gap-0.5">
+                      <div className="flex gap-1 flex-wrap text-left">
+                        {Array.from(Array(rankData.maxRank).keys()).map((i) => {
+                          const count = rankData.user.o.filter(
+                            (c) => rankData.charas[c]?.rank === i + 1
+                          ).length;
+                          return (
+                            <div
+                              key={i}
+                              className={`${rankClassNames[i][0]} border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded`}
+                            >
+                              {count}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {rankClassNames
                   .slice(0, rankData.maxRank)
                   .map((s, i) => ({ rank: i + 1, bg: s[0], txt: s[1] }))
