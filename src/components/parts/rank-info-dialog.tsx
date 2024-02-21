@@ -50,7 +50,7 @@ const RankInfoDialog = ({
           <div className="flex flex-col gap-2">
             <SubtitleBar>{t("ui.equiprank.allRankBonusesTitle")}</SubtitleBar>
             <ScrollArea className="h-72 -mx-1 sm:mx-0 md:mx-1 px-1">
-              <div className="flex flex-col gap-1.5 px-2">
+              <div className="flex flex-col gap-1.5 px-2 my-1">
                 {rankStats.map((rankStatSet, index) => {
                   return (
                     <div
@@ -99,7 +99,7 @@ const RankInfoDialog = ({
             <SubtitleBar>{t("ui.equiprank.hasSameRankBonusTitle")}</SubtitleBar>
             {sameRankBonus && sameRankBonus.length > 0 ? (
               <ScrollArea className="h-36 -mx-1 sm:mx-0 md:mx-1 px-1">
-                <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] gap-1 px-2">
+                <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] gap-1 px-2 my-1">
                   {sameRankBonus.map((chara) => {
                     return (
                       <div
