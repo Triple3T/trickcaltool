@@ -936,54 +936,56 @@ const EquipRank = () => {
                           <div
                             className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
                           >
-                            {rankData.targetStat
-                              .map((stat) =>
-                                rankData.rankStat[StatType[stat]].charas
-                                  .filter(
-                                    (c) =>
-                                      c.reqRank === rank &&
-                                      rankData.user.o.includes(c.chara)
+                            {[
+                              ...new Set(
+                                rankData.targetStat
+                                  .map((stat) =>
+                                    rankData.rankStat[StatType[stat]].charas
+                                      .filter(
+                                        (c) =>
+                                          c.reqRank === rank &&
+                                          rankData.user.o.includes(c.chara)
+                                      )
+                                      .map((c) => c.chara)
                                   )
-                                  .map((c) => ({ stat, c }))
-                              )
-                              .flat()
+                                  .flat()
+                              ),
+                            ]
                               .sort((a, b) => {
-                                const aRank = rankData.charas[a.c.chara]!.rank;
-                                const bRank = rankData.charas[b.c.chara]!.rank;
+                                const aRank = rankData.charas[a].rank;
+                                const bRank = rankData.charas[b].rank;
                                 const aSort = (aRank + 99 - rank) % 99;
                                 const bSort = (bRank + 99 - rank) % 99;
                                 return aRank !== bRank
                                   ? bSort - aSort
-                                  : a.stat - b.stat ||
-                                      t(`chara.${a.c.chara}`).localeCompare(
-                                        t(`chara.${b.c.chara}`)
-                                      );
+                                  : t(`chara.${a}`).localeCompare(
+                                      t(`chara.${b}`)
+                                    );
                               })
-                              .map(({ stat, c }) => {
+                              .map((c) => {
                                 return (
                                   <div
-                                    key={`${c.chara}-${c.reqRank}-${stat}`}
+                                    key={c}
                                     className={`min-w-14 sm:min-w-16`}
                                   >
                                     <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                                       <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
                                         <img
-                                          src={`/charas/${c.chara}.png`}
+                                          src={`/charas/${c}.png`}
                                           className={`${
                                             personalityBG[
                                               Number(
-                                                chara[c.chara].t[0]
+                                                chara[c].t[0]
                                               ) as Personality
                                             ]
                                           } aspect-square w-full${
-                                            rank > rankData.charas[c.chara].rank
+                                            rank > rankData.charas[c].rank
                                               ? ""
                                               : " opacity-60"
                                           }`}
                                         />
                                       </div>
-                                      {rank <=
-                                        rankData.charas[c.chara].rank && (
+                                      {rank <= rankData.charas[c].rank && (
                                         <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
                                           <img
                                             src="/icons/Stage_RewardChack.png"
@@ -993,10 +995,10 @@ const EquipRank = () => {
                                       )}
                                       <div className="absolute right-0 top-0 p-0.5">
                                         <RankInfoDialog
-                                          chara={c.chara}
-                                          rank={rankData.charas[c.chara].rank}
+                                          chara={c}
+                                          rank={rankData.charas[c].rank}
                                           rankStats={eqrank.r[
-                                            eqrank.c[c.chara].r
+                                            eqrank.c[c].r
                                           ].map((rs) =>
                                             rs.map((r) => eqrank.s[r])
                                           )}
@@ -1005,8 +1007,7 @@ const EquipRank = () => {
                                           )
                                             .filter(
                                               ([k, v]) =>
-                                                k !== c.chara &&
-                                                v.r === eqrank.c[c.chara].r
+                                                k !== c && v.r === eqrank.c[c].r
                                             )
                                             .map(([k]) => k)}
                                         />
@@ -1015,20 +1016,35 @@ const EquipRank = () => {
                                     <div
                                       className={`${
                                         rankClassNames[
-                                          rankData.charas[c.chara].rank - 1
+                                          rankData.charas[c].rank - 1
                                         ][1]
                                       } text-sm w-full text-center`}
                                     >
                                       {t("ui.equiprank.rankText", {
-                                        0: `${rankData.charas[c.chara].rank}`,
+                                        0: `${rankData.charas[c].rank}`,
                                       })}
                                     </div>
-                                    <div className="flex flex-row gap-1 text-sm justify-center items-center">
-                                      <img
-                                        src={`/icons/Icon_${StatType[stat]}.png`}
-                                        className="w-5 h-5"
-                                      />
-                                      <div>+{c.statValue}</div>
+                                    <div className="flex flex-col gap-1 text-center">
+                                      {eqrank.r[eqrank.c[c].r]
+                                        .map((rs) => rs.map((r) => eqrank.s[r]))
+                                        .at(rank - 2)!
+                                        .filter(([stat]) =>
+                                          rankData.targetStat.includes(stat)
+                                        )
+                                        .map(([s, v]) => {
+                                          return (
+                                            <div
+                                              key={s}
+                                              className="flex flex-row gap-1 text-sm justify-center items-center"
+                                            >
+                                              <img
+                                                src={`/icons/Icon_${StatType[s]}.png`}
+                                                className="w-5 h-5"
+                                              />
+                                              <div>+{v}</div>
+                                            </div>
+                                          );
+                                        })}
                                     </div>
                                   </div>
                                 );
