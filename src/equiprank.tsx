@@ -816,7 +816,7 @@ const EquipRank = () => {
             <TabsContent value="rankView">
               <div className="flex flex-col gap-4">
                 <div>
-                  <div className="text-lg w-full text-left">
+                  <div className="text-xl w-full text-left">
                     {t("ui.equiprank.rankProgressTitle")}
                   </div>
                   <div className="flex flex-col gap-1 items-stretch w-full">
