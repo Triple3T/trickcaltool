@@ -865,7 +865,7 @@ const EquipRank = () => {
                     const { rank, bg, txt } = s;
                     return (
                       <div key={bg}>
-                        <div className={`${txt} text-lg w-full text-left`}>
+                        <div className={`${txt} text-xl w-full text-left`}>
                           {t("ui.equiprank.rankText", { 0: `${rank}` })}
                         </div>
                         <div
@@ -928,29 +928,48 @@ const EquipRank = () => {
                     .reverse()
                     .map((s) => {
                       const { rank, bg, txt } = s;
+                      const targets = [
+                        ...new Set(
+                          rankData.targetStat
+                            .map((stat) =>
+                              rankData.rankStat[StatType[stat]].charas
+                                .filter(
+                                  (c) =>
+                                    c.reqRank === rank &&
+                                    rankData.user.o.includes(c.chara)
+                                )
+                                .map((c) => c.chara)
+                            )
+                            .flat()
+                        ),
+                      ];
+                      const targetCount = targets.length;
+                      const checkedCount = targets.filter(
+                        (c) => rankData.charas[c].rank >= rank
+                      ).length;
                       return (
                         <div key={bg}>
-                          <div className={`${txt} text-lg w-full text-left`}>
-                            {t("ui.equiprank.rankText", { 0: `${rank}` })}
+                          <div className="flex items-end">
+                            <div
+                              className={`${txt} text-xl flex-auto text-left`}
+                            >
+                              {t("ui.equiprank.rankText", { 0: `${rank}` })}
+                            </div>
+                            <div className="flex-auto text-right">
+                              {checkedCount === targetCount && (
+                                <img
+                                  src="/icons/Photo_Complete_Stamp.png"
+                                  className="h-10 -my-1.5 -mr-6 inline-block"
+                                />
+                              )}
+                              <span className={`${txt}`}>{checkedCount}</span>
+                              <span className="text-sm">/{targetCount}</span>
+                            </div>
                           </div>
                           <div
                             className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
                           >
-                            {[
-                              ...new Set(
-                                rankData.targetStat
-                                  .map((stat) =>
-                                    rankData.rankStat[StatType[stat]].charas
-                                      .filter(
-                                        (c) =>
-                                          c.reqRank === rank &&
-                                          rankData.user.o.includes(c.chara)
-                                      )
-                                      .map((c) => c.chara)
-                                  )
-                                  .flat()
-                              ),
-                            ]
+                            {targets
                               .sort((a, b) => {
                                 const aRank = rankData.charas[a].rank;
                                 const bRank = rankData.charas[b].rank;
