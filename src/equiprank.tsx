@@ -886,6 +886,7 @@ const EquipRank = () => {
                                   <div className="absolute right-0 top-0 p-0.5">
                                     <RankInfoDialog
                                       chara={c}
+                                      charaTypes={chara[c].t}
                                       rank={rank}
                                       rankStats={eqrank.r[eqrank.c[c].r].map(
                                         (rs) => rs.map((r) => eqrank.s[r])
@@ -1015,6 +1016,7 @@ const EquipRank = () => {
                                       <div className="absolute right-0 top-0 p-0.5">
                                         <RankInfoDialog
                                           chara={c}
+                                          charaTypes={chara[c].t}
                                           rank={rankData.charas[c].rank}
                                           rankStats={eqrank.r[
                                             eqrank.c[c].r

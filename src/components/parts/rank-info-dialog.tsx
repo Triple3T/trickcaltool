@@ -7,13 +7,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { StatType } from "@/types/enums";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import SubtitleBar from "./subtitlebar";
-import { ScrollArea } from "../ui/scroll-area";
+import {
+  Attack,
+  Class,
+  Personality,
+  Position,
+  Race,
+  StatType,
+} from "@/types/enums";
 
 interface RankInfoDialogProps {
   rank: number;
   chara: string;
+  charaTypes: string;
   rankStats: number[][][];
   sameRankBonus?: string[];
 }
@@ -21,6 +29,7 @@ interface RankInfoDialogProps {
 const RankInfoDialog = ({
   rank,
   chara,
+  charaTypes,
   rankStats,
   sameRankBonus,
 }: RankInfoDialogProps) => {
@@ -33,15 +42,49 @@ const RankInfoDialog = ({
       <DialogContent className="font-onemobile">
         <DialogHeader>
           <DialogTitle>
-            <div className="flex gap-2 font-normal">
-              <img src={`/charas/${chara}.png`} className="w-12 h-12" />
-              <div className="flex-initial flex-shrink-0 flex flex-col items-start">
-                <div className="text-sm">
-                  <span className="align-middle">
-                    {t("ui.equiprank.allRankBonusesTitle")}
-                  </span>
+            <div className="flex flex-col gap-1 font-normal">
+              <div className="text-sm text-left">
+                <span className="align-middle">
+                  {t("ui.equiprank.allRankBonusesTitle")}
+                </span>
+              </div>
+              <div className="flex">
+                <img src={`/charas/${chara}.png`} className="w-14 h-14" />
+                <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
+                  <div className="flex flex-row gap-px">
+                    <img
+                      src={`/icons/Common_UnitPersonality_${
+                        Personality[Number(charaTypes[0])]
+                      }.png`}
+                      className="w-5 h-5 inline-block align-middle"
+                    />
+                    <img
+                      src={`/icons/Common_UnitAttack${
+                        Attack[Number(charaTypes[2])]
+                      }.png`}
+                      className="w-5 h-5 inline-block align-middle"
+                    />
+                    <img
+                      src={`/icons/Common_Position${
+                        Position[Number(charaTypes[3])]
+                      }.png`}
+                      className="w-5 h-5 inline-block align-middle"
+                    />
+                    <img
+                      src={`/icons/Common_Unit${
+                        Class[Number(charaTypes[4])]
+                      }.png`}
+                      className="w-5 h-5 inline-block align-middle"
+                    />
+                    <img
+                      src={`/icons/Common_UnitRace_${
+                        Race[Number(charaTypes[5])]
+                      }.png`}
+                      className="w-5 h-5 inline-block align-middle"
+                    />
+                  </div>
+                  <div className="text-2xl">{t(`chara.${chara}`)}</div>
                 </div>
-                <div className="text-2xl">{t(`chara.${chara}`)}</div>
               </div>
             </div>
           </DialogTitle>
@@ -63,9 +106,9 @@ const RankInfoDialog = ({
                         </div>
                         {rank > index + 1 && (
                           <img
-                          src="/icons/Stage_RewardChack.png"
-                          className="w-10 inline-block align-middle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                        />
+                            src="/icons/Stage_RewardChack.png"
+                            className="w-10 inline-block align-middle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                          />
                         )}
                       </div>
                       <div className="flex flex-col gap-0.5 flex-1 pl-3 pr-1.5 py-1 bg-[#f3fbe3] dark:bg-[#cfe992]">
