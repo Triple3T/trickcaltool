@@ -997,42 +997,42 @@ const TrickcalBoard = () => {
                                     className={imgClassNames.join(" ")}
                                   />
                                 </div>
-                                {!unowned && (
-                                    <div
-                                      className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
-                                      <BoardInfoDialog
-                                        boardIndex={boardData.boardIndex}
-                                        boardTypeString={bt}
-                                        chara={name}
-                                        route={
-                                          route.r[
-                                            Race[Number(chara[name].t[5])]
-                                          ][boardData.boardIndex].b[
-                                            Number(
-                                              board.c[name].r[
-                                                boardData.boardIndex
-                                              ][ldx].split(".")[bdx]
-                                            )
-                                          ]
-                                        }
-                                        rstart={
-                                          route.r[
-                                            Race[Number(chara[name].t[5])]
-                                          ][boardData.boardIndex].s
-                                        }
-                                        blocked={
-                                          ldx === 0
-                                            ? undefined
-                                            : board.c[name].k[
-                                                boardData.boardIndex
-                                              ][ldx - 1].split(".")[bdx]
-                                        }
-                                        checked={checked}
-                                      />
-                                    </div>
-                                  )}
+                                <div
+                                  className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <BoardInfoDialog
+                                    boardIndex={boardData.boardIndex}
+                                    boardTypeString={bt}
+                                    chara={name}
+                                    charaTypes={chara[name].t}
+                                    route={
+                                      route.r[Race[Number(chara[name].t[5])]][
+                                        boardData.boardIndex
+                                      ].b[
+                                        Number(
+                                          board.c[name].r[boardData.boardIndex][
+                                            ldx
+                                          ].split(".")[bdx]
+                                        )
+                                      ]
+                                    }
+                                    rstart={
+                                      route.r[Race[Number(chara[name].t[5])]][
+                                        boardData.boardIndex
+                                      ].s
+                                    }
+                                    blocked={
+                                      ldx === 0
+                                        ? undefined
+                                        : board.c[name].k[boardData.boardIndex][
+                                            ldx - 1
+                                          ].split(".")[bdx]
+                                    }
+                                    checked={checked}
+                                    unowned={unowned}
+                                  />
+                                </div>
                                 {checked && (
                                   <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
                                     <img
