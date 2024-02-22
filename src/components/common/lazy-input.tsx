@@ -23,6 +23,11 @@ const LazyInput = ({
       onBlur={() => {
         onValueChange(v);
       }}
+      onFocus={(e) =>
+        e.target.select
+          ? e.target.select()
+          : e.target.setSelectionRange(0, e.target.value.length)
+      }
     />
   );
 };
