@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ExternalLink } from "lucide-react";
 import "./App.css";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import MainMenuCard from "@/components/parts/main-menu-card";
 
 function App() {
+  const { t } = useTranslation();
   const [backgroundImage, setBackgroundImage] = useState(
     "/backgrounds/butter_pc.png"
   );
@@ -50,10 +52,10 @@ function App() {
         <main className="flex flex-col flex-1 p-4 md:p-6 items-center justify-center">
           <section className="flex flex-col items-center justify-center space-y-4 text-center">
             <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
-              트릭컬 노트
+              {t("ui.index.title")}
             </h2>
             <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
-              내 성장 현황 메모하기
+              {t("ui.index.description")}
             </p>
             <a
               target="_blank"
@@ -61,20 +63,15 @@ function App() {
               href="https://forms.gle/KRZbrmJ9FG2D19gG7"
             >
               <Button variant="outline" size="sm" className="bg-background/30 text-sm">
-                보드판 스크린샷을 제보해 주세요
+                {t("ui.index.reportBoard")}
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
             </a>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16">
               <MainMenuCard
-                title="최상급 보드 노트"
-                description={
-                  <>
-                    전체 스탯 % 보드 현황을 체크합니다.
-                    <br />
-                    나만 황크 안 나와
-                  </>
-                }
+                title={t("ui.board.title")}
+                description={t("ui.board.description")}
+                subDescription={t("ui.board.subDescription")}
                 icon="/icons/Item_Crayon4.png"
                 to="/board"
               />
@@ -85,27 +82,17 @@ function App() {
                 // to="/board"
               /> */}
               <MainMenuCard
-                title="랭크 메모장"
-                description={
-                  <>
-                    사도들의 장비 랭크를 메모합니다.
-                    <br />
-                    메모 안 하면 헷갈려
-                  </>
-                }
+                title={t("ui.equiprank.title")}
+                description={t("ui.equiprank.description")}
+                subDescription={t("ui.equiprank.subDescription")}
                 icon="/itemslot/Tab_Equip_Default.png"
                 to="/eqrank"
                 greenIcon
               />
               <MainMenuCard
-                title="교단 연구 노트"
-                description={
-                  <>
-                    교단의 연구 현황을 체크합니다.
-                    <br />
-                    루포야 일하자
-                  </>
-                }
+                title={t("ui.lab.title")}
+                description={t("ui.lab.description")}
+                subDescription={t("ui.lab.subDescription")}
                 icon="/mainlobby/HousingButton.png"
                 to="/lab"
               />
@@ -114,7 +101,7 @@ function App() {
         </main>
         <footer className="flex items-center justify-center py-4 bg-gray-500 shadow-md dark:bg-gray-800 fixed bottom-0 left-0 right-0">
           <p className="text-[0.625rem] text-white dark:text-gray-400">
-            Trickcal copyrighted by EPIDGames, Trickcal Note powered by Triple
+            {t("ui.index.gameCopyright")}, {t("ui.index.sitePoweredBy")}
           </p>
           {/* <nav className="ml-4 flex space-x-2">
             <Link

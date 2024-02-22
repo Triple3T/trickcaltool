@@ -148,8 +148,9 @@ i18n
           },
           ui: {
             index: {
-              title: "트릭컬 툴",
-              description: "트릭컬 잡동사니 툴 모음집",
+              title: "트릭컬 노트",
+              description: "내 성장 현황 메모하기",
+              reportBoard: "보드판 스크린샷을 제보해 주세요",
               theme: {
                 title: "테마",
                 light: "라이트",
@@ -169,9 +170,13 @@ i18n
                 noFileProvided: "파일이 제공되지 않았습니다.",
                 invalidFileInput: "파일이 올바르지 않습니다.",
               },
+              gameCopyright: "Trickcal copyrighted by EPIDGames",
+              sitePoweredBy: "Trickcal Note powered by Triple",
             },
             board: {
               title: "최상급 보드 노트",
+              description: "전체 스탯 % 보드 현황을 체크합니다.",
+              subDescription: "나만 황크 안 나와",
               board1: "1차 보드",
               board2: "2차 보드",
               board3: "3차 보드",
@@ -201,6 +206,8 @@ i18n
             },
             equiprank: {
               title: "랭크 메모장",
+              description: "사도들의 장비 랭크를 메모합니다.",
+              subDescription: "메모 안 하면 헷갈려",
               rankText: "RANK {{0}}",
               reqLevel: "RANK {{0}} 필요 레벨: {{1}}",
               settings: "설정",
@@ -226,6 +233,8 @@ i18n
             },
             lab: {
               title: "교단 연구 노트",
+              description: "교단의 연구 현황을 체크합니다.",
+              subDescription: "루포야 일하자",
               cumulativeEffect: "누적 효과",
               remainMaterials: "남은 재료",
               remainMaterialsDepth1: "전체 단계",

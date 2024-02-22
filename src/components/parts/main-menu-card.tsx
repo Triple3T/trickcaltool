@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 interface MainMenuCardProps {
   title: string;
   description: ReactNode | ReactNode[] | undefined;
+  subDescription?: ReactNode | ReactNode[] | undefined;
   icon: string;
   greenIcon?: boolean;
   to?: string;
@@ -12,6 +13,7 @@ interface MainMenuCardProps {
 const MainMenuCard = ({
   title,
   description,
+  subDescription,
   icon,
   greenIcon,
   to,
@@ -47,6 +49,8 @@ const MainMenuCard = ({
         </h3>
         <p className="text-sm text-gray-700 dark:text-gray-300">
           {description}
+          <br />
+          {subDescription}
         </p>
       </div>
     </Link>
