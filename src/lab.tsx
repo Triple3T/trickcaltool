@@ -225,7 +225,7 @@ const Lab = () => {
         {/* Settings */}
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger>{t("lab.cumulativeEffect")}</AccordionTrigger>
+            <AccordionTrigger>{t("ui.lab.cumulativeEffect")}</AccordionTrigger>
             <AccordionContent className="text-base">
               <div className="flex flex-col gap-1">
                 {labData &&
@@ -348,7 +348,7 @@ const Lab = () => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>{t("lab.remainMaterials")}</AccordionTrigger>
+            <AccordionTrigger>{t("ui.lab.remainMaterials")}</AccordionTrigger>
             <AccordionContent className="text-base">
               <Tabs value={materialDepth} className="w-full">
                 <TabsList className="w-full flex">
@@ -357,14 +357,14 @@ const Lab = () => {
                     className="flex-1"
                     onClick={() => setMaterialDepth("indexDepth2")}
                   >
-                    <div>{t("lab.remainMaterialsDepth2")}</div>
+                    <div>{t("ui.lab.remainMaterialsDepth2")}</div>
                   </TabsTrigger>
                   <TabsTrigger
                     value="indexDepth1"
                     className="flex-1"
                     onClick={() => setMaterialDepth("indexDepth1")}
                   >
-                    <div>{t("lab.remainMaterialsDepth1")}</div>
+                    <div>{t("ui.lab.remainMaterialsDepth1")}</div>
                   </TabsTrigger>
                 </TabsList>
               </Tabs>

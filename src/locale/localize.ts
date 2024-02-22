@@ -103,10 +103,6 @@ i18n
             Hp: "HP",
           },
           lab: {
-            cumulativeEffect: "누적 효과",
-            remainMaterials: "남은 재료",
-            remainMaterialsDepth1: "전체 단계",
-            remainMaterialsDepth2: "현재 단계",
             effect: {
               0: "공물량 {{0}}% 증가",
               1: "공물 최대 누적 시간 {{0}}분 증가",
@@ -227,6 +223,13 @@ i18n
               rankSingleText: "RANK",
               hasSameRankBonusTitle: "같은 랭크 효과를 가진 다른 사도",
               noSameRankBonus: "같은 랭크 효과를 가진 다른 사도가 없습니다.",
+            },
+            lab: {
+              title: "교단 연구 노트",
+              cumulativeEffect: "누적 효과",
+              remainMaterials: "남은 재료",
+              remainMaterialsDepth1: "전체 단계",
+              remainMaterialsDepth2: "현재 단계",
             },
             charaSelect: {
               title: "캐릭터 선택",
