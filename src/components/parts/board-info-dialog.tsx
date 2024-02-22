@@ -110,17 +110,19 @@ const BoardInfoDialog = ({
                 <span className="align-middle">
                   {t(`ui.board.board${boardIndex + 1}`)}
                 </span>
-                <Dot className="inline-block w-4 h-4 align-middle" />
+                <Dot className="inline-block w-4 h-4 mx-px align-middle" />
                 <img
                   src={`/boards/Tile_${boardTypeString}On.png`}
-                  className="w-5 h-5 inline-block align-middle"
+                  className="mr-1 w-5 h-5 inline-block align-middle"
                 />
-                {t(`board.${boardTypeString}`)}
+                <span className="align-middle">
+                  {t(`board.${boardTypeString}`)}
+                </span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-row gap-2">
                 <img src={`/charas/${chara}.png`} className="w-14 h-14" />
                 <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
-                  <div>
+                  <div className="flex flex-row gap-px">
                     <img
                       src={`/icons/Common_UnitPersonality_${
                         Personality[Number(charaTypes[0])]
