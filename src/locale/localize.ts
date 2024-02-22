@@ -57,6 +57,7 @@ i18n
             Naia: "나이아",
             Ner: "네르",
             Patula: "파트라",
+            Picora: "피코라",
             Posher: "포셔",
             Rim: "림",
             Rohne: "로네",
