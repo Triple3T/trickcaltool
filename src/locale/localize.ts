@@ -216,6 +216,7 @@ i18n
               targetStat: "목표 스탯",
               selectTargetStatAll: "모두 표시",
               selectTargetStatRecommended: "추천 설정",
+              viewAllStatWithBoard: "특수 보드 스탯 포함",
               shouldSetTargetStat: "목표 스탯을 먼저 설정해주세요!",
               input: "랭크 입력",
               rankView: "랭크 보기",

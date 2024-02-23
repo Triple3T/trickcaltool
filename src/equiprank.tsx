@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -17,11 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
 import SearchBox from "@/components/common/search-with-icon";
+import board from "@/data/board";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
@@ -311,6 +314,8 @@ const EquipRank = () => {
   const [rankData, dispatchRankData] = useReducer(rankDataReducer, undefined);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [withBoardStat, setWithBoardStat] = useState(false);
+  const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
@@ -404,6 +409,36 @@ const EquipRank = () => {
     initFromUserData();
   }, [initFromUserData]);
   const fileInput = useRef<HTMLInputElement>(null);
+
+  const getBoardStats = useCallback(() => {
+    if (Object.keys(boardStat).length !== 0) return;
+    const boardStats: { [key: string]: number } = {};
+    const boardData = userdata.board.load().b;
+    Object.entries(boardData).forEach(([c, b]) => {
+      const charaBoard = board.c[c].b;
+      charaBoard.forEach((nthboard, i) => {
+        nthboard.forEach((boardList, j) => {
+          boardList
+            .toString(10)
+            .split("")
+            .forEach((targetBoardString, k) => {
+              const targetBoard = Number(targetBoardString);
+              const isChecked = b[i][j] & (1 << k);
+              if (isChecked) {
+                const statList = board.s[targetBoard];
+                statList.forEach((stat, statIndex) => {
+                  const statType = StatType[stat];
+                  const statValue = board.b[targetBoard][statIndex][i];
+                  boardStats[statType] =
+                    (boardStats[statType] ?? 0) + statValue;
+                });
+              }
+            });
+        });
+      });
+    });
+    setBoardStat(boardStats);
+  }, [boardStat]);
 
   return (
     <Layout>
@@ -613,6 +648,19 @@ const EquipRank = () => {
               {t("ui.equiprank.allStatTotal")}
             </AccordionTrigger>
             <AccordionContent className="text-base">
+              <div className="mb-2 text-left flex items-center gap-2">
+                <Switch
+                  id="view-all-stat-with-board"
+                  checked={withBoardStat}
+                  onCheckedChange={(c) => {
+                    setWithBoardStat(c);
+                    if (c) getBoardStats();
+                  }}
+                />
+                <Label htmlFor="view-all-stat-with-board">
+                  {t("ui.equiprank.viewAllStatWithBoard")}
+                </Label>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
                 {rankData &&
                   Object.entries(
@@ -655,7 +703,13 @@ const EquipRank = () => {
                               {t(`stat.${stat}`)}
                             </div>
                             <div className="text-right flex-auto">
-                              {statValue}
+                              {withBoardStat
+                                ? Math.floor(
+                                    (statValue *
+                                      ((boardStat[stat] ?? 0) + 100)) /
+                                      100
+                                  )
+                                : statValue}
                             </div>
                           </div>
                         </div>
