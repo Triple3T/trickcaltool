@@ -404,13 +404,20 @@ const TrickcalBoard = () => {
     undefined
   );
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
+  const [newCharaAlert, setNewCharaAlert] = useState(false);
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
-    const userDataBoardProto = userdata.board.load();
-    const userDataUnownedProto = userdata.unowned.load();
+    const { autoRepaired: ar1, ...userDataBoardProto } = userdata.board.load();
+    const { autoRepaired: ar2, ...userDataUnownedProto } =
+      userdata.unowned.load();
     const userData = { ...userDataBoardProto, ...userDataUnownedProto };
+    if (ar1 || ar2) setNewCharaAlert(true);
+    let flag = false;
     if (!userData.o.every((c) => userData.b[c])) {
+      setNewCharaAlert(true);
+      flag = true;
+      console.log(userData.o.filter((c) => !userData.b[c]))
       userData.o
         .filter((c) => !userData.b[c])
         .forEach((c) => {
@@ -419,11 +426,13 @@ const TrickcalBoard = () => {
     }
     Object.keys(userData.b).forEach((c) => {
       if (userData.b[c].some((b) => b.length !== board.c[c].b.length)) {
+        flag = true;
         userData.b[c] = board.c[c].b.map((a, i) =>
           a.map((_, j) => userData.b[c][i][j] ?? 0)
         );
       }
     });
+    if (flag) saveBoardData(userData);
     const sortedCharaList = [...charaList].sort(
       (a, b) =>
         Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c]) ||
@@ -475,6 +484,12 @@ const TrickcalBoard = () => {
     setCharaDrawerOpen(false);
     initFromUserData();
   }, [initFromUserData]);
+  useEffect(() => {
+    if (newCharaAlert) {
+      toast.info(t("ui.index.newCharacterAlert"));
+      setNewCharaAlert(false);
+    }
+  }, [newCharaAlert, t]);
   const fileInput = useRef<HTMLInputElement>(null);
 
   return (

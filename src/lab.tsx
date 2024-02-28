@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import ItemSlot from "@/components/parts/item-slot";
 import lab from "@/data/lab";
 import material from "@/data/material";
@@ -205,9 +206,11 @@ const Lab = () => {
     "indexDepth1" | "indexDepth2"
   >("indexDepth2");
   const [page, setPage] = useState(0);
+  const [repairedAlert, setRepairedAlert] = useState(false);
 
   const initFromUserData = useCallback(() => {
-    const userDataLabProto = userdata.lab.load();
+    const { autoRepaired: ar1, ...userDataLabProto } = userdata.lab.load();
+    if (ar1) setRepairedAlert(true);
     dispatchLabData({
       type: "index",
       payload: {
@@ -218,6 +221,12 @@ const Lab = () => {
     setPage(userDataLabProto[1]);
   }, []);
   useEffect(initFromUserData, [initFromUserData]);
+  useEffect(() => {
+    if (repairedAlert) {
+      toast.info(t("ui.index.repairedAlert"));
+      setRepairedAlert(false);
+    }
+  }, [repairedAlert, t]);
 
   return (
     <Layout>

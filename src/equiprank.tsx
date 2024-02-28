@@ -316,14 +316,18 @@ const EquipRank = () => {
   const [search, setSearch] = useState("");
   const [withBoardStat, setWithBoardStat] = useState(false);
   const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
+  const [newCharaAlert, setNewCharaAlert] = useState(false);
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
-    const UserDataEqRankProto = userdata.eqrank.load();
-    const userDataUnownedProto = userdata.unowned.load();
-    const userData = { ...UserDataEqRankProto, ...userDataUnownedProto };
+    const { autoRepaired: ar1, ...userDataEqRankProto } =
+      userdata.eqrank.load();
+    const { autoRepaired: ar2, ...userDataUnownedProto } =
+      userdata.unowned.load();
+    const userData = { ...userDataEqRankProto, ...userDataUnownedProto };
     const ownNotEqual = !userData.o.every((c) => userData.r[c]);
     const unownNotEqual = userData.u.some((c) => userData.r[c]);
+    if (ar1 || ar2) setNewCharaAlert(true);
     if (ownNotEqual || unownNotEqual) {
       if (ownNotEqual) {
         userData.o
@@ -337,6 +341,7 @@ const EquipRank = () => {
           Object.entries(userData.r).filter(([c]) => !userData.u.includes(c))
         );
       }
+      setNewCharaAlert(true);
       saveUserData(userData);
     }
     const sortedCharaList = [...charaList].sort(
@@ -408,6 +413,12 @@ const EquipRank = () => {
     setCharaDrawerOpen(false);
     initFromUserData();
   }, [initFromUserData]);
+  useEffect(() => {
+    if (newCharaAlert) {
+      toast.info(t("ui.index.newCharacterAlert"));
+      setNewCharaAlert(false);
+    }
+  }, [newCharaAlert, t]);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const getBoardStats = useCallback(() => {

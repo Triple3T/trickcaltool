@@ -170,6 +170,8 @@ i18n
                 noFileProvided: "파일이 제공되지 않았습니다.",
                 invalidFileInput: "파일이 올바르지 않습니다.",
               },
+              newCharacterAlert: "사도 목록 변경을 감지했습니다.\n미보유 캐릭터 설정을 다시 확인해 주세요.",
+              repairedAlert: "데이터 변경이 감지되었습니다.\n데이터가 올바르게 복구되었는지 다시 확인해 주세요.",
               gameCopyright: "Trickcal copyrighted by EPIDGames",
               sitePoweredBy: "Trickcal Note powered by Triple",
             },
