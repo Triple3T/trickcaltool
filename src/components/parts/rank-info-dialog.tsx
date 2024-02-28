@@ -1,5 +1,12 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Info } from "lucide-react";
+import { Check, ChevronsRight, Dot, Info, Pencil, Undo2 } from "lucide-react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionContent,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import LazyInput from "@/components/common/lazy-input";
 import SubtitleBar from "./subtitlebar";
 import {
   Attack,
@@ -17,6 +26,7 @@ import {
   Race,
   StatType,
 } from "@/types/enums";
+import rankClassNames from "@/utils/rankClassNames";
 
 interface RankInfoDialogProps {
   rank: number;
@@ -24,6 +34,8 @@ interface RankInfoDialogProps {
   charaTypes: string;
   rankStats: number[][][];
   sameRankBonus?: string[];
+  maxRank: number;
+  changeRank?: (chara: string, rank: number) => void;
 }
 
 const RankInfoDialog = ({
@@ -32,10 +44,19 @@ const RankInfoDialog = ({
   charaTypes,
   rankStats,
   sameRankBonus,
+  maxRank,
+  changeRank,
 }: RankInfoDialogProps) => {
   const { t } = useTranslation();
+  const [rankSettingOpened, setRankSettingOpened] = useState(false);
+  const [rankToBeChanged, setRankToBeChanged] = useState(rank);
   return (
-    <Dialog>
+    <Dialog
+      onOpenChange={(o) => {
+        if (!o) setRankSettingOpened(false);
+        setRankToBeChanged(rank);
+      }}
+    >
       <DialogTrigger>
         <Info className="h-4 w-4 rounded-full" fill="#a0a0a0" />
       </DialogTrigger>
@@ -47,7 +68,117 @@ const RankInfoDialog = ({
                 <span className="align-middle">
                   {t("ui.equiprank.allRankBonusesTitle")}
                 </span>
+                <Dot className="inline-block w-4 h-4 mx-px align-middle" />
+                <span className="align-middle">
+                  {t("ui.equiprank.rankText", {
+                    0: `${rank}`,
+                  })}
+                </span>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="align-middle w-4 h-4 ml-1.5"
+                  onClick={
+                    changeRank
+                      ? () => setRankSettingOpened((v) => !v)
+                      : undefined
+                  }
+                >
+                  <Pencil />
+                </Button>
               </div>
+              {changeRank && (
+                <Accordion
+                  type="multiple"
+                  value={rankSettingOpened ? ["open"] : []}
+                >
+                  <AccordionItem value="open" className="border-none">
+                    <AccordionContent>
+                      <div className="flex items-center">
+                        <div className="flex-1 text-lg text-center">
+                          <span
+                            className={[
+                              rankClassNames[rank - 1][1],
+                              "inline-block align-middle",
+                            ].join(" ")}
+                          >
+                            {t("ui.equiprank.rankText", {
+                              0: `${rank}`,
+                            })}
+                          </span>
+                          <ChevronsRight className="inline-block mx-1 w-5 h-5 align-middle" />
+                          <span
+                            className={[
+                              rankClassNames[rankToBeChanged - 1][1],
+                              "inline-block align-middle",
+                            ].join(" ")}
+                          >
+                            {t("ui.equiprank.rankText", {
+                              0: `${rankToBeChanged}`,
+                            })}
+                          </span>
+                        </div>
+                        <div className="flex-initial flex flex-row gap-1">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="w-6 h-6"
+                            onClick={() => {
+                              setRankToBeChanged(rank);
+                              setRankSettingOpened(false);
+                            }}
+                          >
+                            <Undo2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="default"
+                            className="w-6 h-6"
+                            onClick={() => {
+                              changeRank(chara, rankToBeChanged);
+                              setRankSettingOpened(false);
+                            }}
+                          >
+                            <Check className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="flex flex-row gap-2 pl-2 pr-1 py-1 mt-0.5 -mb-2">
+                        <Slider
+                          value={[rankToBeChanged]}
+                          min={1}
+                          max={maxRank}
+                          onValueChange={(v) =>
+                            setRankToBeChanged(
+                              Math.max(Math.min(v[0], maxRank), 1)
+                            )
+                          }
+                          className="w-full"
+                          tabIndex={-1}
+                        />
+                        <LazyInput
+                          type="text"
+                          className={`w-8 p-1.5 text-right h-full${
+                            rankToBeChanged > maxRank || rankToBeChanged < 1
+                              ? " ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
+                              : ""
+                          }`}
+                          pattern="[0-9]{1,2}"
+                          value={`${Math.max(
+                            Math.min(rankToBeChanged, maxRank),
+                            1
+                          )}`}
+                          onValueChange={(v) =>
+                            setRankToBeChanged(
+                              Math.max(Math.min(Number(v), maxRank), 1)
+                            )
+                          }
+                        />
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              )}
               <div className="flex">
                 <img src={`/charas/${chara}.png`} className="w-14 h-14" />
                 <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
@@ -92,7 +223,12 @@ const RankInfoDialog = ({
         <div className="flex flex-col gap-2">
           <div className="flex flex-col gap-2">
             <SubtitleBar>{t("ui.equiprank.allRankBonusesTitle")}</SubtitleBar>
-            <ScrollArea className="h-72 -mx-1 sm:mx-0 md:mx-1 px-1">
+            <ScrollArea
+              className={`${
+                rankSettingOpened ? "h-52" : "h-72"
+              } -mx-1 sm:mx-0 md:mx-1 px-1`}
+              style={{ transition: "ease-out 0.2s" }}
+            >
               <div className="flex flex-col gap-1.5 px-2 my-1">
                 {rankStats.map((rankStatSet, index) => {
                   return (
@@ -141,7 +277,7 @@ const RankInfoDialog = ({
           <div className="flex flex-col gap-2">
             <SubtitleBar>{t("ui.equiprank.hasSameRankBonusTitle")}</SubtitleBar>
             {sameRankBonus && sameRankBonus.length > 0 ? (
-              <ScrollArea className="h-36 -mx-1 sm:mx-0 md:mx-1 px-1">
+              <ScrollArea className="h-24 -mx-1 sm:mx-0 md:mx-1 px-1">
                 <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] gap-1 px-2 my-1">
                   {sameRankBonus.map((chara) => {
                     return (
