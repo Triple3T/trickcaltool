@@ -38,7 +38,7 @@ import userdata from "@/utils/userdata";
 import { UserDataEqRank, UserDataUnowned } from "@/types/types";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
-const MAX_RANK = 7;
+const MAX_RANK = 8;
 
 const personalityBG = {
   [Personality.Cool]: "bg-personality-Cool",
