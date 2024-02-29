@@ -417,7 +417,6 @@ const TrickcalBoard = () => {
     if (!userData.o.every((c) => userData.b[c])) {
       setNewCharaAlert(true);
       flag = true;
-      console.log(userData.o.filter((c) => !userData.b[c]))
       userData.o
         .filter((c) => !userData.b[c])
         .forEach((c) => {
