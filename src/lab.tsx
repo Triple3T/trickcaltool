@@ -420,7 +420,7 @@ const Lab = () => {
               <span
                 onClick={() => setPage(labData?.currentLab.indexDepth1 ?? 0)}
               >
-                {page + 1}단계
+                {t("ui.lab.labStep", { 0: `${page + 1}` })}
               </span>
             </div>
             <Button

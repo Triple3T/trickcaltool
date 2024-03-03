@@ -239,6 +239,7 @@ i18n
               title: "교단 연구 노트",
               description: "교단의 연구 현황을 체크합니다.",
               subDescription: "루포야 일하자",
+              labStep: "{{0}}단계",
               cumulativeEffect: "누적 효과",
               remainMaterials: "남은 재료",
               remainMaterialsDepth1: "전체 단계",
