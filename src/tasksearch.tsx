@@ -257,7 +257,7 @@ const TaskSearch = () => {
                             );
                         }}
                       >
-                        <div className="w-16 h-16 relative">
+                        <div className="w-16 h-16 relative dark:contrast-125 dark:brightness-80">
                           <div className="w-16 h-16 rounded-full overflow-hidden">
                             <img
                               src={`/schedule/LifeSkill${lifeskillId}.png`}
@@ -317,7 +317,7 @@ const TaskSearch = () => {
                   <div className="text-xl">{t(`task.${taskId}`)}</div>
                 </div>
               </div>
-              <div className="w-full relative aspect-[254/176]">
+              <div className="w-full relative aspect-[254/176] dark:contrast-125 dark:brightness-80">
                 <img
                   className="w-full aspect-[254/176]"
                   src={`/tasks/Img_${taskId}_Back.png`}
