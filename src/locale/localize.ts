@@ -242,6 +242,7 @@ i18n
               labStep: "{{0}}단계",
               cumulativeEffect: "누적 효과",
               remainMaterials: "남은 재료",
+              showRemainAsSubMaterials: "하위 재료로 표시",
               remainMaterialsDepth1: "전체 단계",
               remainMaterialsDepth2: "현재 단계",
             },

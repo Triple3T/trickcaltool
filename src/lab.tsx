@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import ItemSlot from "@/components/parts/item-slot";
@@ -199,12 +201,58 @@ const labDataReducer = (
   }
 };
 
+const mergeDecomp = (
+  prev: { [key: string]: number },
+  curr: { [key: string]: number }
+): { [key: string]: number } => {
+  Object.entries(curr).forEach(([k, v]) => {
+    if (prev[k]) prev[k] += v;
+    else prev[k] = v;
+  });
+  return prev;
+};
+
+const decompOnlyProd = (
+  key: string,
+  value: number,
+  depth: number
+): { [key: string]: number } => {
+  const smt = material.m[key].m;
+  const isOnlyProd = !material.m[key].g;
+  if (smt && (!depth || isOnlyProd)) {
+    return Object.entries(smt)
+      .map(([k, v]) => decompOnlyProd(k, v * value, depth + 1))
+      .reduce(mergeDecomp, {} as { [key: string]: number });
+  }
+  return { [key]: value };
+};
+
+const decomp = (key: string, value: number): { [key: string]: number } => {
+  const smt = material.m[key].m;
+  if (smt) {
+    return Object.entries(smt)
+      .map(([k, v]) => decomp(k, v * value))
+      .reduce(mergeDecomp, {} as { [key: string]: number });
+  }
+  return { [key]: value };
+};
+
+const decompAll = (
+  m: { [key: string]: number },
+  f?: boolean
+): { [key: string]: number } => {
+  return Object.entries(m)
+    .map(([k, v]) => (f ? decomp(k, v) : decompOnlyProd(k, v, 0)))
+    .reduce(mergeDecomp, {} as { [key: string]: number });
+};
+
 const Lab = () => {
   const { t } = useTranslation();
   const [labData, dispatchLabData] = useReducer(labDataReducer, undefined);
   const [materialDepth, setMaterialDepth] = useState<
     "indexDepth1" | "indexDepth2"
   >("indexDepth2");
+  const [showAsSubMaterial, setShowAsSubMaterial] = useState(false);
   const [page, setPage] = useState(0);
   const [repairedAlert, setRepairedAlert] = useState(false);
 
@@ -377,21 +425,36 @@ const Lab = () => {
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
+              <div className="my-2 text-left flex items-center gap-2">
+                <Switch
+                  id="show-as-sub-materials"
+                  checked={showAsSubMaterial}
+                  onCheckedChange={(c) => {
+                    setShowAsSubMaterial(c);
+                  }}
+                />
+                <Label htmlFor="show-as-sub-materials">
+                  {t("ui.lab.showRemainAsSubMaterials")}
+                </Label>
+              </div>
               {labData && (
                 <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-evenly">
-                  {Object.entries(labData.materialRemain[materialDepth].m).map(
-                    ([item, amount], index) => {
-                      const rarityInfo = material.r[material.m[item].r];
-                      return (
-                        <ItemSlot
-                          rarityInfo={rarityInfo}
-                          item={item}
-                          amount={amount}
-                          key={index}
-                        />
-                      );
-                    }
-                  )}
+                  {(showAsSubMaterial
+                    ? Object.entries(
+                        decompAll(labData.materialRemain[materialDepth].m)
+                      )
+                    : Object.entries(labData.materialRemain[materialDepth].m)
+                  ).map(([item, amount], index) => {
+                    const rarityInfo = material.r[material.m[item].r];
+                    return (
+                      <ItemSlot
+                        rarityInfo={rarityInfo}
+                        item={item}
+                        amount={amount}
+                        key={index}
+                      />
+                    );
+                  })}
                   <ItemSlot
                     rarityInfo={{ s: "Gold" }}
                     item="/icons/CurrencyIcon_0008"

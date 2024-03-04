@@ -13,32 +13,33 @@
                 "CollectMadeLow2":6
             }
         },
-        "CollectMadeLow1":{"r":1},
+        "CollectMadeLow1":{"r":1,"g":true},
         "CollectMadeLow2":{
             "r":1,
+            "g":true,
             "m":{
                 "MadeLow9":6,
                 "MadeLow12":4
             }
         },
-        "FoodMadeLow1":{"r":0},
-        "FoodMadeLow2":{"r":0},
-        "FoodMadeLow3":{"r":0},
-        "FoodMadeLow4":{"r":0},
-        "FoodMadeLow5":{"r":0},
-        "FoodMadeLow6":{"r":0},
-        "FoodMadeLow7":{"r":0},
-        "FoodMadeLow8":{"r":0},
-        "FoodMadeLow9":{"r":0},
-        "FoodMadeLow10":{"r":0},
-        "FoodMadeLow11":{"r":0},
-        "FoodMadeLow12":{"r":0},
-        "FoodMadeLow13":{"r":0},
-        "FoodMadeLow14":{"r":0},
-        "FoodMadeLow15":{"r":0},
-        "FoodMadeLow16":{"r":0},
-        "FoodMadeLow17":{"r":0},
-        "FoodMadeLow18":{"r":0},
+        "FoodMadeLow1":{"r":0,"g":true},
+        "FoodMadeLow2":{"r":0,"g":true},
+        "FoodMadeLow3":{"r":0,"g":true},
+        "FoodMadeLow4":{"r":0,"g":true},
+        "FoodMadeLow5":{"r":0,"g":true},
+        "FoodMadeLow6":{"r":0,"g":true},
+        "FoodMadeLow7":{"r":0,"g":true},
+        "FoodMadeLow8":{"r":0,"g":true},
+        "FoodMadeLow9":{"r":0,"g":true},
+        "FoodMadeLow10":{"r":0,"g":true},
+        "FoodMadeLow11":{"r":0,"g":true},
+        "FoodMadeLow12":{"r":0,"g":true},
+        "FoodMadeLow13":{"r":0,"g":true},
+        "FoodMadeLow14":{"r":0,"g":true},
+        "FoodMadeLow15":{"r":0,"g":true},
+        "FoodMadeLow16":{"r":0,"g":true},
+        "FoodMadeLow17":{"r":0,"g":true},
+        "FoodMadeLow18":{"r":0,"g":true},
         "FurnMadeHigh1":{
             "r":2,
             "m":{
@@ -46,17 +47,20 @@
                 "MadeHigh13":4
             }
         },
-        "FurnMadeLow1":{"r":1},
+        "FurnMadeLow1":{"r":1,"g":true},
         "FurnMadeLow2":{
             "r":1,
+            "g":true,
             "m":{"MadeLow13":6}
         },
         "FurnMadeLow3":{
             "r":1,
+            "g":true,
             "m":{"MadeLow7":6}
         },
         "MadeHigh1":{
             "r":1,
+            "g":true,
             "m":{"MadeLow2":6}
         },
         "MadeHigh2":{
@@ -93,6 +97,7 @@
         },
         "MadeHigh7":{
             "r":1,
+            "g":true,
             "m":{
                 "MadeLow3":4,
                 "MadeLow14":6
@@ -139,30 +144,33 @@
                 "MadeHigh9":2
             }
         },
-        "MadeLow1":{"r":0},
-        "MadeLow2":{"r":0},
-        "MadeLow3":{"r":0},
-        "MadeLow4":{"r":0},
-        "MadeLow5":{"r":0},
-        "MadeLow6":{"r":0},
-        "MadeLow7":{"r":0},
+        "MadeLow1":{"r":0,"g":true},
+        "MadeLow2":{"r":0,"g":true},
+        "MadeLow3":{"r":0,"g":true},
+        "MadeLow4":{"r":0,"g":true},
+        "MadeLow5":{"r":0,"g":true},
+        "MadeLow6":{"r":0,"g":true},
+        "MadeLow7":{"r":0,"g":true},
         "MadeLow8":{
             "r":1,
+            "g":true,
             "m":{"MadeLow3":6}
         },
-        "MadeLow9":{"r":0},
+        "MadeLow9":{"r":0,"g":true},
         "MadeLow10":{
             "r":1,
+            "g":true,
             "m":{"MadeLow6":6}
         },
         "MadeLow11":{
             "r":1,
+            "g":true,
             "m":{"MadeLow4":6}
         },
-        "MadeLow12":{"r":0},
-        "MadeLow13":{"r":0},
-        "MadeLow14":{"r":0},
-        "MadeLow15":{"r":0},
-        "MadeLow16":{"r":0}
+        "MadeLow12":{"r":0,"g":true},
+        "MadeLow13":{"r":0,"g":true},
+        "MadeLow14":{"r":0,"g":true},
+        "MadeLow15":{"r":0,"g":true},
+        "MadeLow16":{"r":0,"g":true}
     }
 }
