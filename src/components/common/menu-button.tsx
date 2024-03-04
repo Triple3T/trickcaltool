@@ -50,6 +50,17 @@ const MenuButton = () => {
           />
           {t("ui.lab.title")}
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/tasksearch")}
+          disabled={matchPath(location.pathname, "/tasksearch") ? true : false}
+        >
+          {/* <img
+            src="/mainlobby/HousingButton.png"
+            className="w-4 h-4 inline-block mr-1"
+          /> */}
+          {t("ui.index.testMark")}
+          {t("ui.tasksearch.title")}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

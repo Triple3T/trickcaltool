@@ -28,6 +28,10 @@ const router = createBrowserRouter([
     path: "/lab",
     element: <Lab />,
   },
+  {
+    path: "/tasksearch",
+    element: <TaskSearch />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
