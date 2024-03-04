@@ -8,6 +8,7 @@ import "./font.css";
 import TrickcalBoard from "./trickcalboard";
 import EquipRank from "./equiprank";
 import Lab from "./lab";
+import TaskSearch from "./tasksearch";
 
 import "@/locale/localize";
 
