@@ -34,6 +34,9 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [v, setV] = useState(value ? t(`chara.${value}`) : "");
+  useEffect(() => {
+    setV(value ? t(`chara.${value}`) : "");
+  }, [t, value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -89,8 +92,8 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   const [open, setOpen] = useState(false);
   const [v, setV] = useState(value);
   useEffect(() => {
-    onChange(v);
-  }, [onChange, v]);
+    setV(value ? t(`lifeskill.${value}`) : "");
+  }, [t, value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -101,26 +104,27 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           aria-expanded={open}
           className="w-60 justify-between font-onemobile"
         >
-          {v ? v : t("ui.tasksearch.selectTask")}
+          {v ? v : t("ui.tasksearch.selectLifeskill")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-60 p-0 font-onemobile">
         <Command>
           <CommandInput
-            placeholder={t("ui.tasksearch.searchTask")}
+            placeholder={t("ui.tasksearch.searchLifeskill")}
             className="h-9"
           />
-          <CommandEmpty>{t("ui.tasksearch.taskNotFound")}</CommandEmpty>
+          <CommandEmpty>{t("ui.tasksearch.lifeskillNotFound")}</CommandEmpty>
           <CommandGroup>
             {Array(lifeskill.n)
               .fill(0)
               .map((_, lifeskillIndex) => (
                 <CommandItem
-                  key={lifeskillIndex}
+                  key={lifeskillIndex + 1}
                   value={t(`lifeskill.${lifeskillIndex + 1}`)}
                   onSelect={(currentValue) => {
                     setV(currentValue === v ? "" : currentValue);
+                    onChange(currentValue === v ? "" : `${lifeskillIndex + 1}`);
                     setOpen(false);
                   }}
                 >
@@ -146,8 +150,8 @@ const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   const [open, setOpen] = useState(false);
   const [v, setV] = useState(value);
   useEffect(() => {
-    onChange(v);
-  }, [onChange, v]);
+    setV(value ? t(`chara.${value}`) : "");
+  }, [t, value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -176,6 +180,7 @@ const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                 value={t(`task.${taskId}`)}
                 onSelect={(currentValue) => {
                   setV(currentValue === v ? "" : currentValue);
+                  onChange(currentValue === v ? "" : taskId);
                   setOpen(false);
                 }}
               >
@@ -199,28 +204,33 @@ const TaskSearch = () => {
   const { t } = useTranslation();
   const [selectedChara, setSelectedChara] = useState("");
   const [selectedLifeskill, setSelectedLifeskill] = useState("");
-  const [selectedTask, setSelectedTask] = useState("");
+  // const [selectedTask, setSelectedTask] = useState("");
   const [bannedIndex, setBannedIndex] = useState<number[]>([]);
-  useEffect(() => {
-    setBannedIndex([]);
-  }, [selectedChara]);
+
   return (
     <Layout>
       <div className="w-full h-4" />
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
-          <div className="flex flex-row p-2 gap-2">
+          <div className="flex flex-col sm:flex-row p-2 gap-2">
             <CharacterCombobox
               value={selectedChara}
-              onChange={setSelectedChara}
+              onChange={(v) => {
+                setSelectedChara(v);
+                setSelectedLifeskill("");
+                setBannedIndex([]);
+              }}
             />
-            {/* <LifeskillCombobox
+            <LifeskillCombobox
               value={selectedLifeskill}
-              onChange={setSelectedLifeskill}
-            /> */}
+              onChange={(v) => {
+                setSelectedLifeskill(v);
+                setSelectedChara("");
+              }}
+            />
             {/* <TaskCombobox value={selectedTask} onChange={setSelectedTask} /> */}
           </div>
-          {selectedChara ? (
+          {selectedChara && (
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="sm:w-32 flex-initial flex flex-row gap-4">
                 <div className="w-24 sm:w-full aspect-square">
@@ -284,134 +294,281 @@ const TaskSearch = () => {
                 </div>
               </div>
             </div>
-          ) : (
-            t("ui.tasksearch.needToSelectCharacter")
           )}
-        </div>
-      </Card>
-      <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
-        {Object.keys(task.t).map((taskId) => {
-          const currentTask = task.t[taskId];
-          if (
-            selectedChara &&
-            currentTask.s.every(
-              (lsid) =>
-                !lifeskill.c[selectedChara].s
-                  .filter((_, i) => !bannedIndex.includes(i))
-                  .includes(lsid)
-            )
-          )
-            return null;
-          return (
-            <div
-              key={taskId}
-              className="w-72 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
-            >
-              <div className="pl-4 mb-1">
-                <div
-                  className="pr-4 pb-1.5 pt-0.5 bg-contain bg-no-repeat"
-                  style={{
-                    backgroundImage: "url(/schedule/Deco_Task_Colored.png)",
-                  }}
-                >
-                  <div className="text-xl">{t(`task.${taskId}`)}</div>
+          {selectedLifeskill && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-2">
+                <div className="w-12 h-12 p-2 relative">
+                  <div className="w-8 h-8 rounded-full overflow-hidden">
+                    <img
+                      className="w-full h-full"
+                      src={`/schedule/LifeSkill${selectedLifeskill}.png`}
+                    />
+                  </div>
+                  <div className="w-12 absolute left-0 top-0.5">
+                    <img
+                      className="h-full mx-auto aspect-[160/148]"
+                      src={`/schedule/Skill_EffectOn.png`}
+                    />
+                  </div>
+                </div>
+                <div className="text-2xl text-right py-2">
+                  {t(`lifeskill.${selectedLifeskill}`)}
                 </div>
               </div>
-              <div className="w-full relative aspect-[254/176] dark:contrast-125 dark:brightness-80">
-                <img
-                  className="w-full aspect-[254/176]"
-                  src={`/tasks/Img_${taskId}_Back.png`}
-                />
-                {currentTask.f && (
-                  <img
-                    className="absolute bottom-0 left-0"
-                    src={`/tasks/Img_${taskId}_Front.png`}
-                    style={{ width: `${currentTask.f}%` }}
-                  />
-                )}
-                <div className="absolute bottom-0 left-0 flex items-end">
-                  <div className="w-16 h-16 relative scale-125">
-                    <div className="p-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden">
-                        <img
-                          className="w-full h-full"
-                          src={`/schedule/LifeSkill${currentTask.s[0]}.png`}
-                        />
-                      </div>
-                    </div>
-                    {(selectedChara
-                      ? lifeskill.c[selectedChara].s.filter(
-                          (_, i) => !bannedIndex.includes(i)
-                        )
-                      : []
-                    ).includes(currentTask.s[0]) ? (
-                      <div className="w-16 absolute left-0 top-0.5">
-                        <img
-                          className="h-full mx-auto aspect-[160/148]"
-                          src={`/schedule/Skill_EffectOn.png`}
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-10 absolute left-3 top-3">
-                        <img
-                          className="w-full h-full aspect-square"
-                          src={`/schedule/IconSkillBorder.png`}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  {currentTask.s.slice(1).map((lifeskillId, index) => {
+              <div>
+                <div className="text-left p-1">
+                  {t("ui.tasksearch.materialsEasyToGet")}
+                </div>
+                <div className="flex flex-row gap-1 flex-wrap py-1">
+                  {[
+                    ...new Set(
+                      Object.values(task.t)
+                        .filter((t) => t.s.includes(Number(selectedLifeskill)))
+                        .map(({ m }) => m)
+                        .flat()
+                    ),
+                  ].map((materialId) => {
                     return (
-                      <div className="w-12 h-12 relative -mx-1" key={index}>
-                        <div className="p-2">
-                          <div className="w-8 h-8 rounded-full overflow-hidden">
-                            <img
-                              className="w-full h-full"
-                              src={`/schedule/LifeSkill${lifeskillId}.png`}
-                            />
-                          </div>
-                        </div>
-                        {(selectedChara
-                          ? lifeskill.c[selectedChara].s.filter(
-                              (_, i) => !bannedIndex.includes(i)
-                            )
-                          : []
-                        ).includes(lifeskillId) ? (
-                          <div className="w-12 absolute left-0 top-0.5">
-                            <img
-                              className="h-full mx-auto aspect-[160/148]"
-                              src={`/schedule/Skill_EffectOn.png`}
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-8 absolute left-2 top-2">
-                            <img
-                              className="w-full h-full aspect-square"
-                              src={`/schedule/IconSkillBorder.png`}
-                            />
-                          </div>
-                        )}
-                      </div>
+                      <ItemSlot
+                        key={materialId}
+                        rarityInfo={material.r[material.m[materialId].r]}
+                        item={materialId}
+                        size={3}
+                      />
                     );
                   })}
                 </div>
               </div>
-              <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
-                {currentTask.m.map((materialId, index) => {
-                  const currrentMaterial = material.m[materialId];
-                  return (
-                    <ItemSlot
-                      key={index}
-                      rarityInfo={material.r[currrentMaterial.r]}
-                      item={materialId}
-                      size={3.5}
-                    />
-                  );
-                })}
-              </div>
             </div>
-          );
-        })}
+          )}
+          {!selectedChara &&
+            !selectedLifeskill &&
+            t("ui.tasksearch.needToSelect")}
+        </div>
+      </Card>
+      <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
+        {!selectedLifeskill &&
+          Object.keys(task.t).map((taskId) => {
+            const currentTask = task.t[taskId];
+            if (
+              selectedChara &&
+              currentTask.s.every(
+                (lsid) =>
+                  !lifeskill.c[selectedChara].s
+                    .filter((_, i) => !bannedIndex.includes(i))
+                    .includes(lsid)
+              )
+            )
+              return null;
+            return (
+              <div
+                key={taskId}
+                className="w-72 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
+              >
+                <div className="pl-4 mb-1">
+                  <div
+                    className="pr-4 pb-1.5 pt-0.5 bg-contain bg-no-repeat"
+                    style={{
+                      backgroundImage: "url(/schedule/Deco_Task_Colored.png)",
+                    }}
+                  >
+                    <div className="text-xl">{t(`task.${taskId}`)}</div>
+                  </div>
+                </div>
+                <div className="w-full relative aspect-[254/176] dark:contrast-125 dark:brightness-80">
+                  <img
+                    className="w-full aspect-[254/176]"
+                    src={`/tasks/Img_${taskId}_Back.png`}
+                  />
+                  {currentTask.f && (
+                    <img
+                      className="absolute bottom-0 left-0"
+                      src={`/tasks/Img_${taskId}_Front.png`}
+                      style={{ width: `${currentTask.f}%` }}
+                    />
+                  )}
+                  <div className="absolute bottom-0 left-0 flex items-end">
+                    <div className="w-16 h-16 relative scale-125">
+                      <div className="p-3">
+                        <div className="w-10 h-10 rounded-full overflow-hidden">
+                          <img
+                            className="w-full h-full"
+                            src={`/schedule/LifeSkill${currentTask.s[0]}.png`}
+                          />
+                        </div>
+                      </div>
+                      {(selectedChara
+                        ? lifeskill.c[selectedChara].s.filter(
+                            (_, i) => !bannedIndex.includes(i)
+                          )
+                        : []
+                      ).includes(currentTask.s[0]) ? (
+                        <div className="w-16 absolute left-0 top-0.5">
+                          <img
+                            className="h-full mx-auto aspect-[160/148]"
+                            src={`/schedule/Skill_EffectOn.png`}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 absolute left-3 top-3">
+                          <img
+                            className="w-full h-full aspect-square"
+                            src={`/schedule/IconSkillBorder.png`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                    {currentTask.s.slice(1).map((lifeskillId, index) => {
+                      return (
+                        <div className="w-12 h-12 relative -mx-1" key={index}>
+                          <div className="p-2">
+                            <div className="w-8 h-8 rounded-full overflow-hidden">
+                              <img
+                                className="w-full h-full"
+                                src={`/schedule/LifeSkill${lifeskillId}.png`}
+                              />
+                            </div>
+                          </div>
+                          {(selectedChara
+                            ? lifeskill.c[selectedChara].s.filter(
+                                (_, i) => !bannedIndex.includes(i)
+                              )
+                            : []
+                          ).includes(lifeskillId) ? (
+                            <div className="w-12 absolute left-0 top-0.5">
+                              <img
+                                className="h-full mx-auto aspect-[160/148]"
+                                src={`/schedule/Skill_EffectOn.png`}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-8 absolute left-2 top-2">
+                              <img
+                                className="w-full h-full aspect-square"
+                                src={`/schedule/IconSkillBorder.png`}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
+                  {currentTask.m.map((materialId, index) => {
+                    const currrentMaterial = material.m[materialId];
+                    return (
+                      <ItemSlot
+                        key={index}
+                        rarityInfo={material.r[currrentMaterial.r]}
+                        item={materialId}
+                        size={3.5}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        {selectedLifeskill &&
+          Object.entries(chara)
+            .filter(
+              ([charaId, v]) =>
+                v.t[1] !== "1" &&
+                lifeskill.c[charaId].s.includes(Number(selectedLifeskill))
+            )
+            .sort(([a], [b]) => {
+              return (
+                (lifeskill.c[a].s.indexOf(Number(selectedLifeskill)) && 1) -
+                  (lifeskill.c[b].s.indexOf(Number(selectedLifeskill)) && 1) ||
+                t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+              );
+            })
+            .map(([charaId]) => {
+              const cls = lifeskill.c[charaId].s;
+              return (
+                <div
+                  key={charaId}
+                  className="w-72 rounded-xl px-2 py-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
+                >
+                  <div className="flex flex-row gap-2.5 items-center">
+                    <img
+                      className="w-12 h-12 aspect-square"
+                      src={`/charas/${charaId}.png`}
+                    />
+                    <div className="text-2xl">{t(`chara.${charaId}`)}</div>
+                  </div>
+                  <div className="flex flex-row flex-wrap gap-0.5 my-2">
+                    <div className="w-16 h-16 -mx-1 relative flex-[4]">
+                      <div className="p-3">
+                        <div className="w-10 h-10 rounded-full overflow-hidden">
+                          <img
+                            className="w-full h-full"
+                            src={`/schedule/LifeSkill${cls[0]}.png`}
+                          />
+                        </div>
+                      </div>
+                      {cls[0].toString() === selectedLifeskill ? (
+                        <div className="w-16 absolute left-0 top-0.5">
+                          <img
+                            className="h-full mx-auto aspect-[160/148]"
+                            src={`/schedule/Skill_EffectOn.png`}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 absolute left-3 top-3">
+                          <img
+                            className="w-full h-full aspect-square"
+                            src={`/schedule/IconSkillBorder.png`}
+                          />
+                        </div>
+                      )}
+                      <div className="text-sm flex justify-center -mt-1.5">
+                        <div className="w-max">{t(`lifeskill.${cls[0]}`)}</div>
+                      </div>
+                    </div>
+                    {cls.slice(1).map((lifeskillId, index) => {
+                      return (
+                        <div
+                          className="w-12 h-12 relative mx-auto flex-[3]"
+                          key={index}
+                        >
+                          <div className="p-2">
+                            <div className="w-8 h-8 rounded-full overflow-hidden">
+                              <img
+                                className="w-full h-full"
+                                src={`/schedule/LifeSkill${lifeskillId}.png`}
+                              />
+                            </div>
+                          </div>
+                          {lifeskillId.toString() === selectedLifeskill ? (
+                            <div className="w-12 absolute left-0 top-0.5">
+                              <img
+                                className="h-full mx-auto aspect-[160/148]"
+                                src={`/schedule/Skill_EffectOn.png`}
+                              />
+                            </div>
+                          ) : (
+                            <div className="w-8 absolute left-2 top-2">
+                              <img
+                                className="w-full h-full aspect-square"
+                                src={`/schedule/IconSkillBorder.png`}
+                              />
+                            </div>
+                          )}
+                          <div className="text-sm flex justify-center -mt-1">
+                            <div className="w-max">
+                              {t(`lifeskill.${lifeskillId}`)}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
       </div>
     </Layout>
   );
