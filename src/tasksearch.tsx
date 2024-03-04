@@ -145,60 +145,60 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
     </Popover>
   );
 };
-const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
-  const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [v, setV] = useState(value);
-  useEffect(() => {
-    setV(value ? t(`chara.${value}`) : "");
-  }, [t, value]);
+// const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
+//   const { t } = useTranslation();
+//   const [open, setOpen] = useState(false);
+//   const [v, setV] = useState(value);
+//   useEffect(() => {
+//     setV(value ? t(`chara.${value}`) : "");
+//   }, [t, value]);
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-60 justify-between"
-        >
-          {v ? v : t("ui.tasksearch.selectTask")}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-60 p-0">
-        <Command>
-          <CommandInput
-            placeholder={t("ui.tasksearch.searchTask")}
-            className="h-9"
-          />
-          <CommandEmpty>{t("ui.tasksearch.taskNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Object.keys(task.t).map((taskId) => (
-              <CommandItem
-                key={taskId}
-                value={t(`task.${taskId}`)}
-                onSelect={(currentValue) => {
-                  setV(currentValue === v ? "" : currentValue);
-                  onChange(currentValue === v ? "" : taskId);
-                  setOpen(false);
-                }}
-              >
-                {t(`task.${taskId}`)}
-                <Check
-                  className={cn(
-                    "ml-auto h-4 w-4",
-                    v === t(`task.${taskId}`) ? "opacity-100" : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  );
-};
+//   return (
+//     <Popover open={open} onOpenChange={setOpen}>
+//       <PopoverTrigger asChild>
+//         <Button
+//           variant="outline"
+//           role="combobox"
+//           aria-expanded={open}
+//           className="w-60 justify-between"
+//         >
+//           {v ? v : t("ui.tasksearch.selectTask")}
+//           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+//         </Button>
+//       </PopoverTrigger>
+//       <PopoverContent className="w-60 p-0">
+//         <Command>
+//           <CommandInput
+//             placeholder={t("ui.tasksearch.searchTask")}
+//             className="h-9"
+//           />
+//           <CommandEmpty>{t("ui.tasksearch.taskNotFound")}</CommandEmpty>
+//           <CommandGroup>
+//             {Object.keys(task.t).map((taskId) => (
+//               <CommandItem
+//                 key={taskId}
+//                 value={t(`task.${taskId}`)}
+//                 onSelect={(currentValue) => {
+//                   setV(currentValue === v ? "" : currentValue);
+//                   onChange(currentValue === v ? "" : taskId);
+//                   setOpen(false);
+//                 }}
+//               >
+//                 {t(`task.${taskId}`)}
+//                 <Check
+//                   className={cn(
+//                     "ml-auto h-4 w-4",
+//                     v === t(`task.${taskId}`) ? "opacity-100" : "opacity-0"
+//                   )}
+//                 />
+//               </CommandItem>
+//             ))}
+//           </CommandGroup>
+//         </Command>
+//       </PopoverContent>
+//     </Popover>
+//   );
+// };
 
 const TaskSearch = () => {
   const { t } = useTranslation();
