@@ -10,6 +10,8 @@ import EquipRank from "./equiprank";
 import Lab from "./lab";
 import TaskSearch from "./tasksearch";
 
+import Privacy from "./privacy";
+
 import "@/locale/localize";
 
 const router = createBrowserRouter([
@@ -32,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/tasksearch",
     element: <TaskSearch />,
+  },
+  {
+    path: "/privacy",
+    element: <Privacy />,
   },
 ]);
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ExternalLink } from "lucide-react";
 import "./App.css";
@@ -99,18 +100,18 @@ function App() {
             </div>
           </section>
         </main>
-        <footer className="flex items-center justify-center py-4 bg-gray-500 shadow-md dark:bg-gray-800 fixed bottom-0 left-0 right-0">
+        <footer className="flex flex-col sm:flex-row items-center justify-center py-4 bg-gray-500 shadow-md dark:bg-gray-800 fixed bottom-0 left-0 right-0 gap-1">
           <p className="text-[0.625rem] text-white dark:text-gray-400">
             {t("ui.index.gameCopyright")}, {t("ui.index.sitePoweredBy")}
           </p>
-          {/* <nav className="ml-4 flex space-x-2">
+          <nav className="ml-4 flex space-x-2">
             <Link
               className="text-xs text-white dark:text-gray-400 hover:underline"
-              to="#"
+              to="/privacy"
             >
               Privacy Policy
             </Link>
-            <Link
+            {/* <Link
               className="text-xs text-white dark:text-gray-400 hover:underline"
               to="#"
             >
@@ -121,8 +122,8 @@ function App() {
               to="#"
             >
               About Us
-            </Link>
-          </nav> */}
+            </Link> */}
+          </nav>
         </footer>
       </div>
     </ThemeProvider>
