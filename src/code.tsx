@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/components/theme-provider";
 import googleAccessUrl from "@/utils/googleAccessUrl";
 
 const Code = () => {
@@ -33,33 +34,35 @@ const Code = () => {
     }
   }, [navigate, requestToken, searchParams]);
   return (
-    <div className="mt-[35vh] mx-auto text-center font-onemobile">
-      {success ? (
-        <div>
-          <div>{t("ui.common.tokenSuccess")}</div>
-          <div>{t("ui.common.tokenSuccessDescription")}</div>
-        </div>
-      ) : failed ? (
-        <div>
-          <div>{t("ui.common.tokenFailed")}</div>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <div className="mt-[35vh] mx-auto text-center font-onemobile">
+        {success ? (
           <div>
-            <a href={googleAccessUrl} target="_self" rel="noreferrer">
-              {t("ui.common.tokenFailedDescription")}
-            </a>
+            <div>{t("ui.common.tokenSuccess")}</div>
+            <div>{t("ui.common.tokenSuccessDescription")}</div>
           </div>
-        </div>
-      ) : (
-        <div>
+        ) : failed ? (
           <div>
-            <img
-              src="/networkicon/NetworkIcon_Elena.png"
-              className="w-24 h-24 mx-auto"
-            />
+            <div>{t("ui.common.tokenFailed")}</div>
+            <div>
+              <a href={googleAccessUrl} target="_self" rel="noreferrer">
+                {t("ui.common.tokenFailedDescription")}
+              </a>
+            </div>
           </div>
-          <div>{t("ui.common.tokenProcessing")}</div>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div>
+            <div>
+              <img
+                src="/networkicon/NetworkIcon_Elena.png"
+                className="w-24 h-24 mx-auto"
+              />
+            </div>
+            <div>{t("ui.common.tokenProcessing")}</div>
+          </div>
+        )}
+      </div>
+    </ThemeProvider>
   );
 };
 
