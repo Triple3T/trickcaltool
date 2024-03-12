@@ -529,9 +529,11 @@ const PurpleBoardStatStatistic = ({
 const BoardCrayonStatistic = ({
   data,
   rarity,
+  require,
 }: {
   data: BoardDataPropsBoard[];
   rarity: number;
+  require: number[];
 }) => {
   const { t } = useTranslation();
   const statStatistic = data.map((d) => {
@@ -551,7 +553,7 @@ const BoardCrayonStatistic = ({
             {t(`ui.board.usedCountLabel`)}
           </div>
           <div className="text-right flex-auto">
-            {statStatistic.reduce((a, b, i) => a + b * (i + 1), 0) * 2}
+            {statStatistic.reduce((a, b, i) => a + b * require[i], 0)}
             {t("ui.board.crayonCountUnit")}
           </div>
         </div>
@@ -1012,6 +1014,7 @@ const PurpleBoard = () => {
                         ),
                       };
                     })}
+                    require={[2, 4, 6]}
                   />
                 )}
               </div>
@@ -1071,6 +1074,7 @@ const PurpleBoard = () => {
                         ),
                       };
                     })}
+                    require={[3, 6, 9]}
                   />
                 )}
               </div>
