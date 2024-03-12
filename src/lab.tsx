@@ -1,6 +1,14 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { AuthContext } from "@/contexts/AuthContext";
 import Layout from "@/components/layout";
 import {
   Accordion,
@@ -52,6 +60,7 @@ interface LabDataPropsCore {
   currentLab: LabDataCurrent;
   materialRemain: LabMaterialRemain;
   effectTotal: (EffectByRace | EffectUniversal)[];
+  isDirty: number;
 }
 
 type LabDataProps = LabDataPropsCore | undefined;
@@ -172,7 +181,7 @@ interface LabDataChangeIndexAction {
 }
 
 const labDataChangeIndexActionHandler = (
-  _state: LabDataProps,
+  state: LabDataProps,
   action: LabDataChangeIndexAction
 ): LabDataPropsCore => {
   const { indexDepth1, indexDepth2 } = action.payload;
@@ -180,14 +189,34 @@ const labDataChangeIndexActionHandler = (
   const currentLab = { indexDepth1, indexDepth2 };
   const effectTotal = reduceEffectTotal(currentLab);
   const materialRemain = reduceMaterialRemain(currentLab);
-  return { currentLab, effectTotal, materialRemain };
+  return {
+    ...state,
+    currentLab,
+    effectTotal,
+    materialRemain,
+    isDirty: state ? (((state.isDirty ?? 0) + 1) % 32768) + 65536 : 0,
+  };
 };
 
-// type LabDataReduceAction = LabDataRestoreAction | LabDataChangeIndexAction;
+interface LabDataClean {
+  type: "clean";
+}
+
+const labDataCleanActionHandler = (
+  state: NonNullable<LabDataProps>
+): LabDataProps => {
+  return { ...state, isDirty: 0 };
+};
+
+// type LabDataReduceAction =
+//   | LabDataRestoreAction
+//   | LabDataChangeIndexAction
+//   | LabDataClean;
+type LabDataReduceAction = LabDataChangeIndexAction | LabDataClean;
 
 const labDataReducer = (
   state: LabDataProps,
-  action: LabDataChangeIndexAction
+  action: LabDataReduceAction
 ): LabDataProps => {
   // if (action.type === "restore") {
   //   return LabDataRestoreActionHandler(action);
@@ -196,6 +225,10 @@ const labDataReducer = (
   switch (action.type) {
     case "index":
       return labDataChangeIndexActionHandler(state, action);
+    case "clean":
+      // return labDataCleanActionHandler(state);
+      if (state) return labDataCleanActionHandler(state);
+      break;
     default:
       throw new Error();
   }
@@ -248,6 +281,7 @@ const decompAll = (
 
 const Lab = () => {
   const { t } = useTranslation();
+  const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
   const [labData, dispatchLabData] = useReducer(labDataReducer, undefined);
   const [materialDepth, setMaterialDepth] = useState<
     "indexDepth1" | "indexDepth2"
@@ -255,6 +289,7 @@ const Lab = () => {
   const [showAsSubMaterial, setShowAsSubMaterial] = useState(false);
   const [page, setPage] = useState(0);
   const [repairedAlert, setRepairedAlert] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const initFromUserData = useCallback(() => {
     const { autoRepaired: ar1, ...userDataLabProto } = userdata.lab.load();
@@ -275,6 +310,35 @@ const Lab = () => {
       setRepairedAlert(false);
     }
   }, [repairedAlert, t]);
+
+  useEffect(() => {
+    (async () => {
+      if (isReady) {
+        if (googleLinked && autoLoad && !loaded) {
+          toast(t("ui.common.dataLoading"));
+          await autoLoad();
+          initFromUserData();
+          toast(t("ui.common.dataLoaded"));
+          setLoaded(true);
+        }
+        if (!googleLinked) initFromUserData();
+      }
+    })();
+  }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
+
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>();
+  const autosaver = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      dispatchLabData({ type: "clean" });
+      if (isReady && googleLinked && autoSave) {
+        autoSave();
+      }
+    }, 500);
+  }, [autoSave, googleLinked, isReady]);
+  useEffect(() => {
+    if (labData && labData.isDirty) autosaver();
+  }, [autosaver, labData]);
 
   return (
     <Layout>
