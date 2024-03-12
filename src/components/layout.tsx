@@ -5,7 +5,7 @@ import MenuButton from "./common/menu-button";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="fixed top-0 left-0 p-2 w-full flex gap-2 z-20">
         <div className="flex-1 flex gap-2 justify-start">
           <BackButton />

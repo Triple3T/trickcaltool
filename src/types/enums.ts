@@ -11,6 +11,19 @@ export enum BoardType {
   Hp = 9,
 }
 
+export enum PurpleBoardType {
+  AttackMagic = 0,
+  AttackPhysic = 1,
+  CriticalMult = 2,
+  CriticalMultResist = 3,
+  CriticalRate = 4,
+  CriticalResist = 5,
+  DefenseMagic = 6,
+  DefensePhysic = 7,
+  // Healing = 8,
+  Hp = 9,
+}
+
 export enum StatType {
   AttackMagic = 0,
   AttackPhysic = 1,

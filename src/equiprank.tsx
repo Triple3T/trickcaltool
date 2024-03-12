@@ -1,5 +1,13 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "@/contexts/AuthContext";
 import Layout from "@/components/layout";
 import {
   Accordion,
@@ -75,6 +83,7 @@ interface RankDataPropsCore {
   minRank: number;
   maxRank: number;
   dirty: boolean;
+  isDirty: number;
 }
 
 type RankDataProps = RankDataPropsCore | undefined;
@@ -113,6 +122,7 @@ const rankDataCharaRankModifyActionHandler = (
   saveUserData(userData);
   return {
     ...state,
+    isDirty: ((state.isDirty + 1) % 32768) + 65536,
     user: userData,
     charas: {
       ...state.charas,
@@ -156,6 +166,7 @@ const rankDataChangeTargetStatActionHandler = (
   saveUserData(userData);
   return {
     ...state,
+    isDirty: ((state.isDirty + 1) % 32768) + 65536,
     user: userData,
     targetStat: action.payload,
   };
@@ -215,6 +226,7 @@ const rankDataApplyMinMaxActionHandler = (
   saveUserData(userData);
   return {
     ...state,
+    isDirty: ((state.isDirty + 1) % 32768) + 65536,
     user: userData,
     charas: Object.fromEntries(
       Object.entries(state.charas).map(([c, v]) => {
@@ -231,6 +243,19 @@ const rankDataApplyMinMaxActionHandler = (
   };
 };
 
+interface RankDataClean {
+  type: "clean";
+}
+
+const rankDataCleanActionHandler = (
+  state: NonNullable<RankDataProps>
+): RankDataProps => {
+  return {
+    ...state,
+    isDirty: 0,
+  };
+};
+
 type RankDataReduceAction =
   | RankDataRestoreAction
   | RankDataCharaRankModify
@@ -238,7 +263,8 @@ type RankDataReduceAction =
   | RankDataChangeTargetStat
   | RankDataChangeMinRank
   | RankDataChangeMaxRank
-  | RankDataApplyMinMax;
+  | RankDataApplyMinMax
+  | RankDataClean;
 
 const rankDataReducer = (
   state: RankDataProps,
@@ -259,17 +285,21 @@ const rankDataReducer = (
       return rankDataChangeMaxRankActionHandler(state, action);
     case "applyminmax":
       return rankDataApplyMinMaxActionHandler(state);
+    case "clean":
+      return rankDataCleanActionHandler(state);
   }
 };
 
 const EquipRank = () => {
   const { t } = useTranslation();
+  const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
   const [rankData, dispatchRankData] = useReducer(rankDataReducer, undefined);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [withBoardStat, setWithBoardStat] = useState(false);
   const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
   const [newCharaAlert, setNewCharaAlert] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
@@ -358,6 +388,7 @@ const EquipRank = () => {
             c.rank < (userData.s[0] || 1) ||
             c.rank > (userData.s[1] || MAX_RANK)
         ),
+        isDirty: 0,
       },
     });
   }, []);
@@ -373,6 +404,35 @@ const EquipRank = () => {
     }
   }, [newCharaAlert, t]);
   const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (isReady) {
+        if (googleLinked && autoLoad && !loaded) {
+          toast(t("ui.common.dataLoading"));
+          await autoLoad();
+          initFromUserData();
+          toast(t("ui.common.dataLoaded"));
+          setLoaded(true);
+        }
+        if (!googleLinked) initFromUserData();
+      }
+    })();
+  }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
+
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>();
+  const autosaver = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      dispatchRankData({ type: "clean" });
+      if (isReady && googleLinked && autoSave) {
+        autoSave();
+      }
+    }, 2000);
+  }, [autoSave, googleLinked, isReady]);
+  useEffect(() => {
+    if (rankData && rankData.isDirty) autosaver();
+  }, [autosaver, rankData]);
 
   const getBoardStats = useCallback(() => {
     if (Object.keys(boardStat).length !== 0) return;

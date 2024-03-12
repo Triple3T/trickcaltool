@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 
 const MenuButton = () => {
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ const MenuButton = () => {
           />
           {t("ui.lab.title")}
         </DropdownMenuItem>
+        <Separator className="my-1" />
         <DropdownMenuItem
           onClick={() => navigate("/tasksearch")}
           disabled={matchPath(location.pathname, "/tasksearch") ? true : false}
@@ -60,6 +62,24 @@ const MenuButton = () => {
           /> */}
           {t("ui.index.testMark")}
           {t("ui.tasksearch.title")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/pboard")}
+          disabled={matchPath(location.pathname, "/pboard") ? true : false}
+        >
+          {/* <img
+            src="/mainlobby/HousingButton.png"
+            className="w-4 h-4 inline-block mr-1"
+          /> */}
+          {t("ui.index.testMark")}
+          {t("ui.board.pboardTitle")}
+        </DropdownMenuItem>
+        <Separator className="my-1" />
+        <DropdownMenuItem
+          onClick={() => navigate("/setting")}
+          disabled={matchPath(location.pathname, "/setting") ? true : false}
+        >
+          {t("ui.index.setting")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -4,6 +4,8 @@ import {
   UserDataBoard,
   UserDataEqRank,
   UserDataLab,
+  UserDataNthBoard,
+  UserDataPurpleBoard,
   UserDataUnowned,
 } from "@/types/types";
 
@@ -15,6 +17,8 @@ type LoadData<T> = () => T & LoadDataAdditionalProps;
 type SaveData<T> = (data: T) => void;
 
 const BOARD_KEY = "trn.board";
+const PBOARD_KEY = "trn.pb";
+const NTHBOARD_KEY = "trn.nthboard";
 const EQRANK_KEY = "trn.eqrank";
 const UNOWNED_KEY = "trn.unown";
 const LAB_KEY = "trn.lab";
@@ -34,6 +38,44 @@ const loadBoardData: LoadData<UserDataBoard> = () => {
     return { ...defaultBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultBoardData, ...JSON.parse(data) };
+  const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  return { ...finalData, autoRepaired };
+};
+
+const defaultPurpleBoardData = {
+  p: {},
+  d: [],
+};
+const savePurpleBoardData: SaveData<UserDataPurpleBoard> = (data) => {
+  localStorage.setItem(
+    PBOARD_KEY,
+    JSON.stringify(data ?? defaultPurpleBoardData)
+  );
+};
+const loadPurpleBoardData: LoadData<UserDataPurpleBoard> = () => {
+  const data = localStorage.getItem(PBOARD_KEY);
+  if (!data) {
+    savePurpleBoardData(defaultPurpleBoardData);
+    return { ...defaultPurpleBoardData, autoRepaired: true };
+  }
+  const finalData = { ...defaultPurpleBoardData, ...JSON.parse(data) };
+  const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  return { ...finalData, autoRepaired };
+};
+
+const defaultNthBoardData = {
+  n: {},
+};
+const saveNthBoardData: SaveData<UserDataNthBoard> = (data) => {
+  localStorage.setItem(NTHBOARD_KEY, JSON.stringify(data ?? defaultNthBoardData));
+};
+const loadNthBoardData: LoadData<UserDataNthBoard> = () => {
+  const data = localStorage.getItem(NTHBOARD_KEY);
+  if (!data) {
+    saveNthBoardData(defaultNthBoardData);
+    return { ...defaultNthBoardData, autoRepaired: true };
+  }
+  const finalData = { ...defaultNthBoardData, ...JSON.parse(data) };
   const autoRepaired = !deepEqual(finalData, JSON.parse(data));
   return { ...finalData, autoRepaired };
 };
@@ -116,6 +158,14 @@ const userdata = {
   board: {
     save: saveBoardData,
     load: loadBoardData,
+  },
+  pboard: {
+    save: savePurpleBoardData,
+    load: loadPurpleBoardData,
+  },
+  nthboard: {
+    save: saveNthBoardData,
+    load: loadNthBoardData,
   },
   eqrank: {
     save: saveEqRankData,

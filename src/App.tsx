@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ExternalLink } from "lucide-react";
 import "./App.css";
@@ -104,13 +104,19 @@ function App() {
           <p className="text-[0.625rem] text-white dark:text-gray-400">
             {t("ui.index.gameCopyright")}, {t("ui.index.sitePoweredBy")}
           </p>
-          {/* <nav className="ml-4 flex space-x-2"> */}
-            {/* <Link
+          <nav className="ml-4 flex space-x-2">
+            <Link
               className="text-xs text-white dark:text-gray-400 hover:underline"
               to="/privacy"
             >
-              Privacy Policy
-            </Link> */}
+              {t("ui.index.textPrivacy")}
+            </Link>
+            <Link
+              className="text-xs text-white dark:text-gray-400 hover:underline"
+              to="/setting"
+            >
+              {t("ui.index.textSetting")}
+            </Link>
             {/* <Link
               className="text-xs text-white dark:text-gray-400 hover:underline"
               to="#"
@@ -123,7 +129,7 @@ function App() {
             >
               About Us
             </Link> */}
-          {/* </nav> */}
+          </nav>
         </footer>
       </div>
     </ThemeProvider>

@@ -17,41 +17,51 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+// import { Label } from "@/components/ui/label";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import { Switch } from "@/components/ui/switch";
+// import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
-import BoardInfoDialog from "@/components/parts/board-info-dialog";
+// import BoardInfoDialog from "@/components/parts/board-info-dialog";
 import board from "@/data/board";
 import chara from "@/data/chara";
-import route from "@/data/route";
+import purpleboard from "@/data/purpleboard";
+import purpleposition from "@/data/purpleposition";
+// import route from "@/data/route";
 import clonefactory from "@/data/clonefactory";
 import {
-  Attack,
+  // Attack,
   BoardType,
-  Class,
-  Personality,
-  Position,
+  // Class,
+  // Personality,
+  // Position,
+  PurpleBoardType,
   Race,
   StatType,
 } from "@/types/enums";
 
 import userdata from "@/utils/userdata";
-import { UserDataBoard, UserDataUnowned } from "@/types/types";
+import {
+  UserDataBoard,
+  UserDataPurpleBoard,
+  UserDataNthBoard,
+  UserDataUnowned,
+} from "@/types/types";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
   charas: {
     name: string;
-    ldx: number; // 자물쇠 개수, 0~2
+    ldx: number; // 황크: 자물쇠 개수, 0~2; 보크: 해당 스탯 보드 중 몇 번째인지, 0~2
     bdx: number; // 몇 번째 자릿수인지, 0~6?
     checked: boolean; // 색칠했는지 여부
     unowned: boolean; // 보유 여부
@@ -63,7 +73,13 @@ interface BoardDataPropsCore {
   board: {
     [key: string]: BoardDataPropsBoard; // 보드 종류별로
   }[]; // [1차보드, 2차보드, 3차보드]
-  user: UserDataBoard & UserDataUnowned;
+  pboard: {
+    [key: string]: BoardDataPropsBoard; // 보드 종류별로
+  }[]; // [1차보드, 2차보드, 3차보드]
+  user: UserDataBoard &
+    UserDataPurpleBoard &
+    UserDataNthBoard &
+    UserDataUnowned;
   boardIndex: number;
   visibleBoard: BoardType[];
   isDirty: number;
@@ -71,9 +87,16 @@ interface BoardDataPropsCore {
 
 type BoardDataProps = BoardDataPropsCore | undefined;
 
-const saveBoardData = (boardData: UserDataBoard & UserDataUnowned) => {
-  const { b, c, o, u, v } = boardData;
+const saveBoardData = (
+  boardData: UserDataBoard &
+    UserDataPurpleBoard &
+    UserDataNthBoard &
+    UserDataUnowned
+) => {
+  const { b, c, o, u, v, p, d, n } = boardData;
   userdata.board.save({ b, c, v });
+  userdata.pboard.save({ p, d });
+  userdata.nthboard.save({ n });
   userdata.unowned.save({ o, u });
 };
 
@@ -92,6 +115,8 @@ interface BoardDataClickAction {
   type: "click";
   payload: {
     charaName: string;
+    boardIndex?: number;
+    boardType: "g" | "p";
     ldx: number;
     bdx: number;
   };
@@ -101,7 +126,7 @@ const boardDataClickActionHandler = (
   state: NonNullable<BoardDataProps>,
   action: BoardDataClickAction
 ): BoardDataProps => {
-  const { boardIndex } = state;
+  const boardIndex = action.payload.boardIndex ?? state.boardIndex;
   if (state.user.u.includes(action.payload.charaName)) {
     const inIfUserData = {
       ...state.user,
@@ -111,6 +136,17 @@ const boardDataClickActionHandler = (
           (a) => a.map(() => 0)
         ),
       },
+      p: {
+        ...state.user.p,
+        [action.payload.charaName]: purpleboard.c[
+          action.payload.charaName
+        ].b.map((a) =>
+          a
+            .toString(10)
+            .split("")
+            .map(() => 0)
+        ),
+      },
       o: [...state.user.o, action.payload.charaName],
       u: state.user.u.filter((c) => c !== action.payload.charaName),
     };
@@ -118,7 +154,9 @@ const boardDataClickActionHandler = (
     return {
       ...state,
       isDirty: ((state.isDirty + 1) % 32768) + 65536,
-      board: state.board.map((nthboard) => {
+      [action.payload.boardType === "g" ? "board" : "pboard"]: state[
+        action.payload.boardType === "g" ? "board" : "pboard"
+      ].map((nthboard) => {
         return Object.fromEntries(
           Object.entries(nthboard).map(([bt, { charas }]) => {
             return [
@@ -139,43 +177,89 @@ const boardDataClickActionHandler = (
   }
   const outIfUserData = {
     ...state.user,
-    b: {
-      ...state.user.b,
-      [action.payload.charaName]: state.user.b[action.payload.charaName].map(
-        (a, i) =>
-          i === boardIndex
-            ? a.map((b, j) =>
-                j === action.payload.ldx ? b ^ (1 << action.payload.bdx) : b
-              )
-            : a
-      ),
-    },
+    b:
+      action.payload.boardType !== "g"
+        ? state.user.b
+        : {
+            ...state.user.b,
+            [action.payload.charaName]: state.user.b[
+              action.payload.charaName
+            ].map((a, i) =>
+              i === boardIndex
+                ? a.map((b, j) =>
+                    j === action.payload.ldx ? b ^ (1 << action.payload.bdx) : b
+                  )
+                : a
+            ),
+          },
+    p:
+      action.payload.boardType !== "p"
+        ? state.user.p
+        : {
+            ...state.user.p,
+            [action.payload.charaName]: state.user.p[
+              action.payload.charaName
+            ].map((a, i) =>
+              i === boardIndex
+                ? a.map((b, j) =>
+                    j === action.payload.bdx ? b ^ (1 << action.payload.ldx) : b
+                  )
+                : a
+            ),
+          },
   };
   saveBoardData(outIfUserData);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
-    board: state.board.map((nthboard, n) => {
-      if (n !== boardIndex) return nthboard;
-      return Object.fromEntries(
-        Object.entries(nthboard).map(([bt, { charas }]) => {
-          return [
-            bt,
-            {
-              charas: charas.map((c) => ({
-                ...c,
-                checked:
-                  c.name === action.payload.charaName &&
-                  c.bdx === action.payload.bdx &&
-                  c.ldx === action.payload.ldx
-                    ? !c.checked
-                    : c.checked,
-              })),
-            },
-          ];
-        })
-      );
-    }),
+    board:
+      action.payload.boardType !== "g"
+        ? state.board
+        : state.board.map((nthboard, n) => {
+            if (n !== boardIndex) return nthboard;
+            return Object.fromEntries(
+              Object.entries(nthboard).map(([bt, { charas }]) => {
+                return [
+                  bt,
+                  {
+                    charas: charas.map((c) => ({
+                      ...c,
+                      checked:
+                        c.name === action.payload.charaName &&
+                        c.bdx === action.payload.bdx &&
+                        c.ldx === action.payload.ldx
+                          ? !c.checked
+                          : c.checked,
+                    })),
+                  },
+                ];
+              })
+            );
+          }),
+    pboard:
+      action.payload.boardType !== "p"
+        ? state.pboard
+        : state.pboard.map((nthboard, n) => {
+            if (n !== boardIndex) return nthboard;
+            return Object.fromEntries(
+              Object.entries(nthboard).map(([bt, { charas }]) => {
+                return [
+                  bt,
+                  {
+                    charas: charas.map((c) => ({
+                      ...c,
+                      checked:
+                        c.name === action.payload.charaName &&
+                        c.bdx === action.payload.bdx &&
+                        c.ldx === action.payload.ldx
+                          ? !c.checked
+                          : c.checked,
+                    })),
+                  },
+                ];
+              })
+            );
+          }),
     user: outIfUserData,
   };
 };
@@ -362,8 +446,93 @@ const BoardStatStatistic = ({
     </div>
   );
 };
+const PurpleBoardStatStatistic = ({
+  stat,
+  data,
+}: {
+  stat: string;
+  data: { [key: string]: BoardDataPropsBoard[] };
+}) => {
+  const { t } = useTranslation();
+  const statType = StatType[stat as keyof typeof StatType];
+  const statStatistic = Object.entries(data).map(([b, d]) => {
+    const boardType = PurpleBoardType[b as keyof typeof PurpleBoardType];
+    const statMult =
+      purpleboard.b[boardType][purpleboard.s[boardType].indexOf(statType)];
+    const cur = d.map((nth) => nth.charas.filter((c) => c.checked).length);
+    const stat = d.map(
+      (nth, n) => nth.charas.filter((c) => c.checked).length * statMult[n]
+    );
+    const max = d.map((nth) => nth.charas.length);
+    return { cur, max, stat };
+  });
+  const statCheckedTotal = statStatistic.reduce(
+    (a, b) => ({
+      cur: Array.from(Array(Math.max(a.cur.length, b.cur.length)).keys()).map(
+        (i) => (a.cur[i] ?? 0) + (b.cur[i] ?? 0)
+      ),
+      max: Array.from(Array(Math.max(a.max.length, b.max.length)).keys()).map(
+        (i) => (a.max[i] ?? 0) + (b.max[i] ?? 0)
+      ),
+    }),
+    {
+      cur: [] as number[],
+      max: [] as number[],
+    }
+  );
+  return (
+    <div className="flex">
+      <div className="relative z-10">
+        <img
+          className="h-10 mr-2 aspect-square inline-block align-middle"
+          src={`/icons/Icon_${stat}.png`}
+        />
+      </div>
+      <div className="flex flex-col flex-1 gap-1 -ml-8">
+        <div className="bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
+          <div className="text-left flex-auto">{t(`stat.${stat}`)}</div>
+          <div className="text-right flex-auto">
+            {statStatistic.reduce(
+              (a, b) => a + b.stat.reduce((a, b) => a + b, 0),
+              0
+            )}
+          </div>
+        </div>
+        <div className="bg-gradient-to-r from-transparent via-[#e9f5cf] dark:via-[#169a2d] via-[28px] to-[#e9f5cf] dark:to-[#169a2d] py-px pr-2.5 pl-8 rounded-r-[11px] flex flex-row gap-1 text-sm dark:contrast-125 dark:brightness-80">
+          {statCheckedTotal.max.map((m, i) => {
+            const max = m;
+            const cur = statCheckedTotal.cur[i];
+            return (
+              <div key={i} className="flex-1 text-center">
+                <img
+                  src={`/icons/RecordReward_Tab_${
+                    ["Easy", "Herd", "VeryHard"][i]
+                  }Lv.png`}
+                  className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
+                />
+                <span
+                  className={`${
+                    cur === max ? "text-red-600 dark:text-red-400" : ""
+                  }`}
+                >
+                  {cur}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
+const BoardCrayonStatistic = ({
+  data,
+  rarity,
+}: {
+  data: BoardDataPropsBoard[];
+  rarity: number;
+}) => {
   const { t } = useTranslation();
   const statStatistic = data.map((d) => {
     return d.charas.filter((c) => c.checked).length;
@@ -373,7 +542,7 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
       <div className="relative z-10">
         <img
           className="h-10 mr-2 aspect-square inline-block align-middle"
-          src={`/icons/Item_Crayon4.png`}
+          src={`/icons/Item_Crayon${rarity}.png`}
         />
       </div>
       <div className="flex flex-col flex-1 gap-1 -ml-8">
@@ -404,29 +573,7 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
   );
 };
 
-const BoardTotal = ({ current, max }: { current: number; max: number }) => {
-  const className = ["text-3xl/4 min-w-max"];
-  if (current === 0) className.push("text-red-600", "dark:text-red-500");
-  else if (current === max)
-    className.push("text-green-500", "dark:text-green-400");
-  else className.push("text-orange-500", "dark:text-orange-400");
-  return (
-    <>
-      {current === max && (
-        <div className="absolute w-14 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
-          <img
-            src="/icons/Photo_Complete_Stamp.png"
-            className="w-100 opacity-100"
-          />
-        </div>
-      )}
-      <span className={className.join(" ")}>{current}</span>
-      <span className="text-sm min-w-max">&nbsp;/{max}</span>
-    </>
-  );
-};
-
-const TrickcalBoard = () => {
+const PurpleBoard = () => {
   const { t } = useTranslation();
   const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
   const [boardData, dispatchBoardData] = useReducer(
@@ -435,15 +582,25 @@ const TrickcalBoard = () => {
   );
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [newCharaAlert, setNewCharaAlert] = useState(false);
+  // const [viewMode, setViewMode] = useState<"target" | "full">("target");
   const [loaded, setLoaded] = useState(false);
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
     const { autoRepaired: ar1, ...userDataBoardProto } = userdata.board.load();
-    const { autoRepaired: ar2, ...userDataUnownedProto } =
+    const { autoRepaired: ar2, ...userDataPBoardProto } =
+      userdata.pboard.load();
+    const { autoRepaired: ar3, ...userDataNthBoardProto } =
+      userdata.nthboard.load();
+    const { autoRepaired: ar4, ...userDataUnownedProto } =
       userdata.unowned.load();
-    const userData = { ...userDataBoardProto, ...userDataUnownedProto };
-    if (ar1 || ar2) setNewCharaAlert(true);
+    const userData = {
+      ...userDataBoardProto,
+      ...userDataPBoardProto,
+      ...userDataNthBoardProto,
+      ...userDataUnownedProto,
+    };
+    if (ar1 || ar2 || ar3 || ar4) setNewCharaAlert(true);
     let flag = false;
     if (!userData.o.every((c) => userData.b[c])) {
       setNewCharaAlert(true);
@@ -462,6 +619,31 @@ const TrickcalBoard = () => {
         );
       }
     });
+    if (!userData.o.every((c) => userData.p[c])) {
+      setNewCharaAlert(true);
+      flag = true;
+      userData.o
+        .filter((c) => !userData.p[c])
+        .forEach((c) => {
+          userData.p[c] = purpleboard.c[c].b.map((a) =>
+            a
+              .toString(10)
+              .split("")
+              .map(() => 0)
+          );
+        });
+    }
+    Object.keys(userData.p).forEach((c) => {
+      if (userData.p[c].some((b) => b.length !== purpleboard.c[c].b.length)) {
+        flag = true;
+        userData.p[c] = purpleboard.c[c].b.map((a, i) =>
+          a
+            .toString(10)
+            .split("")
+            .map((_, j) => userData.p[c][i][j] ?? 0)
+        );
+      }
+    });
     if (flag) saveBoardData(userData);
     const sortedCharaList = [...charaList].sort(
       (a, b) =>
@@ -469,6 +651,9 @@ const TrickcalBoard = () => {
         Number(chara[b].t) - Number(chara[a].t)
     );
     const boardTypes = Object.values(BoardType).filter(
+      (bt) => typeof bt === "string"
+    ) as string[];
+    const pBoardTypes = Object.values(PurpleBoardType).filter(
       (bt) => typeof bt === "string"
     ) as string[];
     const boardDataSkel = Array.from(Array(3).keys()).map(() =>
@@ -499,10 +684,45 @@ const TrickcalBoard = () => {
         });
       });
     });
+    const pBoardDataSkel = Array.from(Array(3).keys()).map(() =>
+      Object.fromEntries(
+        pBoardTypes.map((bt) => {
+          return [bt, { charas: [] }] as [string, BoardDataPropsBoard];
+        })
+      )
+    );
+    sortedCharaList.forEach((c) => {
+      const charaBoard = purpleboard.c[c].b;
+      const charaBoardPos = purpleboard.c[c].p;
+      const charaRace = Number(chara[c].t[5]);
+      const ppos = purpleposition.r[Race[charaRace]];
+      charaBoard.forEach((cb, i) => {
+        if (typeof cb !== "number") return;
+        const cba = cb.toString(10).split("");
+        const pposidx = charaBoardPos[i].split(".");
+        cba.forEach((cbin, k) => {
+          const pbpos = ppos[i].p[Number(pposidx[k])];
+          pbpos.split(".").forEach((_, ldx) => {
+            pBoardDataSkel[i][PurpleBoardType[parseInt(cbin, 10)]].charas.push({
+              name: c,
+              ldx,
+              bdx: k,
+              checked:
+                ((userData.p[c]?.[i][k] ?? 0) & (1 << ldx)) > 0 ? true : false,
+              unowned: userData.u.includes(c),
+              clf: clonefactory.flat().includes(c)
+                ? clonefactory.findIndex((a) => a.includes(c))
+                : false,
+            });
+          });
+        });
+      });
+    });
     dispatchBoardData({
       type: "restore",
       payload: {
         board: boardDataSkel,
+        pboard: pBoardDataSkel,
         user: userData,
         boardIndex: 0,
         visibleBoard: userData.v,
@@ -571,7 +791,7 @@ const TrickcalBoard = () => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+                {/* <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.selectBoardType")}</SubtitleBar>
                   <div className="px-4 flex gap-4">
                     <Button
@@ -648,12 +868,12 @@ const TrickcalBoard = () => {
                       })}
                     </ToggleGroup>
                   </div>
-                </div>
+                </div> */}
                 {/* <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.mainClassification")}</SubtitleBar>
                   <div></div>
                 </div> */}
-                <div className="flex flex-col gap-2">
+                {/* <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.board.subClassification")}</SubtitleBar>
                   <div className="w-full px-4">
                     <Select
@@ -697,7 +917,7 @@ const TrickcalBoard = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
+                </div> */}
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
                   <div className="flex flex-row gap-2 max-w-xl w-full px-4">
@@ -738,7 +958,7 @@ const TrickcalBoard = () => {
               </div>
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-2">
+          <AccordionItem value="item-3">
             <AccordionTrigger>
               {t("ui.board.allStatPercentTotal")}
             </AccordionTrigger>
@@ -783,7 +1003,67 @@ const TrickcalBoard = () => {
                     })}
                 {boardData && (
                   <BoardCrayonStatistic
+                    rarity={4}
                     data={boardData.board.map((nthboard) => {
+                      return {
+                        charas: Object.values(nthboard).reduce(
+                          (a, b) => a.concat(b.charas),
+                          [] as BoardDataPropsBoard["charas"]
+                        ),
+                      };
+                    })}
+                  />
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>
+              {t("ui.board.allStatBaseTotal")}
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
+                {boardData &&
+                  (
+                    Object.values(StatType).filter(
+                      (bt) => typeof bt === "string"
+                    ) as string[]
+                  )
+                    .sort(
+                      (a, b) =>
+                        [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][
+                          StatType[a as keyof typeof StatType]
+                        ] -
+                        [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][
+                          StatType[b as keyof typeof StatType]
+                        ]
+                    )
+                    .map((stat) => {
+                      const statNum = StatType[stat as keyof typeof StatType];
+                      const includedBoards = purpleboard.s
+                        .map((s, i) => [s, i] as [number[], number])
+                        .filter(([s]) => s.includes(statNum))
+                        .map(([, i]) => i);
+                      const data = Object.fromEntries(
+                        includedBoards.map((b) => [
+                          PurpleBoardType[b],
+                          boardData.pboard.map(
+                            (nthboard) => nthboard[PurpleBoardType[b]]
+                          ),
+                        ])
+                      );
+                      return (
+                        <PurpleBoardStatStatistic
+                          key={stat}
+                          stat={stat}
+                          data={data}
+                        />
+                      );
+                    })}
+                {boardData && (
+                  <BoardCrayonStatistic
+                    rarity={3}
+                    data={boardData.pboard.map((nthboard) => {
                       return {
                         charas: Object.values(nthboard).reduce(
                           (a, b) => a.concat(b.charas),
@@ -798,344 +1078,284 @@ const TrickcalBoard = () => {
           </AccordionItem>
         </Accordion>
       </Card>
-      <div className="w-full font-onemobile">
-        <Tabs value={`${boardData?.boardIndex ?? 0}`} className="w-full">
+      {/* <div className="w-full font-onemobile">
+        <Tabs value={viewMode} className="w-full">
           <TabsList className="w-full flex">
-            {Array.from(Array(3).keys()).map((v) => {
-              const isCompleted = Object.values(board.c).every(
-                (b) => b.b[v] && b.b[v].length
-              );
-              return (
-                <TabsTrigger
-                  key={v}
-                  value={`${v}`}
-                  className="flex-1"
-                  onClick={() =>
-                    dispatchBoardData({ type: "index", payload: v })
-                  }
-                >
-                  <div>{t(`ui.board.board${v + 1}`)}</div>
-                  {!isCompleted && (
-                    <div className="text-red-700 dark:text-red-400">*</div>
-                  )}
-                </TabsTrigger>
-              );
-            })}
+            <TabsTrigger
+              value="target"
+              className="flex-1"
+              onClick={() => setViewMode("target")}
+            >
+              <div>{t("ui.board.viewTargetBoard")}</div>
+            </TabsTrigger>
+            <TabsTrigger
+              value="full"
+              className="flex-1"
+              onClick={() => setViewMode("full")}
+            >
+              <div>{t("ui.board.viewFullBoard")}</div>
+            </TabsTrigger>
           </TabsList>
         </Tabs>
-        {!Object.values(board.c).every(
-          (b) =>
-            b.b[boardData?.boardIndex ?? 0] &&
-            b.b[boardData?.boardIndex ?? 0].length
-        ) ? (
-          <div className="mt-1 text-sm text-red-700 dark:text-red-400 w-full text-right">
-            *
-            {t("ui.board.dataIncompleteStatus", {
-              0: Object.values(board.c).filter(
-                (b) =>
-                  b.b[boardData?.boardIndex ?? 0] &&
-                  b.b[boardData?.boardIndex ?? 0].length
-              ).length,
-              1: Object.values(board.c).length,
-            })}
-          </div>
-        ) : (
-          <div className="mt-1 text-sm text-red-700 dark:text-red-400">
-            &nbsp;
-          </div>
-        )}
-      </div>
+      </div> */}
       {boardData && (
         <div className="font-onemobile max-w-[1920px] columns-1 md:columns-2 lg:columns-3 gap-4 py-4">
-          {(
-            Object.values(BoardType).filter(
-              (bt) =>
-                typeof bt === "string" &&
-                boardData.visibleBoard.includes(
-                  BoardType[bt as keyof typeof BoardType]
-                )
-            ) as string[]
-          ).map((bt) => {
-            const currentBoard = boardData.board[boardData.boardIndex][bt];
-            if (currentBoard.charas.length < 1) return null;
+          {boardData.user.o.map((name) => {
+            // const currentBoard = board.c[name].b;
+            const currentPurpleBoard = purpleboard.c[name]; // b: 보크보드 종류, p: 해당 종류 위치 인덱스
+            const charaPersonality = Number(chara[name].t[0]);
+            const charaRace = Number(chara[name].t[5]);
+            const personalityClassName = [
+              "bg-personality-Cool",
+              "bg-personality-Gloomy",
+              "bg-personality-Jolly",
+              "bg-personality-Mad",
+              "bg-personality-Naive",
+            ][charaPersonality];
             return (
               <Card
-                key={bt}
+                key={name}
                 className="p-4 object-cover max-w-full break-inside-avoid mt-0 mb-4"
               >
                 {/* title bar */}
                 <div className="flex gap-2 items-center">
-                  <img
-                    className="rotate-10 w-[3.2rem] flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
-                    src={`/boards/Tile_${bt}On.png`}
-                    style={{ backgroundImage: "url(/boards/Rect_03.png)" }}
-                  />
+                  <div
+                    className="sm:min-w-10 sm:min-h-10 md:min-w-12 md:min-h-12 max-w-16 relative aspect-square"
+                    onContextMenu={(e) => e.preventDefault()}
+                  >
+                    <div
+                      className={[
+                        "min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 max-w-14 aspect-square",
+                        personalityClassName,
+                      ].join(" ")}
+                    >
+                      <img
+                        src={`/charas/${name}.png`}
+                        className="aspect-square w-full"
+                      />
+                    </div>
+                  </div>
                   <div className="flex-initial flex-shrink-0 flex flex-col items-start">
                     <div className="text-sm">
-                      <img
-                        className="mr-1 w-[1.2rem] inline-flex bg-greenicon rounded-full align-middle"
-                        src={`/icons/RecordReward_Tab_${
-                          ["Easy", "Herd", "VeryHard"][boardData.boardIndex]
-                        }Lv.png`}
-                      />
                       <span className="align-middle">
-                        {t(`ui.board.board${boardData.boardIndex + 1}`)}
+                        {t(`ui.board.viewTargetBoardShort`)}
                       </span>
                     </div>
-                    <div className="text-2xl">{t(`board.${bt}`)}</div>
+                    <div className="text-2xl">{t(`chara.${name}`)}</div>
                   </div>
-                  <div className="flex-1" />
-                  <div className="shrink relative w-18">
-                    <BoardTotal
-                      current={
-                        currentBoard.charas.filter((c) => c.checked).length
-                      }
-                      max={currentBoard.charas.length}
-                    />
+                  <div className="flex-1 w-18">
+                    <div className="flex flex-col gap-1 items-end">
+                      {/* <div className="mb-2 text-left flex items-center gap-2">
+                        <Switch
+                          id="view-all-stat-with-board"
+                          checked={true}
+                          onCheckedChange={(c) => {
+                            // setWithBoardStat(c);
+                            // if (c) getBoardStats();
+                          }}
+                        />
+                        <Label htmlFor="view-all-stat-with-board">
+                          {t("ui.board.nthBoardOpened", { 0: "2" })}
+                        </Label>
+                      </div>
+                      <div className="mb-2 text-left flex items-center gap-2">
+                        <Switch
+                          id="view-all-stat-with-board"
+                          checked={true}
+                          onCheckedChange={(c) => {
+                            // setWithBoardStat(c);
+                            // if (c) getBoardStats();
+                          }}
+                        />
+                        <Label htmlFor="view-all-stat-with-board">
+                          {t("ui.board.nthBoardOpened", { 0: "3" })}
+                        </Label>
+                      </div> */}
+                    </div>
                   </div>
                 </div>
-                {/* chara list bar */}
-                <div className="flex flex-col gap-4 mt-4">
-                  {(
-                    Object.values(
-                      [
-                        Personality,
-                        { 1: "3", 2: "2", 3: "1" },
-                        Attack,
-                        Position,
-                        Class,
-                        Race,
-                      ][boardData.user.c]
-                    ).filter((c) => typeof c === "string") as string[]
-                  ).map((k) => {
-                    const displayCharas = boardData.board[boardData.boardIndex][
-                      bt
-                    ].charas.filter(
-                      ({ name }) =>
-                        chara[name].t[boardData.user.c] ===
-                        `${
-                          (
-                            [
-                              Personality,
-                              { 1: 1, 2: 2, 3: 3 },
-                              Attack,
-                              Position,
-                              Class,
-                              Race,
-                            ][boardData.user.c] as {
-                              [key: string]: string | number;
-                            }
-                          )[k]
-                        }`
-                    );
-                    if (displayCharas.length < 1) return null;
-                    return (
-                      <div key={`${k}`} className="flex flex-col gap-2">
-                        {/* chara list title */}
-                        <div className="w-full text-left">
-                          {boardData.user.c === 1 ? (
-                            <>
-                              {Array.from(Array(Number(k)).keys()).map((v) => (
-                                <img
-                                  key={v}
-                                  className="w-6 mr-1 inline-flex align-middle"
-                                  src={`/icons/HeroGrade_000${
-                                    [5, 3, 4][Number(k) - 1]
-                                  }.png`}
-                                />
-                              ))}
-                            </>
-                          ) : (
-                            <>
-                              <img
-                                className="w-6 mr-1 inline-flex align-middle"
-                                src={`/icons/${
-                                  [
-                                    "Common_UnitPersonality_",
-                                    "",
-                                    "Common_UnitAttack",
-                                    "Common_Position",
-                                    "Common_Unit",
-                                    "Common_UnitRace_",
-                                  ][boardData.user.c]
-                                }${k}.png`}
-                              />
-                              {t(
-                                `${
-                                  [
-                                    "personality",
-                                    "",
-                                    "attack",
-                                    "position",
-                                    "class",
-                                    "race",
-                                  ][boardData.user.c]
-                                }.${k}`
-                              )}
-                            </>
-                          )}
-                        </div>
-                        {/* chara grid */}
-                        <div className="grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] auto-rows-auto">
-                          {displayCharas.map((b) => {
-                            const { name, ldx, bdx, checked, unowned, clf } = b;
-                            const bgClassNames = [
-                              "min-w-14",
-                              "min-h-14",
-                              "sm:min-w-16",
-                              "sm:min-h-16",
-                              "max-w-24",
-                              "aspect-square",
-                            ];
-                            const imgClassNames = ["aspect-square", "w-full"];
-                            switch (Personality[Number(chara[name].t[0])]) {
-                              case "Cool":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Cool-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Cool-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Cool");
-                                break;
-                              case "Gloomy":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Gloomy-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Gloomy-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Gloomy");
-                                break;
-                              case "Jolly":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Jolly-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Jolly-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Jolly");
-                                break;
-                              case "Mad":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Mad-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Mad-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Mad");
-                                break;
-                              case "Naive":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Naive-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Naive-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Naive");
-                                break;
-                            }
-                            if (unowned) {
-                              imgClassNames.push("grayscale-[90%]");
-                            } else if (checked) {
-                              imgClassNames.push("opacity-50");
-                            }
+                <div className="flex flex-col gap-1">
+                  <div className="flex flex-row gap-2">
+                    <div className="flex-[1] -mx-2">
+                      <SubtitleBar>{t("ui.board.board1")}</SubtitleBar>
+                      <div className="flex flex-row flex-wrap py-1 px-2 w-full justify-center">
+                        {currentPurpleBoard.b[0]
+                          .toString(10)
+                          .split("")
+                          .map((pb, i) => {
+                            const positionsIndex = Number(
+                              currentPurpleBoard.p[0].split(".")[i]
+                            );
+                            const positionData =
+                              purpleposition.r[Race[charaRace]][0];
+                            const positions =
+                              positionData.p[positionsIndex].split(".");
+                            return [...positions].map((_, posIndex) => {
+                              const target = boardData.pboard[0][
+                                PurpleBoardType[parseInt(pb, 10)]
+                              ].charas.find(
+                                (c) =>
+                                  c.name === name &&
+                                  c.bdx === i &&
+                                  c.ldx === posIndex
+                              );
+                              if (!target) return null;
+                              const checked = target.checked;
+                              return (
+                                <div
+                                  key={`${i}-${posIndex}`}
+                                  className="w-1/2 aspect-square p-px"
+                                >
+                                  <img
+                                    src={`/boards/Tile_${
+                                      PurpleBoardType[parseInt(pb, 10)]
+                                    }${checked ? "On" : "Off"}.png`}
+                                    className="w-full aspect-square bg-cover"
+                                    style={{
+                                      backgroundImage: `url(/boards/Rect_0${
+                                        checked ? 6 : 7
+                                      }.png)`,
+                                    }}
+                                    onClick={() => {
+                                      dispatchBoardData({
+                                        type: "click",
+                                        payload: {
+                                          charaName: name,
+                                          boardIndex: 0,
+                                          bdx: i,
+                                          ldx: posIndex,
+                                          boardType: "p",
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              );
+                            });
+                          })}
+                      </div>
+                    </div>
+                    <div className="flex-[2] -mx-2">
+                      <SubtitleBar>{t("ui.board.board2")}</SubtitleBar>
+                      <div className="flex flex-row flex-wrap py-1 px-4 w-full justify-center">
+                        {currentPurpleBoard.b[1]
+                          .toString(10)
+                          .split("")
+                          .map((pb, i) => {
+                            const positionsIndex = Number(
+                              currentPurpleBoard.p[1].split(".")[i]
+                            );
+                            const positionData =
+                              purpleposition.r[Race[charaRace]][1];
+                            const positions =
+                              positionData.p[positionsIndex].split(".");
+                            return [...positions].map((_, posIndex) => {
+                              const target = boardData.pboard[1][
+                                PurpleBoardType[parseInt(pb, 10)]
+                              ].charas.find(
+                                (c) =>
+                                  c.name === name &&
+                                  c.bdx === i &&
+                                  c.ldx === posIndex
+                              );
+                              if (!target) return null;
+                              const checked = target.checked;
+                              return (
+                                <div
+                                  key={`${i}-${posIndex}`}
+                                  className="w-1/4 aspect-square p-px"
+                                >
+                                  <img
+                                    src={`/boards/Tile_${
+                                      PurpleBoardType[parseInt(pb, 10)]
+                                    }${checked ? "On" : "Off"}.png`}
+                                    className="w-full aspect-square bg-cover"
+                                    style={{
+                                      backgroundImage: `url(/boards/Rect_0${
+                                        checked ? 6 : 7
+                                      }.png)`,
+                                    }}
+                                    onClick={() => {
+                                      dispatchBoardData({
+                                        type: "click",
+                                        payload: {
+                                          charaName: name,
+                                          boardIndex: 1,
+                                          bdx: i,
+                                          ldx: posIndex,
+                                          boardType: "p",
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                              );
+                            });
+                          })}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <SubtitleBar>{t("ui.board.board3")}</SubtitleBar>
+                    <div className="flex flex-row flex-wrap py-1 px-3 w-full justify-center">
+                      {currentPurpleBoard.b[2]
+                        .toString(10)
+                        .split("")
+                        .map((pb, i) => {
+                          const positionsIndex = Number(
+                            currentPurpleBoard.p[2].split(".")[i]
+                          );
+                          const positionData =
+                            purpleposition.r[Race[charaRace]][2];
+                          const positions =
+                            positionData.p[positionsIndex].split(".");
+                          return [...positions].map((_, posIndex) => {
+                            const target = boardData.pboard[2][
+                              PurpleBoardType[parseInt(pb, 10)]
+                            ].charas.find(
+                              (c) =>
+                                c.name === name &&
+                                c.bdx === i &&
+                                c.ldx === posIndex
+                            );
+                            if (!target) return null;
+                            const checked = target.checked;
                             return (
                               <div
-                                key={`${name}${ldx}${bdx}`}
-                                className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
-                                onClick={() => {
-                                  dispatchBoardData({
-                                    type: "click",
-                                    payload: {
-                                      charaName: name,
-                                      ldx,
-                                      bdx,
-                                    },
-                                  });
-                                }}
-                                onContextMenu={(e) => e.preventDefault()}
+                                key={`${i}-${posIndex}`}
+                                className="w-1/6 aspect-square p-px"
                               >
-                                <div className={bgClassNames.join(" ")}>
-                                  <img
-                                    src={`/charas/${name}.png`}
-                                    className={imgClassNames.join(" ")}
-                                  />
-                                </div>
-                                <div
-                                  className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <BoardInfoDialog
-                                    boardIndex={boardData.boardIndex}
-                                    boardTypeString={bt}
-                                    chara={name}
-                                    charaTypes={chara[name].t}
-                                    route={
-                                      route.r[Race[Number(chara[name].t[5])]][
-                                        boardData.boardIndex
-                                      ].b[
-                                        Number(
-                                          board.c[name].r[boardData.boardIndex][
-                                            ldx
-                                          ].split(".")[bdx]
-                                        )
-                                      ]
-                                    }
-                                    rstart={
-                                      route.r[Race[Number(chara[name].t[5])]][
-                                        boardData.boardIndex
-                                      ].s
-                                    }
-                                    blocked={
-                                      ldx === 0
-                                        ? undefined
-                                        : board.c[name].k[boardData.boardIndex][
-                                            ldx - 1
-                                          ].split(".")[bdx]
-                                    }
-                                    checked={checked}
-                                    unowned={unowned}
-                                  />
-                                </div>
-                                {checked && (
-                                  <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
-                                    <img
-                                      src="/icons/Stage_RewardChack.png"
-                                      className="w-100 opacity-100"
-                                    />
-                                  </div>
-                                )}
-                                {unowned && typeof clf === "number" && (
-                                  <div className="absolute w-2/3 bottom-0 right-0 opacity-100">
-                                    <img
-                                      src="/clonefactoryicon/GradeDungeon_Logo.png"
-                                      className="w-100 opacity-100"
-                                    />
-                                    <div className="text-xs [text-shadow:_1px_1px_2px_rgb(0_0_0_/_70%)] text-slate-50">
-                                      {clf + 1},{clf + 7},{clf + 13}
-                                    </div>
-                                  </div>
-                                )}
+                                <img
+                                  src={`/boards/Tile_${
+                                    PurpleBoardType[parseInt(pb, 10)]
+                                  }${checked ? "On" : "Off"}.png`}
+                                  className="w-full aspect-square bg-cover"
+                                  style={{
+                                    backgroundImage: `url(/boards/Rect_0${
+                                      checked ? 6 : 7
+                                    }.png)`,
+                                  }}
+                                  onClick={() => {
+                                    dispatchBoardData({
+                                      type: "click",
+                                      payload: {
+                                        charaName: name,
+                                        boardIndex: 2,
+                                        bdx: i,
+                                        ldx: posIndex,
+                                        boardType: "p",
+                                      },
+                                    });
+                                  }}
+                                />
                               </div>
                             );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
+                          });
+                        })}
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-6 flex gap-1 sm:gap-2 lg:gap-3">
+                {/* <div className="mt-6 flex gap-1 sm:gap-2 lg:gap-3">
                   <div
                     className="flex-initial aspect-square h-full bg-cover relative w-[60px]"
                     style={{
@@ -1233,13 +1453,6 @@ const TrickcalBoard = () => {
                         <div className="bg-slate-300 dark:bg-slate-700 border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded">
                           {currentBoard.charas.filter((c) => c.unowned).length}
                         </div>
-                        {/* {t("ui.board.usedCount", {
-                          0:
-                            currentBoard.charas.filter((c) => c.checked)
-                              .length *
-                            (boardData.boardIndex + 1) *
-                            2,
-                        })} */}
                       </div>
                       <div className="flex flex-1 items-center justify-end overflow-hidden">
                         <div className="align-middle text-sm md:text-base whitespace-nowrap">
@@ -1265,7 +1478,7 @@ const TrickcalBoard = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </Card>
             );
           })}
@@ -1275,4 +1488,4 @@ const TrickcalBoard = () => {
   );
 };
 
-export default TrickcalBoard;
+export default PurpleBoard;
