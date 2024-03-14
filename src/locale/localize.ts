@@ -23,6 +23,7 @@ i18n
             Belita: "벨리타",
             Beni: "베니",
             BigWood: "빅우드",
+            Blanchet: "블랑셰",
             Butter: "버터",
             Canna: "칸나",
             Carren: "카렌",
