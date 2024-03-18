@@ -708,7 +708,8 @@ const EventCalc = () => {
                         {t("ui.eventcalc.allCleared")}
                       </Label>
                     </div>
-                    {!eventCalcData.allCleared[1] && (
+                    {(eventCalcData.dayCount < 3 ||
+                      !eventCalcData.allCleared[1]) && (
                       <RadioGroup
                         className="mx-auto"
                         value={eventCalcData.useCustom[1] ? "custom" : "auto"}
@@ -766,7 +767,8 @@ const EventCalc = () => {
                         {t("ui.eventcalc.allCleared")}
                       </Label>
                     </div>
-                    {!eventCalcData.allCleared[2] && (
+                    {(eventCalcData.dayCount < 5 ||
+                      !eventCalcData.allCleared[2]) && (
                       <RadioGroup
                         className="mx-auto"
                         value={eventCalcData.useCustom[2] ? "custom" : "auto"}
@@ -827,7 +829,8 @@ const EventCalc = () => {
                           {t("ui.eventcalc.allCleared")}
                         </Label>
                       </div>
-                      {!eventCalcData.allCleared[3] && (
+                      {(eventCalcData.dayCount < 8 ||
+                        !eventCalcData.allCleared[3]) && (
                         <div>
                           <LazyInput
                             value={eventCalcData.possibleChallenge.toString()}
