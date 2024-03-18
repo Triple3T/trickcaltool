@@ -25,4 +25,16 @@ export interface UserDataLab {
   1: number;
   2: number;
 }
+export interface UserDataEventCalc {
+  a: boolean[]; // allCleared
+  b: number[]; // customBonus
+  c: boolean; // dailyCompleted
+  d: number; // dayCount
+  h: number; // possibleChallenge
+  r: number; // remainItem
+  e: string; // selectedThemeEvent
+  s: number[]; // shopPurchaseCounts
+  u: boolean[]; // useCustom
+  t: number; // timestamp
+}
 export type UserDataVersion = string;

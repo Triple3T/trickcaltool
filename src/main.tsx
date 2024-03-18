@@ -11,6 +11,7 @@ import PurpleBoard from "./purpleboard";
 import EquipRank from "./equiprank";
 import Lab from "./lab";
 import TaskSearch from "./tasksearch";
+import EventCalc from "./eventcalc";
 
 import Code from "./code";
 import Setting from "./setting";
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/tasksearch",
     element: <TaskSearch />,
+  },
+  {
+    path: "/eventcalc",
+    element: <EventCalc />,
   },
   {
     path: "/privacy",

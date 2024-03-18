@@ -3,6 +3,7 @@ import deepEqual from "@/lib/deepEqual";
 import {
   UserDataBoard,
   UserDataEqRank,
+  UserDataEventCalc,
   UserDataLab,
   UserDataNthBoard,
   UserDataPurpleBoard,
@@ -22,6 +23,7 @@ const NTHBOARD_KEY = "trn.nthboard";
 const EQRANK_KEY = "trn.eqrank";
 const UNOWNED_KEY = "trn.unown";
 const LAB_KEY = "trn.lab";
+const EVENTCALC_KEY = "trn.eventcalc";
 
 const defaultBoardData: UserDataBoard = {
   b: {},
@@ -67,7 +69,10 @@ const defaultNthBoardData = {
   n: {},
 };
 const saveNthBoardData: SaveData<UserDataNthBoard> = (data) => {
-  localStorage.setItem(NTHBOARD_KEY, JSON.stringify(data ?? defaultNthBoardData));
+  localStorage.setItem(
+    NTHBOARD_KEY,
+    JSON.stringify(data ?? defaultNthBoardData)
+  );
 };
 const loadNthBoardData: LoadData<UserDataNthBoard> = () => {
   const data = localStorage.getItem(NTHBOARD_KEY);
@@ -154,6 +159,36 @@ const loadLabData: LoadData<UserDataLab> = () => {
   return { ...finalData, autoRepaired };
 };
 
+const defaultEventCalcData = {
+  a: [false, false, false, false],
+  b: [0, 0, 0],
+  c: false,
+  d: 1,
+  h: 0,
+  r: 0,
+  e: "",
+  s: [],
+  u: [false, false, false],
+  t: 0,
+};
+const saveEventCalcData: SaveData<UserDataEventCalc> = (dt) => {
+  const data = { ...dt, t: Date.now() };
+  localStorage.setItem(
+    EVENTCALC_KEY,
+    JSON.stringify(data ?? defaultEventCalcData)
+  );
+};
+const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
+  const data = localStorage.getItem(EVENTCALC_KEY);
+  if (!data) {
+    saveEventCalcData(defaultEventCalcData);
+    return { ...defaultEventCalcData, autoRepaired: true };
+  }
+  const finalData = { ...defaultEventCalcData, ...JSON.parse(data) };
+  const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  return { ...finalData, autoRepaired };
+};
+
 const userdata = {
   board: {
     save: saveBoardData,
@@ -178,6 +213,10 @@ const userdata = {
   lab: {
     save: saveLabData,
     load: loadLabData,
+  },
+  eventcalc: {
+    save: saveEventCalcData,
+    load: loadEventCalcData,
   },
 };
 

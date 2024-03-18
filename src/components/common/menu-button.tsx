@@ -74,6 +74,17 @@ const MenuButton = () => {
           {t("ui.index.testMark")}
           {t("ui.board.pboardTitle")}
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/eventcalc")}
+          disabled={matchPath(location.pathname, "/eventcalc") ? true : false}
+        >
+          {/* <img
+            src="/mainlobby/HousingButton.png"
+            className="w-4 h-4 inline-block mr-1"
+          /> */}
+          {t("ui.index.testMark")}
+          {t("ui.eventcalc.title")}
+        </DropdownMenuItem>
         <Separator className="my-1" />
         <DropdownMenuItem
           onClick={() => navigate("/setting")}
