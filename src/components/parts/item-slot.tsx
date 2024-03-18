@@ -55,7 +55,7 @@ const ItemSlot = ({ rarityInfo, item, fullItemPath, amount, size = 5 }: ItemSlot
             textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
           }}
         >
-          {amount > 10000 ? `${Math.floor(amount / 1000)}K` : amount}
+          {amount > 9999 ? `${Math.floor(amount / 1000)}K` : amount}
         </div>
       )}
     </div>
