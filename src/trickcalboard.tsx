@@ -726,6 +726,9 @@ const TrickcalBoard = () => {
                             if (v.success) {
                               toast.success(t("ui.index.fileSync.success"));
                               initFromUserData();
+                              if (isReady && googleLinked && autoSave) {
+                                autoSave();
+                              }
                             } else {
                               toast.error(t(v.reason));
                             }
