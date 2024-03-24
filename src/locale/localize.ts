@@ -480,10 +480,12 @@ i18n
               selectTask: "일정 선택...",
               searchTask: "일정 검색...",
               taskNotFound: "해당 일정을 찾을 수 없습니다.",
-              needToSelect: "사도 또는 생활 스킬을 선택해주세요!",
+              needToSelect: "사도, 생활 스킬, 또는 일정을 선택해주세요!",
               materialsEasyToGet: "쉽게 구할 수 있는 재료",
               skillSelectHelp:
                 "생활 스킬을 눌러 온/오프 전환이 가능합니다.\n기본 스킬은 항상 활성화됩니다.",
+              skillMatchCount: "{{0}}개 스킬 일치",
+              includeThisSkill: "이 스킬 포함",
             },
             eventcalc: {
               title: "이벤트 계산기",
