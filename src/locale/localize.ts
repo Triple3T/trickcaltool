@@ -32,6 +32,7 @@ i18n
             Cuee: "큐이",
             Daya: "다야",
             Diana: "디아나",
+            Ed: "이드",
             Elena: "엘레나",
             Epica: "에피카",
             Erpin: "에르핀",
