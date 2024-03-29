@@ -1047,7 +1047,7 @@ const EquipRank = () => {
                               {checkedCount === targetCount && (
                                 <img
                                   src="/icons/Photo_Complete_Stamp.png"
-                                  className="h-10 -my-1.5 -mr-6 inline-block"
+                                  className="h-10 -my-1.5 -mr-5 inline-block relative z-10"
                                 />
                               )}
                               <span className={`${txt}`}>{checkedCount}</span>
