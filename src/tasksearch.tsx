@@ -27,6 +27,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import Layout from "@/components/layout";
 import ItemSlot from "@/components/parts/item-slot";
+import LifeskillIcon from "@/components/parts/lifeskill-icon";
 
 import chara from "@/data/chara";
 import lifeskill from "@/data/lifeskill";
@@ -270,13 +271,15 @@ const TaskSearch = () => {
                 <div className="flex flex-row flex-wrap gap-2">
                   {lifeskill.c[selectedChara].s.map((lifeskillId, index) => {
                     return (
-                      <div
-                        key={index}
-                        className={
+                      <LifeskillIcon
+                        id={lifeskillId}
+                        size="large"
+                        additionalClassName={
                           bannedIndex.includes(index)
                             ? "grayscale-[0.75] opacity-50"
                             : ""
                         }
+                        key={index}
                         onClick={() => {
                           if (index)
                             setBannedIndex((prev) =>
@@ -285,26 +288,13 @@ const TaskSearch = () => {
                                 : [...prev, index]
                             );
                         }}
-                      >
-                        <div className="w-16 h-16 relative dark:contrast-125 dark:brightness-80">
-                          <div className="w-16 h-16 rounded-full overflow-hidden">
-                            <img
-                              src={`/schedule/LifeSkill${lifeskillId}.png`}
-                              className="w-full h-full aspect-square"
-                              alt=""
-                            />
-                          </div>
-                          <img
-                            className="w-16 h-16 absolute top-0 left-0 aspect-square"
-                            src={`/schedule/IconSkillBorder.png`}
-                          />
-                        </div>
-                        <div>{t(`lifeskill.${lifeskillId}`)}</div>
-                      </div>
+                        showName
+                        nameClassName="mt-1.5"
+                      />
                     );
                   })}
                 </div>
-                <div className="text-sm text-left text-slate-700 dark:text-slate-300">
+                <div className="text-sm text-left text-slate-700 dark:text-slate-300 mt-3">
                   {t("ui.tasksearch.skillSelectHelp")
                     .split("\n")
                     .map((l, i) => (
@@ -317,20 +307,12 @@ const TaskSearch = () => {
           {selectedLifeskill && (
             <div className="flex flex-col gap-2">
               <div className="flex flex-row gap-2">
-                <div className="w-12 h-12 p-2 relative">
-                  <div className="w-8 h-8 rounded-full overflow-hidden">
-                    <img
-                      className="w-full h-full"
-                      src={`/schedule/LifeSkill${selectedLifeskill}.png`}
-                    />
-                  </div>
-                  <div className="w-12 absolute left-0 top-0.5">
-                    <img
-                      className="h-full mx-auto aspect-[160/148]"
-                      src={`/schedule/Skill_EffectOn.png`}
-                    />
-                  </div>
-                </div>
+                <LifeskillIcon
+                  id={selectedLifeskill}
+                  active
+                  size="small"
+                  additionalClassName="-mx-1"
+                />
                 <div className="text-2xl text-right py-2">
                   {t(`lifeskill.${selectedLifeskill}`)}
                 </div>
@@ -374,73 +356,35 @@ const TaskSearch = () => {
                     <div className="text-xl">{t(`task.${selectedTask}`)}</div>
                   </div>
                 </div>
-                <div className="w-full relative aspect-[254/176] dark:contrast-125 dark:brightness-80">
+                <div className="w-full relative aspect-[254/176]">
                   <img
-                    className="w-full aspect-[254/176]"
+                    className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
                     src={`/tasks/Img_${selectedTask}_Back.png`}
                   />
                   {task.t[selectedTask].f && (
                     <img
-                      className="absolute bottom-0 left-0"
+                      className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
                       src={`/tasks/Img_${selectedTask}_Front.png`}
                       style={{ width: `${task.t[selectedTask].f}%` }}
                     />
                   )}
                   <div className="absolute bottom-0 left-0 flex items-end">
-                    <div className="w-16 h-16 relative scale-125">
-                      <div className="p-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden">
-                          <img
-                            className="w-full h-full"
-                            src={`/schedule/LifeSkill${task.t[selectedTask].s[0]}.png`}
-                          />
-                        </div>
-                      </div>
-                      {!bannedIndex.includes(task.t[selectedTask].s[0]) ? (
-                        <div className="w-16 absolute left-0 top-0.5">
-                          <img
-                            className="h-full mx-auto aspect-[160/148]"
-                            src={`/schedule/Skill_EffectOn.png`}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-10 absolute left-3 top-3">
-                          <img
-                            className="w-full h-full aspect-square"
-                            src={`/schedule/IconSkillBorder.png`}
-                          />
-                        </div>
-                      )}
-                    </div>
+                    <LifeskillIcon
+                      id={task.t[selectedTask].s[0]}
+                      active={!bannedIndex.includes(task.t[selectedTask].s[0])}
+                      additionalClassName="scale-125"
+                    />
                     {task.t[selectedTask].s
                       .slice(1)
                       .map((lifeskillId, index) => {
                         return (
-                          <div className="w-12 h-12 relative -mx-1" key={index}>
-                            <div className="p-2">
-                              <div className="w-8 h-8 rounded-full overflow-hidden">
-                                <img
-                                  className="w-full h-full"
-                                  src={`/schedule/LifeSkill${lifeskillId}.png`}
-                                />
-                              </div>
-                            </div>
-                            {!bannedIndex.includes(lifeskillId) ? (
-                              <div className="w-12 absolute left-0 top-0.5">
-                                <img
-                                  className="h-full mx-auto aspect-[160/148]"
-                                  src={`/schedule/Skill_EffectOn.png`}
-                                />
-                              </div>
-                            ) : (
-                              <div className="w-8 absolute left-2 top-2">
-                                <img
-                                  className="w-full h-full aspect-square"
-                                  src={`/schedule/IconSkillBorder.png`}
-                                />
-                              </div>
-                            )}
-                          </div>
+                          <LifeskillIcon
+                            id={lifeskillId}
+                            active={!bannedIndex.includes(lifeskillId)}
+                            size="small"
+                            key={index}
+                            additionalClassName="-mx-1"
+                          />
                         );
                       })}
                   </div>
@@ -462,7 +406,10 @@ const TaskSearch = () => {
               <Accordion type="single" collapsible className="w-64">
                 {task.t[selectedTask].s.map((lifeskillId, index) => {
                   return (
-                    <AccordionItem value={`item-${index}-task-${selectedTask}`} key={index}>
+                    <AccordionItem
+                      value={`item-${index}-task-${selectedTask}`}
+                      key={index}
+                    >
                       <AccordionTrigger className="text-center">
                         <div className="w-8 h-8 rounded-full overflow-hidden inline-block">
                           <img
@@ -490,7 +437,9 @@ const TaskSearch = () => {
                               }
                             }}
                           />
-                          <Label htmlFor={`include-this-skill-${index}-task-${selectedTask}`}>
+                          <Label
+                            htmlFor={`include-this-skill-${index}-task-${selectedTask}`}
+                          >
                             {t("ui.tasksearch.includeThisSkill")}
                           </Label>
                         </div>
@@ -572,81 +521,43 @@ const TaskSearch = () => {
                     <div className="text-xl">{t(`task.${taskId}`)}</div>
                   </div>
                 </div>
-                <div className="w-full relative aspect-[254/176] dark:contrast-125 dark:brightness-80">
+                <div className="w-full relative aspect-[254/176]">
                   <img
-                    className="w-full aspect-[254/176]"
+                    className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
                     src={`/tasks/Img_${taskId}_Back.png`}
                   />
                   {currentTask.f && (
                     <img
-                      className="absolute bottom-0 left-0"
+                      className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
                       src={`/tasks/Img_${taskId}_Front.png`}
                       style={{ width: `${currentTask.f}%` }}
                     />
                   )}
                   <div className="absolute bottom-0 left-0 flex items-end">
-                    <div className="w-16 h-16 relative scale-125">
-                      <div className="p-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden">
-                          <img
-                            className="w-full h-full"
-                            src={`/schedule/LifeSkill${currentTask.s[0]}.png`}
-                          />
-                        </div>
-                      </div>
-                      {(selectedChara
+                    <LifeskillIcon
+                      id={currentTask.s[0]}
+                      active={(selectedChara
                         ? lifeskill.c[selectedChara].s.filter(
                             (_, i) => !bannedIndex.includes(i)
                           )
                         : []
-                      ).includes(currentTask.s[0]) ? (
-                        <div className="w-16 absolute left-0 top-0.5">
-                          <img
-                            className="h-full mx-auto aspect-[160/148]"
-                            src={`/schedule/Skill_EffectOn.png`}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-10 absolute left-3 top-3">
-                          <img
-                            className="w-full h-full aspect-square"
-                            src={`/schedule/IconSkillBorder.png`}
-                          />
-                        </div>
-                      )}
-                    </div>
+                      ).includes(currentTask.s[0])}
+                      additionalClassName="scale-125"
+                    />
                     {currentTask.s.slice(1).map((lifeskillId, index) => {
                       return (
-                        <div className="w-12 h-12 relative -mx-1" key={index}>
-                          <div className="p-2">
-                            <div className="w-8 h-8 rounded-full overflow-hidden">
-                              <img
-                                className="w-full h-full"
-                                src={`/schedule/LifeSkill${lifeskillId}.png`}
-                              />
-                            </div>
-                          </div>
-                          {(selectedChara
+                        <LifeskillIcon
+                          key={index}
+                          id={lifeskillId}
+                          active={(selectedChara
                             ? lifeskill.c[selectedChara].s.filter(
                                 (_, i) => !bannedIndex.includes(i)
                               )
                             : []
-                          ).includes(lifeskillId) ? (
-                            <div className="w-12 absolute left-0 top-0.5">
-                              <img
-                                className="h-full mx-auto aspect-[160/148]"
-                                src={`/schedule/Skill_EffectOn.png`}
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-8 absolute left-2 top-2">
-                              <img
-                                className="w-full h-full aspect-square"
-                                src={`/schedule/IconSkillBorder.png`}
-                              />
-                            </div>
-                          )}
-                        </div>
+                          ).includes(lifeskillId)}
+                          size="small"
+                          additionalClassName="-mx-1"
+                        />
                       );
                     })}
                   </div>
@@ -696,69 +607,23 @@ const TaskSearch = () => {
                     <div className="text-2xl">{t(`chara.${charaId}`)}</div>
                   </div>
                   <div className="flex flex-row gap-0.5 my-2">
-                    <div className="w-16 h-16 -mx-1 relative flex-[4]">
-                      <div className="p-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden">
-                          <img
-                            className="w-full h-full"
-                            src={`/schedule/LifeSkill${cls[0]}.png`}
-                          />
-                        </div>
-                      </div>
-                      {cls[0].toString() === selectedLifeskill ? (
-                        <div className="w-16 absolute left-0 top-0.5">
-                          <img
-                            className="h-full mx-auto aspect-[160/148]"
-                            src={`/schedule/Skill_EffectOn.png`}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-10 absolute left-3 top-3">
-                          <img
-                            className="w-full h-full aspect-square"
-                            src={`/schedule/IconSkillBorder.png`}
-                          />
-                        </div>
-                      )}
-                      <div className="text-sm flex justify-center -mt-1.5 whitespace-nowrap">
-                        <div className="w-max">{t(`lifeskill.${cls[0]}`)}</div>
-                      </div>
-                    </div>
+                    <LifeskillIcon
+                      id={cls[0]}
+                      active={cls[0].toString() === selectedLifeskill}
+                      additionalClassName="-mx-1 flex-[4]"
+                      showName
+                    />
                     {cls.slice(1).map((lifeskillId, index) => {
                       return (
-                        <div
-                          className="w-12 h-12 relative mx-auto flex-[3]"
+                        <LifeskillIcon
                           key={index}
-                        >
-                          <div className="p-2">
-                            <div className="w-8 h-8 rounded-full overflow-hidden">
-                              <img
-                                className="w-full h-full"
-                                src={`/schedule/LifeSkill${lifeskillId}.png`}
-                              />
-                            </div>
-                          </div>
-                          {lifeskillId.toString() === selectedLifeskill ? (
-                            <div className="w-12 absolute left-0 top-0.5">
-                              <img
-                                className="h-full mx-auto aspect-[160/148]"
-                                src={`/schedule/Skill_EffectOn.png`}
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-8 absolute left-2 top-2">
-                              <img
-                                className="w-full h-full aspect-square"
-                                src={`/schedule/IconSkillBorder.png`}
-                              />
-                            </div>
-                          )}
-                          <div className="text-sm flex justify-center -mt-1 whitespace-nowrap">
-                            <div className="w-max">
-                              {t(`lifeskill.${lifeskillId}`)}
-                            </div>
-                          </div>
-                        </div>
+                          id={lifeskillId}
+                          active={lifeskillId.toString() === selectedLifeskill}
+                          size="small"
+                          additionalClassName="mx-auto flex-[3]"
+                          showName
+                          nameClassName="-mt-1"
+                        />
                       );
                     })}
                   </div>
@@ -812,69 +677,23 @@ const TaskSearch = () => {
                     </div>
                   </div>
                   <div className="flex flex-row gap-0.5 my-2">
-                    <div className="w-16 h-16 -mx-1 relative flex-[4]">
-                      <div className="p-3">
-                        <div className="w-10 h-10 rounded-full overflow-hidden">
-                          <img
-                            className="w-full h-full"
-                            src={`/schedule/LifeSkill${cls[0]}.png`}
-                          />
-                        </div>
-                      </div>
-                      {task.t[selectedTask].s.includes(cls[0]) ? (
-                        <div className="w-16 absolute left-0 top-0.5">
-                          <img
-                            className="h-full mx-auto aspect-[160/148]"
-                            src={`/schedule/Skill_EffectOn.png`}
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-10 absolute left-3 top-3">
-                          <img
-                            className="w-full h-full aspect-square"
-                            src={`/schedule/IconSkillBorder.png`}
-                          />
-                        </div>
-                      )}
-                      <div className="text-sm flex justify-center -mt-1.5 whitespace-nowrap">
-                        <div className="w-max">{t(`lifeskill.${cls[0]}`)}</div>
-                      </div>
-                    </div>
+                    <LifeskillIcon
+                      id={cls[0]}
+                      active={task.t[selectedTask].s.includes(cls[0])}
+                      additionalClassName="-mx-1 flex-[4]"
+                      showName
+                    />
                     {cls.slice(1).map((lifeskillId, index) => {
                       return (
-                        <div
-                          className="w-12 h-12 relative mx-auto flex-[3]"
+                        <LifeskillIcon
                           key={index}
-                        >
-                          <div className="p-2">
-                            <div className="w-8 h-8 rounded-full overflow-hidden">
-                              <img
-                                className="w-full h-full"
-                                src={`/schedule/LifeSkill${lifeskillId}.png`}
-                              />
-                            </div>
-                          </div>
-                          {task.t[selectedTask].s.includes(lifeskillId) ? (
-                            <div className="w-12 absolute left-0 top-0.5">
-                              <img
-                                className="h-full mx-auto aspect-[160/148]"
-                                src={`/schedule/Skill_EffectOn.png`}
-                              />
-                            </div>
-                          ) : (
-                            <div className="w-8 absolute left-2 top-2">
-                              <img
-                                className="w-full h-full aspect-square"
-                                src={`/schedule/IconSkillBorder.png`}
-                              />
-                            </div>
-                          )}
-                          <div className="text-sm flex justify-center -mt-1 whitespace-nowrap">
-                            <div className="w-max">
-                              {t(`lifeskill.${lifeskillId}`)}
-                            </div>
-                          </div>
-                        </div>
+                          id={lifeskillId}
+                          active={task.t[selectedTask].s.includes(lifeskillId)}
+                          size="small"
+                          additionalClassName="mx-auto flex-[3]"
+                          showName
+                          nameClassName="-mt-1"
+                        />
                       );
                     })}
                   </div>
