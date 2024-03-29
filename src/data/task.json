@@ -11,8 +11,7 @@
         },
         "Arbeit3": {
             "s": [3,8,30,31],
-            "m": ["MadeLow11","MadeLow6"],
-            "f": 100
+            "m": ["MadeLow11","MadeLow6"]
         },
         "Arbeit4": {
             "s": [4,6,16,24],
