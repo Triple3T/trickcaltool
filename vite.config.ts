@@ -3,7 +3,7 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 import { icons } from "./public/AppImages/icons.json";
-console.log(__dirname);
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
