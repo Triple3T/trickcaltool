@@ -352,6 +352,11 @@ i18n
                 dark: "다크",
                 system: "시스템",
               },
+              sync: {
+                config: "동기화 설정",
+                upload: "계정에 데이터 저장",
+                download: "계정의 데이터 불러오기",
+              },
               personality: "성격",
               defaultstar: "초기 성급",
               attack: "공격 타입",
