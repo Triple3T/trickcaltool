@@ -11,6 +11,23 @@ export default defineConfig({
     VitePWA({
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       registerType: "autoUpdate",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,png,jpg,svg,webp,json}"],
+        skipWaiting: true,
+        clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/tr\.triple-lab\.com/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "main-cache",
+              expiration: {
+                maxAgeSeconds: 60 * 60 * 24 * 7,
+              },
+            },
+          },
+        ],
+      },
       manifest: {
         name: "트릭컬 노트",
         short_name: "트릭컬 노트",
