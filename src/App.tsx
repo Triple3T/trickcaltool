@@ -22,15 +22,21 @@ function App() {
       "Selline",
       "Tig",
       "vivi",
+      'alice',
+      'blanchet',
+      'ed',
+      'half',
+      'leets',
+      'picora',
     ];
     return imageNames[Math.floor(Math.random() * imageNames.length)];
   }, []);
   useEffect(() => {
     function handleResize() {
       if (window.innerHeight > window.innerWidth) {
-        setBackgroundImage(`/backgrounds/${randomImageName}_galaxy.png`);
+        setBackgroundImage(`/backgrounds/${randomImageName}_galaxy.webp`);
       } else {
-        setBackgroundImage(`/backgrounds/${randomImageName}_pc.png`);
+        setBackgroundImage(`/backgrounds/${randomImageName}_pc.webp`);
       }
     }
     window.addEventListener("resize", handleResize);
