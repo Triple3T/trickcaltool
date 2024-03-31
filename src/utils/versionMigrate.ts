@@ -10,7 +10,9 @@ const sigConvert = (fdt: string, sig: string) => {
     const eqrank = { r: {}, s: [0, 0, 0] };
     const unowned = { o: Object.keys(d.b ?? {}), u: d.u ?? [] };
     const lab = { 1: 0, 2: 0 };
-    return { board, pboard, nthboard, eqrank, unowned, lab };
+    const myhome = { l: 0, r: 0, m: 0, s: 0, a: 0 };
+    const collection = { c: [] };
+    return { board, pboard, nthboard, eqrank, unowned, lab, myhome, collection };
   }
 };
 export default sigConvert;

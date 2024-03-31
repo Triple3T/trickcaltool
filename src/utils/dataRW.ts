@@ -27,7 +27,9 @@ export const dataFileExport = () => {
   const rdtp = userdata.eqrank.load();
   const udtp = userdata.unowned.load();
   const ldtp = userdata.lab.load();
-  if (!bdtp || !pdtp || !ndtp || !rdtp || !udtp || !ldtp) {
+  const mdtp = userdata.myhome.load();
+  const cdtp = userdata.collection.load();
+  if (!(bdtp && pdtp && ndtp && rdtp && udtp && ldtp && mdtp && cdtp)) {
     console.error("No user data found");
     throw Error();
   }
@@ -38,6 +40,8 @@ export const dataFileExport = () => {
     eqrank: rdtp,
     unowned: udtp,
     lab: ldtp,
+    myhome: mdtp,
+    collection: cdtp,
   });
   // input: 3 * 8(UTF-8), output: 4 * 6(A-Za-z0-9+/).
   const bdt = rdt.split("").map((c) => c.charCodeAt(0));
@@ -158,6 +162,8 @@ export const dataFileImport = (data: string): DataReadResult => {
     userdata.eqrank.save(fdt.eqrank);
     userdata.unowned.save(fdt.unowned);
     userdata.lab.save(fdt.lab);
+    userdata.myhome.save(fdt.myhome);
+    userdata.collection.save(fdt.collection);
     return { success: true };
   }
 };

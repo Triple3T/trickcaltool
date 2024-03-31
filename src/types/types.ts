@@ -25,6 +25,16 @@ export interface UserDataLab {
   1: number;
   2: number;
 }
+export interface UserDataMyHome {
+  l: number[]; // 생산 랩 현재 레벨, 목표 레벨
+  r: number[]; // 연회장 현재 레벨, 목표 레벨
+  m: number[]; // 본부 현재 레벨, 목표 레벨
+  s: number[]; // 모험회 현재 레벨, 목표 레벨
+  a: number[]; // 기록소 현재 레벨, 목표 레벨
+}
+export interface UserDataCollection {
+  c: string[]; // 제작한 수집품 목록
+}
 export interface UserDataEventCalc {
   a: boolean[]; // allCleared
   b: number[]; // customBonus

@@ -7,8 +7,16 @@ interface ItemSlotProps {
   fullItemPath?: boolean;
   amount?: number;
   size?: number;
+  innerSize?: number;
 }
-const ItemSlot = ({ rarityInfo, item, fullItemPath, amount, size = 5 }: ItemSlotProps) => {
+const ItemSlot = ({
+  rarityInfo,
+  item,
+  fullItemPath,
+  amount,
+  size = 5,
+  innerSize = 60,
+}: ItemSlotProps) => {
   return (
     <div
       className="bg-cover bg-center bg-no-repeat rounded-[18%] relative"
@@ -18,14 +26,23 @@ const ItemSlot = ({ rarityInfo, item, fullItemPath, amount, size = 5 }: ItemSlot
         backgroundImage: `url(/itemslot/ItemSlot_${rarityInfo.s}.png)`,
       }}
     >
-      <img
-        src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
+      <div
+        className="flex justify-center items-center w-full h-full"
         style={{
-          width: `${(size * 6) / 10}rem`,
-          height: `${(size * 6) / 10}rem`,
-          margin: `${(size * 2) / 10}rem`,
+          padding: `${(size * (100 - innerSize)) / 200}rem`,
         }}
-      />
+      >
+        <img
+          src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
+          className="max-w-full max-h-full"
+          // style={{
+          //   maxWidth: "100%",
+          //   maxHeight: "100%",
+          //   objectFit: "contain",
+          // }}
+        />
+      </div>
+
       {typeof rarityInfo.b === "string" && (
         <div
           className="absolute top-0 left-0 bottom-[2.655%] right-[2.655%]"

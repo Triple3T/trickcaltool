@@ -2,9 +2,11 @@ import chara from "@/data/chara";
 import deepEqual from "@/lib/deepEqual";
 import {
   UserDataBoard,
+  UserDataCollection,
   UserDataEqRank,
   UserDataEventCalc,
   UserDataLab,
+  UserDataMyHome,
   UserDataNthBoard,
   UserDataPurpleBoard,
   UserDataUnowned,
@@ -23,6 +25,8 @@ const NTHBOARD_KEY = "trn.nthboard";
 const EQRANK_KEY = "trn.eqrank";
 const UNOWNED_KEY = "trn.unown";
 const LAB_KEY = "trn.lab";
+const MYHOME_KEY = "trn.myhome";
+const COLLECTION_KEY = "trn.collection";
 const EVENTCALC_KEY = "trn.eventcalc";
 
 const defaultBoardData: UserDataBoard = {
@@ -159,6 +163,45 @@ const loadLabData: LoadData<UserDataLab> = () => {
   return { ...finalData, autoRepaired };
 };
 
+const defaultMyHomeData = {
+  l: [0, 0],
+  r: [0, 0],
+  m: [0, 0],
+  s: [0, 0],
+  a: [0, 0],
+};
+const saveMyHomeData: SaveData<UserDataMyHome> = (data) => {
+  localStorage.setItem(MYHOME_KEY, JSON.stringify(data ?? defaultMyHomeData));
+};
+const loadMyHomeData: LoadData<UserDataMyHome> = () => {
+  const data = localStorage.getItem(MYHOME_KEY);
+  if (!data) {
+    saveMyHomeData(defaultMyHomeData);
+    return { ...defaultMyHomeData, autoRepaired: true };
+  }
+  const finalData = { ...defaultMyHomeData, ...JSON.parse(data) };
+  const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  return { ...finalData, autoRepaired };
+};
+
+const defaultCollectionData = { c: [] };
+const saveCollectionData: SaveData<UserDataCollection> = (data) => {
+  localStorage.setItem(
+    COLLECTION_KEY,
+    JSON.stringify(data ?? defaultCollectionData)
+  );
+};
+const loadCollectionData: LoadData<UserDataCollection> = () => {
+  const data = localStorage.getItem(COLLECTION_KEY);
+  if (!data) {
+    saveCollectionData(defaultCollectionData);
+    return { ...defaultCollectionData, autoRepaired: true };
+  }
+  const finalData = { ...defaultCollectionData, ...JSON.parse(data) };
+  const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  return { ...finalData, autoRepaired };
+};
+
 const defaultEventCalcData = {
   a: [false, false, false, false],
   b: [0, 0, 0],
@@ -213,6 +256,14 @@ const userdata = {
   lab: {
     save: saveLabData,
     load: loadLabData,
+  },
+  myhome: {
+    save: saveMyHomeData,
+    load: loadMyHomeData,
+  },
+  collection: {
+    save: saveCollectionData,
+    load: loadCollectionData,
   },
   eventcalc: {
     save: saveEventCalcData,
