@@ -1,6 +1,7 @@
 import chara from "@/data/chara";
 import deepEqual from "@/lib/deepEqual";
 import {
+  UserDataDialogEnable,
   UserDataBoard,
   UserDataCollection,
   UserDataEqRank,
@@ -19,6 +20,8 @@ interface LoadDataAdditionalProps {
 type LoadData<T> = () => T & LoadDataAdditionalProps;
 type SaveData<T> = (data: T) => void;
 
+const DIALOG_KEY = "trn.dialog";
+
 const BOARD_KEY = "trn.board";
 const PBOARD_KEY = "trn.pb";
 const NTHBOARD_KEY = "trn.nthboard";
@@ -28,6 +31,24 @@ const LAB_KEY = "trn.lab";
 const MYHOME_KEY = "trn.myhome";
 const COLLECTION_KEY = "trn.collection";
 const EVENTCALC_KEY = "trn.eventcalc";
+
+const defaultDialogEnableData: UserDataDialogEnable = {
+  board: true,
+  eqrank: true,
+};
+const saveDialogEnableData: SaveData<UserDataDialogEnable> = (data) => {
+  localStorage.setItem(DIALOG_KEY, JSON.stringify(data ?? defaultDialogEnableData));
+};
+const loadDialogEnableData: LoadData<UserDataDialogEnable> = () => {
+  const data = localStorage.getItem(DIALOG_KEY);
+  if (!data) {
+    saveDialogEnableData(defaultDialogEnableData);
+    return { ...defaultDialogEnableData, autoRepaired: true };
+  }
+  const finalData = { ...defaultDialogEnableData, ...JSON.parse(data) };
+  const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  return { ...finalData, autoRepaired };
+};
 
 const defaultBoardData: UserDataBoard = {
   b: {},
@@ -233,6 +254,10 @@ const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
 };
 
 const userdata = {
+  dialog: {
+    save: saveDialogEnableData,
+    load: loadDialogEnableData,
+  },
   board: {
     save: saveBoardData,
     load: loadBoardData,

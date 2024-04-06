@@ -294,6 +294,7 @@ const EquipRank = () => {
   const { t } = useTranslation();
   const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
   const [rankData, dispatchRankData] = useReducer(rankDataReducer, undefined);
+  const [enableDialog, setEnableDialog] = useState(false);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [withBoardStat, setWithBoardStat] = useState(false);
@@ -310,6 +311,8 @@ const EquipRank = () => {
     const userData = { ...userDataEqRankProto, ...userDataUnownedProto };
     const ownNotEqual = !userData.o.every((c) => userData.r[c]);
     const unownNotEqual = userData.u.some((c) => userData.r[c]);
+    const { eqrank: ed } = userdata.dialog.load();
+    setEnableDialog(ed);
     if (ar1 || ar2) setNewCharaAlert(true);
     if (ownNotEqual || unownNotEqual) {
       if (ownNotEqual) {
@@ -393,6 +396,12 @@ const EquipRank = () => {
     });
   }, []);
   useEffect(initFromUserData, [initFromUserData]);
+  const setDialogEnabled = useCallback((enabled: boolean) => {
+    setEnableDialog(enabled);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { autoRepaired, ...userDialogData } = userdata.dialog.load();
+    userdata.dialog.save({ ...userDialogData, eqrank: enabled });
+  }, []);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);
     initFromUserData();
@@ -629,6 +638,23 @@ const EquipRank = () => {
                         );
                       })}
                     </ToggleGroup>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <SubtitleBar>
+                    {t("ui.common.dialogEnableSwitchTitle")}
+                  </SubtitleBar>
+                  <div className="w-full px-4 my-2 text-left flex items-center gap-2">
+                    <Switch
+                      id="show-dialog-trigger"
+                      checked={enableDialog}
+                      onCheckedChange={(e) => {
+                        setDialogEnabled(e);
+                      }}
+                    />
+                    <Label htmlFor="show-dialog-trigger">
+                      {t("ui.common.dialogEnableSwitchTitle")}
+                    </Label>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -968,24 +994,26 @@ const EquipRank = () => {
                                   key={c}
                                   className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative"
                                 >
-                                  <div className="absolute right-0 top-0 p-0.5">
-                                    <RankInfoDialog
-                                      chara={c}
-                                      charaTypes={chara[c].t}
-                                      rank={rank}
-                                      rankStats={eqrank.r[eqrank.c[c].r].map(
-                                        (rs) => rs.map((r) => eqrank.s[r])
-                                      )}
-                                      sameRankBonus={Object.entries(eqrank.c)
-                                        .filter(
-                                          ([k, v]) =>
-                                            k !== c && v.r === eqrank.c[c].r
-                                        )
-                                        .map(([k]) => k)}
-                                      maxRank={rankData.maxRank}
-                                      changeRank={changeRank}
-                                    />
-                                  </div>
+                                  {enableDialog && (
+                                    <div className="absolute right-0 top-0 p-0.5">
+                                      <RankInfoDialog
+                                        chara={c}
+                                        charaTypes={chara[c].t}
+                                        rank={rank}
+                                        rankStats={eqrank.r[eqrank.c[c].r].map(
+                                          (rs) => rs.map((r) => eqrank.s[r])
+                                        )}
+                                        sameRankBonus={Object.entries(eqrank.c)
+                                          .filter(
+                                            ([k, v]) =>
+                                              k !== c && v.r === eqrank.c[c].r
+                                          )
+                                          .map(([k]) => k)}
+                                        maxRank={rankData.maxRank}
+                                        changeRank={changeRank}
+                                      />
+                                    </div>
+                                  )}
                                   <img
                                     src={`/charas/${c}.png`}
                                     className={`${
@@ -1100,28 +1128,31 @@ const EquipRank = () => {
                                           />
                                         </div>
                                       )}
-                                      <div className="absolute right-0 top-0 p-0.5">
-                                        <RankInfoDialog
-                                          chara={c}
-                                          charaTypes={chara[c].t}
-                                          rank={rankData.charas[c].rank}
-                                          rankStats={eqrank.r[
-                                            eqrank.c[c].r
-                                          ].map((rs) =>
-                                            rs.map((r) => eqrank.s[r])
-                                          )}
-                                          sameRankBonus={Object.entries(
-                                            eqrank.c
-                                          )
-                                            .filter(
-                                              ([k, v]) =>
-                                                k !== c && v.r === eqrank.c[c].r
+                                      {enableDialog && (
+                                        <div className="absolute right-0 top-0 p-0.5">
+                                          <RankInfoDialog
+                                            chara={c}
+                                            charaTypes={chara[c].t}
+                                            rank={rankData.charas[c].rank}
+                                            rankStats={eqrank.r[
+                                              eqrank.c[c].r
+                                            ].map((rs) =>
+                                              rs.map((r) => eqrank.s[r])
+                                            )}
+                                            sameRankBonus={Object.entries(
+                                              eqrank.c
                                             )
-                                            .map(([k]) => k)}
-                                          maxRank={rankData.maxRank}
-                                          changeRank={changeRank}
-                                        />
-                                      </div>
+                                              .filter(
+                                                ([k, v]) =>
+                                                  k !== c &&
+                                                  v.r === eqrank.c[c].r
+                                              )
+                                              .map(([k]) => k)}
+                                            maxRank={rankData.maxRank}
+                                            changeRank={changeRank}
+                                          />
+                                        </div>
+                                      )}
                                     </div>
                                     <div
                                       className={`${

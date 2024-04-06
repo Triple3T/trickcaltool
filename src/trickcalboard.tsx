@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -24,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
@@ -433,6 +435,7 @@ const TrickcalBoard = () => {
     boardDataReducer,
     undefined
   );
+  const [enableDialog, setEnableDialog] = useState(false);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -443,6 +446,8 @@ const TrickcalBoard = () => {
     const { autoRepaired: ar2, ...userDataUnownedProto } =
       userdata.unowned.load();
     const userData = { ...userDataBoardProto, ...userDataUnownedProto };
+    const { board: bd } = userdata.dialog.load();
+    setEnableDialog(bd);
     if (ar1 || ar2) setNewCharaAlert(true);
     let flag = false;
     if (!userData.o.every((c) => userData.b[c])) {
@@ -511,6 +516,12 @@ const TrickcalBoard = () => {
     });
   }, []);
   useEffect(initFromUserData, [initFromUserData]);
+  const setDialogEnabled = useCallback((enabled: boolean) => {
+    setEnableDialog(enabled);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { autoRepaired, ...userDialogData } = userdata.dialog.load();
+    userdata.dialog.save({ ...userDialogData, board: enabled });
+  }, []);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);
     initFromUserData();
@@ -696,6 +707,23 @@ const TrickcalBoard = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <SubtitleBar>
+                    {t("ui.common.dialogEnableSwitchTitle")}
+                  </SubtitleBar>
+                  <div className="w-full px-4 my-2 text-left flex items-center gap-2">
+                    <Switch
+                      id="show-dialog-trigger"
+                      checked={enableDialog}
+                      onCheckedChange={(e) => {
+                        setDialogEnabled(e);
+                      }}
+                    />
+                    <Label htmlFor="show-dialog-trigger">
+                      {t("ui.common.dialogEnableSwitchTitle")}
+                    </Label>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -1075,42 +1103,44 @@ const TrickcalBoard = () => {
                                     className={imgClassNames.join(" ")}
                                   />
                                 </div>
-                                <div
-                                  className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  <BoardInfoDialog
-                                    boardIndex={boardData.boardIndex}
-                                    boardTypeString={bt}
-                                    chara={name}
-                                    charaTypes={chara[name].t}
-                                    route={
-                                      route.r[Race[Number(chara[name].t[5])]][
-                                        boardData.boardIndex
-                                      ].b[
-                                        Number(
-                                          board.c[name].r[boardData.boardIndex][
-                                            ldx
-                                          ].split(".")[bdx]
-                                        )
-                                      ]
-                                    }
-                                    rstart={
-                                      route.r[Race[Number(chara[name].t[5])]][
-                                        boardData.boardIndex
-                                      ].s
-                                    }
-                                    blocked={
-                                      ldx === 0
-                                        ? undefined
-                                        : board.c[name].k[boardData.boardIndex][
-                                            ldx - 1
-                                          ].split(".")[bdx]
-                                    }
-                                    checked={checked}
-                                    unowned={unowned}
-                                  />
-                                </div>
+                                {enableDialog && (
+                                  <div
+                                    className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <BoardInfoDialog
+                                      boardIndex={boardData.boardIndex}
+                                      boardTypeString={bt}
+                                      chara={name}
+                                      charaTypes={chara[name].t}
+                                      route={
+                                        route.r[Race[Number(chara[name].t[5])]][
+                                          boardData.boardIndex
+                                        ].b[
+                                          Number(
+                                            board.c[name].r[
+                                              boardData.boardIndex
+                                            ][ldx].split(".")[bdx]
+                                          )
+                                        ]
+                                      }
+                                      rstart={
+                                        route.r[Race[Number(chara[name].t[5])]][
+                                          boardData.boardIndex
+                                        ].s
+                                      }
+                                      blocked={
+                                        ldx === 0
+                                          ? undefined
+                                          : board.c[name].k[
+                                              boardData.boardIndex
+                                            ][ldx - 1].split(".")[bdx]
+                                      }
+                                      checked={checked}
+                                      unowned={unowned}
+                                    />
+                                  </div>
+                                )}
                                 {checked && (
                                   <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
                                     <img

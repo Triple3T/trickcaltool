@@ -748,6 +748,7 @@ i18n
               tokenProcessing: "토큰 받아오는 중...",
               dataLoading: "데이터 불러오는 중...",
               dataLoaded: "데이터를 불러왔습니다.",
+              dialogEnableSwitchTitle: "정보 다이얼로그 활성화",
             },
           },
         },
