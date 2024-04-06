@@ -852,6 +852,7 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={labData.myHomeLevels.lab[0] === 0}
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -871,6 +872,12 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.lab[0] ===
+                          myhomeupgrade.l.length ||
+                        labData.myHomeLevels.lab[0] ===
+                          labData.myHomeLevels.lab[1]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -900,6 +907,11 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.lab[1] === 0 ||
+                        labData.myHomeLevels.lab[1] ===
+                          labData.myHomeLevels.lab[0]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -919,6 +931,9 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.lab[1] === myhomeupgrade.l.length
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -957,6 +972,7 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={labData.myHomeLevels.restaurant[0] === 0}
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -979,6 +995,12 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.restaurant[0] ===
+                          myhomeupgrade.r.length ||
+                        labData.myHomeLevels.restaurant[0] ===
+                          labData.myHomeLevels.restaurant[1]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1010,6 +1032,11 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.restaurant[1] === 0 ||
+                        labData.myHomeLevels.restaurant[1] ===
+                          labData.myHomeLevels.restaurant[0]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1032,6 +1059,10 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.restaurant[1] ===
+                        myhomeupgrade.r.length
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1068,6 +1099,7 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={labData.myHomeLevels.myhome[0] === 0}
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1087,6 +1119,12 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.myhome[0] ===
+                          myhomeupgrade.m.length ||
+                        labData.myHomeLevels.myhome[0] ===
+                          labData.myHomeLevels.myhome[1]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1116,6 +1154,11 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.myhome[1] === 0 ||
+                        labData.myHomeLevels.myhome[1] ===
+                          labData.myHomeLevels.myhome[0]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1135,6 +1178,10 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.myhome[1] ===
+                        myhomeupgrade.m.length
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1173,6 +1220,7 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={labData.myHomeLevels.schedule[0] === 0}
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1192,6 +1240,12 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.schedule[0] ===
+                          myhomeupgrade.s.length ||
+                        labData.myHomeLevels.schedule[0] ===
+                          labData.myHomeLevels.schedule[1]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1223,6 +1277,11 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.schedule[1] === 0 ||
+                        labData.myHomeLevels.schedule[1] ===
+                          labData.myHomeLevels.schedule[0]
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
@@ -1242,6 +1301,10 @@ const Lab = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      disabled={
+                        labData.myHomeLevels.schedule[1] ===
+                        myhomeupgrade.s.length
+                      }
                       onClick={() =>
                         dispatchLabData({
                           type: "myhomelevel",
