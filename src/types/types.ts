@@ -1,5 +1,10 @@
 import { BoardType, StatType } from "./enums";
 
+export interface UserDataDialogEnable {
+  board: boolean;
+  eqrank: boolean;
+}
+
 export interface UserDataBoard {
   b: { [key: string]: number[][] }; // 보드 차수별 데이터 (bitmask)
   c: number; // subClassification
