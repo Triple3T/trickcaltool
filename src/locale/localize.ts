@@ -159,7 +159,7 @@ i18n
             Arbeit1: "코스프레 모델",
             Arbeit2: "엘드 마트 강탈",
             Arbeit3: "자판기 털기",
-            Arbeit4: "김창숙 부띠끄 알바",
+            Arbeit4: "김장숙 부띠끄 알바",
             Arbeit5: "모에모에빔 주문걸기",
             Arbeit6: "엘프 시청 창문닦이",
             Arbeit7: "도굴 망보기",
