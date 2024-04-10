@@ -21,7 +21,7 @@
         {"MadeLow1":15,"MadeHigh1":10,"g":100000},
         {"MadeLow1":25,"MadeHigh1":15,"g":500000},
         {"MadeLow1":50,"MadeHigh1":20,"g":1000000},
-        {"MadeLow1":100,"MadeHigh5":10,"g":1000000},
+        {"MadeLow1":100,"MadeHigh5":10,"g":1500000},
         {"MadeLow1":150,"MadeHigh5":15,"g":2000000},
         {"MadeLow1":200,"MadeHigh5":20,"g":5000000}
     ],
