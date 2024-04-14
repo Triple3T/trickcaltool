@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 import Layout from "@/components/layout";
 import {
   Accordion,
@@ -896,12 +897,13 @@ const EquipRank = () => {
                           />
                           <LazyInput
                             type="text"
-                            className={`w-8 p-1.5 text-right h-full${
+                            className={cn(
+                              "w-8 p-1.5 text-right h-full",
                               rankData.charas[c].rank > rankData.maxRank ||
-                              rankData.charas[c].rank < rankData.minRank
-                                ? " ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
+                                rankData.charas[c].rank < rankData.minRank
+                                ? "ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
                                 : ""
-                            }`}
+                            )}
                             pattern="[0-9]{1,2}"
                             value={`${Math.max(
                               Math.min(
