@@ -238,10 +238,10 @@ const BoardInfoDialog = ({
               </div>
             </div>
           </div>
-          <div className="flex-auto flex flex-col gap-4">
+          <div className="flex-auto flex flex-col gap-2">
             <div>
               <SubtitleBar>{t("ui.board.numberOfImportantTiles")}</SubtitleBar>
-              <div className="px-4">
+              <div className="px-4 py-2">
                 <div>
                   {t("ui.board.importantBoardTilesBefore")}
                   <img
@@ -269,7 +269,7 @@ const BoardInfoDialog = ({
                 <SubtitleBar>
                   {t("ui.board.importantBoardCombination")}
                 </SubtitleBar>
-                <div className="px-12 w-full max-w-44 mx-auto">
+                <div className="px-12 w-full max-w-44 mx-auto py-2">
                   <Carousel>
                     <CarouselContent>
                       {blocking.map((bc, i) => {
