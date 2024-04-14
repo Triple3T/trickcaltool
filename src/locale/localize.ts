@@ -602,6 +602,7 @@ i18n
               importantBoardTilesAfter: "",
               importantBoardTilesMultiple: "x",
               importantBoardCombination: "가능한 특수 칸 조합",
+              listInCurrentBoard: "{{0}} {{1}}에 있는 특수 칸 목록",
             },
             equiprank: {
               title: "랭크 메모장",

@@ -33,6 +33,7 @@ interface BoardInfoDialogProps {
   charaTypes: string;
   route: string;
   rstart: number;
+  otherBoards: string;
   blocked?: string;
   checked?: boolean;
   unowned?: boolean;
@@ -45,6 +46,7 @@ const BoardInfoDialog = ({
   charaTypes,
   route,
   rstart,
+  otherBoards,
   blocked,
   checked,
   unowned,
@@ -307,6 +309,30 @@ const BoardInfoDialog = ({
                 </div>
               </div>
             )}
+          </div>
+        </div>
+        <div>
+          <SubtitleBar>
+            {t("ui.board.listInCurrentBoard", {
+              0: t(`chara.${chara}`),
+              1: t(`ui.board.board${boardIndex + 1}`),
+            })}
+          </SubtitleBar>
+          <div className="px-4 pt-6 pb-2 flex flex-row justify-center h-12">
+            {otherBoards.split("").map((b, i) => {
+              const bt = BoardType[Number(b)];
+              return (
+                <div className="w-1/6 max-w-12 relative" key={i}>
+                  <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <img
+                      src={`/boards/Tile_${bt}On.png`}
+                      style={{ backgroundImage: "url(/boards/Rect_03.png)" }}
+                      className="w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </DialogContent>

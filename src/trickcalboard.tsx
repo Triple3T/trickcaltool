@@ -1129,6 +1129,11 @@ const TrickcalBoard = () => {
                                           boardData.boardIndex
                                         ].s
                                       }
+                                      otherBoards={board.c[name].b[
+                                        boardData.boardIndex
+                                      ]
+                                        .map((v) => v.toString())
+                                        .join("")}
                                       blocked={
                                         ldx === 0
                                           ? undefined
