@@ -38,6 +38,7 @@ import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
 import { StatType, Personality } from "@/types/enums";
 import RankInfoDialog from "@/components/parts/rank-info-dialog";
+import RankReqLevelDialog from "./components/parts/rank-req-level-dialog";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import rankClassNames from "@/utils/rankClassNames";
@@ -563,6 +564,10 @@ const EquipRank = () => {
                           0: `${rankData?.maxRank || 1}`,
                           1: `${eqrank.q[(rankData?.maxRank || 1) - 1]}`,
                         })}
+                        <RankReqLevelDialog
+                          reqs={eqrank.q}
+                          maxRank={MAX_RANK}
+                        />
                       </div>
                     </div>
                   </div>
