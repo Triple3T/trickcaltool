@@ -114,6 +114,7 @@ const defaultEqRankData = {
   r: {},
   s: [0, 0, 0],
   v: [],
+  f: [[0, 0, 0]],
 };
 const saveEqRankData: SaveData<UserDataEqRank> = (data) => {
   localStorage.setItem(EQRANK_KEY, JSON.stringify(data ?? defaultEqRankData));

@@ -78,3 +78,24 @@ export enum LabEffectCategory {
   Restaurant = 3,
   Battle = 4,
 }
+
+export enum SortOrFilter {
+  Sort = 0,
+  Filter = 1,
+}
+
+export enum SortBy {
+  Name = 0,
+  Personality = 1,
+  StarGrade = 2,
+}
+
+export enum SortType {
+  Asc = 0,
+  Desc = 1,
+}
+
+export enum FilterBy {
+  Personality = 0,
+  StarGrade = 1,
+}

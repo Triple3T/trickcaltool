@@ -2,11 +2,13 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useReducer,
   useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { ArrowDownUp, ArrowDownZA, ArrowUpAZ, Filter } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
@@ -38,7 +40,14 @@ import board from "@/data/board";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
-import { StatType, Personality } from "@/types/enums";
+import {
+  StatType,
+  Personality,
+  SortBy,
+  FilterBy,
+  SortOrFilter,
+  SortType,
+} from "@/types/enums";
 import RankInfoDialog from "@/components/parts/rank-info-dialog";
 import RankReqLevelDialog from "./components/parts/rank-req-level-dialog";
 import SelectChara from "@/components/parts/select-chara";
@@ -48,6 +57,8 @@ import rankClassNames from "@/utils/rankClassNames";
 import userdata from "@/utils/userdata";
 import { UserDataEqRank, UserDataUnowned } from "@/types/types";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+import sortChange from "./utils/sortChange";
+import filterChange from "./utils/filterChange";
 
 const MAX_RANK = 8;
 
@@ -85,6 +96,7 @@ interface RankDataPropsCore {
   targetStat: StatType[]; // 스탯 종류
   minRank: number;
   maxRank: number;
+  sortAndFilter: number[][]; // 정렬 및 필터
   dirty: boolean;
   isDirty: number;
 }
@@ -92,8 +104,8 @@ interface RankDataPropsCore {
 type RankDataProps = RankDataPropsCore | undefined;
 
 const saveUserData = (rankData: UserDataEqRank & UserDataUnowned) => {
-  const { r, o, u, s, v } = rankData;
-  userdata.eqrank.save({ r, s, v });
+  const { r, o, u, s, v, f } = rankData;
+  userdata.eqrank.save({ r, s, v, f });
   userdata.unowned.save({ o, u });
 };
 
@@ -246,6 +258,59 @@ const rankDataApplyMinMaxActionHandler = (
   };
 };
 
+interface RankDataChangeSort {
+  type: "sort";
+  payload: SortBy;
+}
+
+const rankDataChangeSortActionHandler = (
+  state: NonNullable<RankDataProps>,
+  action: RankDataChangeSort
+) => {
+  const sortAndFilterData = sortChange(state.sortAndFilter, action.payload);
+  const userData = {
+    ...state.user,
+    f: sortAndFilterData,
+  };
+  saveUserData(userData);
+  return {
+    ...state,
+    sortAndFilter: sortAndFilterData,
+    user: userData,
+    isDirty: ((state.isDirty + 1) % 32768) + 65536,
+  };
+};
+
+interface RankDataChangeFilter {
+  type: "filter";
+  payload: {
+    filterBy: FilterBy;
+    target: number;
+  };
+}
+
+const rankDataChangeFilterActionHandler = (
+  state: NonNullable<RankDataProps>,
+  action: RankDataChangeFilter
+) => {
+  const sortAndFilterData = filterChange(
+    state.sortAndFilter,
+    action.payload.filterBy,
+    action.payload.target
+  );
+  const userData = {
+    ...state.user,
+    f: sortAndFilterData,
+  };
+  saveUserData(userData);
+  return {
+    ...state,
+    sortAndFilter: sortAndFilterData,
+    user: userData,
+    isDirty: ((state.isDirty + 1) % 32768) + 65536,
+  };
+};
+
 interface RankDataClean {
   type: "clean";
 }
@@ -267,6 +332,8 @@ type RankDataReduceAction =
   | RankDataChangeMinRank
   | RankDataChangeMaxRank
   | RankDataApplyMinMax
+  | RankDataChangeSort
+  | RankDataChangeFilter
   | RankDataClean;
 
 const rankDataReducer = (
@@ -288,6 +355,10 @@ const rankDataReducer = (
       return rankDataChangeMaxRankActionHandler(state, action);
     case "applyminmax":
       return rankDataApplyMinMaxActionHandler(state);
+    case "sort":
+      return rankDataChangeSortActionHandler(state, action);
+    case "filter":
+      return rankDataChangeFilterActionHandler(state, action);
     case "clean":
       return rankDataCleanActionHandler(state);
   }
@@ -389,6 +460,7 @@ const EquipRank = () => {
         targetStat: userData.v || [],
         minRank: userData.s[0] || 1,
         maxRank: userData.s[1] || MAX_RANK,
+        sortAndFilter: userData.f,
         dirty: Object.values(charas).some(
           (c) =>
             c.rank < (userData.s[0] || 1) ||
@@ -480,6 +552,51 @@ const EquipRank = () => {
     dispatchRankData({ type: "rank", payload: { chara, rank } });
   }, []);
 
+  type SortFuncType = (a: string, b: string) => number;
+  const sortFunc = useMemo<SortFuncType>(() => {
+    const defaultFunc: SortFuncType = (a, b) =>
+      t(`chara.${a}`).localeCompare(t(`chara.${b}`));
+    if (!rankData) return defaultFunc;
+    const { sortAndFilter } = rankData;
+    const sortedWith = sortAndFilter.find((v) => v[0] === SortOrFilter.Sort);
+    if (!sortedWith) return defaultFunc;
+    switch (sortedWith[1] ?? SortBy.Name) {
+      case SortBy.Name:
+        return (a, b) =>
+          t(`chara.${a}`).localeCompare(t(`chara.${b}`)) *
+          (-1) ** sortedWith[2];
+      case SortBy.Personality:
+        return (a, b) =>
+          (Number(chara[a].t[0]) - Number(chara[b].t[0])) *
+          (-1) ** sortedWith[2];
+      case SortBy.StarGrade:
+        return (a, b) =>
+          (Number(chara[a].t[1]) - Number(chara[b].t[1])) *
+          (-1) ** sortedWith[2];
+      default:
+        return defaultFunc;
+    }
+  }, [rankData, t]);
+
+  type FilterFuncType = (c: string) => boolean;
+  const filterFunc = useMemo<FilterFuncType>(() => {
+    const defaultFunc: FilterFuncType = () => true;
+    if (!rankData) return defaultFunc;
+    const { sortAndFilter } = rankData;
+    const filterByTypes = Object.values(FilterBy).filter(
+      (f) => typeof f === "string"
+    ) as (keyof typeof FilterBy)[];
+    const filteredWithAll = filterByTypes.map<FilterFuncType>((f) => {
+      const filterBy: FilterBy = FilterBy[f];
+      const filterWith = sortAndFilter.find(
+        (v) => v[0] === SortOrFilter.Filter && v[1] === filterBy
+      );
+      if (!filterWith || !filterWith[2]) return defaultFunc;
+      return (c) => (filterWith[2] & (1 << Number(chara[c].t[filterBy]))) > 0;
+    });
+    return (c) => filteredWithAll.every((f) => f(c));
+  }, [rankData]);
+
   return (
     <Layout>
       <Card className="p-4 object-cover max-w-xl mt-0 mb-4 gap-2 mx-auto font-onemobile">
@@ -570,6 +687,108 @@ const EquipRank = () => {
                           reqs={eqrank.q}
                           maxRank={MAX_RANK}
                         />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {rankData?.viewType === "rankView" && (
+                  <div className="flex flex-col gap-2">
+                    <SubtitleBar>{t("ui.equiprank.sortAndFilter")}</SubtitleBar>
+                    <div className="flex flex-col gap-1 px-2">
+                      <div className="flex flex-row gap-2">
+                        <div className="flex items-center">
+                          <ArrowDownUp className="w-5 h-5" />
+                        </div>
+                        <div className="flex flex-1 gap-1">
+                          {(
+                            Object.values(SortBy).filter(
+                              (s) => typeof s === "string"
+                            ) as (keyof typeof SortBy)[]
+                          )
+                            .sort((a, b) => SortBy[a] - SortBy[b])
+                            .map((s) => {
+                              const sortedWith = rankData?.sortAndFilter.find(
+                                (v) => v[0] === SortOrFilter.Sort
+                              );
+                              const sortedByThis =
+                                sortedWith?.[1] === SortBy[s];
+                              const hasDirection =
+                                typeof sortedWith?.[2] === "number";
+                              const sortedDirection = sortedWith?.[2];
+                              return (
+                                <Button
+                                  key={s}
+                                  className="flex-auto"
+                                  size="sm"
+                                  variant={sortedByThis ? "default" : "outline"}
+                                  onClick={() =>
+                                    dispatchRankData({
+                                      type: "sort",
+                                      payload: SortBy[s],
+                                    })
+                                  }
+                                >
+                                  {sortedByThis && hasDirection ? (
+                                    sortedDirection === SortType.Asc ? (
+                                      <ArrowUpAZ className="mr-1" />
+                                    ) : (
+                                      <ArrowDownZA className="mr-1" />
+                                    )
+                                  ) : null}
+                                  {t(`ui.equiprank.sortBy${s}`)}
+                                </Button>
+                              );
+                            })}
+                        </div>
+                      </div>
+                      <div className="flex flex-row gap-2">
+                        <div className="flex items-center">
+                          <Filter className="w-5 h-5" />
+                        </div>
+                        <div className="flex flex-1 gap-1 justify-center">
+                          {(
+                            Object.values(Personality).filter(
+                              (s) => typeof s === "string"
+                            ) as (keyof typeof Personality)[]
+                          ).map((p) => {
+                            const filteredWithPersonality =
+                              rankData?.sortAndFilter.find(
+                                (v) =>
+                                  v[0] === SortOrFilter.Filter &&
+                                  v[1] === FilterBy.Personality
+                              );
+                            const filterNumber =
+                              filteredWithPersonality?.[2] ?? 0;
+                            const personalityNumber = Personality[p];
+                            const hasPersonality =
+                              (filterNumber & (1 << personalityNumber)) > 0;
+                            return (
+                              <Button
+                                key={p}
+                                size="icon"
+                                variant="outline"
+                                onClick={() =>
+                                  dispatchRankData({
+                                    type: "filter",
+                                    payload: {
+                                      filterBy: FilterBy.Personality,
+                                      target: personalityNumber,
+                                    },
+                                  })
+                                }
+                                className={cn(
+                                  "flex-1 max-w-10 min-w-6 w-full h-auto aspect-square",
+                                  hasPersonality ? "bg-[#dfeeab]/75" : ""
+                                )}
+                              >
+                                <img
+                                  src={`/icons/Common_UnitPersonality_${p}.png`}
+                                  className="max-w-full w-6 aspect-square"
+                                />
+                              </Button>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -994,9 +1213,8 @@ const EquipRank = () => {
                           className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
                         >
                           {rankData.user.o
-                            .sort((a, b) =>
-                              t(`chara.${a}`).localeCompare(t(`chara.${b}`))
-                            )
+                            .filter(filterFunc)
+                            .sort(sortFunc)
                             .map((c) => {
                               if (rankData.charas[c]?.rank !== rank)
                                 return null;
