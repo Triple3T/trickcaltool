@@ -9,6 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import icSearch from "@/lib/initialConsonantSearch";
 import Layout from "@/components/layout";
 import {
   Accordion,
@@ -857,7 +858,10 @@ const EquipRank = () => {
                     t(`chara.${a}`).localeCompare(t(`chara.${b}`))
                   )
                   .filter((c) =>
-                    search ? t(`chara.${c}`).includes(search) : true
+                    search
+                      ? t(`chara.${c}`).includes(search) ||
+                        icSearch(t(`chara.${c}`), search)
+                      : true
                   )
                   .map((c) => {
                     return (

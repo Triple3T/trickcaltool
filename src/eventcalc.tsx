@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Check, ChevronsUpDown, Dot, Lock } from "lucide-react";
 // import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import icSearch from "./lib/initialConsonantSearch";
 import Layout from "@/components/layout";
 import {
   Accordion,
@@ -72,7 +73,11 @@ const ThemeEventCombobox = ({ value, onChange }: IComboboxOuterProp) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-60 p-0 font-onemobile">
-        <Command>
+        <Command
+          filter={(value, search) =>
+            value.includes(search) || icSearch(value, search) ? 1 : 0
+          }
+        >
           <CommandInput
             placeholder={t("ui.eventcalc.searchThemeEvent")}
             className="h-9"

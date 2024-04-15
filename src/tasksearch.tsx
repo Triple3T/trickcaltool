@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Check, ChevronsUpDown } from "lucide-react";
 // import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
+import icSearch from "./lib/initialConsonantSearch";
 import {
   Accordion,
   AccordionItem,
@@ -61,7 +62,11 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-60 p-0 font-onemobile">
-        <Command>
+        <Command
+          filter={(value, search) =>
+            value.includes(search) || icSearch(value, search) ? 1 : 0
+          }
+        >
           <CommandInput
             placeholder={t("ui.tasksearch.searchCharacter")}
             className="h-9"
@@ -118,7 +123,11 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-60 p-0 font-onemobile">
-        <Command>
+        <Command
+          filter={(value, search) =>
+            value.includes(search) || icSearch(value, search) ? 1 : 0
+          }
+        >
           <CommandInput
             placeholder={t("ui.tasksearch.searchLifeskill")}
             className="h-9"
@@ -176,7 +185,11 @@ const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-60 p-0 font-onemobile">
-        <Command>
+        <Command
+          filter={(value, search) =>
+            value.includes(search) || icSearch(value, search) ? 1 : 0
+          }
+        >
           <CommandInput
             placeholder={t("ui.tasksearch.searchTask")}
             className="h-9"
