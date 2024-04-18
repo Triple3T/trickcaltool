@@ -51,6 +51,7 @@
     "vaul": "^0.8.9"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240405.0",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
