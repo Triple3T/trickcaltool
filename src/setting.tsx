@@ -85,6 +85,9 @@ const SettingCore = () => {
                   dataFileRead(e.target.files).then((v) => {
                     if (v.success) {
                       toast.success(t("ui.index.fileSync.success"));
+                      if (isReady && googleLinked && autoSave) {
+                        autoSave();
+                      }
                     } else {
                       toast.error(t(v.reason));
                     }
