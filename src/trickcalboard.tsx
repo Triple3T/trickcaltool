@@ -649,10 +649,11 @@ const TrickcalBoard = () => {
                             key={bt}
                             value={bt}
                             aria-label={`Toggle ${bt}`}
+                            className="px-2"
                           >
                             <img
                               src={`/boards/Tile_${bt}On.png`}
-                              className="h-6 w-6 aspect-square"
+                              className="h-8 w-8 aspect-square"
                             />
                           </ToggleGroupItem>
                         );
