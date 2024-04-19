@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Search } from "lucide-react";
 // import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import icSearch from "./lib/initialConsonantSearch";
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import Layout from "@/components/layout";
+import CharaWithLifeskill from "@/components/parts/chara-with-lifeskill";
 import ItemSlot from "@/components/parts/item-slot";
 import LifeskillIcon from "@/components/parts/lifeskill-icon";
 
@@ -228,6 +229,24 @@ const TaskSearch = () => {
   const [selectedLifeskill, setSelectedLifeskill] = useState("");
   const [selectedTask, setSelectedTask] = useState("");
   const [bannedIndex, setBannedIndex] = useState<number[]>([]);
+  const searchChara = useCallback((charaId: string) => {
+    setSelectedChara(charaId);
+    setSelectedLifeskill("");
+    setSelectedTask("");
+    setBannedIndex([]);
+  }, []);
+  const searchLifeskill = useCallback((lifeskillId: string) => {
+    setSelectedChara("");
+    setSelectedLifeskill(lifeskillId);
+    setSelectedTask("");
+    setBannedIndex([]);
+  }, []);
+  const searchTask = useCallback((taskId: string) => {
+    setSelectedChara("");
+    setSelectedLifeskill("");
+    setSelectedTask(taskId);
+    setBannedIndex([]);
+  }, []);
 
   return (
     <Layout>
@@ -235,33 +254,12 @@ const TaskSearch = () => {
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
           <div className="flex flex-col sm:flex-row p-2 gap-2">
-            <CharacterCombobox
-              value={selectedChara}
-              onChange={(v) => {
-                setSelectedChara(v);
-                setSelectedLifeskill("");
-                setSelectedTask("");
-                setBannedIndex([]);
-              }}
-            />
+            <CharacterCombobox value={selectedChara} onChange={searchChara} />
             <LifeskillCombobox
               value={selectedLifeskill}
-              onChange={(v) => {
-                setSelectedChara("");
-                setSelectedLifeskill(v);
-                setSelectedTask("");
-                setBannedIndex([]);
-              }}
+              onChange={searchLifeskill}
             />
-            <TaskCombobox
-              value={selectedTask}
-              onChange={(v) => {
-                setSelectedChara("");
-                setSelectedLifeskill("");
-                setSelectedTask(v);
-                setBannedIndex([]);
-              }}
-            />
+            <TaskCombobox value={selectedTask} onChange={searchTask} />
           </div>
           {selectedChara && (
             <div className="flex flex-col sm:flex-row gap-4">
@@ -281,7 +279,7 @@ const TaskSearch = () => {
                 <div className="text-left text-2xl hidden sm:block">
                   {t(`chara.${selectedChara}`)}
                 </div>
-                <div className="flex flex-row flex-wrap gap-2">
+                <div className="flex flex-row flex-wrap gap-2 sm:gap-3 md:gap-4 justify-evenly sm:justify-start max-w-[279px] sm:max-w-full">
                   {lifeskill.c[selectedChara].s.map((lifeskillId, index) => {
                     return (
                       <LifeskillIcon
@@ -289,8 +287,8 @@ const TaskSearch = () => {
                         size="large"
                         additionalClassName={
                           bannedIndex.includes(index)
-                            ? "grayscale-[0.75] opacity-50"
-                            : ""
+                            ? "grayscale-[0.75] opacity-50 mb-8 sm:mb-0"
+                            : "mb-8"
                         }
                         key={index}
                         onClick={() => {
@@ -306,8 +304,9 @@ const TaskSearch = () => {
                       />
                     );
                   })}
+                  <div className="w-16 h-16 sm:hidden" />
                 </div>
-                <div className="text-sm text-left text-slate-700 dark:text-slate-300 mt-3">
+                <div className="text-sm text-left text-slate-700 dark:text-slate-300 break-keep">
                   {t("ui.tasksearch.skillSelectHelp")
                     .split("\n")
                     .map((l, i) => (
@@ -359,9 +358,9 @@ const TaskSearch = () => {
           {selectedTask && (
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-evenly">
               <div className="w-64 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]">
-                <div className="pl-4 mb-1">
+                <div className="pl-2 mb-1">
                   <div
-                    className="pr-4 pb-1.5 pt-0.5 bg-contain bg-no-repeat"
+                    className="pr-2 pb-2 pt-px bg-contain bg-no-repeat bg-center"
                     style={{
                       backgroundImage: "url(/schedule/Deco_Task_Colored.png)",
                     }}
@@ -524,9 +523,9 @@ const TaskSearch = () => {
                 key={taskId}
                 className="w-72 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
               >
-                <div className="pl-4 mb-1">
+                <div className="pl-2 mb-1">
                   <div
-                    className="pr-4 pb-1.5 pt-0.5 bg-contain bg-no-repeat"
+                    className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center"
                     style={{
                       backgroundImage: "url(/schedule/Deco_Task_Colored.png)",
                     }}
@@ -574,6 +573,12 @@ const TaskSearch = () => {
                       );
                     })}
                   </div>
+                  <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-[#e2dbc8] rounded-sm bg-[#f7faef]">
+                    <Search
+                      className="w-3 h-3" strokeWidth={3}
+                      onClick={() => searchTask(taskId)}
+                    />
+                  </div>
                 </div>
                 <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
                   {currentTask.m.map((materialId, index) => {
@@ -608,39 +613,13 @@ const TaskSearch = () => {
             .map(([charaId]) => {
               const cls = lifeskill.c[charaId].s;
               return (
-                <div
+                <CharaWithLifeskill
                   key={charaId}
-                  className="w-72 rounded-xl px-2 py-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
-                >
-                  <div className="flex flex-row gap-2.5 items-center">
-                    <img
-                      className="w-12 h-12 aspect-square"
-                      src={`/charas/${charaId}.png`}
-                    />
-                    <div className="text-2xl">{t(`chara.${charaId}`)}</div>
-                  </div>
-                  <div className="flex flex-row gap-0.5 my-2">
-                    <LifeskillIcon
-                      id={cls[0]}
-                      active={cls[0].toString() === selectedLifeskill}
-                      additionalClassName="-mx-1 flex-[4]"
-                      showName
-                    />
-                    {cls.slice(1).map((lifeskillId, index) => {
-                      return (
-                        <LifeskillIcon
-                          key={index}
-                          id={lifeskillId}
-                          active={lifeskillId.toString() === selectedLifeskill}
-                          size="small"
-                          additionalClassName="mx-auto flex-[3]"
-                          showName
-                          nameClassName="-mt-1"
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
+                  charaId={charaId}
+                  lifeskills={cls}
+                  selectedLifeskills={[Number(selectedLifeskill)]}
+                  searchChara={searchChara}
+                />
               );
             })}
         {selectedTask &&
@@ -665,52 +644,13 @@ const TaskSearch = () => {
             .map(([charaId]) => {
               const cls = lifeskill.c[charaId].s;
               return (
-                <div
+                <CharaWithLifeskill
                   key={charaId}
-                  className="w-72 rounded-xl px-2 py-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
-                >
-                  <div className="flex flex-row gap-2.5 items-center">
-                    <img
-                      className="w-12 h-12 aspect-square"
-                      src={`/charas/${charaId}.png`}
-                    />
-                    <div>
-                      <div className="text-left text-2xl">
-                        {t(`chara.${charaId}`)}
-                      </div>
-                      <div className="text-left text-sm">
-                        {t(`ui.tasksearch.skillMatchCount`, {
-                          0: `${
-                            lifeskill.c[charaId].s.filter((lfs) =>
-                              task.t[selectedTask].s.includes(lfs)
-                            ).length
-                          }`,
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-row gap-0.5 my-2">
-                    <LifeskillIcon
-                      id={cls[0]}
-                      active={task.t[selectedTask].s.includes(cls[0])}
-                      additionalClassName="-mx-1 flex-[4]"
-                      showName
-                    />
-                    {cls.slice(1).map((lifeskillId, index) => {
-                      return (
-                        <LifeskillIcon
-                          key={index}
-                          id={lifeskillId}
-                          active={task.t[selectedTask].s.includes(lifeskillId)}
-                          size="small"
-                          additionalClassName="mx-auto flex-[3]"
-                          showName
-                          nameClassName="-mt-1"
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
+                  charaId={charaId}
+                  lifeskills={cls}
+                  selectedLifeskills={task.t[selectedTask].s}
+                  searchChara={searchChara}
+                />
               );
             })}
       </div>
