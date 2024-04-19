@@ -14,7 +14,7 @@ import googleAccessUrl from "@/utils/googleAccessUrl";
 const SettingCore = () => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
-  const { isReady, googleLinked } = useContext(AuthContext);
+  const { autoSave, isReady, googleLinked } = useContext(AuthContext);
   const fileInput = useRef<HTMLInputElement>(null);
   return (
     <Card className="font-onemobile p-4 max-w-96 mx-auto">
