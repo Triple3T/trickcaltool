@@ -30,7 +30,10 @@ interface GoogleAuthRes {
     };
   
     const res = await fetch(url, options);
-    if (!res.ok) return new Response('Error', { status: res.status });
+    if (!res.ok) {
+      res.body.cancel();
+      return new Response('Error', { status: res.status });
+    }
     const data = await res.json();
     const refreshToken = (data as GoogleAuthRes).refresh_token;
   
