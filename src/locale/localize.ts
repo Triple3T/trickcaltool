@@ -82,6 +82,9 @@ i18n
             xXionx: "시온 더 다크불릿",
             Yumimi: "유미미",
           },
+          eldain: {
+            1: "영원살이",
+          },
           board: {
             AttackBoth: "공격력",
             // AttackPhysic: "물리 공격력",
