@@ -19,7 +19,9 @@ const SettingCore = () => {
   const [remoteHash, setRemoteHash] = useState<string>("");
   useEffect(() => {
     const getRemoteHash = async () => {
-      const res = await fetch("https://tr.triple-lab.com/api/hash");
+      const res = await fetch("https://tr.triple-lab.com/api/hash", {
+        cache: "no-store",
+      });
       const text = await res.text();
       setRemoteHash(text);
     };
