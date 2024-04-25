@@ -19,11 +19,6 @@ export default defineConfig({
           {
             urlPattern: /^https:\/\/tr\.triple-lab\.com/,
             handler: "StaleWhileRevalidate",
-            options: {
-              expiration: {
-                maxAgeSeconds: 60 * 60 * 24 * 7,
-              },
-            },
           },
         ],
       },
