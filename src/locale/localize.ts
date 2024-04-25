@@ -544,6 +544,12 @@ i18n
                 upload: "계정에 데이터 저장",
                 download: "계정의 데이터 불러오기",
               },
+              versionCheck: {
+                title: "버전 확인",
+                current: "현재 버전",
+                latest: "최신 버전",
+                loading: "버전 확인 중...",
+              },
               personality: "성격",
               defaultstar: "초기 성급",
               attack: "공격 타입",

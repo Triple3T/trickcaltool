@@ -81,4 +81,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    REACT_APP_VERSION_HASH: process.env.CF_PAGES_COMMIT_SHA,
+  },
 });
