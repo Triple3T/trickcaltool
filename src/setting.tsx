@@ -103,31 +103,30 @@ const SettingCore = () => {
             </div>
           </div>
         </div>
-        {localStorage.getItem("testkey") && (
-          <div>
-            <SubtitleBar>{t("ui.index.versionCheck.title")}</SubtitleBar>
-            <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
-              <div className="flex flex-row justify-between">
-                <div>{t("ui.index.versionCheck.current")}</div>
-                <div>{process.env.VERSION_HASH}</div>
-              </div>
-              <div className="flex flex-row justify-between">
-                <div>{t("ui.index.versionCheck.latest")}</div>
-                <div
-                  className={
-                    remoteHash
-                      ? process.env.VERSION_HASH === remoteHash
-                        ? "text-green-600 dark:text-green-300"
-                        : "text-red-600 dark:text-red-300"
-                      : ""
-                  }
-                >
-                  {remoteHash || t("ui.index.versionCheck.loading")}
-                </div>
+        <div>
+          <SubtitleBar>{t("ui.index.versionCheck.title")}</SubtitleBar>
+          <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
+            <div className="flex flex-row justify-between">
+              <div>{t("ui.index.versionCheck.current")}</div>
+              <div>{process.env.VERSION_HASH!.substring(0, 7)}</div>
+            </div>
+            <div className="flex flex-row justify-between">
+              <div>{t("ui.index.versionCheck.latest")}</div>
+              <div
+                className={
+                  remoteHash
+                    ? process.env.VERSION_HASH === remoteHash
+                      ? "text-green-600 dark:text-green-300"
+                      : "text-red-600 dark:text-red-300"
+                    : ""
+                }
+              >
+                {remoteHash.substring(0, 7) ||
+                  t("ui.index.versionCheck.loading")}
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </Card>
   );
