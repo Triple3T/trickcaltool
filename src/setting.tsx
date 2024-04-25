@@ -109,14 +109,14 @@ const SettingCore = () => {
             <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
               <div className="flex flex-row justify-between">
                 <div>{t("ui.index.versionCheck.current")}</div>
-                <div>{REACT_APP_VERSION_HASH}</div>
+                <div>{process.env.VERSION_HASH}</div>
               </div>
               <div className="flex flex-row justify-between">
                 <div>{t("ui.index.versionCheck.latest")}</div>
                 <div
                   className={
                     remoteHash
-                      ? REACT_APP_VERSION_HASH === remoteHash
+                      ? process.env.VERSION_HASH === remoteHash
                         ? "text-green-600 dark:text-green-300"
                         : "text-red-600 dark:text-red-300"
                       : ""

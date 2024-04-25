@@ -82,6 +82,6 @@ export default defineConfig({
     },
   },
   define: {
-    REACT_APP_VERSION_HASH: process.env.CF_PAGES_COMMIT_SHA,
+    "process.env.VERSION_HASH": process.env.CF_PAGES_COMMIT_SHA,
   },
 });
