@@ -20,7 +20,6 @@ export default defineConfig({
             urlPattern: /^https:\/\/tr\.triple-lab\.com/,
             handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "main-cache",
               expiration: {
                 maxAgeSeconds: 60 * 60 * 24 * 7,
               },
