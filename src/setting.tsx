@@ -184,6 +184,7 @@ const SettingCore = () => {
             <div className="w-full">
               <Button
                 onClick={installNewVersion}
+                variant="ghost"
                 disabled={
                   process.env.VERSION_HASH === remoteHash ||
                   !remoteHash ||
