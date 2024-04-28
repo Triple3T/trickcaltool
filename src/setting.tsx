@@ -29,8 +29,6 @@ const SettingCore = () => {
     navigator.serviceWorker
       .register("/sw.js", { updateViaCache: "none" })
       .then((registration) => {
-        setInstallButtonText("ui.index.versionCheck.downloading");
-        registration.update();
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
           if (installingWorker) {
@@ -65,6 +63,9 @@ const SettingCore = () => {
             window.location.reload();
           }
         };
+        registration.update().then(() => {
+          setInstallButtonText("ui.index.versionCheck.downloading");
+        });
       });
   }, []);
   return (
