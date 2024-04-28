@@ -53,9 +53,7 @@ const SettingCore = () => {
                   window.location.reload();
                 }
               };
-              registration.update().then(() => {
-                setInstallButtonText("ui.index.versionCheck.downloading");
-              });
+              registration.update();
             });
         }
       })
