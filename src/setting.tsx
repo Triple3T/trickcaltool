@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
+import { Loader2, Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import Layout from "@/components/layout";
 import { useTheme } from "@/components/theme-provider";
@@ -18,8 +18,54 @@ const SettingCore = () => {
   const { autoSave, isReady, googleLinked } = useContext(AuthContext);
   const fileInput = useRef<HTMLInputElement>(null);
   const [remoteHash, setRemoteHash] = useState<string>("");
+  const [installButtonText, setInstallButtonText] = useState<string>(
+    "ui.index.versionCheck.update"
+  );
   useEffect(() => {
     getServerHash(setRemoteHash);
+  }, []);
+  const installNewVersion = useCallback(() => {
+    setInstallButtonText("ui.index.versionCheck.preparing");
+    navigator.serviceWorker
+      .register("/sw.js", { updateViaCache: "none" })
+      .then((registration) => {
+        setInstallButtonText("ui.index.versionCheck.downloading");
+        registration.update();
+        registration.onupdatefound = () => {
+          const installingWorker = registration.installing;
+          if (installingWorker) {
+            setInstallButtonText("ui.index.versionCheck.installing");
+            installingWorker.onstatechange = () => {
+              // if (installingWorker.state === "installed") {
+              //   if (navigator.serviceWorker.controller) {
+              //     // At this point, the updated precached content has been fetched,
+              //     // but the previous service worker will still serve the older content
+              //     console.log(
+              //       "New content is available; please refresh."
+              //     );
+              //     // toast.success(
+              //     //   t("ui.index.versionCheck.success")
+              //     // );
+              //   } else {
+              //     // At this point, everything has been precached.
+              //     // It's the perfect time to display a
+              //     // "Content is cached for offline use." message.
+              //     console.log(
+              //       "Content is cached for offline use."
+              //     );
+              //   }
+              // }
+              if (installingWorker.state === "activated") {
+                setInstallButtonText("ui.index.versionCheck.updateCompleted");
+                window.location.reload();
+              }
+            };
+          } else {
+            setInstallButtonText("ui.index.versionCheck.updateFailed");
+            window.location.reload();
+          }
+        };
+      });
   }, []);
   return (
     <Card className="font-onemobile p-4 max-w-96 mx-auto">
@@ -134,6 +180,21 @@ const SettingCore = () => {
                 {remoteHash.substring(0, 7) ||
                   t("ui.index.versionCheck.loading")}
               </div>
+            </div>
+            <div className="w-full">
+              <Button
+                onClick={installNewVersion}
+                disabled={
+                  process.env.VERSION_HASH === remoteHash ||
+                  !remoteHash ||
+                  installButtonText !== "ui.index.versionCheck.update"
+                }
+              >
+                {installButtonText !== "ui.index.versionCheck.update" && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {t(installButtonText)}
+              </Button>
             </div>
           </div>
         </div>
