@@ -32,31 +32,33 @@ const SettingCore = () => {
           setInstallButtonText("ui.index.versionCheck.updateFailed");
           window.location.reload();
         } else {
-          fetch("/sw.js", { cache: "no-cache" }).then(() => {
-            setInstallButtonText("ui.index.versionCheck.downloading");
-            navigator.serviceWorker
-              .register("/sw.js", { updateViaCache: "none" })
-              .then((registration) => {
-                registration.onupdatefound = () => {
-                  const installingWorker = registration.installing;
-                  if (installingWorker) {
-                    setInstallButtonText("ui.index.versionCheck.installing");
-                    installingWorker.onstatechange = () => {
-                      if (installingWorker.state === "activated") {
-                        setInstallButtonText(
-                          "ui.index.versionCheck.updateCompleted"
-                        );
-                        window.location.reload();
-                      }
-                    };
-                  } else {
-                    setInstallButtonText("ui.index.versionCheck.updateFailed");
-                    window.location.reload();
-                  }
-                };
-                registration.update();
-              });
-          });
+          setInstallButtonText("ui.index.versionCheck.updateCompleted");
+          window.location.reload();
+          // fetch("/sw.js", { cache: "no-cache" }).then(() => {
+          //   setInstallButtonText("ui.index.versionCheck.downloading");
+          //   navigator.serviceWorker
+          //     .register("/sw.js", { updateViaCache: "none" })
+          //     .then((registration) => {
+          //       registration.onupdatefound = () => {
+          //         const installingWorker = registration.installing;
+          //         if (installingWorker) {
+          //           setInstallButtonText("ui.index.versionCheck.installing");
+          //           installingWorker.onstatechange = () => {
+          //             if (installingWorker.state === "activated") {
+          //               setInstallButtonText(
+          //                 "ui.index.versionCheck.updateCompleted"
+          //               );
+          //               window.location.reload();
+          //             }
+          //           };
+          //         } else {
+          //           setInstallButtonText("ui.index.versionCheck.updateFailed");
+          //           window.location.reload();
+          //         }
+          //       };
+          //       registration.update();
+          //     });
+          // });
         }
       })
     );
