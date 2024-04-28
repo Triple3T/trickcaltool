@@ -558,6 +558,9 @@ i18n
               race: "종족",
               fileSync: {
                 success: "성공적으로 데이터를 가져왔습니다.",
+                uploading: "데이터 업로드 중...",
+                uploadSuccess: "성공적으로 데이터를 저장했습니다.",
+                uploadFailed: "데이터 저장에 실패했습니다.",
                 notProperSignature: "파일 형식이 올바르지 않습니다.",
                 incorrectPadding: "파일 패딩이 올바르지 않습니다.",
                 noFileProvided: "파일이 제공되지 않았습니다.",

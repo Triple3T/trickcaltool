@@ -20,7 +20,7 @@ const defaultHeader = {
 interface IAuthContext {
   googleLinked: boolean;
   isReady: boolean;
-  autoSave?: () => void;
+  autoSave?: () => Promise<void>;
   autoLoad?: () => Promise<void>;
   getFileDry?: () => Promise<ISyncabilityCheck>;
   retryReady?: () => void;
@@ -191,22 +191,26 @@ ${fileData}
       const data = await response.json();
       if (data.id) {
         setFileId(data.id);
-        return data.id;
+        // return data.id;
+        return undefined;
       }
     } catch (error) {
       try {
-        let content;
+        let id;
         await getNewToken(async (newToken) => {
           const fid = await getFileId(newToken);
           if (!fid) return undefined;
           await storeFileContent(newToken, fid).then(async (res) => {
-            content = await res.json();
+            id = (await res.json())?.id;
           });
         });
-        return content;
-      } catch (e) {
-        console.error(e);
+        if (id) setFileId(id);
+        // return content as string | undefined;
         return undefined;
+      } catch (e) {
+        // console.error(e);
+        // return undefined;
+        throw new Error();
       }
     }
   };
@@ -215,18 +219,20 @@ ${fileData}
     if (token) {
       if (fileId) {
         if (Date.now() - lastModified > 3600000) {
-          getNewToken((newToken) => {
+          return getNewToken((newToken) => {
             storeFile(newToken, fileId);
             if (noFile) setNoFile(false);
           });
         } else {
-          storeFile(token, fileId);
+          return storeFile(token, fileId);
         }
       } else {
-        getNewToken((newToken) => {
+        return getNewToken((newToken) => {
           storeFile(newToken);
         });
       }
+    } else {
+      return Promise.resolve();
     }
   };
 

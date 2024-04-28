@@ -92,9 +92,15 @@ const SettingCore = () => {
                 onChange={(e) =>
                   dataFileRead(e.target.files).then((v) => {
                     if (v.success) {
-                      toast.success(t("ui.index.fileSync.success"));
                       if (isReady && googleLinked && autoSave) {
-                        autoSave();
+                        toast.loading(t("ui.index.fileSync.uploading"));
+                        autoSave().then(() => {
+                          toast.success(t("ui.index.fileSync.uploadSuccess"));
+                        }).catch(() => {
+                          toast.success(t("ui.index.fileSync.uploadFailed"));
+                        });
+                      } else {
+                        toast.success(t("ui.index.fileSync.success"));
                       }
                     } else {
                       toast.error(t(v.reason));

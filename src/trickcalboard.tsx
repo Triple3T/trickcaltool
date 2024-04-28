@@ -48,7 +48,7 @@ import {
 
 import userdata from "@/utils/userdata";
 import { UserDataBoard, UserDataUnowned } from "@/types/types";
-import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+// import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
   charas: {
@@ -532,7 +532,7 @@ const TrickcalBoard = () => {
       setNewCharaAlert(false);
     }
   }, [newCharaAlert, t]);
-  const fileInput = useRef<HTMLInputElement>(null);
+  // const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -727,7 +727,7 @@ const TrickcalBoard = () => {
                     </Label>
                   </div>
                 </div>
-                <div className="flex flex-col gap-2">
+                {/* <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
                   <div className="flex flex-row gap-2 max-w-xl w-full px-4">
                     <div className="flex-1">
@@ -766,7 +766,7 @@ const TrickcalBoard = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </AccordionContent>
           </AccordionItem>

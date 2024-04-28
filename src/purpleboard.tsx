@@ -920,7 +920,7 @@ const PurpleBoard = () => {
                     </Select>
                   </div>
                 </div> */}
-                <div className="flex flex-col gap-2">
+                {/* <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
                   <div className="flex flex-row gap-2 max-w-xl w-full px-4">
                     <div className="flex-1">
@@ -959,7 +959,7 @@ const PurpleBoard = () => {
                       />
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </AccordionContent>
           </AccordionItem>
