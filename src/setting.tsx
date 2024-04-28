@@ -34,29 +34,27 @@ const SettingCore = () => {
           if (installingWorker) {
             setInstallButtonText("ui.index.versionCheck.installing");
             installingWorker.onstatechange = () => {
-              // if (installingWorker.state === "installed") {
-              //   if (navigator.serviceWorker.controller) {
-              //     // At this point, the updated precached content has been fetched,
-              //     // but the previous service worker will still serve the older content
-              //     console.log(
-              //       "New content is available; please refresh."
-              //     );
-              //     // toast.success(
-              //     //   t("ui.index.versionCheck.success")
-              //     // );
-              //   } else {
-              //     // At this point, everything has been precached.
-              //     // It's the perfect time to display a
-              //     // "Content is cached for offline use." message.
-              //     console.log(
-              //       "Content is cached for offline use."
-              //     );
-              //   }
-              // }
-              if (installingWorker.state === "activated") {
-                setInstallButtonText("ui.index.versionCheck.updateCompleted");
-                window.location.reload();
+              if (installingWorker.state === "installed") {
+                if (navigator.serviceWorker.controller) {
+                  // At this point, the updated precached content has been fetched,
+                  // but the previous service worker will still serve the older content
+                  setInstallButtonText("ui.index.versionCheck.updateCompleted");
+                  window.location.reload();
+                  // toast.success(
+                  //   t("ui.index.versionCheck.success")
+                  // );
+                }
+                //  else {
+                //   // At this point, everything has been precached.
+                //   // It's the perfect time to display a
+                //   // "Content is cached for offline use." message.
+                //   console.log("Content is cached for offline use.");
+                // }
               }
+              // if (installingWorker.state === "activated") {
+              //   setInstallButtonText("ui.index.versionCheck.updateCompleted");
+              //   window.location.reload();
+              // }
             };
           } else {
             setInstallButtonText("ui.index.versionCheck.updateFailed");
