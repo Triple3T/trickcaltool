@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 // import { Label } from "@/components/ui/label";
 // import {
@@ -56,7 +56,7 @@ import {
   UserDataNthBoard,
   UserDataUnowned,
 } from "@/types/types";
-import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+// import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
   charas: {
@@ -743,7 +743,7 @@ const PurpleBoard = () => {
       setNewCharaAlert(false);
     }
   }, [newCharaAlert, t]);
-  const fileInput = useRef<HTMLInputElement>(null);
+  // const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     (async () => {
