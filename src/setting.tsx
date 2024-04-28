@@ -26,47 +26,82 @@ const SettingCore = () => {
   }, []);
   const installNewVersion = useCallback(() => {
     setInstallButtonText("ui.index.versionCheck.preparing");
-    navigator.serviceWorker
-      .register("/sw.js", { updateViaCache: "none" })
-      .then((registration) => {
-        registration.onupdatefound = () => {
-          const installingWorker = registration.installing;
-          if (installingWorker) {
-            setInstallButtonText("ui.index.versionCheck.installing");
-            installingWorker.onstatechange = () => {
-              // if (installingWorker.state === "installed") {
-              //   if (navigator.serviceWorker.controller) {
-              //     // At this point, the updated precached content has been fetched,
-              //     // but the previous service worker will still serve the older content
-              //     console.log(
-              //       "New content is available; please refresh."
-              //     );
-              //     // toast.success(
-              //     //   t("ui.index.versionCheck.success")
-              //     // );
-              //   } else {
-              //     // At this point, everything has been precached.
-              //     // It's the perfect time to display a
-              //     // "Content is cached for offline use." message.
-              //     console.log(
-              //       "Content is cached for offline use."
-              //     );
-              //   }
-              // }
-              if (installingWorker.state === "activated") {
-                setInstallButtonText("ui.index.versionCheck.updateCompleted");
-                window.location.reload();
-              }
-            };
-          } else {
-            setInstallButtonText("ui.index.versionCheck.updateFailed");
-            window.location.reload();
-          }
-        };
-        registration.update().then(() => {
+    navigator.serviceWorker.register("/sw.js").then((registration) =>
+      registration.unregister().then((unregisterSuccess) => {
+        if (!unregisterSuccess) {
+          setInstallButtonText("ui.index.versionCheck.updateFailed");
+          window.location.reload();
+        } else {
           setInstallButtonText("ui.index.versionCheck.downloading");
-        });
-      });
+          navigator.serviceWorker
+            .register("/sw.js", { updateViaCache: "none" })
+            .then((registration) => {
+              registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+                if (installingWorker) {
+                  setInstallButtonText("ui.index.versionCheck.installing");
+                  installingWorker.onstatechange = () => {
+                    if (installingWorker.state === "activated") {
+                      setInstallButtonText(
+                        "ui.index.versionCheck.updateCompleted"
+                      );
+                      window.location.reload();
+                    }
+                  };
+                } else {
+                  setInstallButtonText("ui.index.versionCheck.updateFailed");
+                  window.location.reload();
+                }
+              };
+              registration.update().then(() => {
+                setInstallButtonText("ui.index.versionCheck.downloading");
+              });
+            });
+        }
+      })
+    );
+    // navigator.serviceWorker
+    //   .register("/sw.js", { updateViaCache: "none" })
+    //   .then((registration) => {
+    //     registration.onupdatefound = () => {
+    //       const installingWorker = registration.installing;
+    //       if (installingWorker) {
+    //         setInstallButtonText("ui.index.versionCheck.installing");
+    //         installingWorker.onstatechange = () => {
+    //           // if (installingWorker.state === "installed") {
+    //           //   if (navigator.serviceWorker.controller) {
+    //           //     // At this point, the updated precached content has been fetched,
+    //           //     // but the previous service worker will still serve the older content
+    //           //     console.log(
+    //           //       "New content is available; please refresh."
+    //           //     );
+    //           //     // toast.success(
+    //           //     //   t("ui.index.versionCheck.success")
+    //           //     // );
+    //           //   } else {
+    //           //     // At this point, everything has been precached.
+    //           //     // It's the perfect time to display a
+    //           //     // "Content is cached for offline use." message.
+    //           //     console.log(
+    //           //       "Content is cached for offline use."
+    //           //     );
+    //           //   }
+    //           // }
+    //           if (installingWorker.state === "activated") {
+    //             setInstallButtonText("ui.index.versionCheck.updateCompleted");
+    //             window.location.reload();
+    //           }
+    //         };
+    //       } else {
+    //         setInstallButtonText("ui.index.versionCheck.updateFailed");
+    //         window.location.reload();
+    //       }
+    //     };
+    //     registration;
+    //     registration.update().then(() => {
+    //       setInstallButtonText("ui.index.versionCheck.downloading");
+    //     });
+    //   });
   }, []);
   return (
     <Card className="font-onemobile p-4 max-w-96 mx-auto">
