@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Moon, Sun, SunMoon } from "lucide-react";
+import { Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import Layout from "@/components/layout";
 import { useTheme } from "@/components/theme-provider";
@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+import getServerHash from "@/utils/getServerHash";
 import googleAccessUrl from "@/utils/googleAccessUrl";
 
 const SettingCore = () => {
@@ -18,14 +19,7 @@ const SettingCore = () => {
   const fileInput = useRef<HTMLInputElement>(null);
   const [remoteHash, setRemoteHash] = useState<string>("");
   useEffect(() => {
-    const getRemoteHash = async () => {
-      const res = await fetch("https://tr.triple-lab.com/api/hash", {
-        cache: "no-store",
-      });
-      const text = await res.text();
-      setRemoteHash(text);
-    };
-    getRemoteHash();
+    getServerHash(setRemoteHash);
   }, []);
   return (
     <Card className="font-onemobile p-4 max-w-96 mx-auto">
@@ -94,11 +88,13 @@ const SettingCore = () => {
                     if (v.success) {
                       if (isReady && googleLinked && autoSave) {
                         toast.loading(t("ui.index.fileSync.uploading"));
-                        autoSave().then(() => {
-                          toast.success(t("ui.index.fileSync.uploadSuccess"));
-                        }).catch(() => {
-                          toast.success(t("ui.index.fileSync.uploadFailed"));
-                        });
+                        autoSave()
+                          .then(() => {
+                            toast.success(t("ui.index.fileSync.uploadSuccess"));
+                          })
+                          .catch(() => {
+                            toast.success(t("ui.index.fileSync.uploadFailed"));
+                          });
                       } else {
                         toast.success(t("ui.index.fileSync.success"));
                       }
@@ -119,7 +115,16 @@ const SettingCore = () => {
               <div>{process.env.VERSION_HASH!.substring(0, 7)}</div>
             </div>
             <div className="flex flex-row justify-between">
-              <div>{t("ui.index.versionCheck.latest")}</div>
+              <div>
+                {t("ui.index.versionCheck.latest")}
+                <RotateCcw
+                  className="w-4 h-4 inline-block ml-2"
+                  onClick={() => {
+                    setRemoteHash("");
+                    getServerHash(setRemoteHash);
+                  }}
+                />
+              </div>
               <div
                 className={
                   remoteHash
