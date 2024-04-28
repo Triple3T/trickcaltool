@@ -27,6 +27,7 @@ const SettingCore = () => {
   const installNewVersion = useCallback(() => {
     setInstallButtonText("ui.index.versionCheck.preparing");
     navigator.serviceWorker.register("/sw.js").then((registration) =>
+      // if unregister, browser will automatically install latest version
       registration.unregister().then((unregisterSuccess) => {
         if (!unregisterSuccess) {
           setInstallButtonText("ui.index.versionCheck.updateFailed");
