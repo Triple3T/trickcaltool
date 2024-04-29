@@ -51,6 +51,7 @@ const SettingCore = () => {
                 //   console.log("Content is cached for offline use.");
                 // }
               }
+              // wait
               // if (installingWorker.state === "activated") {
               //   setInstallButtonText("ui.index.versionCheck.updateCompleted");
               //   window.location.reload();
