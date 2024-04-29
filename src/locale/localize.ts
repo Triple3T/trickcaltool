@@ -554,7 +554,7 @@ i18n
                 downloading: "업데이트 다운로드 중...",
                 installing: "업데이트 설치 중...",
                 updateCompleted: "업데이트 완료!",
-                updateFailed: "업데이트 실패...",
+                updateFailed: "새로고침 중...",
               },
               personality: "성격",
               defaultstar: "초기 성급",
