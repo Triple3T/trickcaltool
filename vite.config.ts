@@ -28,6 +28,10 @@ export default defineConfig({
             urlPattern: /^https:\/\/tr\.triple-lab\.com\/api/,
             handler: "NetworkOnly",
           },
+          {
+            urlPattern: /^https:\/\/tr\.triple-lab\.com/,
+            handler: "StaleWhileRevalidate",
+          },
         ],
       },
       manifest: {
