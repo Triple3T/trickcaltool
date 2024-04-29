@@ -66,6 +66,9 @@ const SettingCore = () => {
         registration;
         registration.update().then(() => {
           setInstallButtonText("ui.index.versionCheck.update");
+        }).catch(() => {
+          setInstallButtonText("ui.index.versionCheck.updateFailed");
+          window.location.reload();
         });
       });
   }, []);
