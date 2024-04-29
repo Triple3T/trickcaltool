@@ -28,7 +28,7 @@ const SettingCore = () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
     await fetch("/sw.js", { cache: "reload" });
     navigator.serviceWorker
-      .register("/sw.js", { updateViaCache: "none" })
+      .register("/sw.js", { scope: "/", updateViaCache: "none" })
       .then((registration) => {
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
