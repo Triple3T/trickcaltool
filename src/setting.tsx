@@ -26,7 +26,7 @@ const SettingCore = () => {
   }, []);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
-    await fetch("/sw.js", { cache: "no-cache" });
+    await fetch("/sw.js", { cache: "reload" });
     navigator.serviceWorker
       .register("/sw.js", { updateViaCache: "none" })
       .then((registration) => {
