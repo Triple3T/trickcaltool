@@ -24,8 +24,9 @@ const SettingCore = () => {
   useEffect(() => {
     getServerHash(setRemoteHash);
   }, []);
-  const installNewVersion = useCallback(() => {
+  const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
+    await fetch("/sw.js", { cache: "no-cache" });
     navigator.serviceWorker
       .register("/sw.js", { updateViaCache: "none" })
       .then((registration) => {
