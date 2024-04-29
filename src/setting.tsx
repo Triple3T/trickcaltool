@@ -26,7 +26,6 @@ const SettingCore = () => {
   }, []);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
-    // delete must-revalidate cache
     await caches.delete("workbox-mustrevalidate-https://tr.triple-lab.com/");
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
@@ -42,9 +41,6 @@ const SettingCore = () => {
                   // but the previous service worker will still serve the older content
                   setInstallButtonText("ui.index.versionCheck.updateCompleted");
                   window.location.reload();
-                  // toast.success(
-                  //   t("ui.index.versionCheck.success")
-                  // );
                 }
                 //  else {
                 //   // At this point, everything has been precached.
