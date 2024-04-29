@@ -1,2 +1,2 @@
 /sw.js
-  Cache-Control: public, max-age=60, s-maxage=604800, must-revalidate
+  Cache-Control: public, no-cache, must-revalidate
