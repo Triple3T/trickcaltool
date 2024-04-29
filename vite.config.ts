@@ -15,6 +15,7 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,png,jpg,svg,webp,json}"],
         skipWaiting: true,
         clientsClaim: true,
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/tr\.triple-lab\.com/,
