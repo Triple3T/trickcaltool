@@ -19,6 +19,8 @@ import Privacy from "./privacy";
 
 import "@/locale/localize";
 
+if (typeof window !== "undefined") import("./utils/pwa");
+
 const router = createBrowserRouter([
   {
     path: "/",
