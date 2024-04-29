@@ -26,6 +26,7 @@ const SettingCore = () => {
   }, []);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
+    // delete must-revalidate cache
     await caches.delete("workbox-mustrevalidate-https://tr.triple-lab.com/");
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
