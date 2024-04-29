@@ -40,7 +40,6 @@ const SettingCore = () => {
                   // At this point, the updated precached content has been fetched,
                   // but the previous service worker will still serve the older content
                   setInstallButtonText("ui.index.versionCheck.updateCompleted");
-                  // then reload to apply the update
                   window.location.reload();
                   // toast.success(
                   //   t("ui.index.versionCheck.success")
