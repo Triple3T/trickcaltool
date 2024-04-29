@@ -26,7 +26,7 @@ const SettingCore = () => {
   }, []);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
-    await fetch("/sw.js", { cache: "reload" });
+    await caches.delete("workbox-mustrevalidate-https://tr.triple-lab.com/");
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
       .then((registration) => {
@@ -62,13 +62,15 @@ const SettingCore = () => {
             window.location.reload();
           }
         };
-        registration;
-        registration.update().then(() => {
-          setInstallButtonText("ui.index.versionCheck.update");
-        }).catch(() => {
-          setInstallButtonText("ui.index.versionCheck.updateFailed");
-          window.location.reload();
-        });
+        registration
+          .update()
+          .then(() => {
+            setInstallButtonText("ui.index.versionCheck.update");
+          })
+          .catch(() => {
+            setInstallButtonText("ui.index.versionCheck.updateFailed");
+            window.location.reload();
+          });
       });
   }, []);
   return (
