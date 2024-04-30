@@ -100,8 +100,8 @@ const routes = [
 
 const router = createBrowserRouter(routes);
 
-const Route = () => {
+const Routes = () => {
   return <RouterProvider router={router} />;
 };
 
-export default Route;
+export default Routes;
