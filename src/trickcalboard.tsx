@@ -1164,7 +1164,19 @@ const TrickcalBoard = () => {
                                   </div>
                                 )}
                                 {checked && (
-                                  <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
+                                  <div
+                                    className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100"
+                                    onClick={() => {
+                                      dispatchBoardData({
+                                        type: "click",
+                                        payload: {
+                                          charaName: name,
+                                          ldx,
+                                          bdx,
+                                        },
+                                      });
+                                    }}
+                                  >
                                     <img
                                       src="/icons/Stage_RewardChack.png"
                                       className="w-100 opacity-100"
@@ -1172,7 +1184,19 @@ const TrickcalBoard = () => {
                                   </div>
                                 )}
                                 {unowned && typeof clf === "number" && (
-                                  <div className="absolute w-2/3 bottom-0 right-0 opacity-100">
+                                  <div
+                                    className="absolute w-2/3 bottom-0 right-0 opacity-100"
+                                    onClick={() => {
+                                      dispatchBoardData({
+                                        type: "click",
+                                        payload: {
+                                          charaName: name,
+                                          ldx,
+                                          bdx,
+                                        },
+                                      });
+                                    }}
+                                  >
                                     <img
                                       src="/clonefactoryicon/GradeDungeon_Logo.png"
                                       className="w-100 opacity-100"
