@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronsUpDown, Search } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2, Search } from "lucide-react";
 // import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
-import icSearch from "./lib/initialConsonantSearch";
+import icSearch from "@/lib/initialConsonantSearch";
 import {
   Accordion,
   AccordionItem,
@@ -27,7 +27,10 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import Layout from "@/components/layout";
-import CharaWithLifeskill from "@/components/parts/chara-with-lifeskill";
+// import CharaWithLifeskill from "@/components/parts/chara-with-lifeskill";
+const CharaWithLifeskill = lazy(
+  () => import("@/components/parts/chara-with-lifeskill")
+);
 import ItemSlot from "@/components/parts/item-slot";
 import LifeskillIcon from "@/components/parts/lifeskill-icon";
 
@@ -575,7 +578,8 @@ const TaskSearch = () => {
                   </div>
                   <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-[#e2dbc8] rounded-sm bg-[#f7faef]">
                     <Search
-                      className="w-3 h-3" strokeWidth={3}
+                      className="w-3 h-3"
+                      strokeWidth={3}
                       onClick={() => searchTask(taskId)}
                     />
                   </div>
@@ -613,13 +617,22 @@ const TaskSearch = () => {
             .map(([charaId]) => {
               const cls = lifeskill.c[charaId].s;
               return (
-                <CharaWithLifeskill
+                <Suspense
                   key={charaId}
-                  charaId={charaId}
-                  lifeskills={cls}
-                  selectedLifeskills={[Number(selectedLifeskill)]}
-                  searchChara={searchChara}
-                />
+                  fallback={
+                    <Loader2
+                      className="w-4 h-4 animate-spin absolute right-0"
+                      strokeWidth={3}
+                    />
+                  }
+                >
+                  <CharaWithLifeskill
+                    charaId={charaId}
+                    lifeskills={cls}
+                    selectedLifeskills={[Number(selectedLifeskill)]}
+                    searchChara={searchChara}
+                  />
+                </Suspense>
               );
             })}
         {selectedTask &&
@@ -644,13 +657,22 @@ const TaskSearch = () => {
             .map(([charaId]) => {
               const cls = lifeskill.c[charaId].s;
               return (
-                <CharaWithLifeskill
+                <Suspense
                   key={charaId}
-                  charaId={charaId}
-                  lifeskills={cls}
-                  selectedLifeskills={task.t[selectedTask].s}
-                  searchChara={searchChara}
-                />
+                  fallback={
+                    <Loader2
+                      className="w-4 h-4 animate-spin absolute right-0"
+                      strokeWidth={3}
+                    />
+                  }
+                >
+                  <CharaWithLifeskill
+                    charaId={charaId}
+                    lifeskills={cls}
+                    selectedLifeskills={task.t[selectedTask].s}
+                    searchChara={searchChara}
+                  />
+                </Suspense>
               );
             })}
       </div>

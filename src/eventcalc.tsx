@@ -1,4 +1,6 @@
 import {
+  Suspense,
+  lazy,
   useCallback,
   useEffect,
   useMemo,
@@ -39,9 +41,13 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
-import SelectChara from "@/components/parts/select-chara";
+// import SelectChara from "@/components/parts/select-chara";
+const SelectChara = lazy(() => import("@/components/parts/select-chara"));
 import SubtitleBar from "@/components/parts/subtitlebar";
-import ThemeEventBonusDialog from "@/components/parts/theme-event-bonus-dialog";
+// import ThemeEventBonusDialog from "@/components/parts/theme-event-bonus-dialog";
+const ThemeEventBonusDialog = lazy(
+  () => import("@/components/parts/theme-event-bonus-dialog")
+);
 import themeevent from "@/data/themeevent";
 
 import userdata from "@/utils/userdata";
@@ -564,11 +570,15 @@ const EventCalc = () => {
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.common.unownedCharacters")}</SubtitleBar>
                   <div>
-                    <SelectChara
-                      isOpen={charaDrawerOpen}
-                      onOpenChange={setCharaDrawerOpen}
-                      saveAndClose={saveSelectChara}
-                    />
+                    <Suspense
+                      fallback={<div>{t("ui.index.suspenseLoading")}</div>}
+                    >
+                      <SelectChara
+                        isOpen={charaDrawerOpen}
+                        onOpenChange={setCharaDrawerOpen}
+                        saveAndClose={saveSelectChara}
+                      />
+                    </Suspense>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -587,11 +597,15 @@ const EventCalc = () => {
                     />
                     {eventCalcData.selectedThemeEvent && (
                       <div className="hidden sm:flex sm:items-center sm:justify-center">
-                        <ThemeEventBonusDialog
-                          bonus={
-                            themeevent.e[eventCalcData.selectedThemeEvent].b
-                          }
-                        />
+                        <Suspense
+                          fallback={<div>{t("ui.index.suspenseLoading")}</div>}
+                        >
+                          <ThemeEventBonusDialog
+                            bonus={
+                              themeevent.e[eventCalcData.selectedThemeEvent].b
+                            }
+                          />
+                        </Suspense>
                       </div>
                     )}
                   </div>

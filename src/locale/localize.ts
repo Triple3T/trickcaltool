@@ -585,6 +585,7 @@ i18n
               sitePoweredBy: "Trickcal Note powered by Triple",
               textPrivacy: "Privacy",
               textSetting: "Setting",
+              suspenseLoading: "Loading...",
             },
             board: {
               title: "최상급 보드 노트",

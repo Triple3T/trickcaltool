@@ -1,4 +1,6 @@
 import {
+  Suspense,
+  lazy,
   useCallback,
   useContext,
   useEffect,
@@ -8,7 +10,13 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowDownUp, ArrowDownZA, ArrowUpAZ, Filter } from "lucide-react";
+import {
+  ArrowDownUp,
+  ArrowDownZA,
+  ArrowUpAZ,
+  Filter,
+  Loader2,
+} from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
@@ -48,17 +56,24 @@ import {
   SortOrFilter,
   SortType,
 } from "@/types/enums";
-import RankInfoDialog from "@/components/parts/rank-info-dialog";
-import RankReqLevelDialog from "./components/parts/rank-req-level-dialog";
-import SelectChara from "@/components/parts/select-chara";
+// import RankInfoDialog from "@/components/parts/rank-info-dialog";
+const RankInfoDialog = lazy(
+  () => import("@/components/parts/rank-info-dialog")
+);
+// import RankReqLevelDialog from "@/components/parts/rank-req-level-dialog";
+const RankReqLevelDialog = lazy(
+  () => import("@/components/parts/rank-req-level-dialog")
+);
+// import SelectChara from "@/components/parts/select-chara";
+const SelectChara = lazy(() => import("@/components/parts/select-chara"));
 import SubtitleBar from "@/components/parts/subtitlebar";
 import rankClassNames from "@/utils/rankClassNames";
 
 import userdata from "@/utils/userdata";
 import { UserDataEqRank, UserDataUnowned } from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
-import sortChange from "./utils/sortChange";
-import filterChange from "./utils/filterChange";
+import sortChange from "@/utils/sortChange";
+import filterChange from "@/utils/filterChange";
 
 const MAX_RANK = 8;
 
@@ -609,11 +624,15 @@ const EquipRank = () => {
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.common.unownedCharacters")}</SubtitleBar>
                   <div>
-                    <SelectChara
-                      isOpen={charaDrawerOpen}
-                      onOpenChange={setCharaDrawerOpen}
-                      saveAndClose={saveSelectChara}
-                    />
+                    <Suspense
+                      fallback={<div>{t("ui.index.suspenseLoading")}</div>}
+                    >
+                      <SelectChara
+                        isOpen={charaDrawerOpen}
+                        onOpenChange={setCharaDrawerOpen}
+                        saveAndClose={saveSelectChara}
+                      />
+                    </Suspense>
                   </div>
                 </div>
                 {rankData?.viewType === "input" && (
@@ -683,10 +702,19 @@ const EquipRank = () => {
                           0: `${rankData?.maxRank || 1}`,
                           1: `${eqrank.q[(rankData?.maxRank || 1) - 1]}`,
                         })}
-                        <RankReqLevelDialog
-                          reqs={eqrank.q}
-                          maxRank={MAX_RANK}
-                        />
+                        <Suspense
+                          fallback={
+                            <Loader2
+                              className="w-4 h-4 animate-spin absolute right-0"
+                              strokeWidth={3}
+                            />
+                          }
+                        >
+                          <RankReqLevelDialog
+                            reqs={eqrank.q}
+                            maxRank={MAX_RANK}
+                          />
+                        </Suspense>
                       </div>
                     </div>
                   </div>
@@ -1225,22 +1253,35 @@ const EquipRank = () => {
                                 >
                                   {enableDialog && (
                                     <div className="absolute right-0 top-0 p-0.5">
-                                      <RankInfoDialog
-                                        chara={c}
-                                        charaTypes={chara[c].t}
-                                        rank={rank}
-                                        rankStats={eqrank.r[eqrank.c[c].r].map(
-                                          (rs) => rs.map((r) => eqrank.s[r])
-                                        )}
-                                        sameRankBonus={Object.entries(eqrank.c)
-                                          .filter(
-                                            ([k, v]) =>
-                                              k !== c && v.r === eqrank.c[c].r
+                                      <Suspense
+                                        fallback={
+                                          <Loader2
+                                            className="w-4 h-4 animate-spin absolute right-0"
+                                            strokeWidth={3}
+                                          />
+                                        }
+                                      >
+                                        <RankInfoDialog
+                                          chara={c}
+                                          charaTypes={chara[c].t}
+                                          rank={rank}
+                                          rankStats={eqrank.r[
+                                            eqrank.c[c].r
+                                          ].map((rs) =>
+                                            rs.map((r) => eqrank.s[r])
+                                          )}
+                                          sameRankBonus={Object.entries(
+                                            eqrank.c
                                           )
-                                          .map(([k]) => k)}
-                                        maxRank={rankData.maxRank}
-                                        changeRank={changeRank}
-                                      />
+                                            .filter(
+                                              ([k, v]) =>
+                                                k !== c && v.r === eqrank.c[c].r
+                                            )
+                                            .map(([k]) => k)}
+                                          maxRank={rankData.maxRank}
+                                          changeRank={changeRank}
+                                        />
+                                      </Suspense>
                                     </div>
                                   )}
                                   <img
@@ -1359,27 +1400,36 @@ const EquipRank = () => {
                                       )}
                                       {enableDialog && (
                                         <div className="absolute right-0 top-0 p-0.5">
-                                          <RankInfoDialog
-                                            chara={c}
-                                            charaTypes={chara[c].t}
-                                            rank={rankData.charas[c].rank}
-                                            rankStats={eqrank.r[
-                                              eqrank.c[c].r
-                                            ].map((rs) =>
-                                              rs.map((r) => eqrank.s[r])
-                                            )}
-                                            sameRankBonus={Object.entries(
-                                              eqrank.c
-                                            )
-                                              .filter(
-                                                ([k, v]) =>
-                                                  k !== c &&
-                                                  v.r === eqrank.c[c].r
+                                          <Suspense
+                                            fallback={
+                                              <Loader2
+                                                className="w-4 h-4 animate-spin absolute right-0"
+                                                strokeWidth={3}
+                                              />
+                                            }
+                                          >
+                                            <RankInfoDialog
+                                              chara={c}
+                                              charaTypes={chara[c].t}
+                                              rank={rankData.charas[c].rank}
+                                              rankStats={eqrank.r[
+                                                eqrank.c[c].r
+                                              ].map((rs) =>
+                                                rs.map((r) => eqrank.s[r])
+                                              )}
+                                              sameRankBonus={Object.entries(
+                                                eqrank.c
                                               )
-                                              .map(([k]) => k)}
-                                            maxRank={rankData.maxRank}
-                                            changeRank={changeRank}
-                                          />
+                                                .filter(
+                                                  ([k, v]) =>
+                                                    k !== c &&
+                                                    v.r === eqrank.c[c].r
+                                                )
+                                                .map(([k]) => k)}
+                                              maxRank={rankData.maxRank}
+                                              changeRank={changeRank}
+                                            />
+                                          </Suspense>
                                         </div>
                                       )}
                                     </div>

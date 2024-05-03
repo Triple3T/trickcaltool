@@ -1,4 +1,6 @@
 import {
+  Suspense,
+  lazy,
   useCallback,
   useContext,
   useEffect,
@@ -7,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { Loader2 } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import Layout from "@/components/layout";
 import {
@@ -29,9 +32,13 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
-import SelectChara from "@/components/parts/select-chara";
+// import SelectChara from "@/components/parts/select-chara";
+const SelectChara = lazy(() => import("@/components/parts/select-chara"));
 import SubtitleBar from "@/components/parts/subtitlebar";
-import BoardInfoDialog from "@/components/parts/board-info-dialog";
+// import BoardInfoDialog from "@/components/parts/board-info-dialog";
+const BoardInfoDialog = lazy(
+  () => import("@/components/parts/board-info-dialog")
+);
 import board from "@/data/board";
 import chara from "@/data/chara";
 import route from "@/data/route";
@@ -575,11 +582,15 @@ const TrickcalBoard = () => {
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>{t("ui.common.unownedCharacters")}</SubtitleBar>
                   <div>
-                    <SelectChara
-                      isOpen={charaDrawerOpen}
-                      onOpenChange={setCharaDrawerOpen}
-                      saveAndClose={saveSelectChara}
-                    />
+                    <Suspense
+                      fallback={<div>{t("ui.index.suspenseLoading")}</div>}
+                    >
+                      <SelectChara
+                        isOpen={charaDrawerOpen}
+                        onOpenChange={setCharaDrawerOpen}
+                        saveAndClose={saveSelectChara}
+                      />
+                    </Suspense>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -1086,65 +1097,70 @@ const TrickcalBoard = () => {
                               <div
                                 key={`${name}${ldx}${bdx}`}
                                 className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
-                                onClick={() => {
-                                  dispatchBoardData({
-                                    type: "click",
-                                    payload: {
-                                      charaName: name,
-                                      ldx,
-                                      bdx,
-                                    },
-                                  });
-                                }}
-                                onContextMenu={(e) => e.preventDefault()}
                               >
                                 <div className={bgClassNames.join(" ")}>
                                   <img
                                     src={`/charas/${name}.png`}
                                     className={imgClassNames.join(" ")}
+                                    onClick={() => {
+                                      dispatchBoardData({
+                                        type: "click",
+                                        payload: {
+                                          charaName: name,
+                                          ldx,
+                                          bdx,
+                                        },
+                                      });
+                                    }}
                                   />
                                 </div>
                                 {enableDialog && (
-                                  <div
-                                    className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <BoardInfoDialog
-                                      boardIndex={boardData.boardIndex}
-                                      boardTypeString={bt}
-                                      chara={name}
-                                      charaTypes={chara[name].t}
-                                      route={
-                                        route.r[Race[Number(chara[name].t[5])]][
+                                  <div className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100">
+                                    <Suspense
+                                      fallback={
+                                        <Loader2
+                                          className="w-4 h-4 animate-spin absolute right-0"
+                                          strokeWidth={3}
+                                        />
+                                      }
+                                    >
+                                      <BoardInfoDialog
+                                        boardIndex={boardData.boardIndex}
+                                        boardTypeString={bt}
+                                        chara={name}
+                                        charaTypes={chara[name].t}
+                                        route={
+                                          route.r[
+                                            Race[Number(chara[name].t[5])]
+                                          ][boardData.boardIndex].b[
+                                            Number(
+                                              board.c[name].r[
+                                                boardData.boardIndex
+                                              ][ldx].split(".")[bdx]
+                                            )
+                                          ]
+                                        }
+                                        rstart={
+                                          route.r[
+                                            Race[Number(chara[name].t[5])]
+                                          ][boardData.boardIndex].s
+                                        }
+                                        otherBoards={board.c[name].b[
                                           boardData.boardIndex
-                                        ].b[
-                                          Number(
-                                            board.c[name].r[
-                                              boardData.boardIndex
-                                            ][ldx].split(".")[bdx]
-                                          )
                                         ]
-                                      }
-                                      rstart={
-                                        route.r[Race[Number(chara[name].t[5])]][
-                                          boardData.boardIndex
-                                        ].s
-                                      }
-                                      otherBoards={board.c[name].b[
-                                        boardData.boardIndex
-                                      ]
-                                        .map((v) => v.toString())
-                                        .join("")}
-                                      blocked={
-                                        ldx === 0
-                                          ? undefined
-                                          : board.c[name].k[
-                                              boardData.boardIndex
-                                            ][ldx - 1].split(".")[bdx]
-                                      }
-                                      checked={checked}
-                                      unowned={unowned}
-                                    />
+                                          .map((v) => v.toString())
+                                          .join("")}
+                                        blocked={
+                                          ldx === 0
+                                            ? undefined
+                                            : board.c[name].k[
+                                                boardData.boardIndex
+                                              ][ldx - 1].split(".")[bdx]
+                                        }
+                                        checked={checked}
+                                        unowned={unowned}
+                                      />
+                                    </Suspense>
                                   </div>
                                 )}
                                 {checked && (
