@@ -455,6 +455,8 @@ i18n
             PosterL11: "그대를 위한 찬사 포스터",
             PosterL12: "멘토를 만난 포스터",
             PosterL13: "떠도는 이드 포스터",
+            PosterL14: "폭주족 슈팡 포스터",
+            PosterL15: "새 친구 포스터",
             PosterM1: "토끼 구름 포스터",
             PosterM2: "에르핀 야망 포스터",
             PosterM3: "베니 둥둥 포스터",
