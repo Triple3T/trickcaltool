@@ -18,6 +18,10 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
+            urlPattern: /^https:\/\/tr\.triple-lab\.com\/api/,
+            handler: "NetworkOnly",
+          },
+          {
             urlPattern:
               /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?.*)?$/,
             handler: "StaleWhileRevalidate",
@@ -46,10 +50,6 @@ export default defineConfig({
             options: {
               cacheName: "workbox-mustrevalidate-https://tr.triple-lab.com/",
             },
-          },
-          {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\/api/,
-            handler: "NetworkOnly",
           },
           {
             urlPattern: /^https:\/\/tr\.triple-lab\.com/,
