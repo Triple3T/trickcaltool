@@ -25,6 +25,13 @@ export default defineConfig({
             },
           },
           {
+            urlPattern: /^https:\/\/tr\.triple-lab\.com\/[\d\w-/]+$/,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "workbox-mustrevalidate-https://tr.triple-lab.com/",
+            },
+          },
+          {
             urlPattern: /^https:\/\/tr\.triple-lab\.com\/api/,
             handler: "NetworkOnly",
           },
