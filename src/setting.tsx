@@ -26,6 +26,16 @@ const SettingCore = () => {
   }, []);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.preparing");
+    await new Promise<void>((res, rej) =>
+      navigator.serviceWorker.getRegistrations().then(async (registrations) => {
+        Promise.all(registrations.map((r) => r.unregister()))
+          .then(() => res())
+          .catch(rej);
+      })
+    ).catch(() => {
+      setInstallButtonText("ui.index.versionCheck.updateFailed");
+      window.location.reload();
+    });
     await caches.delete("workbox-mustrevalidate-https://tr.triple-lab.com/");
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
@@ -37,22 +47,10 @@ const SettingCore = () => {
             installingWorker.onstatechange = () => {
               if (installingWorker.state === "installed") {
                 if (navigator.serviceWorker.controller) {
-                  // At this point, the updated precached content has been fetched,
-                  // but the previous service worker will still serve the older content
                   setInstallButtonText("ui.index.versionCheck.updateCompleted");
                   window.location.reload();
                 }
-                //  else {
-                //   // At this point, everything has been precached.
-                //   // It's the perfect time to display a
-                //   // "Content is cached for offline use." message.
-                //   console.log("Content is cached for offline use.");
-                // }
               }
-              // if (installingWorker.state === "activated") {
-              //   setInstallButtonText("ui.index.versionCheck.updateCompleted");
-              //   window.location.reload();
-              // }
             };
           } else {
             setInstallButtonText("ui.index.versionCheck.updateFailed");
