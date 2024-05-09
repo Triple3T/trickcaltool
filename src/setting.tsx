@@ -25,7 +25,7 @@ const SettingCore = () => {
     getServerHash(setRemoteHash);
   }, []);
   const installNewVersion = useCallback(async () => {
-    setInstallButtonText("ui.index.versionCheck.preparing");
+    setInstallButtonText("ui.index.versionCheck.cleaning");
     await new Promise<void>((res, rej) =>
       navigator.serviceWorker.getRegistrations().then(async (registrations) => {
         Promise.all(registrations.map((r) => r.unregister()))
@@ -37,6 +37,7 @@ const SettingCore = () => {
       window.location.reload();
     });
     await caches.delete("workbox-mustrevalidate-https://tr.triple-lab.com/");
+    setInstallButtonText("ui.index.versionCheck.preparing");
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
       .then((registration) => {

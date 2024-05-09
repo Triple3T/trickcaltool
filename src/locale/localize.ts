@@ -556,6 +556,7 @@ i18n
                 latest: "최신 버전",
                 loading: "버전 확인 중...",
                 update: "업데이트",
+                cleaning: "기존 파일 정리 중...",
                 preparing: "업데이트 준비 중...",
                 downloading: "업데이트 다운로드 중...",
                 installing: "업데이트 설치 중...",
