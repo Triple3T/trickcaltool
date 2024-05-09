@@ -480,6 +480,42 @@
                 {"i":"FoodMadeLow10","c":"material","n":1,"l":30,"p":300},
                 {"i":"currency0008","c":"themeevent.shop","n":10000,"l":-1,"p":250}
             ]
+        },
+        "14":{
+            "b":[
+                {"c":"Rollett","b":40},
+                {"c":"Erpin","b":30},
+                {"c":"Velvet","b":30},
+                {"c":"Butter","b":30},
+                {"c":"Shady","b":30},
+                {"c":"Marie","b":30},
+                {"c":"Festa","b":30},
+                {"c":"Espi","b":30},
+                {"c":"Silphir","b":30},
+                {"c":"Cuee","b":20}
+            ],
+            "c":15,
+            "s":[
+                {"i":"FigureL23","c":"collection","n":1,"l":1,"p":1800},
+                {"i":"charaLicense","c":"themeevent.shop","a":{"0":"Rollett"},"n":1,"l":10,"p":400},
+                {"i":"crayon3","c":"themeevent.shop","n":1,"l":10,"p":600},
+                {"i":"crayon4","c":"themeevent.shop","n":1,"l":4,"p":1600},
+                {"i":"currency0008","c":"themeevent.shop","n":100000,"l":10,"p":500},
+                {"i":"currency0047","c":"themeevent.shop","n":180,"l":1,"p":360},
+                {"i":"currency0047","c":"themeevent.shop","n":280,"l":1,"p":560},
+                {"i":"currency0047","c":"themeevent.shop","n":380,"l":1,"p":760},
+                {"i":"gachaTicketHero","c":"themeevent.shop","n":1,"l":10,"p":200},
+                {"i":"gachaTicketCard","c":"themeevent.shop","n":1,"l":10,"p":200},
+                {"i":"Equip_EnhanceStone1","c":"themeevent.shop","n":1,"l":10,"p":100},
+                {"i":"Equip_EnhanceStone2","c":"themeevent.shop","n":1,"l":4,"p":200},
+                {"i":"Equip_EnhanceStone3","c":"themeevent.shop","n":1,"l":1,"p":300},
+                {"i":"MadeHigh1","c":"material","n":1,"l":30,"p":300},
+                {"i":"CollectMadeLow1","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow9","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow5","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow3","c":"material","n":1,"l":30,"p":300},
+                {"i":"currency0008","c":"themeevent.shop","n":10000,"l":-1,"p":250}
+            ]
         }
     }
 }
