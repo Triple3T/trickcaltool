@@ -12,14 +12,14 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       registerType: "autoUpdate",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,jpg,svg,webp,json}"],
+        globPatterns: ["**/*.{js,css,html,png,jpg,svg,webp,json,ttf,otf}"],
         skipWaiting: true,
         clientsClaim: true,
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
             urlPattern:
-              /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp)(\?.*)?$/,
+              /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?.*)?$/,
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "workbox-asset-https://tr.triple-lab.com/",
