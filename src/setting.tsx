@@ -6,6 +6,7 @@ import Layout from "@/components/layout";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
@@ -18,25 +19,34 @@ const SettingCore = () => {
   const { autoSave, isReady, googleLinked } = useContext(AuthContext);
   const fileInput = useRef<HTMLInputElement>(null);
   const [remoteHash, setRemoteHash] = useState<string>("");
+  const [enableHardReset, setEnableHardReset] = useState<boolean>(false);
   const [installButtonText, setInstallButtonText] = useState<string>(
     "ui.index.versionCheck.update"
   );
   useEffect(() => {
     getServerHash(setRemoteHash);
   }, []);
-  const installNewVersion = useCallback(async () => {
+  const installNewVersion = useCallback(async (hard: boolean) => {
     setInstallButtonText("ui.index.versionCheck.cleaning");
-    await new Promise<void>((res, rej) =>
-      navigator.serviceWorker.getRegistrations().then(async (registrations) => {
-        Promise.all(registrations.map((r) => r.unregister()))
-          .then(() => res())
-          .catch(rej);
-      })
-    ).catch(() => {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((r) => r.unregister())).catch(() => {
       setInstallButtonText("ui.index.versionCheck.updateFailed");
       window.location.reload();
     });
-    await caches.delete("workbox-mustrevalidate-https://tr.triple-lab.com/");
+    if (hard) {
+      const cacheKeys = await caches.keys();
+      await Promise.all(cacheKeys.map((k) => caches.delete(k))).catch(() => {
+        setInstallButtonText("ui.index.versionCheck.updateFailed");
+        window.location.reload();
+      });
+    } else {
+      await caches
+        .delete("workbox-mustrevalidate-https://tr.triple-lab.com/")
+        .catch(() => {
+          setInstallButtonText("ui.index.versionCheck.updateFailed");
+          window.location.reload();
+        });
+    }
     setInstallButtonText("ui.index.versionCheck.preparing");
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
@@ -67,6 +77,10 @@ const SettingCore = () => {
             setInstallButtonText("ui.index.versionCheck.updateFailed");
             window.location.reload();
           });
+      })
+      .catch(() => {
+        setInstallButtonText("ui.index.versionCheck.updateFailed");
+        window.location.reload();
       });
   }, []);
   return (
@@ -185,7 +199,8 @@ const SettingCore = () => {
             </div>
             <div className="w-full">
               <Button
-                onClick={installNewVersion}
+                className="w-full"
+                onClick={() => installNewVersion(enableHardReset)}
                 variant="ghost"
                 disabled={
                   process.env.VERSION_HASH === remoteHash ||
@@ -198,6 +213,31 @@ const SettingCore = () => {
                 )}
                 {t(installButtonText)}
               </Button>
+              {remoteHash && process.env.VERSION_HASH !== remoteHash && (
+                <div className="items-top flex space-x-2">
+                  <Checkbox
+                    id="enable-hard-reset"
+                    checked={enableHardReset}
+                    onCheckedChange={(v) => setEnableHardReset(Boolean(v))}
+                    disabled={
+                      process.env.VERSION_HASH === remoteHash ||
+                      !remoteHash ||
+                      installButtonText !== "ui.index.versionCheck.update"
+                    }
+                  />
+                  <div className="grid gap-1.5 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    <label
+                      htmlFor="enable-hard-reset"
+                      className="text-sm leading-none text-left"
+                    >
+                      {t("ui.index.versionCheck.enableHardReset")}
+                    </label>
+                    <p className="text-xs text-muted-foreground">
+                      {t("ui.index.versionCheck.enableHardResetDescription")}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

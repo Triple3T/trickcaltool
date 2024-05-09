@@ -562,6 +562,9 @@ i18n
                 installing: "업데이트 설치 중...",
                 updateCompleted: "업데이트 완료!",
                 updateFailed: "새로고침 중...",
+                enableHardReset: "하드 리셋",
+                enableHardResetDescription:
+                  "데이터 사용량이 크게 증가합니다",
               },
               personality: "성격",
               defaultstar: "초기 성급",
@@ -646,7 +649,8 @@ i18n
               reqLevel: "RANK {{0}} 필요 레벨: {{1}}",
               rankReqLevelTitle: "랭크별 필요 사도 레벨",
               aboutReqLevelTitle: "필요 사도 레벨에 대하여",
-              aboutReqLevelDescription: "사도가 랭크별 필요 레벨에 도달하지 못하면, 해당 랭크 장비를 착용할 수 없어요.",
+              aboutReqLevelDescription:
+                "사도가 랭크별 필요 레벨에 도달하지 못하면, 해당 랭크 장비를 착용할 수 없어요.",
               sortAndFilter: "정렬 및 필터",
               sortByName: "이름",
               sortByPersonality: "성격",
