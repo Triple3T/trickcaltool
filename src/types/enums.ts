@@ -99,3 +99,12 @@ export enum FilterBy {
   Personality = 0,
   StarGrade = 1,
 }
+
+export enum SyncStatus {
+  NotLinked = 0,
+  Idle = 1,
+  Downloading = 2,
+  Uploading = 3,
+  Errored = 4,
+  Success = 5,
+}

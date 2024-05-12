@@ -6,6 +6,7 @@ import "./App.css";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
+import { QuickSync } from "@/components/quick-sync";
 import MainMenuCard from "@/components/parts/main-menu-card";
 
 function App() {
@@ -49,7 +50,8 @@ function App() {
         style={{ backgroundImage }}
       />
       <div className="fixed top-0 left-0 flex p-2 gap-2 w-full z-10">
-        <div className="flex-1 flex justify-end">
+        <div className="flex-1 flex gap-2 justify-end">
+          <QuickSync />
           <ModeToggle />
         </div>
       </div>

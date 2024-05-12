@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { dataFileExport, dataFileImport } from "@/utils/dataRW";
+import { SyncStatus } from "@/types/enums";
 
 const TOKEN_URL = "https://api.triple-lab.com/api/v1/tr/token";
 
@@ -20,6 +21,7 @@ const defaultHeader = {
 interface IAuthContext {
   googleLinked: boolean;
   isReady: boolean;
+  status: SyncStatus;
   autoSave?: () => Promise<void>;
   autoLoad?: () => Promise<void>;
   getFileDry?: () => Promise<ISyncabilityCheck>;
@@ -33,6 +35,7 @@ interface IAuthContext {
 const AuthContext = createContext<IAuthContext>({
   googleLinked: false,
   isReady: false,
+  status: SyncStatus.NotLinked,
 });
 
 type Children = ReactNode | ReactNode[];
@@ -44,6 +47,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
   const [fileId, setFileId] = useState<string>();
   const [lastModified, setLastModified] = useState<number>(0);
   const [noFile, setNoFile] = useState<boolean>(false);
+  const [status, setStatus] = useState<SyncStatus>(SyncStatus.NotLinked);
 
   const getNewToken = async (
     callback?: (accessToken: string) => void,
@@ -56,6 +60,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
       });
       if (!f.ok) {
         setGoogleLinked(false);
+        setStatus(SyncStatus.NotLinked);
         if (onError) onError();
         return;
       }
@@ -63,11 +68,13 @@ const AuthProvider = ({ children }: { children: Children }) => {
       if (token) {
         setToken(token);
         setGoogleLinked(true);
+        setStatus((v) => (v < 1 ? SyncStatus.Idle : v));
         setLastModified(Date.now());
         if (callback) callback(token);
       }
     } catch (e) {
       setGoogleLinked(false);
+      setStatus(SyncStatus.Errored);
       if (onError) onError();
     }
   };
@@ -105,6 +112,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
           return id;
         } catch (e) {
           console.error(e);
+          setStatus(SyncStatus.Errored);
           return undefined;
         }
       }
@@ -134,21 +142,37 @@ const AuthProvider = ({ children }: { children: Children }) => {
         },
       });
     try {
+      setStatus(SyncStatus.Downloading);
       const response = await getFile(accessToken, id);
-      return await response.text();
+      const fileContent = await response.text();
+      setStatus(SyncStatus.Success);
+      setTimeout(
+        () =>
+          setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
+        2000
+      );
+      return fileContent;
     } catch (error) {
       try {
         let content;
         await getNewToken(async (newToken) => {
           const fid = await getFileId(newToken);
           if (!fid) return undefined;
+          setStatus(SyncStatus.Downloading);
           await getFile(accessToken, fid).then(async (res) => {
             content = await res.text();
           });
         });
+        setStatus(SyncStatus.Success);
+        setTimeout(
+          () =>
+            setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
+          2000
+        );
         return content;
       } catch (e) {
         console.error(e);
+        setStatus(SyncStatus.Errored);
         return undefined;
       }
     }
@@ -187,8 +211,15 @@ ${fileData}
       });
     };
     try {
+      setStatus(SyncStatus.Uploading);
       const response = await storeFileContent(accessToken, id);
       const data = await response.json();
+      setStatus(SyncStatus.Success);
+      setTimeout(
+        () =>
+          setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
+        2000
+      );
       if (data.id) {
         setFileId(data.id);
         // return data.id;
@@ -199,16 +230,23 @@ ${fileData}
         let id;
         await getNewToken(async (newToken) => {
           const fid = await getFileId(newToken);
-          if (!fid) return undefined;
+          setStatus(SyncStatus.Uploading);
           await storeFileContent(newToken, fid).then(async (res) => {
             id = (await res.json())?.id;
           });
         });
+        setStatus(SyncStatus.Success);
+        setTimeout(
+          () =>
+            setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
+          2000
+        );
         if (id) setFileId(id);
         // return content as string | undefined;
         return undefined;
       } catch (e) {
         // console.error(e);
+        setStatus(SyncStatus.Errored);
         // return undefined;
         throw new Error();
       }
@@ -347,6 +385,7 @@ ${fileData}
       value={{
         googleLinked,
         isReady,
+        status,
         autoSave,
         autoLoad,
         getFileDry,

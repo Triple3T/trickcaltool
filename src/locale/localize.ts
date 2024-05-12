@@ -559,6 +559,10 @@ i18n
                 config: "동기화 설정",
                 upload: "계정에 데이터 저장",
                 download: "계정의 데이터 불러오기",
+                uploading: "데이터 저장 중...",
+                downloading: "데이터 불러오는 중...",
+                errored: "오류가 발생했습니다.",
+                tryRefresh: "새로고침을 해 보세요.",
               },
               versionCheck: {
                 title: "버전 확인",
