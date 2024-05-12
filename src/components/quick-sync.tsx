@@ -67,19 +67,19 @@ export function QuickSync() {
           size="icon"
           className={cn("transition-all relative", bgClass(status))}
         >
-          <Cloud
-            className={cn(
-              "h-[1.2rem] w-[1.2rem] transition-all",
-              status === SyncStatus.Idle ? "opacity-100" : "opacity-0"
-            )}
-          />
           <RefreshCw
             className={cn(
-              "h-[1.2rem] w-[1.2rem] transition-all animate-spin absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2",
+              "h-[1.2rem] w-[1.2rem] transition-all animate-spin",
               status === SyncStatus.Uploading ||
                 status === SyncStatus.Downloading
                 ? "opacity-100"
                 : "opacity-0"
+            )}
+          />
+          <Cloud
+            className={cn(
+              "h-[1.2rem] w-[1.2rem] transition-all absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2",
+              status === SyncStatus.Idle ? "opacity-100" : "opacity-0"
             )}
           />
           <CheckCircle
