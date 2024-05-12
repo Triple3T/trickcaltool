@@ -68,7 +68,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
       if (token) {
         setToken(token);
         setGoogleLinked(true);
-        setStatus((v) => (v < 1 ? SyncStatus.Idle : v));
+        setStatus((v) => (v === SyncStatus.NotLinked ? SyncStatus.Idle : v));
         setLastModified(Date.now());
         if (callback) callback(token);
       }
@@ -149,7 +149,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
       setTimeout(
         () =>
           setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-        2000
+        2500
       );
       return fileContent;
     } catch (error) {
@@ -167,7 +167,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
         setTimeout(
           () =>
             setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-          2000
+          2500
         );
         return content;
       } catch (e) {
@@ -218,7 +218,7 @@ ${fileData}
       setTimeout(
         () =>
           setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-        2000
+        2500
       );
       if (data.id) {
         setFileId(data.id);
@@ -239,7 +239,7 @@ ${fileData}
         setTimeout(
           () =>
             setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-          2000
+          2500
         );
         if (id) setFileId(id);
         // return content as string | undefined;
