@@ -40,12 +40,19 @@ const SettingCore = () => {
         window.location.reload();
       });
     } else {
-      await caches
-        .delete("workbox-mustrevalidate-https://tr.triple-lab.com/")
-        .catch(() => {
-          setInstallButtonText("ui.index.versionCheck.updateFailed");
-          window.location.reload();
-        });
+      try {
+        const cacheKeys = await caches.keys();
+        const targetKey = cacheKeys.find((k) =>
+          k.startsWith("workbox-precache-")
+        );
+        if (targetKey) {
+          const targetCache = await caches.open(targetKey);
+          await targetCache.delete("/index.html", { ignoreSearch: true });
+        }
+      } catch {
+        setInstallButtonText("ui.index.versionCheck.updateFailed");
+        window.location.reload();
+      }
     }
     setInstallButtonText("ui.index.versionCheck.preparing");
     navigator.serviceWorker
@@ -232,7 +239,7 @@ const SettingCore = () => {
                     >
                       {t("ui.index.versionCheck.enableHardReset")}
                     </label>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground -mr-2 whitespace-nowrap">
                       {t("ui.index.versionCheck.enableHardResetDescription")}
                     </p>
                   </div>

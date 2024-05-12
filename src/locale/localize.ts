@@ -574,7 +574,7 @@ i18n
                 updateFailed: "새로고침 중...",
                 enableHardReset: "하드 리셋",
                 enableHardResetDescription:
-                  "데이터 사용량이 크게 증가합니다",
+                  "데이터 사용량과 소요 시간이 크게 증가합니다",
               },
               personality: "성격",
               defaultstar: "초기 성급",

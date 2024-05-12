@@ -24,23 +24,9 @@ export default defineConfig({
           {
             urlPattern:
               /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?.*)?$/,
-            handler: "StaleWhileRevalidate",
+            handler: "CacheFirst",
             options: {
               cacheName: "workbox-asset-https://tr.triple-lab.com/",
-            },
-          },
-          {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\/[0-9A-Za-z-/]+$/,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "workbox-mustrevalidate-https://tr.triple-lab.com/",
-            },
-          },
-          {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\/?$/,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "workbox-mustrevalidate-https://tr.triple-lab.com/",
             },
           },
           {
