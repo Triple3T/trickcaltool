@@ -10,9 +10,7 @@ import MainMenuCard from "@/components/parts/main-menu-card";
 
 function App() {
   const { t } = useTranslation();
-  const [backgroundImage, setBackgroundImage] = useState(
-    "/backgrounds/butter_pc.png"
-  );
+  const [backgroundImage, setBackgroundImage] = useState<string>();
   const randomImageName = useMemo(() => {
     const imageNames = [
       "butter",
@@ -34,9 +32,9 @@ function App() {
   useEffect(() => {
     function handleResize() {
       if (window.innerHeight > window.innerWidth) {
-        setBackgroundImage(`/backgrounds/${randomImageName}_galaxy.webp`);
+        setBackgroundImage(`url(/backgrounds/${randomImageName}_galaxy.webp)`);
       } else {
-        setBackgroundImage(`/backgrounds/${randomImageName}_pc.webp`);
+        setBackgroundImage(`url(/backgrounds/${randomImageName}_pc.webp)`);
       }
     }
     window.addEventListener("resize", handleResize);
@@ -48,7 +46,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div
         className="bg-center bg-cover bg-no-repeat h-screen w-screen fixed top-0 left-0 bottom-0 right-0 opacity-25 dark:brightness-80 dark:contrast-125"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{ backgroundImage }}
       />
       <div className="fixed top-0 left-0 flex p-2 gap-2 w-full z-10">
         <div className="flex-1 flex justify-end">
