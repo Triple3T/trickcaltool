@@ -149,7 +149,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
       setTimeout(
         () =>
           setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-        2500
+        3600
       );
       return fileContent;
     } catch (error) {
@@ -167,7 +167,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
         setTimeout(
           () =>
             setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-          2500
+          3600
         );
         return content;
       } catch (e) {
@@ -218,7 +218,7 @@ ${fileData}
       setTimeout(
         () =>
           setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-        2500
+        3600
       );
       if (data.id) {
         setFileId(data.id);
@@ -239,7 +239,7 @@ ${fileData}
         setTimeout(
           () =>
             setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
-          2500
+          3600
         );
         if (id) setFileId(id);
         // return content as string | undefined;
