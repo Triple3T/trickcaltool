@@ -159,6 +159,11 @@
         "PosterL13":{"f":150,"r":4},
         "PosterL14":{"f":150,"r":4},
         "PosterL15":{"f":150,"r":4},
+        "PosterL20":{"f":150,"r":4},
+        "PosterL16":{"f":150,"r":4},
+        "PosterL17":{"f":120,"r":3},
+        "PosterL19":{"f":150,"r":4},
+        "PosterL18":{"f":150,"r":4},
         "PosterM1":{"m":{"MadeLow9":10},"s":180,"f":30,"r":0},
         "PosterM2":{"m":{"MadeLow9":15},"s":300,"f":60,"r":1},
         "PosterM3":{"m":{"CollectMadeLow2":8,"MadeLow9":4},"s":600,"f":90,"r":2},
@@ -174,6 +179,9 @@
         "PosterM13":{"f":150,"r":4},
         "PosterM14":{"f":150,"r":4},
         "PosterM15":{"f":150,"r":4},
+        "PosterM16":{"f":120,"r":3},
+        "PosterM17":{"f":120,"r":3},
+        "PosterM18":{"f":150,"r":4},
         "PosterS1":{"m":{"MadeLow9":10},"s":180,"f":30,"r":0},
 
         "PosterS3":{"m":{"CollectMadeLow2":8,"MadeLow9":4},"s":600,"f":90,"r":2},
@@ -189,6 +197,8 @@
         "PosterS13":{"m":{"MadeLow9":15},"s":300,"f":60,"r":1},
         "PosterS14":{"m":{"MadeLow9":10},"s":180,"f":30,"r":0},
         "PosterS15":{"m":{"CollectMadeLow2":3,"MadeLow9":4},"s":300,"f":60,"r":1},
-        "PosterS16":{"f":120,"r":3}
+        "PosterS16":{"f":120,"r":3},
+        "PosterS17":{"f":120,"r":3},
+        "PosterS18":{"f":120,"r":3}
     }
 }
