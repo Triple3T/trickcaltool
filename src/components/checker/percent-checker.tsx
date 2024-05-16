@@ -166,7 +166,9 @@ interface IPercentStatProps {
   boardStat: { [key: string]: number };
 }
 
-type StatCollection = { [key in Exclude<keyof typeof StatType, number>]: number };
+type StatCollection = {
+  [key in Exclude<keyof typeof StatType, number>]: number;
+};
 
 interface StatsProps {
   off: Partial<StatCollection>;
@@ -198,7 +200,14 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
   // const setStat = useCallback((key: keyof IStatCollectionProps, value: number) => {}, []);
 
   return (
-    <div className={cn("flex flex-col items-center gap-2 w-max max-w-full mx-auto")}>
+    <div
+      className={cn(
+        "flex flex-col items-center gap-2 w-max max-w-full mx-auto"
+      )}
+    >
+      <div className="text-sm opacity-75 mb-2 break-keep">
+        {t("ui.check.percent.description")}
+      </div>
       <ToggleGroup
         className="w-max"
         value={`${lovePercent}`}
@@ -245,12 +254,13 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
           <Accordion type="multiple">
             {statOrder.map((s) => {
               const stat = s as StatType;
-              const statName = StatType[stat] as Exclude<keyof typeof StatType, number>;
+              const statName = StatType[stat] as Exclude<
+                keyof typeof StatType,
+                number
+              >;
               const targetStatValue = boardStat[statName] || 0;
-              const offStat =
-                stats.off[statName] || 0;
-              const onStat =
-                stats.on[statName] || 0;
+              const offStat = stats.off[statName] || 0;
+              const onStat = stats.on[statName] || 0;
               const resultStat =
                 onStat === offStat
                   ? -1
@@ -261,7 +271,11 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
                   : `${Math.round(resultStat * 1000) / 10}%`;
               const resultDiff = Math.abs(targetStatValue - resultStat * 100);
               return (
-                <AccordionItem key={`${tab}-${s}`} value={`${s}`} className="-my-2">
+                <AccordionItem
+                  key={`${tab}-${s}`}
+                  value={`${s}`}
+                  className="-my-2"
+                >
                   <AccordionTrigger>
                     <div className="w-full flex flex-row mr-2">
                       <div className="text-[#315c15] dark:text-[#f5fde5] text-left flex-auto">
@@ -298,7 +312,10 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
         <Card className={cn(cardCommonStyle, "grid grid-cols-2 gap-1")}>
           {statOrder.map((s) => {
             const stat = s as StatType;
-            const statName = StatType[stat] as Exclude<keyof typeof StatType, number>;
+            const statName = StatType[stat] as Exclude<
+              keyof typeof StatType,
+              number
+            >;
             return (
               <Fragment key={`${tab}-${s}`}>
                 <div className="text-[#315c15] dark:text-[#f5fde5] text-left">
@@ -310,9 +327,7 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
                 </div>
                 <div className="text-right">
                   <LazyInput
-                    value={`${
-                      stats[tab][statName] || 0
-                    }`}
+                    value={`${stats[tab][statName] || 0}`}
                     onValueChange={(v) =>
                       dispatchStats({
                         type: tab,

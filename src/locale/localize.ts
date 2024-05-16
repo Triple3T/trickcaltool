@@ -796,7 +796,7 @@ i18n
               description: "전체 적용 스탯이 정확히 입력되었는지 확인합니다.",
               percent: {
                 index: "전체 % 스탯",
-                description: "관심 사도 지정 및 해제 시의 스탯 차이를 이용해 확인합니다.",
+                description: "관심 사도 지정 및 해제 시의 스탯 차이를 이용해 검산합니다.",
                 startStar1: "태생 1성",
                 startStar2: "태생 2성",
                 startStar3: "태생 3성",
