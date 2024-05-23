@@ -1,5 +1,5 @@
 {
-    "i":["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],
+    "i":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],
     "e":{
         "1":{
             "b":[
@@ -514,6 +514,42 @@
                 {"i":"FoodMadeLow9","c":"material","n":1,"l":30,"p":300},
                 {"i":"FoodMadeLow5","c":"material","n":1,"l":30,"p":300},
                 {"i":"FoodMadeLow3","c":"material","n":1,"l":30,"p":300},
+                {"i":"currency0008","c":"themeevent.shop","n":10000,"l":-1,"p":250}
+            ]
+        },
+        "15":{
+            "b":[
+                {"c":"Risty","b":40},
+                {"c":"Vivi","b":30},
+                {"c":"Amelia","b":30},
+                {"c":"Ifrit","b":30},
+                {"c":"Rohne","b":30},
+                {"c":"Jubee","b":30},
+                {"c":"Meluna","b":30},
+                {"c":"Mayo","b":30},
+                {"c":"Chopi","b":30},
+                {"c":"Ui","b":20}
+            ],
+            "c":15,
+            "s":[
+                {"i":"FigureL24","c":"collection","n":1,"l":1,"p":1800},
+                {"i":"charaLicense","c":"themeevent.shop","a":{"0":"Risty"},"n":1,"l":10,"p":400},
+                {"i":"crayon3","c":"themeevent.shop","n":1,"l":10,"p":600},
+                {"i":"crayon4","c":"themeevent.shop","n":1,"l":4,"p":1600},
+                {"i":"currency0008","c":"themeevent.shop","n":100000,"l":10,"p":500},
+                {"i":"currency0047","c":"themeevent.shop","n":180,"l":1,"p":360},
+                {"i":"currency0047","c":"themeevent.shop","n":280,"l":1,"p":560},
+                {"i":"currency0047","c":"themeevent.shop","n":380,"l":1,"p":760},
+                {"i":"gachaTicketHero","c":"themeevent.shop","n":1,"l":10,"p":200},
+                {"i":"gachaTicketCard","c":"themeevent.shop","n":1,"l":10,"p":200},
+                {"i":"Equip_EnhanceStone1","c":"themeevent.shop","n":1,"l":10,"p":100},
+                {"i":"Equip_EnhanceStone2","c":"themeevent.shop","n":1,"l":4,"p":200},
+                {"i":"Equip_EnhanceStone3","c":"themeevent.shop","n":1,"l":1,"p":300},
+                {"i":"MadeLow11","c":"material","n":1,"l":30,"p":300},
+                {"i":"MadeHigh7","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow12","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow17","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow2","c":"material","n":1,"l":30,"p":300},
                 {"i":"currency0008","c":"themeevent.shop","n":10000,"l":-1,"p":250}
             ]
         }
