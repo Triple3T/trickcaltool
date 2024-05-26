@@ -26,6 +26,14 @@ export default defineConfig({
             handler: "NetworkOnly",
           },
           {
+            urlPattern: /^https:\/\/api\.triple-lab\.com\/api/,
+            handler: "NetworkOnly",
+          },
+          {
+            urlPattern: /^https:\/\/www\.googleapis\.com\//,
+            handler: "NetworkOnly",
+          },
+          {
             urlPattern:
               /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?.*)?$/,
             handler: "CacheFirst",
