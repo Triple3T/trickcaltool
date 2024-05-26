@@ -1010,7 +1010,7 @@ const EquipRank = () => {
                             </div>
                             <div className="text-right flex-auto">
                               {withBoardStat
-                                ? Math.floor(
+                                ? Math.round(
                                     (statValue *
                                       ((boardStat[stat] ?? 0) + 100)) /
                                       100
