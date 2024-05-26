@@ -73,7 +73,6 @@ interface BoardDataPropsCore {
     [key: string]: BoardDataPropsBoard; // 보드 종류별로
   }[]; // [1차보드, 2차보드, 3차보드]
   user: UserDataBoard & UserDataUnowned;
-  boardIndex: number;
   visibleBoard: BoardType[];
   isDirty: number;
 }
@@ -100,6 +99,7 @@ const boardDataRestoreActionHandler = (
 interface BoardDataClickAction {
   type: "click";
   payload: {
+    boardIndex: number;
     charaName: string;
     ldx: number;
     bdx: number;
@@ -110,7 +110,7 @@ const boardDataClickActionHandler = (
   state: NonNullable<BoardDataProps>,
   action: BoardDataClickAction
 ): BoardDataProps => {
-  const { boardIndex } = state;
+  const boardIndex = action.payload.boardIndex;
   if (state.user.u.includes(action.payload.charaName)) {
     const inIfUserData = {
       ...state.user,
@@ -232,21 +232,6 @@ const boardDataChangeVisibleBoardActionHandler = (
   };
 };
 
-interface BoardDataChangeIndex {
-  type: "index";
-  payload: number;
-}
-
-const boardDataChangeIndexActionHandler = (
-  state: NonNullable<BoardDataProps>,
-  action: BoardDataChangeIndex
-): BoardDataProps => {
-  return {
-    ...state,
-    boardIndex: action.payload,
-  };
-};
-
 interface BoardDataClean {
   type: "clean";
 }
@@ -265,7 +250,6 @@ type BoardDataReduceAction =
   | BoardDataClickAction
   | BoardDataChangeClassificationAction
   | boardDataChangeVisibleBoardAction
-  | BoardDataChangeIndex
   | BoardDataClean;
 
 const boardDataReducer = (
@@ -283,8 +267,6 @@ const boardDataReducer = (
       return boardDataChangeClassificationActionHandler(state, action);
     case "visible":
       return boardDataChangeVisibleBoardActionHandler(state, action);
-    case "index":
-      return boardDataChangeIndexActionHandler(state, action);
     case "clean":
       return boardDataCleanActionHandler(state);
     default:
@@ -442,6 +424,7 @@ const TrickcalBoard = () => {
     boardDataReducer,
     undefined
   );
+  const [boardIndex, setBoardIndex] = useState(0);
   const [enableDialog, setEnableDialog] = useState(false);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [newCharaAlert, setNewCharaAlert] = useState(false);
@@ -516,7 +499,6 @@ const TrickcalBoard = () => {
       payload: {
         board: boardDataSkel,
         user: userData,
-        boardIndex: 0,
         visibleBoard: userData.v,
         isDirty: 0,
       },
@@ -840,7 +822,7 @@ const TrickcalBoard = () => {
         </Accordion>
       </Card>
       <div className="w-full font-onemobile">
-        <Tabs value={`${boardData?.boardIndex ?? 0}`} className="w-full">
+        <Tabs value={`${boardIndex}`} className="w-full">
           <TabsList className="w-full flex">
             {Array.from(Array(3).keys()).map((v) => {
               const isCompleted = Object.values(board.c).every(
@@ -851,9 +833,7 @@ const TrickcalBoard = () => {
                   key={v}
                   value={`${v}`}
                   className="flex-1"
-                  onClick={() =>
-                    dispatchBoardData({ type: "index", payload: v })
-                  }
+                  onClick={() => setBoardIndex(v)}
                 >
                   <div>{t(`ui.board.board${v + 1}`)}</div>
                   {!isCompleted && (
@@ -865,17 +845,13 @@ const TrickcalBoard = () => {
           </TabsList>
         </Tabs>
         {!Object.values(board.c).every(
-          (b) =>
-            b.b[boardData?.boardIndex ?? 0] &&
-            b.b[boardData?.boardIndex ?? 0].length
+          (b) => b.b[boardIndex] && b.b[boardIndex].length
         ) ? (
           <div className="mt-1 text-sm text-red-700 dark:text-red-400 w-full text-right">
             *
             {t("ui.board.dataIncompleteStatus", {
               0: Object.values(board.c).filter(
-                (b) =>
-                  b.b[boardData?.boardIndex ?? 0] &&
-                  b.b[boardData?.boardIndex ?? 0].length
+                (b) => b.b[boardIndex] && b.b[boardIndex].length
               ).length,
               1: Object.values(board.c).length,
             })}
@@ -897,7 +873,7 @@ const TrickcalBoard = () => {
                 )
             ) as string[]
           ).map((bt) => {
-            const currentBoard = boardData.board[boardData.boardIndex][bt];
+            const currentBoard = boardData.board[boardIndex][bt];
             if (currentBoard.charas.length < 1) return null;
             return (
               <Card
@@ -916,11 +892,11 @@ const TrickcalBoard = () => {
                       <img
                         className="mr-1 w-[1.2rem] inline-flex bg-greenicon rounded-full align-middle"
                         src={`/icons/RecordReward_Tab_${
-                          ["Easy", "Herd", "VeryHard"][boardData.boardIndex]
+                          ["Easy", "Herd", "VeryHard"][boardIndex]
                         }Lv.png`}
                       />
                       <span className="align-middle">
-                        {t(`ui.board.board${boardData.boardIndex + 1}`)}
+                        {t(`ui.board.board${boardIndex + 1}`)}
                       </span>
                     </div>
                     <div className="text-2xl">{t(`board.${bt}`)}</div>
@@ -949,7 +925,7 @@ const TrickcalBoard = () => {
                       ][boardData.user.c]
                     ).filter((c) => typeof c === "string") as string[]
                   ).map((k) => {
-                    const displayCharas = boardData.board[boardData.boardIndex][
+                    const displayCharas = boardData.board[boardIndex][
                       bt
                     ].charas.filter(
                       ({ name }) =>
@@ -1104,6 +1080,7 @@ const TrickcalBoard = () => {
                                       dispatchBoardData({
                                         type: "click",
                                         payload: {
+                                          boardIndex,
                                           charaName: name,
                                           ldx,
                                           bdx,
@@ -1123,37 +1100,35 @@ const TrickcalBoard = () => {
                                       }
                                     >
                                       <BoardInfoDialog
-                                        boardIndex={boardData.boardIndex}
+                                        boardIndex={boardIndex}
                                         boardTypeString={bt}
                                         chara={name}
                                         charaTypes={chara[name].t}
                                         route={
                                           route.r[
                                             Race[Number(chara[name].t[5])]
-                                          ][boardData.boardIndex].b[
+                                          ][boardIndex].b[
                                             Number(
-                                              board.c[name].r[
-                                                boardData.boardIndex
-                                              ][ldx].split(".")[bdx]
+                                              board.c[name].r[boardIndex][
+                                                ldx
+                                              ].split(".")[bdx]
                                             )
                                           ]
                                         }
                                         rstart={
                                           route.r[
                                             Race[Number(chara[name].t[5])]
-                                          ][boardData.boardIndex].s
+                                          ][boardIndex].s
                                         }
-                                        otherBoards={board.c[name].b[
-                                          boardData.boardIndex
-                                        ]
+                                        otherBoards={board.c[name].b[boardIndex]
                                           .map((v) => v.toString())
                                           .join("")}
                                         blocked={
                                           ldx === 0
                                             ? undefined
-                                            : board.c[name].k[
-                                                boardData.boardIndex
-                                              ][ldx - 1].split(".")[bdx]
+                                            : board.c[name].k[boardIndex][
+                                                ldx - 1
+                                              ].split(".")[bdx]
                                         }
                                         checked={checked}
                                         unowned={unowned}
@@ -1168,6 +1143,7 @@ const TrickcalBoard = () => {
                                       dispatchBoardData({
                                         type: "click",
                                         payload: {
+                                          boardIndex,
                                           charaName: name,
                                           ldx,
                                           bdx,
@@ -1188,6 +1164,7 @@ const TrickcalBoard = () => {
                                       dispatchBoardData({
                                         type: "click",
                                         payload: {
+                                          boardIndex,
                                           charaName: name,
                                           ldx,
                                           bdx,
@@ -1235,7 +1212,7 @@ const TrickcalBoard = () => {
                       }}
                     >
                       {currentBoard.charas.filter((c) => c.checked).length *
-                        (boardData.boardIndex + 1) *
+                        (boardIndex + 1) *
                         2}
                     </div>
                   </div>
@@ -1259,7 +1236,7 @@ const TrickcalBoard = () => {
                                   .length *
                                   board.b[
                                     BoardType[bt as keyof typeof BoardType]
-                                  ][statIndex][boardData.boardIndex]}
+                                  ][statIndex][boardIndex]}
                                 %
                               </span>
                             </div>
@@ -1314,7 +1291,7 @@ const TrickcalBoard = () => {
                           0:
                             currentBoard.charas.filter((c) => c.checked)
                               .length *
-                            (boardData.boardIndex + 1) *
+                            (boardIndex + 1) *
                             2,
                         })} */}
                       </div>
@@ -1328,13 +1305,11 @@ const TrickcalBoard = () => {
                                   (currentBoard.charas.length -
                                     currentBoard.charas.filter((c) => c.checked)
                                       .length) *
-                                  (boardData.boardIndex + 1) *
+                                  (boardIndex + 1) *
                                   2,
                               })}
                           {Object.values(board.c).every(
-                            (b) =>
-                              b.b[boardData.boardIndex] &&
-                              b.b[boardData.boardIndex].length
+                            (b) => b.b[boardIndex] && b.b[boardIndex].length
                           )
                             ? ""
                             : "?"}
