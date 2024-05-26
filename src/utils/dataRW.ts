@@ -21,14 +21,16 @@ export const exportTextFile = ({ fileName, data }: ExportTextFileProps) => {
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 
 export const dataFileExport = () => {
-  const bdtp = userdata.board.load();
-  const pdtp = userdata.pboard.load();
-  const ndtp = userdata.nthboard.load();
-  const rdtp = userdata.eqrank.load();
-  const udtp = userdata.unowned.load();
-  const ldtp = userdata.lab.load();
-  const mdtp = userdata.myhome.load();
-  const cdtp = userdata.collection.load();
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const {autoRepaired: ar01, ...bdtp} = userdata.board.load();
+  const {autoRepaired: ar02, ...pdtp} = userdata.pboard.load();
+  const {autoRepaired: ar03, ...ndtp} = userdata.nthboard.load();
+  const {autoRepaired: ar04, ...rdtp} = userdata.eqrank.load();
+  const {autoRepaired: ar05, ...udtp} = userdata.unowned.load();
+  const {autoRepaired: ar06, ...ldtp} = userdata.lab.load();
+  const {autoRepaired: ar07, ...mdtp} = userdata.myhome.load();
+  const {autoRepaired: ar08, ...cdtp} = userdata.collection.load();
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   if (!(bdtp && pdtp && ndtp && rdtp && udtp && ldtp && mdtp && cdtp)) {
     console.error("No user data found");
     throw Error();
