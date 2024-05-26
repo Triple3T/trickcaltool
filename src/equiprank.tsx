@@ -85,6 +85,8 @@ const personalityBG = {
   [Personality.Naive]: "bg-personality-Naive",
 };
 
+type ViewType = "input" | "rankView" | "targetView";
+
 interface RankDataPropsRank {
   charas: {
     chara: string;
@@ -107,7 +109,6 @@ interface RankDataPropsCore {
     [key: string]: RankDataPropsChara;
   };
   user: UserDataEqRank & UserDataUnowned;
-  viewType: "input" | "rankView" | "targetView";
   targetStat: StatType[]; // 스탯 종류
   minRank: number;
   maxRank: number;
@@ -161,22 +162,6 @@ const rankDataCharaRankModifyActionHandler = (
         rank,
       },
     },
-  };
-};
-
-interface RankDataSwitchViewType {
-  type: "viewtype";
-  payload: "input" | "rankView" | "targetView";
-}
-
-const rankDataSwitchViewTypeActionHandler = (
-  state: NonNullable<RankDataProps>,
-  action: RankDataSwitchViewType
-) => {
-  if (state.dirty) return state;
-  return {
-    ...state,
-    viewType: action.payload,
   };
 };
 
@@ -342,7 +327,6 @@ const rankDataCleanActionHandler = (
 type RankDataReduceAction =
   | RankDataRestoreAction
   | RankDataCharaRankModify
-  | RankDataSwitchViewType
   | RankDataChangeTargetStat
   | RankDataChangeMinRank
   | RankDataChangeMaxRank
@@ -360,8 +344,6 @@ const rankDataReducer = (
   switch (action.type) {
     case "rank":
       return rankDataCharaRankModifyActionHandler(state, action);
-    case "viewtype":
-      return rankDataSwitchViewTypeActionHandler(state, action);
     case "targetstats":
       return rankDataChangeTargetStatActionHandler(state, action);
     case "minrank":
@@ -383,6 +365,7 @@ const EquipRank = () => {
   const { t } = useTranslation();
   const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
   const [rankData, dispatchRankData] = useReducer(rankDataReducer, undefined);
+  const [viewType, setViewType] = useState<ViewType>("rankView");
   const [enableDialog, setEnableDialog] = useState(false);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -390,6 +373,7 @@ const EquipRank = () => {
   const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [dirtyRankCharas, setDirtyRankCharas] = useState<string[]>([]);
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
@@ -465,26 +449,39 @@ const EquipRank = () => {
         });
       });
     });
+    const dirty = Object.values(charas).some(
+      (c) =>
+        c.rank < (userData.s[0] || 1) || c.rank > (userData.s[1] || MAX_RANK)
+    );
     dispatchRankData({
       type: "restore",
       payload: {
         rankStat,
         charas,
         user: userData,
-        viewType: "input",
         targetStat: userData.v || [],
         minRank: userData.s[0] || 1,
         maxRank: userData.s[1] || MAX_RANK,
         sortAndFilter: userData.f,
-        dirty: Object.values(charas).some(
-          (c) =>
-            c.rank < (userData.s[0] || 1) ||
-            c.rank > (userData.s[1] || MAX_RANK)
-        ),
+        dirty,
         isDirty: 0,
       },
     });
   }, []);
+  useEffect(() => {
+    if (rankData && rankData.dirty) {
+      setViewType("input");
+      setDirtyRankCharas(
+        Object.entries(rankData.charas)
+          .filter(
+            ([, v]) => v.rank < rankData.minRank || v.rank > rankData.maxRank
+          )
+          .map(([c]) => c)
+      );
+    } else {
+      setDirtyRankCharas([]);
+    }
+  }, [rankData]);
   useEffect(initFromUserData, [initFromUserData]);
   const setDialogEnabled = useCallback((enabled: boolean) => {
     setEnableDialog(enabled);
@@ -633,7 +630,7 @@ const EquipRank = () => {
                     </Suspense>
                   </div>
                 </div>
-                {rankData?.viewType === "input" && (
+                {viewType === "input" && (
                   <div className="flex flex-col gap-2">
                     <SubtitleBar>{t("ui.equiprank.rankMinMax")}</SubtitleBar>
                     <div className="flex flex-col gap-1 px-4">
@@ -717,7 +714,7 @@ const EquipRank = () => {
                     </div>
                   </div>
                 )}
-                {rankData?.viewType === "rankView" && (
+                {viewType === "rankView" && (
                   <div className="flex flex-col gap-2">
                     <SubtitleBar>{t("ui.equiprank.sortAndFilter")}</SubtitleBar>
                     <div className="flex flex-col gap-1 px-2">
@@ -1032,25 +1029,21 @@ const EquipRank = () => {
 
       {rankData && (
         <div className="font-onemobile max-w-[1920px]">
-          <Tabs value={rankData.viewType} className="w-full">
+          <Tabs value={viewType} className="w-full">
             <TabsList
-              className={`w-full flex${rankData.dirty ? " invisible" : ""}`}
+              className={cn("w-full flex", rankData.dirty ? "invisible" : "")}
             >
               <TabsTrigger
                 value="input"
                 className="flex-1"
-                onClick={() =>
-                  dispatchRankData({ type: "viewtype", payload: "input" })
-                }
+                onClick={() => setViewType("input")}
               >
                 <div>{t("ui.equiprank.input")}</div>
               </TabsTrigger>
               <TabsTrigger
                 value="rankView"
                 className="flex-1"
-                onClick={() =>
-                  dispatchRankData({ type: "viewtype", payload: "rankView" })
-                }
+                onClick={() => setViewType("rankView")}
                 disabled={rankData.dirty}
               >
                 <div>{t("ui.equiprank.rankView")}</div>
@@ -1058,9 +1051,7 @@ const EquipRank = () => {
               <TabsTrigger
                 value="targetView"
                 className="flex-1"
-                onClick={() =>
-                  dispatchRankData({ type: "viewtype", payload: "targetView" })
-                }
+                onClick={() => setViewType("targetView")}
                 disabled={rankData.dirty}
               >
                 <div>{t("ui.equiprank.targetView")}</div>
@@ -1102,12 +1093,15 @@ const EquipRank = () => {
                   .sort((a, b) =>
                     t(`chara.${a}`).localeCompare(t(`chara.${b}`))
                   )
-                  .filter((c) =>
-                    search
-                      ? t(`chara.${c}`).includes(search) ||
+                  .filter((c) => {
+                    if (search)
+                      return (
+                        t(`chara.${c}`).includes(search) ||
                         icSearch(t(`chara.${c}`), search)
-                      : true
-                  )
+                      );
+                    if (rankData.dirty) return dirtyRankCharas.includes(c);
+                    return true;
+                  })
                   .map((c) => {
                     return (
                       <div key={c} className="flex flex-col gap-1">
