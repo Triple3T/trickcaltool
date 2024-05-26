@@ -4,22 +4,31 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
     "plugin:react-hooks/recommended",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
-  plugins: ["react-refresh"],
+  plugins: [
+    "react",
+    "react-hooks",
+    "react-refresh",
+    "@typescript-eslint",
+    "@stylistic/ts",
+    "eslint-plugin-react-compiler",
+  ],
   rules: {
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
-    "@typescript-eslint/comma-dangle": ["error", {
+    "@stylistic/ts/comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",
       "imports": "always-multiline",
       "exports": "always-multiline",
       "enums": "always-multiline",
+      "tuples": "always-multiline",
       "functions": "never"
     }],
     "@typescript-eslint/no-unused-vars": "warn",
@@ -38,5 +47,13 @@ module.exports = {
     "template-curly-spacing": ["error", "never"],
     "react/react-in-jsx-scope": "off",
     "comma-dangle": "off",
+    "react/prop-types": "off",
+    "react/no-unknown-property": "off",
+    "react-compiler/react-compiler": "error",
+  },
+  settings: {
+      "react": {
+          "version": "detect",
+      },
   },
 }

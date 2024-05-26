@@ -7,7 +7,11 @@ import { icons } from "./public/AppImages/icons.json";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
     VitePWA({
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       registerType: "autoUpdate",

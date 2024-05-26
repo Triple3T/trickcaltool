@@ -460,7 +460,7 @@ const Lab = () => {
         Object.keys(c).includes("m")
       ) as unknown as [
         string,
-        { m: { [key: string]: number }; s: number; f: number; r: number }
+        { m: { [key: string]: number }; s: number; f: number; r: number },
       ][]
     ).map(([id, c]) => ({
       id,
@@ -548,7 +548,7 @@ const Lab = () => {
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
 
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const autosaver = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {

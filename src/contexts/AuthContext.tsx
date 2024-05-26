@@ -64,13 +64,13 @@ const AuthProvider = ({ children }: { children: Children }) => {
         if (onError) onError();
         return;
       }
-      const token = await f.text();
-      if (token) {
-        setToken(token);
+      const tok = await f.text();
+      if (tok) {
+        setToken(tok);
         setGoogleLinked(true);
         setStatus((v) => (v === SyncStatus.NotLinked ? SyncStatus.Idle : v));
         setLastModified(Date.now());
-        if (callback) callback(token);
+        if (callback) callback(tok);
       }
     } catch (e) {
       setGoogleLinked(false);
