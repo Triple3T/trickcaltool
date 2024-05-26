@@ -760,7 +760,7 @@ const PurpleBoard = () => {
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
 
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const autosaver = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
