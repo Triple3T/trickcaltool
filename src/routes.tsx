@@ -6,6 +6,7 @@ import Loading from "@/components/common/loading";
 // import PurpleBoard from "./purpleboard";
 // import EquipRank from "./equiprank";
 // import Lab from "./lab";
+// import BoardSearch from "./boardsearch";
 // import TaskSearch from "./tasksearch";
 // import EventCalc from "./eventcalc";
 // import Checker from "./checker";
@@ -14,6 +15,7 @@ const TrickcalBoard = lazy(() => import("./trickcalboard"));
 const EquipRank = lazy(() => import("./equiprank"));
 const Lab = lazy(() => import("./lab"));
 const PurpleBoard = lazy(() => import("./purpleboard"));
+const BoardSearch = lazy(() => import("./boardsearch"));
 const TaskSearch = lazy(() => import("./tasksearch"));
 const EventCalc = lazy(() => import("./eventcalc"));
 const Checker = lazy(() => import("./checker"));
@@ -60,6 +62,15 @@ const routes = [
     element: (
       <Suspense fallback={<Loading />}>
         <PurpleBoard />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/boardsearch",
+    // element: <BoardSearch />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <BoardSearch />
       </Suspense>
     ),
   },
