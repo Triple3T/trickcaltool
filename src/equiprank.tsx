@@ -464,7 +464,7 @@ const EquipRank = () => {
         maxRank: userData.s[1] || MAX_RANK,
         sortAndFilter: userData.f,
         dirty,
-        isDirty: 0,
+        isDirty: 65536,
       },
     });
   }, []);

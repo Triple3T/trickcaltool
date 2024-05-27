@@ -387,6 +387,18 @@ const PurpleBoard = () => {
           );
         });
     }
+    if (userData.u.some((c) => userData.p[c])) {
+      setNewCharaAlert(true);
+      userData.p = Object.fromEntries(
+        Object.entries(userData.p).filter(([k]) => !userData.u.includes(k))
+      );
+    }
+    if (userData.u.some((c) => userData.n[c])) {
+      setNewCharaAlert(true);
+      userData.n = Object.fromEntries(
+        Object.entries(userData.n).filter(([k]) => !userData.u.includes(k))
+      );
+    }
     Object.keys(userData.p).forEach((c) => {
       userData.n[c] = Math.max(
         userData.p[c].findLastIndex((a) => a.some((b) => b !== 0)) + 1,
@@ -444,7 +456,7 @@ const PurpleBoard = () => {
       payload: {
         pboard: pBoardDataSkel,
         user: userData,
-        isDirty: 0,
+        isDirty: 65536,
       },
     });
   }, []);
