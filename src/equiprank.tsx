@@ -522,7 +522,7 @@ const EquipRank = () => {
       if (isReady && googleLinked && autoSave) {
         autoSave();
       }
-    }, 2000);
+    }, 500);
   }, [autoSave, googleLinked, isReady]);
   useEffect(() => {
     if (rankData && rankData.isDirty) autosaver();
