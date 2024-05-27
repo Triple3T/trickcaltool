@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { AuthContext } from "@/contexts/AuthContext";
 import Layout from "@/components/layout";
 import {
@@ -54,7 +55,11 @@ import {
 } from "@/types/enums";
 
 import userdata from "@/utils/userdata";
-import { UserDataBoard, UserDataUnowned } from "@/types/types";
+import {
+  UserDataBoard,
+  UserDataNthBoard,
+  UserDataUnowned,
+} from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
@@ -72,16 +77,19 @@ interface BoardDataPropsCore {
   board: {
     [key: string]: BoardDataPropsBoard; // 보드 종류별로
   }[]; // [1차보드, 2차보드, 3차보드]
-  user: UserDataBoard & UserDataUnowned;
+  user: UserDataBoard & UserDataUnowned & UserDataNthBoard;
   visibleBoard: BoardType[];
   isDirty: number;
 }
 
 type BoardDataProps = BoardDataPropsCore | undefined;
 
-const saveBoardData = (boardData: UserDataBoard & UserDataUnowned) => {
-  const { b, c, o, u, v } = boardData;
+const saveBoardData = (
+  boardData: UserDataBoard & UserDataUnowned & UserDataNthBoard
+) => {
+  const { b, c, n, o, u, v } = boardData;
   userdata.board.save({ b, c, v });
+  userdata.nthboard.save({ n });
   userdata.unowned.save({ o, u });
 };
 
@@ -122,6 +130,7 @@ const boardDataClickActionHandler = (
       },
       o: [...state.user.o, action.payload.charaName],
       u: state.user.u.filter((c) => c !== action.payload.charaName),
+      n: { ...state.user.n, [action.payload.charaName]: boardIndex + 1 },
     };
     saveBoardData(inIfUserData);
     return {
@@ -157,6 +166,13 @@ const boardDataClickActionHandler = (
                 j === action.payload.ldx ? b ^ (1 << action.payload.bdx) : b
               )
             : a
+      ),
+    },
+    n: {
+      ...state.user.n,
+      [action.payload.charaName]: Math.max(
+        state.user.n[action.payload.charaName],
+        boardIndex + 1
       ),
     },
   };
@@ -339,9 +355,9 @@ const BoardStatStatistic = ({
                   className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
                 />
                 <span
-                  className={`${
+                  className={cn(
                     cur === max ? "text-red-600 dark:text-red-400" : ""
-                  }`}
+                  )}
                 >
                   {cur}
                 </span>
@@ -435,14 +451,18 @@ const TrickcalBoard = () => {
     const { autoRepaired: ar1, ...userDataBoardProto } = userdata.board.load();
     const { autoRepaired: ar2, ...userDataUnownedProto } =
       userdata.unowned.load();
-    const userData = { ...userDataBoardProto, ...userDataUnownedProto };
+    const { autoRepaired: ar3, ...userDataNthBoardProto } =
+      userdata.nthboard.load();
+    const userData = {
+      ...userDataBoardProto,
+      ...userDataUnownedProto,
+      ...userDataNthBoardProto,
+    };
     const { board: bd } = userdata.dialog.load();
     setEnableDialog(bd);
-    if (ar1 || ar2) setNewCharaAlert(true);
-    let flag = false;
+    if (ar1 || ar2 || ar3) setNewCharaAlert(true);
     if (!userData.o.every((c) => userData.b[c])) {
       setNewCharaAlert(true);
-      flag = true;
       userData.o
         .filter((c) => !userData.b[c])
         .forEach((c) => {
@@ -450,14 +470,17 @@ const TrickcalBoard = () => {
         });
     }
     Object.keys(userData.b).forEach((c) => {
+      userData.n[c] = Math.max(
+        userData.b[c].findLastIndex((a) => a.some((b) => b !== 0)) + 1,
+        userData.n[c] || 1
+      );
       if (userData.b[c].some((b) => b.length !== board.c[c].b.length)) {
-        flag = true;
         userData.b[c] = board.c[c].b.map((a, i) =>
           a.map((_, j) => userData.b[c][i][j] ?? 0)
         );
       }
     });
-    if (flag) saveBoardData(userData);
+    saveBoardData(userData);
     const sortedCharaList = [...charaList].sort(
       (a, b) =>
         Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c]) ||
@@ -1181,6 +1204,23 @@ const TrickcalBoard = () => {
                                     </div>
                                   </div>
                                 )}
+                                {!unowned &&
+                                  !checked &&
+                                  boardData.user.n[name] > boardIndex && (
+                                    <div className="absolute right-0.5 bottom-0.5 flex flex-row p-px w-3 h-3">
+                                      <div
+                                        className={cn(
+                                          "flex-1 rounded-full aspect-square border border-slate-100 ring-1 ring-slate-900",
+                                          [
+                                            "bg-transparent",
+                                            "bg-slate-400",
+                                            "bg-emerald-500",
+                                            "bg-amber-400",
+                                          ][boardData.user.n[name]]
+                                        )}
+                                      />
+                                    </div>
+                                  )}
                               </div>
                             );
                           })}
