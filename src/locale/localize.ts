@@ -600,7 +600,7 @@ i18n
                 invalidFileInput: "파일이 올바르지 않습니다.",
               },
               newCharacterAlert:
-                "사도 목록 변경을 감지했습니다.\n미보유 캐릭터 설정을 다시 확인해 주세요.",
+                "사도 목록 변경을 감지했습니다.\n미보유 사도 설정을 다시 확인해 주세요.",
               repairedAlert:
                 "데이터 변경이 감지되었습니다.\n데이터가 올바르게 복구되었는지 다시 확인해 주세요.",
               testMark: "[테스트]",
@@ -722,7 +722,7 @@ i18n
                 "기록 시, 본부 - 창고 - 수집품 목록 화면에서\n정렬 순서를 크기로 변경한 후 시작하세요.",
             },
             charaSelect: {
-              title: "캐릭터 선택",
+              title: "사도 선택",
               owned: "보유중",
               unowned: "미보유",
               allOwned: "모두 보유",
@@ -831,7 +831,7 @@ i18n
               },
             },
             common: {
-              unownedCharacters: "미보유 캐릭터",
+              unownedCharacters: "미보유 사도",
               backUpAndRestore: "백업 및 복원",
               backUp: "파일로 백업",
               restore: "파일에서 복원",
