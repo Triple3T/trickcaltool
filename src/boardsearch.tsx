@@ -178,7 +178,7 @@ const BoardSearch = () => {
                           >
                             <img
                               src={`/icons/RecordReward_Tab_${bText}Lv.png`}
-                              className="h-6 w-6 aspect-square"
+                              className="h-5 w-5 aspect-square mr-1 bg-greenicon rounded-full inline-flex align-middle"
                             />
                             {t(`ui.board.board${bIndex + 1}Short`)}
                           </ToggleGroupItem>
