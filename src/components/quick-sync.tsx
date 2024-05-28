@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
+  Archive,
   CheckCircle,
   Cloud,
   CloudCog,
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { dataFileWrite } from "@/utils/dataRW";
 
 import { SyncStatus } from "@/types/enums";
 
@@ -53,7 +55,13 @@ export function QuickSync() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => dataFileWrite()}>
+            <Archive className="mr-2 h-4 w-4" />
+            {t("ui.common.backUp")}
+          </DropdownMenuItem>
+          <Separator className="my-1" />
           <DropdownMenuItem onClick={() => navigate("/setting")}>
+            <CloudCog className="mr-2 h-4 w-4" />
             {t("ui.index.sync.config")}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -124,6 +132,11 @@ export function QuickSync() {
             <Separator className="my-1" />
           </>
         )}
+        <DropdownMenuItem onClick={() => dataFileWrite()}>
+          <Archive className="mr-2 h-4 w-4" />
+          {t("ui.common.backUp")}
+        </DropdownMenuItem>
+        <Separator className="my-1" />
         <DropdownMenuItem
           onClick={() => autoSave?.()}
           disabled={[
