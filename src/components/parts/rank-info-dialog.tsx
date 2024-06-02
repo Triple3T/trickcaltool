@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, ChevronsRight, Dot, Pencil, Undo2 } from "lucide-react";
 import {
@@ -51,14 +51,19 @@ const RankInfoDialog = ({
   onOpenChange,
 }: RankInfoDialogProps) => {
   const { t } = useTranslation();
+  const [currentRank, setCurrentRank] = useState(rank);
   const [rankSettingOpened, setRankSettingOpened] = useState(false);
   const [rankToBeChanged, setRankToBeChanged] = useState(rank);
+  useEffect(() => {
+    setCurrentRank(rank);
+    setRankToBeChanged(rank);
+  }, [rank, chara]);
   return (
     <Dialog
       open={opened}
       onOpenChange={(o) => {
         if (!o) setRankSettingOpened(false);
-        setRankToBeChanged(rank);
+        setRankToBeChanged(currentRank);
         onOpenChange(o);
       }}
     >
@@ -73,7 +78,7 @@ const RankInfoDialog = ({
                 <Dot className="inline-block w-4 h-4 mx-px align-middle" />
                 <span className="align-middle mr-2">
                   {t("ui.equiprank.rankText", {
-                    0: `${rank}`,
+                    0: `${currentRank}`,
                   })}
                 </span>
                 <Button
@@ -100,12 +105,12 @@ const RankInfoDialog = ({
                         <div className="flex-1 text-lg text-center">
                           <span
                             className={[
-                              rankClassNames[rank - 1][1],
+                              rankClassNames[currentRank - 1][1],
                               "inline-block align-middle",
                             ].join(" ")}
                           >
                             {t("ui.equiprank.rankText", {
-                              0: `${rank}`,
+                              0: `${currentRank}`,
                             })}
                           </span>
                           <ChevronsRight className="inline-block mx-1 w-5 h-5 align-middle" />
@@ -126,7 +131,7 @@ const RankInfoDialog = ({
                             variant="outline"
                             className="w-6 h-6"
                             onClick={() => {
-                              setRankToBeChanged(rank);
+                              setRankToBeChanged(currentRank);
                               setRankSettingOpened(false);
                             }}
                           >
@@ -138,6 +143,7 @@ const RankInfoDialog = ({
                             className="w-6 h-6"
                             onClick={() => {
                               changeRank(chara, rankToBeChanged);
+                              setCurrentRank(rankToBeChanged);
                               setRankSettingOpened(false);
                             }}
                           >
@@ -242,7 +248,7 @@ const RankInfoDialog = ({
                         <div className="text-lg">
                           {t("ui.equiprank.rankText", { 0: index + 2 })}
                         </div>
-                        {rank > index + 1 && (
+                        {currentRank > index + 1 && (
                           <img
                             src="/icons/Stage_RewardChack.png"
                             className="w-10 inline-block align-middle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
