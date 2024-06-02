@@ -1,47 +1,61 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import "./App.css";
 import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
 import MainMenuCard from "@/components/parts/main-menu-card";
+import getServerHash from "@/utils/getServerHash";
+
+const imageNames = [
+  "butter",
+  "Epica",
+  "group",
+  "naia",
+  "Selline",
+  "Tig",
+  "vivi",
+  "alice",
+  "blanchet",
+  "ed",
+  "half",
+  "leets",
+  "picora",
+];
 
 function App() {
   const { t } = useTranslation();
+  const randomImageName = useRef<string>(
+    imageNames[Math.floor(Math.random() * imageNames.length)]
+  );
   const [backgroundImage, setBackgroundImage] = useState<string>();
-  const randomImageName = useMemo(() => {
-    const imageNames = [
-      "butter",
-      "Epica",
-      "group",
-      "naia",
-      "Selline",
-      "Tig",
-      "vivi",
-      'alice',
-      'blanchet',
-      'ed',
-      'half',
-      'leets',
-      'picora',
-    ];
-    return imageNames[Math.floor(Math.random() * imageNames.length)];
-  }, []);
+  const [isHashUpdated, setIsHashUpdated] = useState<boolean>(false);
   useEffect(() => {
     function handleResize() {
       if (window.innerHeight > window.innerWidth) {
-        setBackgroundImage(`url(/backgrounds/${randomImageName}_galaxy.webp)`);
+        setBackgroundImage(
+          `url(/backgrounds/${randomImageName.current}_galaxy.webp)`
+        );
       } else {
-        setBackgroundImage(`url(/backgrounds/${randomImageName}_pc.webp)`);
+        setBackgroundImage(
+          `url(/backgrounds/${randomImageName.current}_pc.webp)`
+        );
       }
     }
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, [randomImageName]);
+  }, []);
+  useEffect(() => {
+    getServerHash()
+      .then((v) => {
+        if (v !== process.env.VERSION_HASH) setIsHashUpdated(true);
+      })
+      .catch(() => {});
+  });
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -61,15 +75,28 @@ function App() {
             <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
               {t("ui.index.title")}
             </h2>
-            <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
-              {t("ui.index.description")}
-            </p>
+            {isHashUpdated ? (
+              <p className="max-w-[600px] text-red-600/80 md:text-lg dark:text-red-500/80">
+                <Link to="/setting">
+                  {t("ui.index.newVersionDetected")}
+                  <ArrowRight className="w-4 h-4 inline-block align-middle ml-2" strokeWidth={3.5} />
+                </Link>
+              </p>
+            ) : (
+              <p className="max-w-[600px] text-gray-700 md:text-lg dark:text-gray-400">
+                {t("ui.index.description")}
+              </p>
+            )}
             <a
               target="_blank"
               rel="noopener noreferrer"
               href="https://forms.gle/KRZbrmJ9FG2D19gG7"
             >
-              <Button variant="outline" size="sm" className="bg-background/30 text-sm">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-background/30 text-sm"
+              >
                 {t("ui.index.reportBoard")}
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
