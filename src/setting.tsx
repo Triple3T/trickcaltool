@@ -24,7 +24,9 @@ const SettingCore = () => {
     "ui.index.versionCheck.update"
   );
   useEffect(() => {
-    getServerHash(setRemoteHash);
+    getServerHash()
+      .then((v) => setRemoteHash(v))
+      .catch(() => {});
   }, []);
   const installNewVersion = useCallback(async (hard: boolean) => {
     setInstallButtonText("ui.index.versionCheck.cleaning");
@@ -187,7 +189,9 @@ const SettingCore = () => {
                   className="w-4 h-4 inline-block ml-2"
                   onClick={() => {
                     setRemoteHash("");
-                    getServerHash(setRemoteHash);
+                    getServerHash()
+                      .then((v) => setRemoteHash(v))
+                      .catch(() => {});
                   }}
                 />
               </div>
