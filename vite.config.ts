@@ -109,4 +109,24 @@ export default defineConfig({
   define: {
     "process.env.VERSION_HASH": `"${process.env.CF_PAGES_COMMIT_SHA}"`,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes("node_modules")) {
+            if (id.includes("i18next")) return "i18next";
+            if (id.includes("lucide-react")) return "lucide-react";
+            if (id.includes("tailwind-merge")) return "tailwind-merge";
+            if (id.includes("sonner")) return "sonner";
+            if (id.includes("@radix-ui")) return "radix-ui";
+            if (id.includes("@floating-ui")) return "floating-ui";
+            if (id.includes("node_modules/react-dom")) return "react-dom";
+            if (id.includes("router")) return "router";
+            if (id.includes("react")) return "react";
+            return "vendor";
+          }
+        },
+      },
+    },
+  },
 });
