@@ -13,7 +13,6 @@ import { Check, ChevronsUpDown, Dot, Lock } from "lucide-react";
 // import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import icSearch from "./lib/initialConsonantSearch";
-import Layout from "@/components/layout";
 import {
   Accordion,
   AccordionContent,
@@ -559,7 +558,7 @@ const EventCalc = () => {
   }, [autosaver, eventCalcData]);
 
   return (
-    <Layout>
+    <>
       <Card className="p-4 object-cover max-w-xl mt-0 mb-4 gap-2 mx-auto font-onemobile">
         {/* Settings */}
         <Accordion type="single" collapsible>
@@ -1008,7 +1007,7 @@ const EventCalc = () => {
           </Tabs>
         </div>
       )}
-    </Layout>
+    </>
   );
 };
 

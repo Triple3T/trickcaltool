@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Layout from "@/components/layout";
 import {
   Accordion,
   AccordionItem,
@@ -113,7 +112,7 @@ const BoardSearch = () => {
   ]);
 
   return (
-    <Layout>
+    <>
       <Card className="p-4 object-cover max-w-xl mt-0 mb-4 gap-2 mx-auto font-onemobile">
         <Accordion type="single" defaultValue="item-1" collapsible>
           <AccordionItem value="item-1">
@@ -299,7 +298,7 @@ const BoardSearch = () => {
           })}
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import Layout from "@/components/layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   StatType,
@@ -121,7 +120,7 @@ const Checker = () => {
   //   return labStats;
   // }, []);
   return (
-    <Layout>
+    <>
       <Tabs className="font-onemobile w-full mt-4" defaultValue="percent">
         <TabsList className="flex mb-4">
           <TabsTrigger className="flex-1" value="percent">
@@ -132,7 +131,7 @@ const Checker = () => {
           <PercentChecker boardStat={boardStat} />
         </TabsContent>
       </Tabs>
-    </Layout>
+    </>
   );
 };
 

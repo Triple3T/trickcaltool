@@ -2,7 +2,6 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2, Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
-import Layout from "@/components/layout";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,7 +12,7 @@ import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 import getServerHash from "@/utils/getServerHash";
 import googleAccessUrl from "@/utils/googleAccessUrl";
 
-const SettingCore = () => {
+const Setting = () => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { autoSave, isReady, googleLinked } = useContext(AuthContext);
@@ -254,14 +253,6 @@ const SettingCore = () => {
         </div>
       </div>
     </Card>
-  );
-};
-
-const Setting = () => {
-  return (
-    <Layout>
-      <SettingCore />
-    </Layout>
   );
 };
 

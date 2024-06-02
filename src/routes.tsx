@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
+import Layout from "@/components/layout";
 import Loading from "@/components/common/loading";
 // import TrickcalBoard from "./trickcalboard";
 // import PurpleBoard from "./purpleboard";
@@ -21,7 +22,8 @@ const EventCalc = lazy(() => import("./eventcalc"));
 const Checker = lazy(() => import("./checker"));
 const Setting = lazy(() => import("./setting"));
 
-import Privacy from "./privacy";
+// import Privacy from "./privacy";
+const Privacy = lazy(() => import("./privacy"));
 import Code from "./code";
 
 const routes = [
@@ -33,86 +35,111 @@ const routes = [
     path: "/board",
     // element: <TrickcalBoard />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <TrickcalBoard />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <TrickcalBoard />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/eqrank",
     // element: <EquipRank />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <EquipRank />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <EquipRank />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/lab",
     // element: <Lab />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <Lab />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <Lab />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/pboard",
     // element: <PurpleBoard />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <PurpleBoard />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <PurpleBoard />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/boardsearch",
     // element: <BoardSearch />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <BoardSearch />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <BoardSearch />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/tasksearch",
     // element: <TaskSearch />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <TaskSearch />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <TaskSearch />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/eventcalc",
     // element: <EventCalc />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <EventCalc />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <EventCalc />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/check",
     // element: <Checker />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <Checker />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <Checker />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/setting",
     // element: <Setting />,
     element: (
-      <Suspense fallback={<Loading />}>
-        <Setting />
-      </Suspense>
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <Setting />
+        </Suspense>
+      </Layout>
     ),
   },
   {
     path: "/privacy",
-    element: <Privacy />,
+    // element: <Privacy />,
+    element: (
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <Privacy />
+        </Suspense>
+      </Layout>
+    ),
   },
   {
     path: "/code",

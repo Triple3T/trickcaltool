@@ -26,7 +26,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import Layout from "@/components/layout";
 // import CharaWithLifeskill from "@/components/parts/chara-with-lifeskill";
 const CharaWithLifeskill = lazy(
   () => import("@/components/parts/chara-with-lifeskill")
@@ -252,7 +251,7 @@ const TaskSearch = () => {
   }, []);
 
   return (
-    <Layout>
+    <>
       <div className="w-full h-4" />
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
@@ -676,7 +675,7 @@ const TaskSearch = () => {
               );
             })}
       </div>
-    </Layout>
+    </>
   );
 };
 

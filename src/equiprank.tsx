@@ -20,7 +20,6 @@ import {
 import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
-import Layout from "@/components/layout";
 import {
   Accordion,
   AccordionItem,
@@ -608,7 +607,7 @@ const EquipRank = () => {
   }, [rankData]);
 
   return (
-    <Layout>
+    <>
       <Card className="p-4 object-cover max-w-xl mt-0 mb-4 gap-2 mx-auto font-onemobile">
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
@@ -1471,7 +1470,7 @@ const EquipRank = () => {
           </Tabs>
         </div>
       )}
-    </Layout>
+    </>
   );
 };
 
