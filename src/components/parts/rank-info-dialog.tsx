@@ -71,7 +71,7 @@ const RankInfoDialog = ({
                   {t("ui.equiprank.allRankBonusesTitle")}
                 </span>
                 <Dot className="inline-block w-4 h-4 mx-px align-middle" />
-                <span className="align-middle">
+                <span className="align-middle mr-2">
                   {t("ui.equiprank.rankText", {
                     0: `${rank}`,
                   })}
@@ -79,7 +79,7 @@ const RankInfoDialog = ({
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="align-middle w-4 h-4 ml-1.5"
+                  className="align-middle w-6 h-6 -m-1 p-1"
                   onClick={
                     changeRank
                       ? () => setRankSettingOpened((v) => !v)
