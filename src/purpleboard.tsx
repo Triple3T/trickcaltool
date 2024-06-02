@@ -476,10 +476,8 @@ const PurpleBoard = () => {
     (async () => {
       if (isReady) {
         if (googleLinked && autoLoad && !loaded) {
-          toast(t("ui.common.dataLoading"));
           await autoLoad();
           initFromUserData();
-          toast(t("ui.common.dataLoaded"));
           setLoaded(true);
         }
         if (!googleLinked) initFromUserData();
