@@ -1,5 +1,7 @@
+import { HTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
 import { Dot, Info, Waypoints } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,7 +16,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import SubtitleBar from "./subtitlebar";
 import {
@@ -26,7 +27,11 @@ import {
   Race,
 } from "@/types/enums";
 
-interface BoardInfoDialogProps {
+interface BoardInfoDialogTriggerProps extends HTMLAttributes<HTMLDivElement> {
+  route: string;
+}
+
+export interface BoardInfoDialogProps {
   boardIndex: number;
   boardTypeString: string;
   chara: string;
@@ -37,7 +42,50 @@ interface BoardInfoDialogProps {
   blocked?: string;
   checked?: boolean;
   unowned?: boolean;
+  opened: boolean;
+  onOpenChange: (open: boolean) => void;
 }
+
+const BoardInfoDialogTrigger = ({
+  route,
+  className,
+  ...props
+}: BoardInfoDialogTriggerProps) => {
+  const crayon3Count = route.split("3").length - 1;
+  const crayon4Count = route.split("4").length - 1;
+  return (
+    <div className={cn("w-full h-4 flex relative", className)} {...props}>
+      <div className="flex-1">
+        {Array(crayon3Count + crayon4Count)
+          .fill(0)
+          .map((_, i) => {
+            if (i < crayon4Count)
+              return (
+                <img
+                  key={i}
+                  src="/icons/Item_Crayon4.png"
+                  alt="crayon4"
+                  className="h-4 w-4 absolute"
+                  style={{ top: "0", left: `${i / 2.25}rem` }}
+                />
+              );
+            return (
+              <img
+                key={i}
+                src="/icons/Item_Crayon3.png"
+                alt="crayon3"
+                className="h-4 w-4 absolute"
+                style={{ top: "0", left: `${i / 2.25}rem` }}
+              />
+            );
+          })}
+      </div>
+      <div className="flex-0 aspect-square">
+        <Info className="h-4 w-4 rounded-full" fill="#a0a0a0" />
+      </div>
+    </div>
+  );
+};
 
 const BoardInfoDialog = ({
   boardIndex,
@@ -50,6 +98,8 @@ const BoardInfoDialog = ({
   blocked,
   checked,
   unowned,
+  opened,
+  onOpenChange,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
   const brLength = route.length;
@@ -65,39 +115,7 @@ const BoardInfoDialog = ({
         .map((_, i) => blocked.slice(i * crayon4Count, (i + 1) * crayon4Count))
     : [];
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="w-full h-4 flex relative">
-          <div className="flex-1">
-            {Array(crayon3Count + crayon4Count)
-              .fill(0)
-              .map((_, i) => {
-                if (i < crayon4Count)
-                  return (
-                    <img
-                      key={i}
-                      src="/icons/Item_Crayon4.png"
-                      alt="crayon4"
-                      className="h-4 w-4 absolute"
-                      style={{ top: "0", left: `${i / 2.25}rem` }}
-                    />
-                  );
-                return (
-                  <img
-                    key={i}
-                    src="/icons/Item_Crayon3.png"
-                    alt="crayon3"
-                    className="h-4 w-4 absolute"
-                    style={{ top: "0", left: `${i / 2.25}rem` }}
-                  />
-                );
-              })}
-          </div>
-          <div className="flex-0 aspect-square">
-            <Info className="h-4 w-4 rounded-full" fill="#a0a0a0" />
-          </div>
-        </div>
-      </DialogTrigger>
+    <Dialog open={opened} onOpenChange={onOpenChange}>
       <DialogContent className="font-onemobile">
         <DialogHeader>
           <DialogTitle>
@@ -340,4 +358,4 @@ const BoardInfoDialog = ({
   );
 };
 
-export default BoardInfoDialog;
+export { BoardInfoDialog, BoardInfoDialogTrigger };

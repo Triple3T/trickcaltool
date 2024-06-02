@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronsRight, Dot, Info, Pencil, Undo2 } from "lucide-react";
+import { Check, ChevronsRight, Dot, Pencil, Undo2 } from "lucide-react";
 import {
   Accordion,
   AccordionItem,
@@ -12,7 +12,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -28,7 +27,7 @@ import {
 } from "@/types/enums";
 import rankClassNames from "@/utils/rankClassNames";
 
-interface RankInfoDialogProps {
+export interface RankInfoDialogProps {
   rank: number;
   chara: string;
   charaTypes: string;
@@ -36,6 +35,8 @@ interface RankInfoDialogProps {
   sameRankBonus?: string[];
   maxRank: number;
   changeRank?: (chara: string, rank: number) => void;
+  opened: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const RankInfoDialog = ({
@@ -46,20 +47,21 @@ const RankInfoDialog = ({
   sameRankBonus,
   maxRank,
   changeRank,
+  opened,
+  onOpenChange,
 }: RankInfoDialogProps) => {
   const { t } = useTranslation();
   const [rankSettingOpened, setRankSettingOpened] = useState(false);
   const [rankToBeChanged, setRankToBeChanged] = useState(rank);
   return (
     <Dialog
+      open={opened}
       onOpenChange={(o) => {
         if (!o) setRankSettingOpened(false);
         setRankToBeChanged(rank);
+        onOpenChange(o);
       }}
     >
-      <DialogTrigger>
-        <Info className="h-4 w-4 rounded-full" fill="#a0a0a0" />
-      </DialogTrigger>
       <DialogContent className="font-onemobile">
         <DialogHeader>
           <DialogTitle>

@@ -35,10 +35,11 @@ import { toast } from "sonner";
 // import SelectChara from "@/components/parts/select-chara";
 const SelectChara = lazy(() => import("@/components/parts/select-chara"));
 import SubtitleBar from "@/components/parts/subtitlebar";
-// import BoardInfoDialog from "@/components/parts/board-info-dialog";
-const BoardInfoDialog = lazy(
-  () => import("@/components/parts/board-info-dialog")
-);
+import {
+  BoardInfoDialog,
+  BoardInfoDialogTrigger,
+} from "@/components/parts/board-info-dialog";
+import type { BoardInfoDialogProps } from "@/components/parts/board-info-dialog";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import route from "@/data/route";
@@ -444,6 +445,9 @@ const TrickcalBoard = () => {
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [boardDialogOpened, setBoardDialogOpened] = useState(false);
+  const [boardDialogProp, setBoardDialogProp] =
+    useState<Omit<BoardInfoDialogProps, "opened" | "onOpenChange">>();
 
   const initFromUserData = useCallback(() => {
     const charaList = Object.keys(chara);
@@ -1133,11 +1137,7 @@ const TrickcalBoard = () => {
                                         />
                                       }
                                     >
-                                      <BoardInfoDialog
-                                        boardIndex={boardIndex}
-                                        boardTypeString={bt}
-                                        chara={name}
-                                        charaTypes={chara[name].t}
+                                      <BoardInfoDialogTrigger
                                         route={
                                           route.r[
                                             Race[Number(chara[name].t[5])]
@@ -1149,23 +1149,42 @@ const TrickcalBoard = () => {
                                             )
                                           ]
                                         }
-                                        rstart={
-                                          route.r[
-                                            Race[Number(chara[name].t[5])]
-                                          ][boardIndex].s
-                                        }
-                                        otherBoards={board.c[name].b[boardIndex]
-                                          .map((v) => v.toString())
-                                          .join("")}
-                                        blocked={
-                                          ldx === 0
-                                            ? undefined
-                                            : board.c[name].k[boardIndex][
-                                                ldx - 1
-                                              ].split(".")[bdx]
-                                        }
-                                        checked={checked}
-                                        unowned={unowned}
+                                        onClick={() => {
+                                          setBoardDialogProp({
+                                            boardIndex,
+                                            boardTypeString: bt,
+                                            chara: name,
+                                            charaTypes: chara[name].t,
+                                            route:
+                                              route.r[
+                                                Race[Number(chara[name].t[5])]
+                                              ][boardIndex].b[
+                                                Number(
+                                                  board.c[name].r[boardIndex][
+                                                    ldx
+                                                  ].split(".")[bdx]
+                                                )
+                                              ],
+                                            rstart:
+                                              route.r[
+                                                Race[Number(chara[name].t[5])]
+                                              ][boardIndex].s,
+                                            otherBoards: board.c[name].b[
+                                              boardIndex
+                                            ]
+                                              .map((v) => v.toString())
+                                              .join(""),
+                                            blocked:
+                                              ldx === 0
+                                                ? undefined
+                                                : board.c[name].k[boardIndex][
+                                                    ldx - 1
+                                                  ].split(".")[bdx],
+                                            checked,
+                                            unowned,
+                                          });
+                                          setBoardDialogOpened(true);
+                                        }}
                                       />
                                     </Suspense>
                                   </div>
@@ -1373,6 +1392,15 @@ const TrickcalBoard = () => {
             );
           })}
         </div>
+      )}
+      {boardDialogProp && (
+        <BoardInfoDialog
+          {...({
+            ...boardDialogProp,
+            opened: boardDialogOpened,
+            onOpenChange: setBoardDialogOpened,
+          } as BoardInfoDialogProps)}
+        />
       )}
     </>
   );
