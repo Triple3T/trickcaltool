@@ -1258,6 +1258,7 @@ const EquipRank = () => {
                                             maxRank: rankData.maxRank,
                                             changeRank,
                                           });
+                                          setRankDialogOpened(true);
                                         }}
                                       />
                                     </div>
@@ -1403,6 +1404,7 @@ const EquipRank = () => {
                                                 maxRank: rankData.maxRank,
                                                 changeRank,
                                               });
+                                              setRankDialogOpened(true);
                                             }}
                                           />
                                         </div>
