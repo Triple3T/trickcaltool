@@ -44,7 +44,7 @@ const Checker = () => {
         });
       });
     });
-    console.log("boardStats", boardStats);
+    // console.log("boardStats", boardStats);
     return boardStats;
   }, []);
   // const pboardStat = useMemo(() => {
