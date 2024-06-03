@@ -872,6 +872,7 @@ const TrickcalBoard = () => {
                   value={`${v}`}
                   className="flex-1"
                   onClick={() => {
+                    if (v === boardIndex) return;
                     setBoardIndex(v);
                     if (enableDialog) {
                       setEnableDialog(false);

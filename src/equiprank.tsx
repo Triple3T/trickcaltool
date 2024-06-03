@@ -1021,6 +1021,7 @@ const EquipRank = () => {
             value={viewType}
             className="w-full"
             onValueChange={(v) => {
+              if (!v || viewType === v) return;
               setViewType(v as ViewType);
               if (enableDialog) {
                 setEnableDialog(false);
