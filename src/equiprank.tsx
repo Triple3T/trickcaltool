@@ -382,7 +382,7 @@ const EquipRank = () => {
     const ownNotEqual = !userData.o.every((c) => userData.r[c]);
     const unownNotEqual = userData.u.some((c) => userData.r[c]);
     const { eqrank: ed } = userdata.dialog.load();
-    setEnableDialog(ed);
+    setTimeout(() => setEnableDialog(ed), 0);
     if (ar1 || ar2) setNewCharaAlert(true);
     if (ownNotEqual || unownNotEqual) {
       if (ownNotEqual) {

@@ -462,7 +462,7 @@ const TrickcalBoard = () => {
       ...userDataNthBoardProto,
     };
     const { board: bd } = userdata.dialog.load();
-    setEnableDialog(bd);
+    setTimeout(() => setEnableDialog(bd), 0);
     if (ar1 || ar2 || ar3) setNewCharaAlert(true);
     if (!userData.o.every((c) => userData.b[c])) {
       setNewCharaAlert(true);
