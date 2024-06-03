@@ -1017,21 +1017,26 @@ const EquipRank = () => {
 
       {rankData && (
         <div className="font-onemobile max-w-[1920px]">
-          <Tabs value={viewType} className="w-full">
+          <Tabs
+            value={viewType}
+            className="w-full"
+            onValueChange={(v) => {
+              setViewType(v as ViewType);
+              if (enableDialog) {
+                setEnableDialog(false);
+                setTimeout(() => setEnableDialog(true), 0);
+              }
+            }}
+          >
             <TabsList
               className={cn("w-full flex", rankData.dirty ? "invisible" : "")}
             >
-              <TabsTrigger
-                value="input"
-                className="flex-1"
-                onClick={() => setViewType("input")}
-              >
+              <TabsTrigger value="input" className="flex-1">
                 <div>{t("ui.equiprank.input")}</div>
               </TabsTrigger>
               <TabsTrigger
                 value="rankView"
                 className="flex-1"
-                onClick={() => setViewType("rankView")}
                 disabled={rankData.dirty}
               >
                 <div>{t("ui.equiprank.rankView")}</div>
@@ -1039,7 +1044,6 @@ const EquipRank = () => {
               <TabsTrigger
                 value="targetView"
                 className="flex-1"
-                onClick={() => setViewType("targetView")}
                 disabled={rankData.dirty}
               >
                 <div>{t("ui.equiprank.targetView")}</div>

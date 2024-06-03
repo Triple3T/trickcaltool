@@ -871,7 +871,13 @@ const TrickcalBoard = () => {
                   key={v}
                   value={`${v}`}
                   className="flex-1"
-                  onClick={() => setBoardIndex(v)}
+                  onClick={() => {
+                    setBoardIndex(v);
+                    if (enableDialog) {
+                      setEnableDialog(false);
+                      setTimeout(() => setEnableDialog(true), 0);
+                    }
+                  }}
                 >
                   <div>{t(`ui.board.board${v + 1}`)}</div>
                   {!isCompleted && (
