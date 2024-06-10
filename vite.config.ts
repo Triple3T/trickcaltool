@@ -114,7 +114,6 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
-            if (id.includes("i18next")) return "i18next";
             if (id.includes("lucide-react")) return "lucide-react";
             if (id.includes("tailwind-merge")) return "tailwind-merge";
             if (id.includes("sonner")) return "sonner";
