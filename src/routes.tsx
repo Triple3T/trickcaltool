@@ -11,7 +11,6 @@ import Loading from "@/components/common/loading";
 // import TaskSearch from "./tasksearch";
 // import EventCalc from "./eventcalc";
 // import Checker from "./checker";
-// import Setting from "./setting";
 const TrickcalBoard = lazy(() => import("./trickcalboard"));
 const EquipRank = lazy(() => import("./equiprank"));
 const Lab = lazy(() => import("./lab"));
@@ -20,10 +19,10 @@ const BoardSearch = lazy(() => import("./boardsearch"));
 const TaskSearch = lazy(() => import("./tasksearch"));
 const EventCalc = lazy(() => import("./eventcalc"));
 const Checker = lazy(() => import("./checker"));
-const Setting = lazy(() => import("./setting"));
 
 // import Privacy from "./privacy";
 const Privacy = lazy(() => import("./privacy"));
+import Setting from "./setting";
 import Code from "./code";
 
 const routes = [
@@ -121,12 +120,9 @@ const routes = [
   },
   {
     path: "/setting",
-    // element: <Setting />,
     element: (
       <Layout>
-        <Suspense fallback={<Loading />}>
-          <Setting />
-        </Suspense>
+        <Setting />
       </Layout>
     ),
   },
