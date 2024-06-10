@@ -414,8 +414,8 @@ const EquipRank = () => {
       charas[c] = {
         rank: userData.r[c],
         unowned: false,
-        clf: clonefactory.flat().includes(c)
-          ? clonefactory.findIndex((a) => a.includes(c))
+        clf: clonefactory.l[clonefactory.f].flat().includes(c)
+          ? clonefactory.l[clonefactory.f].findIndex((a) => a.includes(c))
           : false,
       };
     });

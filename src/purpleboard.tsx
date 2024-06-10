@@ -442,8 +442,8 @@ const PurpleBoard = () => {
               checked:
                 ((userData.p[c]?.[i][k] ?? 0) & (1 << ldx)) > 0 ? true : false,
               unowned: userData.u.includes(c),
-              clf: clonefactory.flat().includes(c)
-                ? clonefactory.findIndex((a) => a.includes(c))
+              clf: clonefactory.l[clonefactory.f].flat().includes(c)
+                ? clonefactory.l[clonefactory.f].findIndex((a) => a.includes(c))
                 : false,
             });
           });

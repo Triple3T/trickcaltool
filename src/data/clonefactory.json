@@ -1,8 +1,29 @@
-[
-    ["BigWood","Jubee","Rufo","Belita"],
-    ["Gabia","Marie","Kidian","Meluna"],
-    ["Beni","Mayo","Rim","Sist"],
-    ["Festa","Levi","Tig","Erpin"],
-    ["Ifrit","Speaki","Sylla","Jade"],
-    ["Silphir","MaestroMK2","Hilde","Amelia"]
-]
+{
+    "f": "2024-03-28",
+    "l": {
+        "2023-09-27":[
+            ["BigWood","Rim","Jade","Espi"],
+            ["Festa","Rufo","Marie","Fricle"],
+            ["Ifrit","Ashur","Beni","Jubee"],
+            ["Rohne","Mayo","Levi","Sylla"],
+            ["Gabia","MaestroMK2","Canna","Amelia"],
+            ["Speaki","Mago","Shady","Sist"]
+        ],
+        "2023-12-28":[
+            ["Levi","Marie","Velvet","Belita"],
+            ["Ifrit","Mayo","Ner","Elena"],
+            ["Beni","Jubee","Posher","Erpin"],
+            ["Espi","Silphir","Diana","Kidian"],
+            ["Mago","Rohne","Kommy","Meluna"],
+            ["Speaki","Festa","Rude","Butter"]
+        ],
+        "2024-03-28":[
+            ["BigWood","Jubee","Rufo","Belita"],
+            ["Gabia","Marie","Kidian","Meluna"],
+            ["Beni","Mayo","Rim","Sist"],
+            ["Festa","Levi","Tig","Erpin"],
+            ["Ifrit","Speaki","Sylla","Jade"],
+            ["Silphir","MaestroMK2","Hilde","Amelia"]
+        ]
+    }
+}
