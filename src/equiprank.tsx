@@ -372,7 +372,7 @@ const EquipRank = () => {
   const [rankDialogProp, setRankDialogProp] =
     useState<Omit<RankInfoDialogProps, "opened" | "onOpenChange">>();
 
-  const initFromUserData = useCallback(() => {
+  const initFromUserData = useCallback((dirtyFlag?: boolean) => {
     const charaList = Object.keys(chara);
     const { autoRepaired: ar1, ...userDataEqRankProto } =
       userdata.eqrank.load();
@@ -461,7 +461,7 @@ const EquipRank = () => {
         maxRank: userData.s[1] || MAX_RANK,
         sortAndFilter: userData.f,
         dirty,
-        isDirty: 65536,
+        isDirty: dirtyFlag ? 65536 : 0,
       },
     });
   }, []);
@@ -488,7 +488,7 @@ const EquipRank = () => {
   }, []);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);
-    initFromUserData();
+    initFromUserData(true);
   }, [initFromUserData]);
   useEffect(() => {
     if (newCharaAlert) {
@@ -503,10 +503,10 @@ const EquipRank = () => {
       if (isReady) {
         if (googleLinked && autoLoad && !loaded) {
           await autoLoad();
-          initFromUserData();
+          initFromUserData(true);
           setLoaded(true);
         }
-        if (!googleLinked) initFromUserData();
+        if (!googleLinked) initFromUserData(true);
       }
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);

@@ -449,7 +449,7 @@ const TrickcalBoard = () => {
   const [boardDialogProp, setBoardDialogProp] =
     useState<Omit<BoardInfoDialogProps, "opened" | "onOpenChange">>();
 
-  const initFromUserData = useCallback(() => {
+  const initFromUserData = useCallback((dirtyFlag?: boolean) => {
     const charaList = Object.keys(chara);
     const { autoRepaired: ar1, ...userDataBoardProto } = userdata.board.load();
     const { autoRepaired: ar2, ...userDataUnownedProto } =
@@ -538,7 +538,7 @@ const TrickcalBoard = () => {
         board: boardDataSkel,
         user: userData,
         visibleBoard: userData.v,
-        isDirty: 65536,
+        isDirty: dirtyFlag ? 65536 : 0,
       },
     });
   }, []);
@@ -551,7 +551,7 @@ const TrickcalBoard = () => {
   }, []);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);
-    initFromUserData();
+    initFromUserData(true);
   }, [initFromUserData]);
   useEffect(() => {
     if (newCharaAlert) {
@@ -566,10 +566,10 @@ const TrickcalBoard = () => {
       if (isReady) {
         if (googleLinked && autoLoad && !loaded) {
           await autoLoad();
-          initFromUserData();
+          initFromUserData(true);
           setLoaded(true);
         }
-        if (!googleLinked) initFromUserData();
+        if (!googleLinked) initFromUserData(true);
       }
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);

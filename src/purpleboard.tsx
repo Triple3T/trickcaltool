@@ -359,7 +359,7 @@ const PurpleBoard = () => {
   // const [viewMode, setViewMode] = useState<"target" | "full">("target");
   const [loaded, setLoaded] = useState(false);
 
-  const initFromUserData = useCallback(() => {
+  const initFromUserData = useCallback((dirtyFlag?: boolean) => {
     const charaList = Object.keys(chara);
     const { autoRepaired: ar1, ...userDataPBoardProto } =
       userdata.pboard.load();
@@ -455,14 +455,14 @@ const PurpleBoard = () => {
       payload: {
         pboard: pBoardDataSkel,
         user: userData,
-        isDirty: 65536,
+        isDirty: dirtyFlag ? 65536 : 0,
       },
     });
   }, []);
   useEffect(initFromUserData, [initFromUserData]);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);
-    initFromUserData();
+    initFromUserData(true);
   }, [initFromUserData]);
   useEffect(() => {
     if (newCharaAlert) {
@@ -477,10 +477,10 @@ const PurpleBoard = () => {
       if (isReady) {
         if (googleLinked && autoLoad && !loaded) {
           await autoLoad();
-          initFromUserData();
+          initFromUserData(true);
           setLoaded(true);
         }
-        if (!googleLinked) initFromUserData();
+        if (!googleLinked) initFromUserData(true);
       }
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);

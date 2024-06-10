@@ -283,14 +283,12 @@ ${fileData}
             const content = await getFileContent(newToken, fileId);
             if (content) {
               dataFileImport(content);
-              autoSave();
             }
           });
         } else {
           const content = await getFileContent(token, fileId);
           if (content) {
             dataFileImport(content);
-            autoSave();
           }
         }
       } else {
@@ -299,7 +297,6 @@ ${fileData}
           const content = await getFileContent(token, id);
           if (content) {
             dataFileImport(content);
-            autoSave();
           }
         } else {
           setNoFile(true);
