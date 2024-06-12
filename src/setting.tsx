@@ -38,7 +38,6 @@ const Setting = () => {
     setUserSkinData(userdata.skin.load());
   }, []);
   useEffect(() => {
-    console.log(userSkinData);
     if (Object.keys(userSkinData).length) userdata.skin.save(userSkinData);
   }, [userSkinData]);
   const installNewVersion = useCallback(async (hard: boolean) => {
