@@ -607,9 +607,14 @@ i18n
                 installing: "업데이트 설치 중...",
                 updateCompleted: "업데이트 완료!",
                 updateFailed: "새로고침 중...",
-                enableHardReset: "하드 리셋",
-                enableHardResetDescription:
-                  "데이터 사용량과 소요 시간이 크게 증가합니다",
+                hardReset: "앱 리셋",
+                hardResetTitle: "정말 리셋할까요?",
+                hardResetDescription:
+                  "이 동작은 트릭컬 노트의 모든 캐시를 지우고 내부적으로 재설치를 수행합니다. 데이터 사용량이 많아질 가능성이 있으며, 일정 시간이 소요됩니다.",
+                hardResetAdditionalDesc:
+                  "입력한 데이터 및 설정은 그대로 유지됩니다.",
+                hardResetCancel: "그냥 냅두죠",
+                hardResetConfirm: "그렇게 해주세요",
               },
               personality: "성격",
               defaultstar: "초기 성급",
@@ -843,7 +848,8 @@ i18n
               description: "전체 적용 스탯이 정확히 입력되었는지 확인합니다.",
               percent: {
                 index: "전체 % 스탯",
-                description: "관심 사도 지정 및 해제 시의 스탯 차이를 이용해 검산합니다.",
+                description:
+                  "관심 사도 지정 및 해제 시의 스탯 차이를 이용해 검산합니다.",
                 startStar1: "태생 1성",
                 startStar2: "태생 2성",
                 startStar3: "태생 3성",
@@ -851,15 +857,20 @@ i18n
                 loveOn: "관심 지정",
                 result: "결과",
                 resultIgnoredTitle: "계산 불가",
-                resultIgnoredDescription: "값을 올바르게 입력했는지 다시 확인해 보세요.",
+                resultIgnoredDescription:
+                  "값을 올바르게 입력했는지 다시 확인해 보세요.",
                 resultPassTitle: "결과 일치",
-                resultPassDescription: "계산 결과가 트릭컬 노트에 입력된 값과 일치합니다.",
+                resultPassDescription:
+                  "계산 결과가 트릭컬 노트에 입력된 값과 일치합니다.",
                 resultWarnTitle: "결과 불확실",
-                resultWarnDescription1: "계산 결과가 트릭컬 노트에 입력된 값과 약간 차이가 있습니다.",
+                resultWarnDescription1:
+                  "계산 결과가 트릭컬 노트에 입력된 값과 약간 차이가 있습니다.",
                 resultWarnDescription2: "입력한 값을 다시 확인해 보세요.",
                 resultFailTitle: "결과 불일치",
-                resultFailDescription1: "계산 결과가 트릭컬 노트에 입력된 값과 다릅니다.",
-                resultFailDescription2: "입력한 값 또는 트릭컬 노트에 작성한 데이터를 다시 확인해 보세요.",
+                resultFailDescription1:
+                  "계산 결과가 트릭컬 노트에 입력된 값과 다릅니다.",
+                resultFailDescription2:
+                  "입력한 값 또는 트릭컬 노트에 작성한 데이터를 다시 확인해 보세요.",
                 resultDisplayOffStat: "관심 사도 해제: {{0}}",
                 resultDisplayOnStat: "관심 사도 지정: {{0}}",
                 resultDisplayResultPercent: "계산 결과: {{0}}%",
@@ -871,7 +882,8 @@ i18n
               },
               youngchun: {
                 index: "영춘 스탯",
-                description: "기본 스탯이 올스탯 1인 영춘이의 스탯을 확인합니다.",
+                description:
+                  "기본 스탯이 올스탯 1인 영춘이의 스탯을 확인합니다.",
               },
             },
             common: {

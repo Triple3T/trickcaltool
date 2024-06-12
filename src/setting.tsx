@@ -5,9 +5,9 @@ import { AuthContext } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import HardResetWithConfirm from "@/components/parts/hard-reset-with-confirm";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
@@ -22,7 +22,6 @@ const Setting = () => {
   const { autoSave, isReady, googleLinked } = useContext(AuthContext);
   const fileInput = useRef<HTMLInputElement>(null);
   const [remoteHash, setRemoteHash] = useState<string>("");
-  const [enableHardReset, setEnableHardReset] = useState<boolean>(false);
   const [installButtonText, setInstallButtonText] = useState<string>(
     "ui.index.versionCheck.update"
   );
@@ -40,33 +39,25 @@ const Setting = () => {
   useEffect(() => {
     if (Object.keys(userSkinData).length) userdata.skin.save(userSkinData);
   }, [userSkinData]);
-  const installNewVersion = useCallback(async (hard: boolean) => {
+  const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.cleaning");
     const registrations = await navigator.serviceWorker.getRegistrations();
     await Promise.all(registrations.map((r) => r.unregister())).catch(() => {
       setInstallButtonText("ui.index.versionCheck.updateFailed");
       window.location.reload();
     });
-    if (hard) {
+    try {
       const cacheKeys = await caches.keys();
-      await Promise.all(cacheKeys.map((k) => caches.delete(k))).catch(() => {
-        setInstallButtonText("ui.index.versionCheck.updateFailed");
-        window.location.reload();
-      });
-    } else {
-      try {
-        const cacheKeys = await caches.keys();
-        const targetKey = cacheKeys.find((k) =>
-          k.startsWith("workbox-precache-")
-        );
-        if (targetKey) {
-          const targetCache = await caches.open(targetKey);
-          await targetCache.delete("/index.html", { ignoreSearch: true });
-        }
-      } catch {
-        setInstallButtonText("ui.index.versionCheck.updateFailed");
-        window.location.reload();
+      const targetKey = cacheKeys.find((k) =>
+        k.startsWith("workbox-precache-")
+      );
+      if (targetKey) {
+        const targetCache = await caches.open(targetKey);
+        await targetCache.delete("/index.html", { ignoreSearch: true });
       }
+    } catch {
+      setInstallButtonText("ui.index.versionCheck.updateFailed");
+      window.location.reload();
     }
     setInstallButtonText("ui.index.versionCheck.preparing");
     navigator.serviceWorker
@@ -203,7 +194,9 @@ const Setting = () => {
               ) : (
                 <div className="w-16 h-16" />
               )}
-              <div className="w-16 text-sm break-keep">{skinChangeChara && t(skinNameId)}</div>
+              <div className="w-16 text-sm break-keep">
+                {skinChangeChara && t(skinNameId)}
+              </div>
             </div>
             <div className="flex flex-col gap-2 flex-1 max-w-[calc(100%_-_4.5rem)] items-start">
               <div>
@@ -285,10 +278,11 @@ const Setting = () => {
                   t("ui.index.versionCheck.loading")}
               </div>
             </div>
-            <div className="w-full">
+            <div className="w-full flex flex-col gap-2">
               <Button
                 className="w-full"
-                onClick={() => installNewVersion(enableHardReset)}
+                size="sm"
+                onClick={installNewVersion}
                 variant="ghost"
                 disabled={
                   process.env.VERSION_HASH === remoteHash ||
@@ -301,31 +295,7 @@ const Setting = () => {
                 )}
                 {t(installButtonText)}
               </Button>
-              {remoteHash && process.env.VERSION_HASH !== remoteHash && (
-                <div className="items-top flex space-x-2">
-                  <Checkbox
-                    id="enable-hard-reset"
-                    checked={enableHardReset}
-                    onCheckedChange={(v) => setEnableHardReset(Boolean(v))}
-                    disabled={
-                      process.env.VERSION_HASH === remoteHash ||
-                      !remoteHash ||
-                      installButtonText !== "ui.index.versionCheck.update"
-                    }
-                  />
-                  <div className="grid gap-1.5 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    <label
-                      htmlFor="enable-hard-reset"
-                      className="text-sm leading-none text-left"
-                    >
-                      {t("ui.index.versionCheck.enableHardReset")}
-                    </label>
-                    <p className="text-xs text-muted-foreground -mr-2 whitespace-nowrap">
-                      {t("ui.index.versionCheck.enableHardResetDescription")}
-                    </p>
-                  </div>
-                </div>
-              )}
+              <HardResetWithConfirm />
             </div>
           </div>
         </div>
