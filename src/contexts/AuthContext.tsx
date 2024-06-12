@@ -96,6 +96,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
         const data = await response.json();
         if (data.files.length > 0) {
           setFileId(data.files[0].id);
+          setNoFile(false);
           return data.files[0].id;
         } else setNoFile(true);
       } catch (error) {
@@ -107,6 +108,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
             if (data.files.length > 0) {
               id = data.files[0].id;
               setFileId(id);
+              setNoFile(false);
             } else setNoFile(true);
           });
           return id;
@@ -222,6 +224,7 @@ ${fileData}
       );
       if (data.id) {
         setFileId(data.id);
+        setNoFile(false);
         // return data.id;
         return undefined;
       }
@@ -241,7 +244,10 @@ ${fileData}
             setStatus((v) => (v === SyncStatus.Success ? SyncStatus.Idle : v)),
           3600
         );
-        if (id) setFileId(id);
+        if (id) {
+          setFileId(id);
+          setNoFile(false);
+        }
         // return content as string | undefined;
         return undefined;
       } catch (e) {
