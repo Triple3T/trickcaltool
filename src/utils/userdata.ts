@@ -11,6 +11,7 @@ import {
   UserDataNthBoard,
   UserDataPurpleBoard,
   UserDataUnowned,
+  UserDataSkin,
 } from "@/types/types";
 
 interface LoadDataAdditionalProps {
@@ -19,6 +20,7 @@ interface LoadDataAdditionalProps {
 
 type LoadData<T> = () => T & LoadDataAdditionalProps;
 type SaveData<T> = (data: T) => void;
+type LoadDataWithoutAutoRepaired<T> = () => T;
 
 const DIALOG_KEY = "trn.dialog";
 
@@ -31,13 +33,17 @@ const LAB_KEY = "trn.lab";
 const MYHOME_KEY = "trn.myhome";
 const COLLECTION_KEY = "trn.collection";
 const EVENTCALC_KEY = "trn.eventcalc";
+const SKIN_KEY = "trn.skin";
 
 const defaultDialogEnableData: UserDataDialogEnable = {
   board: true,
   eqrank: true,
 };
 const saveDialogEnableData: SaveData<UserDataDialogEnable> = (data) => {
-  localStorage.setItem(DIALOG_KEY, JSON.stringify(data ?? defaultDialogEnableData));
+  localStorage.setItem(
+    DIALOG_KEY,
+    JSON.stringify(data ?? defaultDialogEnableData)
+  );
 };
 const loadDialogEnableData: LoadData<UserDataDialogEnable> = () => {
   const data = localStorage.getItem(DIALOG_KEY);
@@ -254,6 +260,19 @@ const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
   return { ...finalData, autoRepaired };
 };
 
+const saveSkinData: SaveData<UserDataSkin> = (data) => {
+  localStorage.setItem(SKIN_KEY, JSON.stringify(data ?? {}));
+};
+const loadSkinData: LoadDataWithoutAutoRepaired<UserDataSkin> = () => {
+  const data = localStorage.getItem(SKIN_KEY);
+  if (!data) {
+    saveSkinData({});
+    return {};
+  }
+  const finalData = { ...JSON.parse(data) };
+  return finalData;
+};
+
 const userdata = {
   dialog: {
     save: saveDialogEnableData,
@@ -294,6 +313,10 @@ const userdata = {
   eventcalc: {
     save: saveEventCalcData,
     load: loadEventCalcData,
+  },
+  skin: {
+    save: saveSkinData,
+    load: loadSkinData,
   },
 };
 

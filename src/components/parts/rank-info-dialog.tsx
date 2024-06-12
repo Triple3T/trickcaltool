@@ -37,6 +37,7 @@ export interface RankInfoDialogProps {
   changeRank?: (chara: string, rank: number) => void;
   opened: boolean;
   onOpenChange: (open: boolean) => void;
+  skin: number;
 }
 
 const RankInfoDialog = ({
@@ -49,6 +50,7 @@ const RankInfoDialog = ({
   changeRank,
   opened,
   onOpenChange,
+  skin,
 }: RankInfoDialogProps) => {
   const { t } = useTranslation();
   const [currentRank, setCurrentRank] = useState(rank);
@@ -188,7 +190,14 @@ const RankInfoDialog = ({
                 </Accordion>
               )}
               <div className="flex">
-                <img src={`/charas/${chara}.png`} className="w-14 h-14" />
+                <img
+                  src={
+                    skin
+                      ? `/charas/${chara}Skin${skin}.png`
+                      : `/charas/${chara}.png`
+                  }
+                  className="w-14 h-14"
+                />
                 <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
                   <div className="flex flex-row gap-px">
                     <img

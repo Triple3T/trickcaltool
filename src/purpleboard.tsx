@@ -358,6 +358,7 @@ const PurpleBoard = () => {
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   // const [viewMode, setViewMode] = useState<"target" | "full">("target");
   const [loaded, setLoaded] = useState(false);
+  const [skinData, setSkinData] = useState<Record<string, number>>({});
 
   const initFromUserData = useCallback((dirtyFlag?: boolean) => {
     const charaList = Object.keys(chara);
@@ -373,6 +374,7 @@ const PurpleBoard = () => {
       ...userDataUnownedProto,
     };
     if (ar1 || ar2 || ar3) setNewCharaAlert(true);
+    setSkinData(userdata.skin.load());
     if (!userData.o.every((c) => userData.p[c])) {
       setNewCharaAlert(true);
       userData.o
@@ -721,7 +723,11 @@ const PurpleBoard = () => {
                         )}
                       >
                         <img
-                          src={`/charas/${name}.png`}
+                          src={
+                            skinData[name]
+                              ? `/charas/${name}Skin${skinData[name]}.png`
+                              : `/charas/${name}.png`
+                          }
                           className="aspect-square w-full"
                         />
                       </div>

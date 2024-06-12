@@ -36,6 +36,7 @@ const BoardSearch = () => {
   const [includeBoardType, setIncludeBoardType] = useState<BoardType[]>([]);
   const [includeMinimumCount, setIncludeMinimumCount] = useState<number>(1);
   const [excludeUnlocked, setExcludeUnlocked] = useState<boolean>(false);
+  const [skinData, setSkinData] = useState<Record<string, number>>({});
   const initFromUserData = useCallback(() => {
     const userDataUnownedProto = userdata.unowned.load();
     const userDataNthBoardProto = userdata.nthboard.load();
@@ -46,6 +47,7 @@ const BoardSearch = () => {
     );
     userdata.nthboard.save({ n: userDataNthBoard });
     setOwnedCharas(userDataNthBoard);
+    setSkinData(userdata.skin.load());
   }, []);
   useEffect(initFromUserData, [initFromUserData]);
   const saveSelectChara = useCallback(() => {
@@ -293,6 +295,7 @@ const BoardSearch = () => {
                   .join("")}
                 search={includeBoardType}
                 unlocked={fb.index <= ownedCharas[fb.name]}
+                skin={skinData[fb.name] || 0}
               />
             );
           })}

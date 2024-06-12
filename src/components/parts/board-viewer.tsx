@@ -10,6 +10,7 @@ interface IBoardViewerProps {
   board: string;
   search: number[];
   unlocked: boolean;
+  skin: number;
 }
 
 const BoardViewer = ({
@@ -18,12 +19,16 @@ const BoardViewer = ({
   board,
   search,
   unlocked,
+  skin,
 }: IBoardViewerProps) => {
   const { t } = useTranslation();
   return (
     <Card className="p-4">
       <div className="flex flex-row gap-2.5 items-center">
-        <img className="w-12 h-12 aspect-square" src={`/charas/${name}.png`} />
+        <img
+          className="w-12 h-12 aspect-square"
+          src={skin ? `/charas/${name}Skin${skin}.png` : `/charas/${name}.png`}
+        />
         <div>
           <div className="text-left text-sm">
             <img

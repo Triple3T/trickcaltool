@@ -448,6 +448,7 @@ const TrickcalBoard = () => {
   const [boardDialogOpened, setBoardDialogOpened] = useState(false);
   const [boardDialogProp, setBoardDialogProp] =
     useState<Omit<BoardInfoDialogProps, "opened" | "onOpenChange">>();
+  const [skinData, setSkinData] = useState<Record<string, number>>({});
 
   const initFromUserData = useCallback((dirtyFlag?: boolean) => {
     const charaList = Object.keys(chara);
@@ -464,6 +465,7 @@ const TrickcalBoard = () => {
     const { board: bd } = userdata.dialog.load();
     setTimeout(() => setEnableDialog(bd), 0);
     if (ar1 || ar2 || ar3) setNewCharaAlert(true);
+    setSkinData(userdata.skin.load());
     if (!userData.o.every((c) => userData.b[c])) {
       setNewCharaAlert(true);
       userData.o
@@ -1119,7 +1121,11 @@ const TrickcalBoard = () => {
                               >
                                 <div className={bgClassNames.join(" ")}>
                                   <img
-                                    src={`/charas/${name}.png`}
+                                    src={
+                                      skinData[name]
+                                        ? `/charas/${name}Skin${skinData[name]}.png`
+                                        : `/charas/${name}.png`
+                                    }
                                     className={imgClassNames.join(" ")}
                                     onClick={() => {
                                       dispatchBoardData({
@@ -1189,6 +1195,7 @@ const TrickcalBoard = () => {
                                                   ].split(".")[bdx],
                                             checked,
                                             unowned,
+                                            skin: skinData[name] || 0,
                                           });
                                           setBoardDialogOpened(true);
                                         }}

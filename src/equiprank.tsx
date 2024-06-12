@@ -371,6 +371,7 @@ const EquipRank = () => {
   const [rankDialogOpened, setRankDialogOpened] = useState(false);
   const [rankDialogProp, setRankDialogProp] =
     useState<Omit<RankInfoDialogProps, "opened" | "onOpenChange">>();
+  const [skinData, setSkinData] = useState<Record<string, number>>({});
 
   const initFromUserData = useCallback((dirtyFlag?: boolean) => {
     const charaList = Object.keys(chara);
@@ -379,6 +380,7 @@ const EquipRank = () => {
     const { autoRepaired: ar2, ...userDataUnownedProto } =
       userdata.unowned.load();
     const userData = { ...userDataEqRankProto, ...userDataUnownedProto };
+    setSkinData(userdata.skin.load());
     const ownNotEqual = !userData.o.every((c) => userData.r[c]);
     const unownNotEqual = userData.u.some((c) => userData.r[c]);
     const { eqrank: ed } = userdata.dialog.load();
@@ -1100,7 +1102,11 @@ const EquipRank = () => {
                       <div key={c} className="flex flex-col gap-1">
                         <div className="min-w-28 min-h-28 sm:min-w-32 sm:min-h-32 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                           <img
-                            src={`/charas/${c}.png`}
+                            src={
+                              skinData[c]
+                                ? `/charas/${c}Skin${skinData[c]}.png`
+                                : `/charas/${c}.png`
+                            }
                             className={`${
                               personalityBG[
                                 Number(chara[c].t[0]) as Personality
@@ -1262,6 +1268,7 @@ const EquipRank = () => {
                                               .map(([k]) => k),
                                             maxRank: rankData.maxRank,
                                             changeRank,
+                                            skin: skinData[c] || 0,
                                           });
                                           setRankDialogOpened(true);
                                         }}
@@ -1269,7 +1276,11 @@ const EquipRank = () => {
                                     </div>
                                   )}
                                   <img
-                                    src={`/charas/${c}.png`}
+                                    src={
+                                      skinData[c]
+                                        ? `/charas/${c}Skin${skinData[c]}.png`
+                                        : `/charas/${c}.png`
+                                    }
                                     className={`${
                                       personalityBG[
                                         Number(chara[c].t[0]) as Personality
@@ -1360,7 +1371,11 @@ const EquipRank = () => {
                                     <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                                       <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
                                         <img
-                                          src={`/charas/${c}.png`}
+                                          src={
+                                            skinData[c]
+                                              ? `/charas/${c}Skin${skinData[c]}.png`
+                                              : `/charas/${c}.png`
+                                          }
                                           className={`${
                                             personalityBG[
                                               Number(
@@ -1408,6 +1423,7 @@ const EquipRank = () => {
                                                   .map(([k]) => k),
                                                 maxRank: rankData.maxRank,
                                                 changeRank,
+                                                skin: skinData[c] || 0,
                                               });
                                               setRankDialogOpened(true);
                                             }}

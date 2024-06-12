@@ -44,6 +44,7 @@ export interface BoardInfoDialogProps {
   unowned?: boolean;
   opened: boolean;
   onOpenChange: (open: boolean) => void;
+  skin: number;
 }
 
 const BoardInfoDialogTrigger = ({
@@ -100,6 +101,7 @@ const BoardInfoDialog = ({
   unowned,
   opened,
   onOpenChange,
+  skin,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
   const brLength = route.length;
@@ -140,7 +142,14 @@ const BoardInfoDialog = ({
                 </span>
               </div>
               <div className="flex flex-row gap-2">
-                <img src={`/charas/${chara}.png`} className="w-14 h-14" />
+                <img
+                  src={
+                    skin
+                      ? `/charas/${chara}Skin${skin}.png`
+                      : `/charas/${chara}.png`
+                  }
+                  className="w-14 h-14"
+                />
                 <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
                   <div className="flex flex-row gap-px">
                     <img

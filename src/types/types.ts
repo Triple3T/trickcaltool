@@ -53,4 +53,7 @@ export interface UserDataEventCalc {
   u: boolean[]; // useCustom
   t: number; // timestamp
 }
+export interface UserDataSkin {
+  [key: string]: number; // 스킨 적용 데이터
+}
 export type UserDataVersion = string;

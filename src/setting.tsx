@@ -6,11 +6,15 @@ import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 import getServerHash from "@/utils/getServerHash";
 import googleAccessUrl from "@/utils/googleAccessUrl";
+import userdata from "@/utils/userdata";
+import chara from "@/data/chara";
 
 const Setting = () => {
   const { t } = useTranslation();
@@ -22,11 +26,21 @@ const Setting = () => {
   const [installButtonText, setInstallButtonText] = useState<string>(
     "ui.index.versionCheck.update"
   );
+  const [skinChangeChara, setSkinChangeChara] = useState<string>("");
+  const [skinNameId, setSkinNameId] = useState<string>("");
+  const [userSkinData, setUserSkinData] = useState<Record<string, number>>({});
   useEffect(() => {
     getServerHash()
       .then((v) => setRemoteHash(v))
       .catch(() => {});
   }, []);
+  useEffect(() => {
+    setUserSkinData(userdata.skin.load());
+  }, []);
+  useEffect(() => {
+    console.log(userSkinData);
+    if (Object.keys(userSkinData).length) userdata.skin.save(userSkinData);
+  }, [userSkinData]);
   const installNewVersion = useCallback(async (hard: boolean) => {
     setInstallButtonText("ui.index.versionCheck.cleaning");
     const registrations = await navigator.serviceWorker.getRegistrations();
@@ -171,6 +185,71 @@ const Setting = () => {
                   })
                 }
               />
+            </div>
+          </div>
+        </div>
+        <div>
+          <SubtitleBar>{t("ui.index.costumeChange.title")}</SubtitleBar>
+          <div className="flex flex-row gap-2 max-w-xl w-full px-2 py-2">
+            <div className="flex-[4rem_0_0]">
+              {skinChangeChara ? (
+                <img
+                  className="w-16 h-16"
+                  src={
+                    userSkinData[skinChangeChara]
+                      ? `/charas/${skinChangeChara}Skin${userSkinData[skinChangeChara]}.png`
+                      : `/charas/${skinChangeChara}.png`
+                  }
+                />
+              ) : (
+                <div className="w-16 h-16" />
+              )}
+              <div className="w-16 text-sm break-keep">{skinChangeChara && t(skinNameId)}</div>
+            </div>
+            <div className="flex flex-col gap-2 flex-1 max-w-[calc(100%_-_4.5rem)] items-start">
+              <div>
+                <SkinChangeableCombobox
+                  value={skinChangeChara}
+                  onChange={(v) => {
+                    setSkinChangeChara(v);
+                    const skinId = userSkinData[v];
+                    setSkinNameId(
+                      skinId ? `skin.${v}.${skinId}` : "defaultSkin"
+                    );
+                  }}
+                />
+              </div>
+              <ScrollArea className="w-full whitespace-nowrap h-14 rounded-md border">
+                <div className="flex w-max space-x-2 p-2">
+                  {skinChangeChara &&
+                    Array((chara[skinChangeChara]?.s || 0) + 1)
+                      .fill(0)
+                      .map((_, i) => {
+                        const imgName = i
+                          ? `${skinChangeChara}Skin${i}`
+                          : skinChangeChara;
+                        const skinNameId = i
+                          ? `skin.${skinChangeChara}.${i}`
+                          : "defaultSkin";
+                        return (
+                          <img
+                            key={`${skinChangeChara}-${i}`}
+                            src={`/charas/${imgName}.png`}
+                            alt={t(skinNameId)}
+                            className="w-9 h-9"
+                            onClick={() => {
+                              setUserSkinData((prev) => ({
+                                ...prev,
+                                [skinChangeChara]: i,
+                              }));
+                              setSkinNameId(skinNameId);
+                            }}
+                          />
+                        );
+                      })}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             </div>
           </div>
         </div>

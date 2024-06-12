@@ -90,6 +90,27 @@ i18n
           eldain: {
             1: "영원살이",
           },
+          defaultSkin: "기본 사복",
+          skin: {
+            Ner: {
+              1: "한 때 한가닥",
+            },
+            Butter: {
+              1: "세이프티 가드",
+            },
+            Erpin: {
+              1: "하드 워킹 홀리데이",
+            },
+            Diana: {
+              1: "해변의 해결사",
+            },
+            Ashur: {
+              1: "아이스크림 메이커",
+            },
+            Amelia: {
+              1: "해변의 비서",
+            },
+          },
           board: {
             AttackBoth: "공격력",
             // AttackPhysic: "물리 공격력",
@@ -570,6 +591,9 @@ i18n
                 downloading: "데이터 불러오는 중...",
                 errored: "오류가 발생했습니다.",
                 tryRefresh: "새로고침을 해 보세요.",
+              },
+              costumeChange: {
+                title: "코스튬 변경",
               },
               versionCheck: {
                 title: "버전 확인",
