@@ -89,7 +89,7 @@ const ThemeEventCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           />
           <CommandEmpty>{t("ui.eventcalc.themeEventNotFound")}</CommandEmpty>
           <CommandGroup>
-            {themeevent.i.map((eventId) => (
+            {Object.keys(themeevent.e).map((eventId) => (
               <CommandItem
                 key={eventId}
                 value={t(`themeevent.title.${eventId}`)}
@@ -453,48 +453,68 @@ const EventCalc = () => {
     const remainDate = 15 - dayCount + 1;
     const dailyQuestRemainCount = remainDate - (dailyCompleted ? 1 : 0);
     const dailyQuestAcquire = dailyQuestRemainCount * 450;
-    let requiredEasy10 = dailyQuestRemainCount * 20;
+    let requiredEasyFinal = dailyQuestRemainCount * 20;
     let rewardTotal = 0;
     const bonusMultEasy =
       100 + (useCustom[0] ? customBonus[0] : autoCalculatedBonus);
+    const fields = themeevent.e[selectedThemeEvent].f;
     if (!allCleared[0]) {
-      [22, 24, 26, 28, 30, 32, 34, 36, 38].forEach((basicMax) => {
-        const basicMin = Math.floor((basicMax * 9) / 10);
-        const rewardMax = Math.floor((basicMax * bonusMultEasy) / 100);
-        const rewardMin = Math.floor((basicMin * bonusMultEasy) / 100);
-        rewardTotal += (rewardMax + rewardMin) / 2;
-        requiredEasy10 -= 1;
+      fields.n.forEach((basic) => {
+        const [basicMin, basicMax] = basic;
+        if (fields.l) {
+          const rewardMax = Math.floor((basicMax * bonusMultEasy) / 100);
+          const rewardMin = Math.floor((basicMin * bonusMultEasy) / 100);
+          rewardTotal += (rewardMax + rewardMin) / 2;
+          requiredEasyFinal -= 1;
+        } else {
+          const rewardArray = Array(basicMax - basicMin + 1)
+            .fill(0)
+            .map((_, i) => Math.floor(((basicMin + i) * bonusMultEasy) / 100));
+          rewardTotal +=
+            rewardArray.reduce((acc, cur) => acc + cur, 0) / rewardArray.length;
+          requiredEasyFinal -= 1;
+        }
       });
     }
-    if (dayCount < 3 || !allCleared[1]) {
+    if (fields.h && (dayCount < 3 || !allCleared[1])) {
       const bonusMult =
         100 + (useCustom[1] ? customBonus[1] : autoCalculatedBonus);
-      [40, 44, 48, 52, 56, 60, 64, 68, 72, 76].forEach((basic) => {
+      fields.h.forEach((basic) => {
         const reward = Math.floor((basic * bonusMult) / 100);
         rewardTotal += reward;
-        requiredEasy10 -= 1;
+        requiredEasyFinal -= 1;
       });
     }
-    if (dayCount < 5 || !allCleared[2]) {
+    if (fields.v && (dayCount < 5 || !allCleared[2])) {
       const bonusMult =
         100 + (useCustom[2] ? customBonus[2] : autoCalculatedBonus);
-      [55, 60, 65, 70, 75, 80, 85, 90, 95, 100].forEach((basic) => {
+      fields.v.forEach((basic) => {
         const reward = Math.floor((basic * bonusMult) / 100);
         rewardTotal += reward;
-        requiredEasy10 -= 1;
+        requiredEasyFinal -= 1;
       });
     }
     if (
       themeevent.e[selectedThemeEvent].c &&
       (dayCount < 8 || !allCleared[3])
     ) {
-      requiredEasy10 -= possibleChallenge;
+      requiredEasyFinal -= possibleChallenge;
     }
-    const easy10 =
-      (Math.floor((40 * bonusMultEasy) / 100) +
-        Math.floor((36 * bonusMultEasy) / 100)) /
-      2;
-    rewardTotal += requiredEasy10 * easy10;
+    const ec = fields.n.length;
+    const easyFinal = Math.floor(
+      fields.l
+        ? (Math.floor((fields.n[ec - 1][0] * bonusMultEasy) / 100) +
+            Math.floor((fields.n[ec - 1][1] * bonusMultEasy) / 100)) /
+            2
+        : Array(fields.n[ec - 1][1] - fields.n[ec - 1][0] + 1)
+            .fill(0)
+            .map((_, i) =>
+              Math.floor(((fields.n[ec - 1][0] + i) * bonusMultEasy) / 100)
+            )
+            .reduce((acc, cur) => acc + cur, 0) /
+            (fields.n[ec - 1][1] - fields.n[ec - 1][0] + 1)
+    );
+    rewardTotal += requiredEasyFinal * easyFinal;
     const shopRequired = themeevent.e[selectedThemeEvent].s.reduce(
       (acc, cur, index) => {
         return acc + cur.p * shopPurchaseCounts[index];
@@ -507,10 +527,12 @@ const EventCalc = () => {
       actualReq - rewardTotal - dailyQuestAcquire
     );
     const additionalClearReq =
-      Math.max(0, Math.ceil((additionalItemReq * 100) / easy10)) / 100;
+      Math.max(0, Math.ceil((additionalItemReq * 100) / easyFinal)) / 100;
     const additionalDailyClearReq =
-      Math.max(0, Math.ceil((additionalItemReq * 100) / easy10 / remainDate)) /
-      100;
+      Math.max(
+        0,
+        Math.ceil((additionalItemReq * 100) / easyFinal / remainDate)
+      ) / 100;
     return {
       remainDate,
       rewardTotal,
@@ -707,124 +729,130 @@ const EventCalc = () => {
                     </RadioGroup>
                   </div>
                 </div>
-                <div className="flex flex-col flex-auto gap-2">
-                  <SubtitleBar>{t("ui.eventcalc.hardLvBonus")}</SubtitleBar>
-                  <div className="px-4 flex flex-col gap-2 justify-center">
-                    <div className="mb-2 text-left flex items-center gap-2">
-                      {eventCalcData.dayCount < 3 ? (
-                        <Lock className="inline-block w-6 h-6 ml-3 mr-2 my-auto" />
-                      ) : (
-                        <Switch
-                          id="all-cleared-hard"
-                          checked={eventCalcData.allCleared[1]}
-                          onCheckedChange={(v) => {
-                            setAllCleared(1, v);
-                          }}
-                        />
-                      )}
-                      <Label htmlFor="all-cleared-hard">
-                        {t("ui.eventcalc.allCleared")}
-                      </Label>
-                    </div>
-                    {(eventCalcData.dayCount < 3 ||
-                      !eventCalcData.allCleared[1]) && (
-                      <RadioGroup
-                        className="mx-auto"
-                        value={eventCalcData.useCustom[1] ? "custom" : "auto"}
-                        onValueChange={(v) => setUseCustom(1, v !== "auto")}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="auto" id="r21" />
-                          <Label htmlFor="r21">
-                            {t("ui.eventcalc.useAutoCalculatedBonus", {
-                              0: autoCalculatedBonus,
-                            })}
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="custom" id="r22" />
-                          <Label htmlFor="r22">
-                            {t("ui.eventcalc.useCustomBonus")}
-                            <LazyInput
-                              value={eventCalcData.customBonus[1].toString()}
-                              onValueChange={(v) =>
-                                setCustomBonus(
-                                  1,
-                                  Math.min(
-                                    150,
-                                    Math.max(0, parseInt(v, 10) || 0)
+                {themeevent.e[eventCalcData.selectedThemeEvent]?.f.h && (
+                  <div className="flex flex-col flex-auto gap-2">
+                    <SubtitleBar>{t("ui.eventcalc.hardLvBonus")}</SubtitleBar>
+                    <div className="px-4 flex flex-col gap-2 justify-center">
+                      <div className="mb-2 text-left flex items-center gap-2">
+                        {eventCalcData.dayCount < 3 ? (
+                          <Lock className="inline-block w-6 h-6 ml-3 mr-2 my-auto" />
+                        ) : (
+                          <Switch
+                            id="all-cleared-hard"
+                            checked={eventCalcData.allCleared[1]}
+                            onCheckedChange={(v) => {
+                              setAllCleared(1, v);
+                            }}
+                          />
+                        )}
+                        <Label htmlFor="all-cleared-hard">
+                          {t("ui.eventcalc.allCleared")}
+                        </Label>
+                      </div>
+                      {(eventCalcData.dayCount < 3 ||
+                        !eventCalcData.allCleared[1]) && (
+                        <RadioGroup
+                          className="mx-auto"
+                          value={eventCalcData.useCustom[1] ? "custom" : "auto"}
+                          onValueChange={(v) => setUseCustom(1, v !== "auto")}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="auto" id="r21" />
+                            <Label htmlFor="r21">
+                              {t("ui.eventcalc.useAutoCalculatedBonus", {
+                                0: autoCalculatedBonus,
+                              })}
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="custom" id="r22" />
+                            <Label htmlFor="r22">
+                              {t("ui.eventcalc.useCustomBonus")}
+                              <LazyInput
+                                value={eventCalcData.customBonus[1].toString()}
+                                onValueChange={(v) =>
+                                  setCustomBonus(
+                                    1,
+                                    Math.min(
+                                      150,
+                                      Math.max(0, parseInt(v, 10) || 0)
+                                    )
                                   )
-                                )
-                              }
-                              onClick={() => setUseCustom(1, true)}
-                              className="p-0.5 h-auto w-10 text-right inline-block focus:mx-2 bg-slate-400/80 dark:bg-slate-600/80"
-                            />
-                            %
-                          </Label>
-                        </div>
-                      </RadioGroup>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col flex-auto gap-2">
-                  <SubtitleBar>{t("ui.eventcalc.veryHardLvBonus")}</SubtitleBar>
-                  <div className="px-4 flex flex-col gap-2 justify-center">
-                    <div className="mb-2 text-left flex items-center gap-2">
-                      {eventCalcData.dayCount < 5 ? (
-                        <Lock className="inline-block w-6 h-6 ml-3 mr-2 my-auto" />
-                      ) : (
-                        <Switch
-                          id="all-cleared-veryhard"
-                          checked={eventCalcData.allCleared[2]}
-                          onCheckedChange={(v) => {
-                            setAllCleared(2, v);
-                          }}
-                        />
+                                }
+                                onClick={() => setUseCustom(1, true)}
+                                className="p-0.5 h-auto w-10 text-right inline-block focus:mx-2 bg-slate-400/80 dark:bg-slate-600/80"
+                              />
+                              %
+                            </Label>
+                          </div>
+                        </RadioGroup>
                       )}
-                      <Label htmlFor="all-cleared-veryhard">
-                        {t("ui.eventcalc.allCleared")}
-                      </Label>
                     </div>
-                    {(eventCalcData.dayCount < 5 ||
-                      !eventCalcData.allCleared[2]) && (
-                      <RadioGroup
-                        className="mx-auto"
-                        value={eventCalcData.useCustom[2] ? "custom" : "auto"}
-                        onValueChange={(v) => setUseCustom(2, v !== "auto")}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="auto" id="r31" />
-                          <Label htmlFor="r31">
-                            {t("ui.eventcalc.useAutoCalculatedBonus", {
-                              0: autoCalculatedBonus,
-                            })}
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="custom" id="r32" />
-                          <Label htmlFor="r32">
-                            {t("ui.eventcalc.useCustomBonus")}
-                            <LazyInput
-                              value={eventCalcData.customBonus[2].toString()}
-                              onValueChange={(v) =>
-                                setCustomBonus(
-                                  2,
-                                  Math.min(
-                                    150,
-                                    Math.max(0, parseInt(v, 10) || 0)
-                                  )
-                                )
-                              }
-                              onClick={() => setUseCustom(2, true)}
-                              className="p-0.5 h-auto w-10 text-right inline-block focus:mx-2 bg-slate-400/80 dark:bg-slate-600/80"
-                            />
-                            %
-                          </Label>
-                        </div>
-                      </RadioGroup>
-                    )}
                   </div>
-                </div>
+                )}
+                {themeevent.e[eventCalcData.selectedThemeEvent]?.f.v && (
+                  <div className="flex flex-col flex-auto gap-2">
+                    <SubtitleBar>
+                      {t("ui.eventcalc.veryHardLvBonus")}
+                    </SubtitleBar>
+                    <div className="px-4 flex flex-col gap-2 justify-center">
+                      <div className="mb-2 text-left flex items-center gap-2">
+                        {eventCalcData.dayCount < 5 ? (
+                          <Lock className="inline-block w-6 h-6 ml-3 mr-2 my-auto" />
+                        ) : (
+                          <Switch
+                            id="all-cleared-veryhard"
+                            checked={eventCalcData.allCleared[2]}
+                            onCheckedChange={(v) => {
+                              setAllCleared(2, v);
+                            }}
+                          />
+                        )}
+                        <Label htmlFor="all-cleared-veryhard">
+                          {t("ui.eventcalc.allCleared")}
+                        </Label>
+                      </div>
+                      {(eventCalcData.dayCount < 5 ||
+                        !eventCalcData.allCleared[2]) && (
+                        <RadioGroup
+                          className="mx-auto"
+                          value={eventCalcData.useCustom[2] ? "custom" : "auto"}
+                          onValueChange={(v) => setUseCustom(2, v !== "auto")}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="auto" id="r31" />
+                            <Label htmlFor="r31">
+                              {t("ui.eventcalc.useAutoCalculatedBonus", {
+                                0: autoCalculatedBonus,
+                              })}
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="custom" id="r32" />
+                            <Label htmlFor="r32">
+                              {t("ui.eventcalc.useCustomBonus")}
+                              <LazyInput
+                                value={eventCalcData.customBonus[2].toString()}
+                                onValueChange={(v) =>
+                                  setCustomBonus(
+                                    2,
+                                    Math.min(
+                                      150,
+                                      Math.max(0, parseInt(v, 10) || 0)
+                                    )
+                                  )
+                                }
+                                onClick={() => setUseCustom(2, true)}
+                                className="p-0.5 h-auto w-10 text-right inline-block focus:mx-2 bg-slate-400/80 dark:bg-slate-600/80"
+                              />
+                              %
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    </div>
+                  </div>
+                )}
                 {themeevent.e[eventCalcData.selectedThemeEvent].c > 0 && (
                   <div className="flex flex-col flex-auto gap-2">
                     <SubtitleBar>

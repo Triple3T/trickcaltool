@@ -1,6 +1,5 @@
 import themeevent from "./themeevent.json";
 export default themeevent as {
-  i: string[];
   e: {
     [key: string]: {
       b: {
@@ -16,6 +15,12 @@ export default themeevent as {
         l: number;
         p: number;
       }[];
+      f: {
+        l: boolean;
+        n: number[][];
+        h?: number[];
+        v?: number[];
+      };
     };
   };
 };
