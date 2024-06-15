@@ -708,6 +708,8 @@ i18n
               settings: "설정",
               allStatTotal: "전체 적용 스탯 총합",
               targetStat: "목표 스탯",
+              omitCompleted: "목표 미도달만 표시",
+              hideCompletedDesc: "랭크 목표를 달성한 사도를 목록에서 숨기기",
               selectTargetStatAll: "모두 표시",
               selectTargetStatRecommended: "추천 설정",
               viewAllStatWithBoard: "특수 보드 스탯 포함",

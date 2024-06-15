@@ -367,6 +367,7 @@ const EquipRank = () => {
   const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(true);
   const [dirtyRankCharas, setDirtyRankCharas] = useState<string[]>([]);
   const [rankDialogOpened, setRankDialogOpened] = useState(false);
   const [rankDialogProp, setRankDialogProp] =
@@ -879,6 +880,23 @@ const EquipRank = () => {
                     </ToggleGroup>
                   </div>
                 </div>
+                {viewType === "targetView" && (
+                  <div className="flex flex-col gap-2">
+                    <SubtitleBar>{t("ui.equiprank.omitCompleted")}</SubtitleBar>
+                    <div className="w-full px-4 my-2 text-left flex items-center gap-2">
+                      <Switch
+                        id="omit-complete-trigger"
+                        checked={hideCompleted}
+                        onCheckedChange={(e) => {
+                          setHideCompleted(e);
+                        }}
+                      />
+                      <Label htmlFor="omit-complete-trigger">
+                        {t("ui.equiprank.hideCompletedDesc")}
+                      </Label>
+                    </div>
+                  </div>
+                )}
                 <div className="flex flex-col gap-2">
                   <SubtitleBar>
                     {t("ui.common.dialogEnableSwitchTitle")}
@@ -1351,6 +1369,11 @@ const EquipRank = () => {
                             className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
                           >
                             {targets
+                              .filter(
+                                (c) =>
+                                  !hideCompleted ||
+                                  rank > rankData.charas[c].rank
+                              )
                               .sort((a, b) => {
                                 const aRank = rankData.charas[a].rank;
                                 const bRank = rankData.charas[b].rank;
