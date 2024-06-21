@@ -16,6 +16,8 @@ import {
   ArrowUpAZ,
   Filter,
   Info,
+  Minus,
+  Plus,
 } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -36,7 +38,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -1156,29 +1157,31 @@ const EquipRank = () => {
                           </div>
                         </div>
                         <div className="flex flex-row gap-2 pl-2 pr-1 py-1 rounded bg-slate-400 dark:bg-slate-600">
-                          <Slider
-                            value={[rankData.charas[c].rank]}
-                            min={rankData.minRank}
-                            max={rankData.maxRank}
-                            onValueChange={(v) =>
+                          <Button
+                            className="h-full p-0 aspect-square bg-greenicon"
+                            disabled={rankData.charas[c].rank <= rankData.minRank}
+                            onClick={() => {
                               dispatchRankData({
                                 type: "rank",
                                 payload: {
                                   chara: c,
                                   rank: Math.max(
-                                    Math.min(Number(v[0]), rankData.maxRank),
+                                    Math.min(
+                                      rankData.charas[c].rank - 1,
+                                      rankData.maxRank
+                                    ),
                                     rankData.minRank
                                   ),
                                 },
-                              })
-                            }
-                            className="w-full"
-                            tabIndex={-1}
-                          />
+                              });
+                            }}
+                          >
+                            <Minus className="w-full aspect-square" />
+                          </Button>
                           <LazyInput
                             type="text"
                             className={cn(
-                              "w-8 p-1.5 text-right h-full",
+                              "w-full p-1.5 text-right h-full",
                               rankData.charas[c].rank > rankData.maxRank ||
                                 rankData.charas[c].rank < rankData.minRank
                                 ? "ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
@@ -1205,6 +1208,27 @@ const EquipRank = () => {
                               })
                             }
                           />
+                          <Button
+                            className="h-full p-0 aspect-square bg-greenicon"
+                            disabled={rankData.charas[c].rank >= rankData.maxRank}
+                            onClick={() => {
+                              dispatchRankData({
+                                type: "rank",
+                                payload: {
+                                  chara: c,
+                                  rank: Math.max(
+                                    Math.min(
+                                      rankData.charas[c].rank + 1,
+                                      rankData.maxRank
+                                    ),
+                                    rankData.minRank
+                                  ),
+                                },
+                              });
+                            }}
+                          >
+                            <Plus className="w-full aspect-square" />
+                          </Button>
                         </div>
                       </div>
                     );
