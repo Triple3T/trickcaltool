@@ -22,7 +22,7 @@ const Error404 = ({ message }: { message: string }) => {
         className="absolute left-0 top-0 bg-center bg-cover w-full h-full font-onemobile bg-no-repeat bg-blend-overlay bg-slate-100/90 dark:bg-slate-900/90"
         style={{ backgroundImage: `url(/dialogcut/${ref.current}.png)` }}
       >
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full p-8 opacity-70">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full p-8 opacity-70 max-h-full overflow-y-auto">
           <div className="text-6xl">{t("ui.error.title404")}</div>
           <div className="h-4" />
           <div className="text-lg">{t("ui.error.subtitle404")}</div>
