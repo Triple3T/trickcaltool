@@ -467,21 +467,19 @@ const EquipRank = () => {
         isDirty: dirtyFlag ? 65536 : 0,
       },
     });
-  }, []);
-  useEffect(() => {
-    if (rankData && rankData.dirty) {
+    if (dirty) {
       setViewType("input");
       setDirtyRankCharas(
-        Object.entries(rankData.charas)
+        Object.entries(charas)
           .filter(
-            ([, v]) => v.rank < rankData.minRank || v.rank > rankData.maxRank
+            ([, v]) =>
+              v.rank < (userData.s[0] || 1) ||
+              v.rank > (userData.s[1] || MAX_RANK)
           )
           .map(([c]) => c)
       );
-    } else {
-      setDirtyRankCharas([]);
     }
-  }, [rankData]);
+  }, []);
   useEffect(initFromUserData, [initFromUserData]);
   const setDialogEnabled = useCallback((enabled: boolean) => {
     setEnableDialog(enabled);
@@ -637,12 +635,23 @@ const EquipRank = () => {
                       <div className="flex flex-row gap-2">
                         <Select
                           value={`${rankData?.minRank || 1}`}
-                          onValueChange={(v) =>
+                          onValueChange={(v) => {
                             dispatchRankData({
                               type: "minrank",
                               payload: Number(v),
-                            })
-                          }
+                            });
+                            if (rankData) {
+                              setDirtyRankCharas(
+                                Object.entries(rankData.charas)
+                                  .filter(
+                                    ([, c]) =>
+                                      c.rank < Number(v) ||
+                                      c.rank > rankData.maxRank
+                                  )
+                                  .map(([c]) => c)
+                              );
+                            }
+                          }}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue
@@ -665,12 +674,23 @@ const EquipRank = () => {
                         </Select>
                         <Select
                           value={`${rankData?.maxRank || 1}`}
-                          onValueChange={(v) =>
+                          onValueChange={(v) => {
                             dispatchRankData({
                               type: "maxrank",
                               payload: Number(v),
-                            })
-                          }
+                            });
+                            if (rankData) {
+                              setDirtyRankCharas(
+                                Object.entries(rankData.charas)
+                                  .filter(
+                                    ([, c]) =>
+                                      c.rank < rankData.minRank ||
+                                      c.rank > Number(v)
+                                  )
+                                  .map(([c]) => c)
+                              );
+                            }
+                          }}
                         >
                           <SelectTrigger className="w-full">
                             <SelectValue
