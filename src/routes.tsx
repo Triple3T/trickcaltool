@@ -1,6 +1,8 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import type { IndexRouteObject, NonIndexRouteObject } from "react-router-dom";
 import App from "./App";
+import ErrorElement from "@/components/error-element";
 import Layout from "@/components/layout";
 import Loading from "@/components/common/loading";
 // import TrickcalBoard from "./trickcalboard";
@@ -25,10 +27,12 @@ const Privacy = lazy(() => import("./privacy"));
 import Setting from "./setting";
 import Code from "./code";
 
-const routes = [
+const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
   {
     path: "/",
     element: <App />,
+    index: true,
+    errorElement: <ErrorElement />,
   },
   {
     path: "/board",
@@ -40,6 +44,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/eqrank",
@@ -51,6 +56,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/lab",
@@ -62,6 +68,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/pboard",
@@ -73,6 +80,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/boardsearch",
@@ -84,6 +92,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/tasksearch",
@@ -95,6 +104,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/eventcalc",
@@ -106,6 +116,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/check",
@@ -117,6 +128,7 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/setting",
@@ -125,6 +137,7 @@ const routes = [
         <Setting />
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/privacy",
@@ -136,10 +149,12 @@ const routes = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/code",
     element: <Code />,
+    errorElement: <ErrorElement />,
   },
 ];
 

@@ -913,6 +913,25 @@ i18n
               dataLoaded: "데이터를 불러왔습니다.",
               dialogEnableSwitchTitle: "정보 다이얼로그 활성화",
             },
+            error: {
+              title: "Error",
+              title404: "404",
+              subtitle: "오류가 발생했습니다.",
+              subtitleupdate: "필수 파일을 불러올 수 없습니다.",
+              subtitle404: "페이지를 찾을 수 없습니다.",
+              description:
+                "최신 버전이 아닌 경우 설정에서 업데이트를 진행하거나, 아래 자세히 버튼을 눌러 자세한 상황과 함께 제보해 주세요.",
+              descriptionupdate:
+                "새 버전의 파일을 불러오기 위해 설정에서 업데이트를 진행해 주세요.",
+              description404:
+                "트릭컬 노트 외부에서 들어온 경우, URL이 정확한지 확인해 주세요.",
+              viewstack: "자세히",
+              hidestack: "간략히",
+              goto: {
+                main: "메인 화면으로",
+                update: "업데이트 확인",
+              },
+            },
           },
         },
       },
