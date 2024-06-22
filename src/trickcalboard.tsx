@@ -1196,6 +1196,8 @@ const TrickcalBoard = () => {
                                             checked,
                                             unowned,
                                             skin: skinData[name] || 0,
+                                            unlockedBoard:
+                                              boardData.user.n[name] || 0,
                                           });
                                           setBoardDialogOpened(true);
                                         }}

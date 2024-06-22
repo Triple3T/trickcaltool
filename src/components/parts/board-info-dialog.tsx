@@ -45,6 +45,7 @@ export interface BoardInfoDialogProps {
   opened: boolean;
   onOpenChange: (open: boolean) => void;
   skin: number;
+  unlockedBoard: number;
 }
 
 const BoardInfoDialogTrigger = ({
@@ -102,6 +103,7 @@ const BoardInfoDialog = ({
   opened,
   onOpenChange,
   skin,
+  unlockedBoard,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
   const brLength = route.length;
@@ -182,6 +184,36 @@ const BoardInfoDialog = ({
                       }.png`}
                       className="w-5 h-5 inline-block align-middle"
                     />
+                    {unlockedBoard > 0 && (
+                      <>
+                        <Dot className="inline-block w-5 h-5 mx-px align-middle" />
+                        <div className="inline-block align-middle p-1 -ml-1 w-5 h-5">
+                          <div
+                            className={cn(
+                              "flex-1 rounded-full aspect-square border border-slate-100 ring-1 ring-slate-900",
+                              [
+                                "bg-transparent",
+                                "bg-slate-400",
+                                "bg-emerald-500",
+                                "bg-amber-400",
+                              ][unlockedBoard]
+                            )}
+                          />
+                        </div>
+                        <div
+                          className={cn(
+                            "inline-block align-middle text-sm",
+                            unlockedBoard > boardIndex
+                              ? ""
+                              : "text-red-600 dark:text-red-400"
+                          )}
+                        >
+                          {t("ui.board.nthBoardOpened", {
+                            0: `${unlockedBoard}`,
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                   <div className="text-2xl">
                     {t(`chara.${chara}`)}
