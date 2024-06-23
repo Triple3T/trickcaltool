@@ -1195,6 +1195,7 @@ const TrickcalBoard = () => {
                                                   ].split(".")[bdx],
                                             checked,
                                             unowned,
+                                            eldain: chara[name].e,
                                             skin: skinData[name] || 0,
                                             unlockedBoard:
                                               boardData.user.n[name] || 0,

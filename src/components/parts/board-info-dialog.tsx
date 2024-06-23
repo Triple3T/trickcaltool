@@ -46,6 +46,7 @@ export interface BoardInfoDialogProps {
   onOpenChange: (open: boolean) => void;
   skin: number;
   unlockedBoard: number;
+  eldain?: number;
 }
 
 const BoardInfoDialogTrigger = ({
@@ -104,6 +105,7 @@ const BoardInfoDialog = ({
   onOpenChange,
   skin,
   unlockedBoard,
+  eldain,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
   const brLength = route.length;
@@ -142,6 +144,14 @@ const BoardInfoDialog = ({
                 <span className="align-middle">
                   {t(`board.${boardTypeString}`)}
                 </span>
+                {eldain ? (
+                  <>
+                    <Dot className="inline-block w-4 h-4 mx-px align-middle" />
+                    <span className="align-middle">
+                      {t(`eldain.${eldain}`)}
+                    </span>
+                  </>
+                ) : null}
               </div>
               <div className="flex flex-row gap-2">
                 <img
