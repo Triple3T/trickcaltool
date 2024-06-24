@@ -9,6 +9,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
 import MainMenuCard from "@/components/parts/main-menu-card";
 import getServerHash from "@/utils/getServerHash";
+import MainMenuCardSwitchable from "./components/parts/main-menu-card-switchable";
 
 const imageNames = [
   "butter",
@@ -102,19 +103,18 @@ function App() {
               </Button>
             </a>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16">
-              <MainMenuCard
+              <MainMenuCardSwitchable
                 title={t("ui.board.title")}
                 description={t("ui.board.description")}
                 subDescription={t("ui.board.subDescription")}
                 icon="/icons/Item_Crayon4.png"
                 to="/board"
+                secondaryTitle={t("ui.board.pboardTitle")}
+                secondaryDescription={t("ui.board.pboardDescription")}
+                secondarySubDescription={t("ui.board.pboardSubDescription")}
+                secondaryIcon="/icons/Item_Crayon3.png"
+                secondaryTo="/pboard"
               />
-              {/* <MainMenuCard
-                title="상급 보드 노트"
-                description={<>전체 스탯 고정치 보드 현황을 체크합니다.<br />꽤 많이 필요해</>}
-                icon="/icons/Item_Crayon3.png"
-                // to="/board"
-              /> */}
               <MainMenuCard
                 title={t("ui.equiprank.title")}
                 description={t("ui.equiprank.description")}
