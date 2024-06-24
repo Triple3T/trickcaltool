@@ -32,6 +32,16 @@ const MenuButton = () => {
           {t("ui.board.title")}
         </DropdownMenuItem>
         <DropdownMenuItem
+          onClick={() => navigate("/pboard")}
+          disabled={matchPath(location.pathname, "/pboard") ? true : false}
+        >
+          <img
+            src="/icons/Item_Crayon3.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.board.pboardTitle")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
           onClick={() => navigate("/eqrank")}
           disabled={matchPath(location.pathname, "/eqrank") ? true : false}
         >
@@ -62,17 +72,6 @@ const MenuButton = () => {
           /> */}
           {t("ui.index.testMark")}
           {t("ui.tasksearch.title")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => navigate("/pboard")}
-          disabled={matchPath(location.pathname, "/pboard") ? true : false}
-        >
-          {/* <img
-            src="/mainlobby/HousingButton.png"
-            className="w-4 h-4 inline-block mr-1"
-          /> */}
-          {t("ui.index.testMark")}
-          {t("ui.board.pboardTitle")}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => navigate("/eventcalc")}
