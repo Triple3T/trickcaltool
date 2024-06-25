@@ -27,7 +27,10 @@ const RankReqLevelDialog = ({
           strokeWidth={3}
         />
       </DialogTrigger>
-      <DialogContent className="font-onemobile">
+      <DialogContent
+        className="font-onemobile"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>
             <div className="font-normal">

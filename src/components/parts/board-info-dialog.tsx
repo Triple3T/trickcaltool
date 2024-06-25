@@ -122,7 +122,10 @@ const BoardInfoDialog = ({
     : [];
   return (
     <Dialog open={opened} onOpenChange={onOpenChange}>
-      <DialogContent className="font-onemobile">
+      <DialogContent
+        className="font-onemobile"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>
             <div className="flex flex-col gap-1 font-normal">

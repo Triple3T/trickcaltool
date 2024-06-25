@@ -42,7 +42,10 @@ const ThemeEventBonusDialog = ({ bonus }: ThemeEventBonusDialogProps) => {
       <DialogTrigger asChild>
         <Badge className="font-normal">{t("ui.eventcalc.viewBonus")}</Badge>
       </DialogTrigger>
-      <DialogContent className="font-onemobile">
+      <DialogContent
+        className="font-onemobile"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{t("ui.eventcalc.viewBonusTitle")}</DialogTitle>
         </DialogHeader>
