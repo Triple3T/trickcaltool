@@ -42,26 +42,24 @@ const MainMenuCardSwitchable = ({
   if (!to || !secondaryTo)
     return (
       <div className="relative">
-        <img
-          src={isPrimary ? secondaryIcon : icon}
-          className={cn(
-            "h-4 w-4 lg:h-6 lg:w-6 absolute right-4 top-4 opacity-75",
-            (isPrimary ? secondaryGreenIcon : greenIcon)
-              ? " bg-greenicon rounded-full"
-              : ""
-          )}
+        <div
+          className="h-5 w-8 lg:h-7 lg:w-10 absolute right-4 top-4"
           onClick={() => {
             setIsPrimary((v) => !v);
           }}
-        />
-        <div className="h-4 w-4 p-0.5 lg:h-6 lg:w-6 lg:p-1 absolute right-7 lg:right-8 top-5 rounded-full bg-slate-500/80 opacity-75">
-          <ArrowLeftRight
-            className="h-full w-full"
-            strokeWidth={3}
-            onClick={() => {
-              setIsPrimary((v) => !v);
-            }}
+        >
+          <img
+            src={isPrimary ? secondaryIcon : icon}
+            className={cn(
+              "h-4 w-4 lg:h-6 lg:w-6 absolute right-0 top-0 opacity-75",
+              (isPrimary ? secondaryGreenIcon : greenIcon)
+                ? " bg-greenicon rounded-full"
+                : ""
+            )}
           />
+          <div className="h-4 w-4 p-0.5 lg:h-6 lg:w-6 lg:p-1 absolute right-3 lg:right-4 top-1 rounded-full bg-slate-500/80 opacity-75">
+            <ArrowLeftRight className="h-full w-full" strokeWidth={3} />
+          </div>
         </div>
         <div className="flex flex-col bg-gray-200/60 dark:bg-gray-500/60 p-4 rounded-lg shadow-md space-y-4">
           <img
@@ -84,26 +82,24 @@ const MainMenuCardSwitchable = ({
     );
   return (
     <div className="relative">
-      <img
-        src={isPrimary ? secondaryIcon : icon}
-        className={cn(
-          "h-4 w-4 lg:h-6 lg:w-6 absolute right-4 top-4 opacity-75",
-          (isPrimary ? secondaryGreenIcon : greenIcon)
-            ? " bg-greenicon rounded-full"
-            : ""
-        )}
+      <div
+        className="h-5 w-8 lg:h-7 lg:w-10 absolute right-4 top-4"
         onClick={() => {
           setIsPrimary((v) => !v);
         }}
-      />
-      <div className="h-4 w-4 p-0.5 lg:h-6 lg:w-6 lg:p-1 absolute right-7 lg:right-8 top-5 rounded-full bg-slate-500/80 opacity-75">
-        <ArrowLeftRight
-          className="h-full w-full"
-          strokeWidth={3}
-          onClick={() => {
-            setIsPrimary((v) => !v);
-          }}
+      >
+        <img
+          src={isPrimary ? secondaryIcon : icon}
+          className={cn(
+            "h-4 w-4 lg:h-6 lg:w-6 absolute right-0 top-0 opacity-75",
+            (isPrimary ? secondaryGreenIcon : greenIcon)
+              ? " bg-greenicon rounded-full"
+              : ""
+          )}
         />
+        <div className="h-4 w-4 p-0.5 lg:h-6 lg:w-6 lg:p-1 absolute right-3 lg:right-4 top-1 rounded-full bg-slate-500/80 opacity-75">
+          <ArrowLeftRight className="h-full w-full" strokeWidth={3} />
+        </div>
       </div>
       <Link to={isPrimary ? to : secondaryTo}>
         <div className="flex flex-col bg-gray-200/60 dark:bg-gray-500/60 p-4 rounded-lg shadow-md space-y-4">
