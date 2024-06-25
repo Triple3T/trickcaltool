@@ -51,10 +51,7 @@ const RankReqLevelDialog = ({
             return (
               <div key={i} className="pl-4">
                 <div
-                  className={cn(
-                    rankClassNames[i][5],
-                    "flex flex-row border-b"
-                  )}
+                  className={cn(rankClassNames[i][5], "flex flex-row border-b")}
                 >
                   <div
                     className={cn(
