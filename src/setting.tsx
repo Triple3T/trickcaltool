@@ -180,6 +180,10 @@ const Setting = () => {
         </div>
         <div>
           <SubtitleBar>{t("ui.index.costumeChange.title")}</SubtitleBar>
+          <div className="flex flex-col max-w-xl w-full px-2 mt-1 text-xs opacity-75 text-right">
+            <div>{t("ui.index.costumeChange.description1")}</div>
+            <div>{t("ui.index.costumeChange.description2")}</div>
+          </div>
           <div className="flex flex-row gap-2 max-w-xl w-full px-2 py-2">
             <div className="flex-[4rem_0_0]">
               {skinChangeChara ? (

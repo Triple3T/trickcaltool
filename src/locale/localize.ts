@@ -597,6 +597,8 @@ i18n
               },
               costumeChange: {
                 title: "코스튬 변경",
+                description1: "사도를 선택하고 원하는 코스튬을 입혀주세요",
+                description2: "코스튬은 선택 즉시 로컬 브라우저에만 저장됩니다",
               },
               versionCheck: {
                 title: "버전 확인",
