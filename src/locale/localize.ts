@@ -895,6 +895,18 @@ i18n
                   "기본 스탯이 올스탯 1인 영춘이의 스탯을 확인합니다.",
               },
             },
+            utilities: {
+              title: "유틸리티",
+              description: "기타 쓸만한 도구들을 살펴봅니다.",
+              subDescription: "엘프 과학력은 세계제이이일",
+              experimental: "실험실 기능",
+              showExperimentalText: "실험실 기능 표시",
+              showExperimentalDescription:
+                "실험실 기능은 기능 추가 이전 실험 단계이며, UI 또는 작동이 불안정하거나 심각한 버그를 일으킬 수 있습니다. 또한, 실험실 기능은 URL이 변경되거나, 정식 추가되지 않고 삭제되는 등의 변경이 예고 없이 일어날 수 있습니다. 아래 체크박스를 선택하면 이를 이해하고 위험성을 감수한 것으로 간주합니다. 버그나 오류 등을 발견 시 제보해 주시기 바랍니다.",
+              showExperimentalCheckbox: "상기 내용을 이해했습니다.",
+              showExperimentalCancel: "그만 둘래요",
+              showExperimentalConfirm: "보러 갈래요",
+            },
             common: {
               unownedCharacters: "미보유 사도",
               backUpAndRestore: "백업 및 복원",

@@ -8,8 +8,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
 import MainMenuCard from "@/components/parts/main-menu-card";
+import MainMenuCardSwitchable from "@/components/parts/main-menu-card-switchable";
+import UtilitySetCard from "@/components/parts/menu-card-utilityset";
 import getServerHash from "@/utils/getServerHash";
-import MainMenuCardSwitchable from "./components/parts/main-menu-card-switchable";
 
 const imageNames = [
   "butter",
@@ -70,7 +71,7 @@ function App() {
           <ModeToggle />
         </div>
       </div>
-      <div className="flex flex-col min-h-screen relative font-onemobile">
+      <div className="flex flex-col min-h-screen relative font-onemobile -mt-16 pt-16">
         <main className="flex flex-col flex-1 p-4 md:p-6 items-center justify-center">
           <section className="flex flex-col items-center justify-center space-y-4 text-center">
             <h2 className="text-2xl font-semibold tracking-tighter sm:text-4xl text-gray-800 dark:text-gray-200">
@@ -80,7 +81,10 @@ function App() {
               <p className="max-w-[600px] text-red-600/80 md:text-lg dark:text-red-500/80">
                 <Link to="/setting">
                   {t("ui.index.newVersionDetected")}
-                  <ArrowRight className="w-4 h-4 inline-block align-middle ml-2" strokeWidth={3.5} />
+                  <ArrowRight
+                    className="w-4 h-4 inline-block align-middle ml-2"
+                    strokeWidth={3.5}
+                  />
                 </Link>
               </p>
             ) : (
@@ -102,7 +106,7 @@ function App() {
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
             </a>
-            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16">
+            <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-16">
               <MainMenuCardSwitchable
                 title={t("ui.board.title")}
                 description={t("ui.board.description")}
@@ -130,6 +134,7 @@ function App() {
                 icon="/mainlobby/HousingButton.png"
                 to="/lab"
               />
+              <UtilitySetCard />
             </div>
           </section>
         </main>

@@ -66,46 +66,45 @@ const MenuButton = () => {
           onClick={() => navigate("/tasksearch")}
           disabled={matchPath(location.pathname, "/tasksearch") ? true : false}
         >
-          {/* <img
-            src="/mainlobby/HousingButton.png"
+          <img
+            src="/myhomeicons/MyHome_Button_004.png"
             className="w-4 h-4 inline-block mr-1"
-          /> */}
-          {t("ui.index.testMark")}
+          />
           {t("ui.tasksearch.title")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => navigate("/eventcalc")}
-          disabled={matchPath(location.pathname, "/eventcalc") ? true : false}
-        >
-          {/* <img
-            src="/mainlobby/HousingButton.png"
-            className="w-4 h-4 inline-block mr-1"
-          /> */}
-          {t("ui.index.testMark")}
-          {t("ui.eventcalc.title")}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => navigate("/check")}
-          disabled={matchPath(location.pathname, "/check") ? true : false}
-        >
-          {/* <img
-            src="/mainlobby/HousingButton.png"
-            className="w-4 h-4 inline-block mr-1"
-          /> */}
-          {t("ui.index.testMark")}
-          {t("ui.check.title")}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => navigate("/boardsearch")}
           disabled={matchPath(location.pathname, "/boardsearch") ? true : false}
         >
-          {/* <img
-            src="/mainlobby/HousingButton.png"
+          <img
+            src="/icons/Common_Node_Special.png"
             className="w-4 h-4 inline-block mr-1"
-          /> */}
-          {t("ui.index.testMark")}
+          />
           {t("ui.boardsearch.title")}
         </DropdownMenuItem>
+        {/* <Separator className="my-1" /> */}
+        {/* <DropdownMenuItem
+          onClick={() => navigate("/eventcalc")}
+          disabled={matchPath(location.pathname, "/eventcalc") ? true : false}
+        >
+          <img
+            src="/mainlobby/HousingButton.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.index.testMark")}
+          {t("ui.eventcalc.title")}
+        </DropdownMenuItem> */}
+        {/* <DropdownMenuItem
+          onClick={() => navigate("/check")}
+          disabled={matchPath(location.pathname, "/check") ? true : false}
+        >
+          <img
+            src="/mainlobby/HousingButton.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.index.testMark")}
+          {t("ui.check.title")}
+        </DropdownMenuItem> */}
         <Separator className="my-1" />
         <DropdownMenuItem
           onClick={() => navigate("/setting")}
