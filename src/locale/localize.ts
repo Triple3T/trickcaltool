@@ -898,7 +898,7 @@ i18n
             utilities: {
               title: "유틸리티",
               description: "기타 쓸만한 도구들을 살펴봅니다.",
-              subDescription: "엘프 과학력은 세계제이이일",
+              subDescription: "엘프 과학력은 엘리아스 제이이이이일",
               experimental: "실험실 기능",
               showExperimentalText: "실험실 기능 표시",
               showExperimentalDescription:
