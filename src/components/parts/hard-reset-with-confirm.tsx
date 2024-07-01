@@ -58,9 +58,9 @@ export function HardResetWithConfirm() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          variant="destructive"
+          variant="outline"
           size="sm"
-          className="w-full font-onemobile"
+          className="w-full font-onemobile text-red-600 dark:text-red-400"
           disabled={started}
         >
           {t("ui.index.versionCheck.hardReset")}

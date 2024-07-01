@@ -6,6 +6,7 @@ import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import HardResetWithConfirm from "@/components/parts/hard-reset-with-confirm";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
@@ -30,7 +31,14 @@ const Setting = () => {
   const [userSkinData, setUserSkinData] = useState<Record<string, number>>({});
   useEffect(() => {
     getServerHash()
-      .then((v) => setRemoteHash(v))
+      .then((v) => {
+        setRemoteHash(v);
+        if (process.env.VERSION_HASH !== v) {
+          setInstallButtonText("ui.index.versionCheck.update");
+        } else {
+          setInstallButtonText("ui.index.versionCheck.alreadyLatest");
+        }
+      })
       .catch(() => {});
   }, []);
   useEffect(() => {
@@ -282,12 +290,11 @@ const Setting = () => {
                   t("ui.index.versionCheck.loading")}
               </div>
             </div>
-            <div className="w-full flex flex-col gap-2">
+            <div className="w-full flex flex-col gap-2 mt-1">
               <Button
                 className="w-full"
                 size="sm"
                 onClick={installNewVersion}
-                variant="ghost"
                 disabled={
                   process.env.VERSION_HASH === remoteHash ||
                   !remoteHash ||
@@ -299,8 +306,14 @@ const Setting = () => {
                 )}
                 {t(installButtonText)}
               </Button>
-              <HardResetWithConfirm />
             </div>
+          </div>
+        </div>
+        <Separator className="my-2" />
+        <div>
+          <SubtitleBar>{t("ui.index.versionCheck.dangerZone")}</SubtitleBar>
+          <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
+            <HardResetWithConfirm />
           </div>
         </div>
       </div>
