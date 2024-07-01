@@ -298,7 +298,8 @@ const Setting = () => {
                 disabled={
                   process.env.VERSION_HASH === remoteHash ||
                   !remoteHash ||
-                  installButtonText !== "ui.index.versionCheck.update"
+                  (installButtonText !== "ui.index.versionCheck.update" &&
+                    installButtonText !== "ui.index.versionCheck.alreadyLatest")
                 }
               >
                 {installButtonText !== "ui.index.versionCheck.update" &&
