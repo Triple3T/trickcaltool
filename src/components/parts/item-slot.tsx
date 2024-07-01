@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 interface ItemSlotProps {
   rarityInfo: {
     s: string;
@@ -5,7 +7,7 @@ interface ItemSlotProps {
   };
   item: string;
   fullItemPath?: boolean;
-  amount?: number;
+  amount?: number | ReactNode;
   size?: number;
   innerSize?: number;
 }
@@ -54,7 +56,7 @@ const ItemSlot = ({
           }}
         />
       )}
-      {typeof amount === "number" && (
+      {typeof amount !== "undefined" && (
         <div
           className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain"
           style={{
@@ -63,7 +65,7 @@ const ItemSlot = ({
           }}
         />
       )}
-      {typeof amount === "number" && (
+      {typeof amount === "number" ? (
         <div
           className={`absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900 ${
             size < 4 ? "text-xs" : "text-sm"
@@ -74,6 +76,19 @@ const ItemSlot = ({
         >
           {amount > 9999 ? `${Math.floor(amount / 1000)}K` : amount}
         </div>
+      ) : (
+        amount && (
+          <div
+            className={`absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900 ${
+              size < 4 ? "text-xs" : "text-sm"
+            }`}
+            style={{
+              textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
+            }}
+          >
+            {amount}
+          </div>
+        )
       )}
     </div>
   );
