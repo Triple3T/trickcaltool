@@ -301,9 +301,11 @@ const Setting = () => {
                   installButtonText !== "ui.index.versionCheck.update"
                 }
               >
-                {installButtonText !== "ui.index.versionCheck.update" && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
+                {installButtonText !== "ui.index.versionCheck.update" &&
+                  installButtonText !==
+                    "ui.index.versionCheck.alreadyLatest" && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                 {t(installButtonText)}
               </Button>
             </div>
