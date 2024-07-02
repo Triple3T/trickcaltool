@@ -13,7 +13,7 @@ const cuts = [
   "CG_SoloEnd_04",
 ];
 
-const Error404 = ({ message }: { message: string }) => {
+const Error404 = ({ message }: { message?: string }) => {
   const ref = useRef<string>(cuts[Math.floor(Math.random() * cuts.length)]);
   const { t } = useTranslation();
   return (
@@ -28,7 +28,7 @@ const Error404 = ({ message }: { message: string }) => {
           <div className="text-lg">{t("ui.error.subtitle404")}</div>
           <div className="break-keep">{t("ui.error.description404")}</div>
           <div className="text-xs mt-1 rounded-sm bg-slate-100 dark:bg-slate-900 p-1">
-            <div>{message}</div>
+            <div>{message || `No route matches URL "${window.location.pathname}"`}</div>
           </div>
           <div className="mt-4 text-lg flex gap-2 justify-center">
             <Link to="/">

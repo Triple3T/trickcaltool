@@ -26,6 +26,7 @@ const Checker = lazy(() => import("./checker"));
 const Privacy = lazy(() => import("./privacy"));
 import Setting from "./setting";
 import Code from "./code";
+import Error404 from "./components/errors/404";
 
 const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
   {
@@ -155,6 +156,10 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/code",
     element: <Code />,
     errorElement: <ErrorElement />,
+  },
+  {
+    path: "/*",
+    element: <Error404 />,
   },
 ];
 
