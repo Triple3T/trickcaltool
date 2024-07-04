@@ -681,6 +681,48 @@
                 "l":false,
                 "n":[[19,21],[20,22],[21,23],[22,24],[23,25],[24,26],[25,27],[26,28],[27,29],[28,30],[29,31],[30,32],[31,33],[32,34],[33,35],[34,36],[35,37],[36,38],[37,39],[38,40],[39,41],[40,42],[41,43],[42,44],[43,45],[44,46],[45,47],[46,48],[47,49],[48,50]]
             }
+        },
+        "18":{
+            "b":[
+                {"c":"Haley","b":40},
+                {"c":"Lethe","b":30},
+                {"c":"Hilde","b":30},
+                {"c":"Kidian","b":30},
+                {"c":"Canna","b":30},
+                {"c":"Alice","b":30},
+                {"c":"Espi","b":30},
+                {"c":"Rohne","b":30},
+                {"c":"Jubee","b":20},
+                {"c":"Maison","b":20}
+            ],
+            "c":15,
+            "s":[
+                {"i":"FigureL27","c":"collection","n":1,"l":1,"p":1800},
+                {"i":"charaLicense","c":"themeevent.shop","a":{"0":"Haley"},"n":1,"l":10,"p":400},
+                {"i":"crayon3","c":"themeevent.shop","n":1,"l":10,"p":600},
+                {"i":"crayon4","c":"themeevent.shop","n":1,"l":4,"p":1600},
+                {"i":"currency0008","c":"themeevent.shop","n":100000,"l":10,"p":500},
+                {"i":"currency0047","c":"themeevent.shop","n":180,"l":1,"p":360},
+                {"i":"currency0047","c":"themeevent.shop","n":280,"l":1,"p":560},
+                {"i":"currency0047","c":"themeevent.shop","n":380,"l":1,"p":760},
+                {"i":"gachaTicketHero","c":"themeevent.shop","n":1,"l":10,"p":200},
+                {"i":"gachaTicketCard","c":"themeevent.shop","n":1,"l":10,"p":200},
+                {"i":"Equip_EnhanceStone1","c":"themeevent.shop","n":1,"l":10,"p":100},
+                {"i":"Equip_EnhanceStone2","c":"themeevent.shop","n":1,"l":4,"p":200},
+                {"i":"Equip_EnhanceStone3","c":"themeevent.shop","n":1,"l":1,"p":300},
+                {"i":"FurnMadeLow1","c":"material","n":1,"l":30,"p":300},
+                {"i":"MadeLow8","c":"material","n":1,"l":30,"p":300},
+                {"i":"MadeLow5","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow10","c":"material","n":1,"l":30,"p":300},
+                {"i":"FoodMadeLow3","c":"material","n":1,"l":30,"p":300},
+                {"i":"currency0008","c":"themeevent.shop","n":10000,"l":-1,"p":250}
+            ],
+            "f":{
+                "l":false,
+                "n":[[19,22],[21,24],[23,26],[25,28],[27,30],[28,32],[30,34],[32,36],[34,38],[36,40]],
+                "h":[40,44,48,52,56,60,64,68,72,76],
+                "v":[55,60,65,70,75,80,85,90,95,100]
+            }
         }
     }
 }
