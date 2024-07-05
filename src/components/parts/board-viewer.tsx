@@ -71,9 +71,8 @@ const BoardViewer = ({
               <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <img
                   src={`/boards/Tile_${bt}On.png`}
-                  style={{ backgroundImage: "url(/boards/Rect_03.png)" }}
                   className={cn(
-                    "w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125",
+                    "bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125",
                     search.includes(Number(b))
                       ? "drop-shadow-[0px_0_8px_#d97706] dark:drop-shadow-[0px_0_8px_#fbbf24]"
                       : "brightness-90"

@@ -361,12 +361,7 @@ const TaskSearch = () => {
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-evenly">
               <div className="w-64 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]">
                 <div className="pl-2 mb-1">
-                  <div
-                    className="pr-2 pb-2 pt-px bg-contain bg-no-repeat bg-center"
-                    style={{
-                      backgroundImage: "url(/schedule/Deco_Task_Colored.png)",
-                    }}
-                  >
+                  <div className="pr-2 pb-2 pt-px bg-contain bg-no-repeat bg-center bg-task-title">
                     <div className="text-xl">{t(`task.${selectedTask}`)}</div>
                   </div>
                 </div>
@@ -526,12 +521,7 @@ const TaskSearch = () => {
                 className="w-72 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
               >
                 <div className="pl-2 mb-1">
-                  <div
-                    className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center"
-                    style={{
-                      backgroundImage: "url(/schedule/Deco_Task_Colored.png)",
-                    }}
-                  >
+                  <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
                     <div className="text-xl">{t(`task.${taskId}`)}</div>
                   </div>
                 </div>

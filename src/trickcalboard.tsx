@@ -930,9 +930,8 @@ const TrickcalBoard = () => {
                 {/* title bar */}
                 <div className="flex gap-2 items-center">
                   <img
-                    className="rotate-10 w-[3.2rem] flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
+                    className="bg-board-special rotate-10 w-[3.2rem] flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
                     src={`/boards/Tile_${bt}On.png`}
-                    style={{ backgroundImage: "url(/boards/Rect_03.png)" }}
                   />
                   <div className="flex-initial flex-shrink-0 flex flex-col items-start">
                     <div className="text-sm">
@@ -1284,14 +1283,7 @@ const TrickcalBoard = () => {
                         "url(/AppImages/windows11/Square44x44Logo.scale-200.png)",
                     }}
                   >
-                    <div
-                      className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain"
-                      style={{
-                        aspectRatio: "196/28",
-                        backgroundImage:
-                          "url(/itemslot/ItemSlot_ValueBase.png)",
-                      }}
-                    />
+                    <div className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain bg-item-slot-value aspect-[196/28]" />
                     <div
                       className="absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900 text-sm"
                       style={{

@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface ItemSlotProps {
   rarityInfo: {
@@ -57,19 +58,14 @@ const ItemSlot = ({
         />
       )}
       {typeof amount !== "undefined" && (
-        <div
-          className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain"
-          style={{
-            aspectRatio: "196/28",
-            backgroundImage: "url(/itemslot/ItemSlot_ValueBase.png)",
-          }}
-        />
+        <div className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain bg-item-slot-value aspect-[196/28]" />
       )}
       {typeof amount === "number" ? (
         <div
-          className={`absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900 ${
+          className={cn(
+            "absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900",
             size < 4 ? "text-xs" : "text-sm"
-          }`}
+          )}
           style={{
             textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
           }}
@@ -79,9 +75,10 @@ const ItemSlot = ({
       ) : (
         amount && (
           <div
-            className={`absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900 ${
+            className={cn(
+              "absolute bottom-[3%] left-0 right-0 w-full text-center text-slate-900",
               size < 4 ? "text-xs" : "text-sm"
-            }`}
+            )}
             style={{
               textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
             }}

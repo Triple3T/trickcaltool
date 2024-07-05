@@ -1146,11 +1146,12 @@ const EquipRank = () => {
                                 ? `/charas/${c}Skin${skinData[c]}.png`
                                 : `/charas/${c}.png`
                             }
-                            className={`${
+                            className={cn(
                               personalityBG[
                                 Number(chara[c].t[0]) as Personality
-                              ]
-                            } aspect-square w-full`}
+                              ],
+                              "aspect-square w-full"
+                            )}
                           />
                           <div className="absolute w-full left-0 bottom-0 bg-slate-100/75 dark:bg-gray-800/75 text-sm text-center py-0.5">
                             {t(`chara.${c}`)}
@@ -1159,7 +1160,9 @@ const EquipRank = () => {
                         <div className="flex flex-row gap-2 pl-2 pr-1 py-1 rounded bg-slate-400 dark:bg-slate-600">
                           <Button
                             className="h-full p-0 aspect-square bg-greenicon"
-                            disabled={rankData.charas[c].rank <= rankData.minRank}
+                            disabled={
+                              rankData.charas[c].rank <= rankData.minRank
+                            }
                             onClick={() => {
                               dispatchRankData({
                                 type: "rank",
@@ -1210,7 +1213,9 @@ const EquipRank = () => {
                           />
                           <Button
                             className="h-full p-0 aspect-square bg-greenicon"
-                            disabled={rankData.charas[c].rank >= rankData.maxRank}
+                            disabled={
+                              rankData.charas[c].rank >= rankData.maxRank
+                            }
                             onClick={() => {
                               dispatchRankData({
                                 type: "rank",
@@ -1252,7 +1257,7 @@ const EquipRank = () => {
                         return (
                           <div
                             key={i}
-                            className={`${rankClassNames[i][2]} h-1`}
+                            className={cn(rankClassNames[i][2], "h-1")}
                             style={{
                               flex: `${count}`,
                             }}
@@ -1269,7 +1274,10 @@ const EquipRank = () => {
                           return (
                             <div
                               key={i}
-                              className={`${rankClassNames[i][0]} border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded`}
+                              className={cn(
+                                rankClassNames[i][0],
+                                "border-slate-900 dark:border-slate-50 border text-xs py-0.5 w-8 inline-block text-center rounded"
+                              )}
                             >
                               {count}
                             </div>
@@ -1287,11 +1295,14 @@ const EquipRank = () => {
                     const { rank, bg, txt } = s;
                     return (
                       <div key={bg}>
-                        <div className={`${txt} text-xl w-full text-left`}>
+                        <div className={cn(txt, "text-xl w-full text-left")}>
                           {t("ui.equiprank.rankText", { 0: `${rank}` })}
                         </div>
                         <div
-                          className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
+                          className={cn(
+                            bg,
+                            "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1"
+                          )}
                         >
                           {rankData.user.o
                             .filter(filterFunc)
@@ -1343,11 +1354,12 @@ const EquipRank = () => {
                                         ? `/charas/${c}Skin${skinData[c]}.png`
                                         : `/charas/${c}.png`
                                     }
-                                    className={`${
+                                    className={cn(
                                       personalityBG[
                                         Number(chara[c].t[0]) as Personality
-                                      ]
-                                    } aspect-square w-full`}
+                                      ],
+                                      "aspect-square w-full"
+                                    )}
                                   />
                                 </div>
                               );
@@ -1394,7 +1406,7 @@ const EquipRank = () => {
                         <div key={bg}>
                           <div className="flex items-end">
                             <div
-                              className={`${txt} text-xl flex-auto text-left`}
+                              className={cn(txt, "text-xl flex-auto text-left")}
                             >
                               {t("ui.equiprank.rankText", { 0: `${rank}` })}
                             </div>
@@ -1405,12 +1417,15 @@ const EquipRank = () => {
                                   className="h-10 -my-1.5 -mr-5 inline-block relative z-10"
                                 />
                               )}
-                              <span className={`${txt}`}>{checkedCount}</span>
+                              <span className={txt}>{checkedCount}</span>
                               <span className="text-sm">/{targetCount}</span>
                             </div>
                           </div>
                           <div
-                            className={`${bg} w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1`}
+                            className={cn(
+                              bg,
+                              "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1"
+                            )}
                           >
                             {targets
                               .filter(
@@ -1443,17 +1458,17 @@ const EquipRank = () => {
                                               ? `/charas/${c}Skin${skinData[c]}.png`
                                               : `/charas/${c}.png`
                                           }
-                                          className={`${
+                                          className={cn(
+                                            "aspect-square w-full",
                                             personalityBG[
                                               Number(
                                                 chara[c].t[0]
                                               ) as Personality
-                                            ]
-                                          } aspect-square w-full${
+                                            ],
                                             rank > rankData.charas[c].rank
                                               ? ""
-                                              : " opacity-60"
-                                          }`}
+                                              : "opacity-60"
+                                          )}
                                         />
                                       </div>
                                       {rank <= rankData.charas[c].rank && (
@@ -1499,11 +1514,12 @@ const EquipRank = () => {
                                       )}
                                     </div>
                                     <div
-                                      className={`${
+                                      className={cn(
                                         rankClassNames[
                                           rankData.charas[c].rank - 1
-                                        ][1]
-                                      } text-sm w-full text-center`}
+                                        ][1],
+                                        "text-sm w-full text-center"
+                                      )}
                                     >
                                       {t("ui.equiprank.rankText", {
                                         0: `${rankData.charas[c].rank}`,

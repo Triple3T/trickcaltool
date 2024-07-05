@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, ChevronsRight, Dot, Pencil, Undo2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Accordion,
   AccordionItem,
@@ -171,11 +172,12 @@ const RankInfoDialog = ({
                         />
                         <LazyInput
                           type="text"
-                          className={`w-8 p-1.5 text-right h-full${
+                          className={cn(
+                            "w-8 p-1.5 text-right h-full",
                             rankToBeChanged > maxRank || rankToBeChanged < 1
-                              ? " ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
+                              ? "ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
                               : ""
-                          }`}
+                          )}
                           pattern="[0-9]{1,2}"
                           value={`${Math.max(
                             Math.min(rankToBeChanged, maxRank),
@@ -244,9 +246,10 @@ const RankInfoDialog = ({
           <div className="flex flex-col gap-2">
             <SubtitleBar>{t("ui.equiprank.allRankBonusesTitle")}</SubtitleBar>
             <ScrollArea
-              className={`${
-                rankSettingOpened ? "h-52" : "h-72"
-              } -mx-1 sm:mx-0 md:mx-1 px-1`}
+              className={cn(
+                rankSettingOpened ? "h-52" : "h-72",
+                "-mx-1 sm:mx-0 md:mx-1 px-1"
+              )}
               style={{ transition: "ease-out 0.2s" }}
             >
               <div className="flex flex-col gap-1.5 px-2 my-1">

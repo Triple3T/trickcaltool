@@ -827,12 +827,12 @@ const PurpleBoard = () => {
                                         src={`/boards/Tile_${
                                           PurpleBoardType[parseInt(pb, 10)]
                                         }${checked ? "On" : "Off"}.png`}
-                                        className="w-full aspect-square bg-cover"
-                                        style={{
-                                          backgroundImage: `url(/boards/Rect_0${
-                                            checked ? 6 : 7
-                                          }.png)`,
-                                        }}
+                                        className={cn(
+                                          "w-full aspect-square bg-cover",
+                                          checked
+                                            ? "bg-board-high"
+                                            : "bg-board-high-disabled"
+                                        )}
                                         onClick={() => {
                                           dispatchBoardData({
                                             type: "click",
@@ -897,12 +897,12 @@ const PurpleBoard = () => {
                                         src={`/boards/Tile_${
                                           PurpleBoardType[parseInt(pb, 10)]
                                         }${checked ? "On" : "Off"}.png`}
-                                        className="w-full aspect-square bg-cover"
-                                        style={{
-                                          backgroundImage: `url(/boards/Rect_0${
-                                            checked ? 6 : 7
-                                          }.png)`,
-                                        }}
+                                        className={cn(
+                                          "w-full aspect-square bg-cover",
+                                          checked
+                                            ? "bg-board-high"
+                                            : "bg-board-high-disabled"
+                                        )}
                                         onClick={() => {
                                           dispatchBoardData({
                                             type: "click",
@@ -968,12 +968,12 @@ const PurpleBoard = () => {
                                       src={`/boards/Tile_${
                                         PurpleBoardType[parseInt(pb, 10)]
                                       }${checked ? "On" : "Off"}.png`}
-                                      className="w-full aspect-square bg-cover"
-                                      style={{
-                                        backgroundImage: `url(/boards/Rect_0${
-                                          checked ? 6 : 7
-                                        }.png)`,
-                                      }}
+                                      className={cn(
+                                        "w-full aspect-square bg-cover",
+                                        checked
+                                          ? "bg-board-high"
+                                          : "bg-board-high-disabled"
+                                      )}
                                       onClick={() => {
                                         dispatchBoardData({
                                           type: "click",

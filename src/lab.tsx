@@ -426,6 +426,13 @@ const decompAll = (
     .reduce(mergeDecomp, {} as { [key: string]: number });
 };
 
+type CollectionFilteredType = {
+  m: { [key: string]: number };
+  s: number;
+  f: number;
+  r: number;
+};
+
 const Lab = () => {
   const { t } = useTranslation();
   const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
@@ -457,10 +464,7 @@ const Lab = () => {
     const collectionProducible = (
       Object.entries(collection.c).filter(([, c]) =>
         Object.keys(c).includes("m")
-      ) as unknown as [
-        string,
-        { m: { [key: string]: number }; s: number; f: number; r: number },
-      ][]
+      ) as unknown as [string, CollectionFilteredType][]
     ).map(([id, c]) => ({
       id,
       material: c.m,
@@ -1375,16 +1379,19 @@ const Lab = () => {
                     return (
                       <Card
                         key={indexDepth2}
-                        className={`text-center font-onemobile p-1 flex flex-row gap-2${
+                        className={cn(
+                          "text-center font-onemobile p-1 flex flex-row gap-2",
                           indexDepth1.toString() +
                             indexDepth2.toString().padStart(4, "0") >
-                          (labData?.currentLab.indexDepth1.toString() ?? "0") +
-                            (
-                              labData?.currentLab.indexDepth2.toString() ?? "0"
-                            ).padStart(4, "0")
+                            (labData?.currentLab.indexDepth1.toString() ??
+                              "0") +
+                              (
+                                labData?.currentLab.indexDepth2.toString() ??
+                                "0"
+                              ).padStart(4, "0")
                             ? ""
-                            : " bg-[#f2f9e7] dark:bg-[#36a52d]"
-                        }`}
+                            : "bg-[#f2f9e7] dark:bg-[#36a52d]"
+                        )}
                         onClick={() =>
                           dispatchLabData({
                             type: "index",
@@ -1393,18 +1400,19 @@ const Lab = () => {
                         }
                       >
                         <div
-                          className={`flex flex-col gap-1 flex-1${
+                          className={cn(
+                            "flex flex-col gap-1 flex-1",
                             indexDepth1.toString() +
                               indexDepth2.toString().padStart(4, "0") >
-                            (labData?.currentLab.indexDepth1.toString() ??
-                              "0") +
-                              (
-                                labData?.currentLab.indexDepth2.toString() ??
-                                "0"
-                              ).padStart(4, "0")
+                              (labData?.currentLab.indexDepth1.toString() ??
+                                "0") +
+                                (
+                                  labData?.currentLab.indexDepth2.toString() ??
+                                  "0"
+                                ).padStart(4, "0")
                               ? ""
-                              : " opacity-50"
-                          }`}
+                              : "opacity-50"
+                          )}
                         >
                           <div className="flex flex-row gap-1">
                             <div className="w-6 h-6 p-1 inline-flex bg-greenicon rounded-full align-middle">
@@ -1443,18 +1451,19 @@ const Lab = () => {
                         </div>
                         <div className="relative">
                           <div
-                            className={`flex justify-center${
+                            className={cn(
+                              "flex justify-center",
                               indexDepth1.toString() +
                                 indexDepth2.toString().padStart(4, "0") >
-                              (labData?.currentLab.indexDepth1.toString() ??
-                                "0") +
-                                (
-                                  labData?.currentLab.indexDepth2.toString() ??
-                                  "0"
-                                ).padStart(4, "0")
+                                (labData?.currentLab.indexDepth1.toString() ??
+                                  "0") +
+                                  (
+                                    labData?.currentLab.indexDepth2.toString() ??
+                                    "0"
+                                  ).padStart(4, "0")
                                 ? ""
-                                : " opacity-50"
-                            }`}
+                                : "opacity-50"
+                            )}
                           >
                             {Object.entries(labeffect.m).map(
                               ([item, amount], index) => {

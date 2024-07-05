@@ -118,6 +118,16 @@ module.exports = {
         14: "3.5rem",
         18: "4.5rem",
       },
+      backgroundImage: {
+        "board-special": "url('/boards/Rect_03.png')",
+        "board-special-disabled": "url('/boards/Rect_05.png')",
+        "board-high": "url('/boards/Rect_06.png')",
+        "board-high-disabled": "url('/boards/Rect_07.png')",
+        "board-normal": "url('/boards/Rect_01.png')",
+        "board-normal-disabled": "url('/boards/Rect_02.png')",
+        "task-title": "url('/schedule/Deco_Task_Colored.png')",
+        "item-slot-value": "url('/itemslot/ItemSlot_ValueBase.png')",
+      },
     },
     fontFamily: {
       onemobile: ['ONE-Mobile-POP'],

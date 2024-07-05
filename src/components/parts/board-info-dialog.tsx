@@ -62,14 +62,15 @@ const BoardInfoDialogTrigger = ({
         {Array(crayon3Count + crayon4Count)
           .fill(0)
           .map((_, i) => {
+            const left = `${i / 2.25}rem`;
             if (i < crayon4Count)
               return (
                 <img
                   key={i}
                   src="/icons/Item_Crayon4.png"
                   alt="crayon4"
-                  className="h-4 w-4 absolute"
-                  style={{ top: "0", left: `${i / 2.25}rem` }}
+                  className="h-4 w-4 absolute top-0"
+                  style={{ left }}
                 />
               );
             return (
@@ -77,8 +78,8 @@ const BoardInfoDialogTrigger = ({
                 key={i}
                 src="/icons/Item_Crayon3.png"
                 alt="crayon3"
-                className="h-4 w-4 absolute"
-                style={{ top: "0", left: `${i / 2.25}rem` }}
+                className="h-4 w-4 absolute top-0"
+                style={{ left }}
               />
             );
           })}
@@ -271,7 +272,7 @@ const BoardInfoDialog = ({
                         return (
                           <div key={j} className="w-4 h-4 scale-150 z-10">
                             <img
-                              src={`/boards/Rect_03.png`}
+                              src="/boards/Rect_03.png"
                               className="w-full h-full drop-shadow-[0px_0_3px_#dc2626] dark:drop-shadow-[0px_0_3px_#fca5a5]"
                             />
                           </div>
@@ -282,9 +283,10 @@ const BoardInfoDialog = ({
                             src={`/boards/Rect_0${
                               [2, 1, 6, 3][Number(br) - 1]
                             }.png`}
-                            className={`w-full h-full${
+                            className={cn(
+                              "w-full h-full",
                               br === "1" ? " opacity-70" : ""
-                            }`}
+                            )}
                           />
                         </div>
                       );
@@ -355,14 +357,10 @@ const BoardInfoDialog = ({
                                   return (
                                     <img
                                       key={j}
-                                      className="rotate-10 w-10 -m-1 flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
+                                      className="bg-board-special rotate-10 w-10 -m-1 flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
                                       src={`/boards/Tile_${
                                         BoardType[Number(b)]
                                       }On.png`}
-                                      style={{
-                                        backgroundImage:
-                                          "url(/boards/Rect_03.png)",
-                                      }}
                                     />
                                   );
                                 })}
@@ -398,8 +396,7 @@ const BoardInfoDialog = ({
                   <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                     <img
                       src={`/boards/Tile_${bt}On.png`}
-                      style={{ backgroundImage: "url(/boards/Rect_03.png)" }}
-                      className="w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
+                      className="bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                     />
                   </div>
                 </div>

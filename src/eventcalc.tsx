@@ -982,9 +982,10 @@ const EventCalc = () => {
                                   )
                                 )
                               }
-                              className={`p-1 h-auto ${
+                              className={cn(
+                                "p-1 text-center inline-block mx-1 bg-slate-400/80 dark:bg-slate-600/80 h-auto",
                                 item.l > 0 ? "w-14" : "w-28"
-                              } text-center inline-block mx-1 bg-slate-400/80 dark:bg-slate-600/80`}
+                              )}
                             />
                             {item.l > 0 && (
                               <Button
