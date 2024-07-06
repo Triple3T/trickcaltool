@@ -82,6 +82,16 @@ const MenuButton = () => {
           />
           {t("ui.boardsearch.title")}
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/restaurant")}
+          disabled={matchPath(location.pathname, "/restaurant") ? true : false}
+        >
+          <img
+            src="/foods/MyHomeRestaurant_EatingInviteIcon.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.restaurant.title")}
+        </DropdownMenuItem>
         {/* <Separator className="my-1" /> */}
         {/* <DropdownMenuItem
           onClick={() => navigate("/eventcalc")}

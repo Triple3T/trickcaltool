@@ -127,6 +127,8 @@ module.exports = {
         "board-normal-disabled": "url('/boards/Rect_02.png')",
         "task-title": "url('/schedule/Deco_Task_Colored.png')",
         "item-slot-value": "url('/itemslot/ItemSlot_ValueBase.png')",
+        "restaurant": "url('/foods/MyHomeRestaurant_background_crop.png')",
+        "dish": "url('/foods/Icon_RestaurantDish.png')",
       },
     },
     fontFamily: {

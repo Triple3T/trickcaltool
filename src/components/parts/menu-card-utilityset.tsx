@@ -57,7 +57,7 @@ const UtilitySetCard = () => {
             <div className={utilityButtonClasses}>
               <h4 className={utilityTextClasses}>
                 <img
-                  src={"/myhomeicons/MyHome_Button_004.png"}
+                  src="/myhomeicons/MyHome_Button_004.png"
                   className="h-6 w-6 inline-block align-middle mr-2"
                 />
                 {t("ui.tasksearch.title")}
@@ -68,10 +68,21 @@ const UtilitySetCard = () => {
             <div className={utilityButtonClasses}>
               <h4 className={utilityTextClasses}>
                 <img
-                  src={"/icons/Common_Node_Special.png"}
+                  src="/icons/Common_Node_Special.png"
                   className="h-6 w-6 inline-block align-middle mr-2"
                 />
                 {t("ui.boardsearch.title")}
+              </h4>
+            </div>
+          </Link>
+          <Link to={"/restaurant"}>
+            <div className={utilityButtonClasses}>
+              <h4 className={utilityTextClasses}>
+                <img
+                  src="/foods/MyHomeRestaurant_EatingInviteIcon.png"
+                  className="h-6 w-6 inline-block align-middle mr-2"
+                />
+                {t("ui.restaurant.title")}
               </h4>
             </div>
           </Link>

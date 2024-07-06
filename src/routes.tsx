@@ -19,6 +19,7 @@ const Lab = lazy(() => import("./lab"));
 const PurpleBoard = lazy(() => import("./purpleboard"));
 const BoardSearch = lazy(() => import("./boardsearch"));
 const TaskSearch = lazy(() => import("./tasksearch"));
+const Restaurant = lazy(() => import("./restaurant"));
 const EventCalc = lazy(() => import("./eventcalc"));
 const Checker = lazy(() => import("./checker"));
 
@@ -102,6 +103,18 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout>
         <Suspense fallback={<Loading />}>
           <TaskSearch />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/restaurant",
+    // element: <Restaurant />,
+    element: (
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <Restaurant />
         </Suspense>
       </Layout>
     ),
