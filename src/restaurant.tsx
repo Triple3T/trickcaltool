@@ -336,8 +336,8 @@ const Restaurant = () => {
                 </div>
                 {showValue && (
                   <div className="absolute w-full text-lg pr-3">{`+${
-                    food.p[food.f[selectedFood].r][2] + 1
-                  }~${food.p[food.f[selectedFood].r][2] + 3}`}</div>
+                    food.p[food.f[selectedFood].r][0] + 1
+                  }~${food.p[food.f[selectedFood].r][0] + 3}`}</div>
                 )}
                 <div className="flex w-48 h-48 px-10 pt-12 pb-8 justify-center items-end bg-dish bg-cover bg-no-repeat -mt-4">
                   <img
