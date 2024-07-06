@@ -445,12 +445,12 @@ const Restaurant = () => {
         {(() => {
           if (selectedChara)
             return [
-              "ui.restaurant.scrollableNotice",
+              "ui.restaurant.foodScrollableNotice",
               "ui.restaurant.tapFoodToSearch",
             ];
           if (selectedFood)
             return [
-              "ui.restaurant.scrollableNotice",
+              "ui.restaurant.characterScrollableNotice",
               "ui.restaurant.tapCharacterToSearch",
             ];
           return ["ui.restaurant.needToSelect"];
