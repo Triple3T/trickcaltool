@@ -872,7 +872,7 @@ i18n
               needToSelect: "사도 또는 음식을 선택해주세요!",
               foodScrollableNotice:
                 "음식이 많은 경우 좌우로 스크롤하여 모두 볼 수 있습니다.",
-              CharacterScrollableNotice:
+              characterScrollableNotice:
                 "사도가 많은 경우 좌우로 스크롤하여 모두 볼 수 있습니다.",
               tapFoodToSearch: "음식을 누르면 음식으로 검색할 수 있습니다.",
               tapCharacterToSearch: "사도를 누르면 사도로 검색할 수 있습니다.",
