@@ -240,7 +240,7 @@ const Restaurant = () => {
                 </div>
                 <img
                   src="/foods/Deco_Clip.png"
-                  className="absolute -left-px -top-[27.2px] h-[44px]"
+                  className="absolute -left-px -top-[1.7rem] h-[2.75rem]"
                 />
               </div>
             </div>
@@ -484,7 +484,7 @@ const Restaurant = () => {
                     </div>
                     <img
                       src="/foods/Deco_Clip.png"
-                      className="absolute -left-px -top-[27.2px] h-[44px]"
+                      className="absolute -left-px -top-[1.7rem] h-[2.75rem]"
                     />
                   </div>
                 </div>
