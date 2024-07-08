@@ -81,6 +81,16 @@ module.exports = {
             marked: "hsl(var(--personality-naive-bg-marked))",
           },
         },
+        taskcard: {
+          DEFAULT: "hsl(var(--taskcard))",
+          foreground: "hsl(var(--taskcard-foreground))",
+          border: "hsl(var(--taskcard-border))",
+        },
+        foodcard: {
+          DEFAULT: "hsl(var(--foodcard))",
+          border: "hsl(var(--foodcard-border))",
+          frame: "hsl(var(--foodcard-frame))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

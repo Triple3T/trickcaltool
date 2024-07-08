@@ -359,7 +359,7 @@ const TaskSearch = () => {
           )}
           {selectedTask && (
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-evenly">
-              <div className="w-64 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]">
+              <div className="w-64 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border">
                 <div className="pl-2 mb-1">
                   <div className="pr-2 pb-2 pt-px bg-contain bg-no-repeat bg-center bg-task-title">
                     <div className="text-xl">{t(`task.${selectedTask}`)}</div>
@@ -518,7 +518,7 @@ const TaskSearch = () => {
             return (
               <div
                 key={taskId}
-                className="w-72 rounded-xl p-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]"
+                className="w-72 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border"
               >
                 <div className="pl-2 mb-1">
                   <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
@@ -565,7 +565,7 @@ const TaskSearch = () => {
                       );
                     })}
                   </div>
-                  <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-[#e2dbc8] rounded-sm bg-[#f7faef]">
+                  <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-taskcard-border rounded-sm bg-taskcard">
                     <Search
                       className="w-3 h-3"
                       strokeWidth={3}

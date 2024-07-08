@@ -221,14 +221,14 @@ const Restaurant = () => {
       </Card>
       <div className="font-onemobile flex justify-center p-4 max-w-full">
         {selectedChara && (
-          <div className="bg-[#eee8d8] ring-2 ring-[#e2d2c3] rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4">
+          <div className="bg-foodcard ring-2 ring-foodcard-border rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4">
             <div className="flex flex-row justify-center">
-              <div className="w-max p-1.5 bg-[#55355e] relative">
+              <div className="w-max p-1.5 bg-foodcard-frame relative">
                 <img
                   src={`/charas/${selectedChara}.png`}
                   className="w-48 h-48 bg-restaurant bg-cover bg-no-repeat"
                 />
-                <div className="relative -mt-8 pt-1.5 z-10 bg-[#55355e]">
+                <div className="relative -mt-8 pt-1.5 z-10 bg-foodcard-frame">
                   <div
                     className="text-2xl text-slate-900"
                     style={{
@@ -323,11 +323,11 @@ const Restaurant = () => {
           </div>
         )}
         {selectedFood && (
-          <div className="bg-[#eee8d8] ring-2 ring-[#e2d2c3] rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4">
+          <div className="bg-foodcard ring-2 ring-foodcard-border rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4">
             <div className="flex flex-row justify-center">
               <div className="w-max p-1.5 relative">
                 <div
-                  className="text-2xl text-slate-900"
+                  className="text-xl text-slate-900"
                   style={{
                     textShadow: Array(30).fill("0 0 3px #fff").join(", "),
                   }}
@@ -464,15 +464,15 @@ const Restaurant = () => {
             return (
               <div
                 key={c}
-                className="bg-[#eee8d8] ring-2 ring-[#e2d2c3] rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4"
+                className="bg-foodcard ring-2 ring-foodcard-border rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4"
               >
                 <div className="flex flex-row justify-center">
-                  <div className="w-max p-1.5 bg-[#55355e] relative">
+                  <div className="w-max p-1.5 bg-foodcard-frame relative">
                     <img
                       src={`/charas/${c}.png`}
                       className="w-48 h-48 bg-restaurant bg-cover bg-no-repeat"
                     />
-                    <div className="relative -mt-8 pt-1.5 z-10 bg-[#55355e]">
+                    <div className="relative -mt-8 pt-1.5 z-10 bg-foodcard-frame">
                       <div
                         className="text-2xl text-slate-900"
                         style={{

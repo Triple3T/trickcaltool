@@ -49,6 +49,13 @@
     --personality-naive-bg: 110 55% 65%;
     --personality-naive-bg-grayscale-90: 108 8% 75%;
     --personality-naive-bg-marked: 110 55% 83%;
+
+    --taskcard: 76 52% 96%;
+    --taskcard-foreground: 17 32% 28%;
+    --taskcard-border: 44 31% 84%;
+    --foodcard: 42 57% 95%;
+    --foodcard-border: 32 43% 79%;
+    --foodcard-frame: 287 28% 29%;
  
     --radius: 0.5rem;
   }
@@ -99,6 +106,12 @@
     --personality-naive-bg: 111 54% 50%;
     --personality-naive-bg-grayscale-90: 111 10% 74%;
     --personality-naive-bg-marked: 110 54% 37%;
+
+    /* --taskcard: 49 47% 14%; */
+    /* --taskcard-foreground: 38 39% 77%; */
+    /* --taskcard-border: 27 26% 34%; */
+    --foodcard: 21 46% 15%;
+    --foodcard-border: 15 35% 34%;
   }
 }
  

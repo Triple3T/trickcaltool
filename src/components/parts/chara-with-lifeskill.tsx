@@ -17,7 +17,7 @@ const CharaWithLifeskill = ({
 }: CharaWithLifeskillProps) => {
   const { t } = useTranslation();
   return (
-    <div className="w-72 rounded-xl px-2 py-4 ring-4 bg-[#f7faef] text-[#5d3d30] ring-[#e2dbc8]">
+    <div className="w-72 rounded-xl px-2 py-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border">
       <div className="flex flex-row gap-2.5 items-center">
         <img
           className="w-12 h-12 aspect-square"
