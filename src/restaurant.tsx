@@ -161,7 +161,7 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-60 p-0 font-onemobile">
+      <PopoverContent className="w-60 md:w-96 p-0 font-onemobile">
         <Command
           filter={(value, search) =>
             value.includes(search) || icSearch(value, search) ? 1 : 0
@@ -174,30 +174,40 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty>
           <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
             <CommandList>
-              <CommandGroup>
+              <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-2 md:[&_[cmdk-group-items]]:grid-cols-3 [&_[cmdk-group-items]]:gap-1 p-2">
                 {Object.keys(food.f)
                   .sort((a, b) => t(`food.${a}`).localeCompare(t(`food.${b}`)))
-                  .map((foodId) => (
-                    <CommandItem
-                      key={foodId}
-                      value={t(`food.${foodId}`)}
-                      onSelect={(currentValue) => {
-                        setV(currentValue === v ? "" : currentValue);
-                        onChange(currentValue === v ? "" : foodId);
-                        setOpen(false);
-                      }}
-                    >
-                      {t(`food.${foodId}`)}
-                      <Check
-                        className={cn(
-                          "ml-auto h-4 w-4",
-                          v === t(`food.${foodId}`)
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
+                  .map((foodId) => {
+                    const selected = v === t(`food.${foodId}`);
+                    return (
+                      <CommandItem
+                        key={foodId}
+                        value={t(`food.${foodId}`)}
+                        onSelect={(currentValue) => {
+                          setV(currentValue === v ? "" : currentValue);
+                          onChange(currentValue === v ? "" : foodId);
+                          setOpen(false);
+                        }}
+                      >
+                        <div className="w-full relative flex flex-col items-center py-0.5">
+                          <div className="text-sm text-center break-keep absolute h-12 -top-1 flex items-center">
+                            {t(`food.${foodId}`)}
+                          </div>
+                          <div className="flex w-[5.8125rem] h-[5.8125rem] md:w-[calc(19.375rem_/_3)] md:h-[calc(19.375rem_/_3)] px-4 pt-6 pb-3 mt-4 justify-center items-end bg-dish bg-cover bg-no-repeat">
+                            <img
+                              src={`/foods/Icon_Food_${foodId}.png`}
+                              className="max-w-full max-h-full"
+                            />
+                          </div>
+                          {selected && (
+                            <div className="h-6 w-6 p-1 absolute -top-0.5 -right-1 rounded-full bg-slate-100/80 dark:bg-slate-900/80">
+                              <Check className="w-full h-full" />
+                            </div>
+                          )}
+                        </div>
+                      </CommandItem>
+                    );
+                  })}
               </CommandGroup>
             </CommandList>
           </ScrollArea>
