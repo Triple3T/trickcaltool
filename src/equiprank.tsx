@@ -654,7 +654,7 @@ const EquipRank = () => {
                               })}
                             />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="font-onemobile">
                             {Array.from(Array(MAX_RANK).keys()).map((i) => {
                               return (
                                 <SelectItem key={i + 1} value={`${i + 1}`}>
@@ -693,7 +693,7 @@ const EquipRank = () => {
                               })}
                             />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="font-onemobile">
                             {Array.from(Array(MAX_RANK).keys()).map((i) => {
                               return (
                                 <SelectItem key={i + 1} value={`${i + 1}`}>

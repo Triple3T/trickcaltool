@@ -716,7 +716,7 @@ const TrickcalBoard = () => {
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder={t("ui.index.personality")} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="font-onemobile">
                         {Array.from(Array(6).keys()).map((v) => (
                           <SelectItem
                             key={v}
