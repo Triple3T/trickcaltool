@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import chara from "@/data/chara";
+import { personalityBG } from "@/utils/personalityBG";
+import { Personality } from "@/types/enums";
 
 interface ThemeEventBonusDialogProps {
   bonus: {
@@ -17,23 +19,6 @@ interface ThemeEventBonusDialogProps {
     b: number;
   }[];
 }
-
-const personalityBG = (p: string) => {
-  switch (Number(p)) {
-    case 0:
-      return "bg-personality-Cool";
-    case 1:
-      return "bg-personality-Gloomy";
-    case 2:
-      return "bg-personality-Jolly";
-    case 3:
-      return "bg-personality-Mad";
-    case 4:
-      return "bg-personality-Naive";
-    default:
-      return "";
-  }
-};
 
 const ThemeEventBonusDialog = ({ bonus }: ThemeEventBonusDialogProps) => {
   const { t } = useTranslation();
@@ -61,7 +46,7 @@ const ThemeEventBonusDialog = ({ bonus }: ThemeEventBonusDialogProps) => {
                   alt={t(`chara.${c}`)}
                   className={cn(
                     "w-full aspect-square",
-                    personalityBG(chara[c].t[0])
+                    personalityBG[Number(chara[c].t[0]) as Personality]
                   )}
                 />
                 <div className="my-auto py-0.5">{t(`chara.${c}`)}</div>

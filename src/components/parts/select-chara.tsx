@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -12,6 +13,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import SearchBox from "@/components/common/search-with-icon";
 import chara from "@/data/chara";
 import userdata from "@/utils/userdata";
+import { personalityBG } from "@/utils/personalityBG";
+import { Personality } from "@/types/enums";
 import { UserDataUnowned } from "@/types/types";
 
 interface SelectCharaProp {
@@ -128,27 +131,13 @@ const SelectChara = ({
             <ScrollArea className="mt-2 p-1 w-full h-80 sm:h-96 bg-gray-400/50 rounded-lg">
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
                 {userData?.o
-                  .filter((c) => (search ? t(`chara.${c}`).includes(search) : true))
-                  .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
+                  .filter((c) =>
+                    search ? t(`chara.${c}`).includes(search) : true
+                  )
+                  .sort((a, b) =>
+                    t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                  )
                   .map((c) => {
-                    const imgClassNames = ["w-full", "aspect-square"];
-                    switch (chara[c].t[0]) {
-                      case "0":
-                        imgClassNames.push("bg-personality-Cool");
-                        break;
-                      case "1":
-                        imgClassNames.push("bg-personality-Gloomy");
-                        break;
-                      case "2":
-                        imgClassNames.push("bg-personality-Jolly");
-                        break;
-                      case "3":
-                        imgClassNames.push("bg-personality-Mad");
-                        break;
-                      case "4":
-                        imgClassNames.push("bg-personality-Naive");
-                        break;
-                    }
                     return (
                       <div
                         key={c}
@@ -156,7 +145,10 @@ const SelectChara = ({
                       >
                         <img
                           src={`/charas/${c}.png`}
-                          className={imgClassNames.join(" ")}
+                          className={cn(
+                            "w-full aspect-square",
+                            personalityBG[Number(chara[c].t[0]) as Personality]
+                          )}
                           onClick={() => {
                             dispatchUserData({ type: "unown", chara: c });
                           }}
@@ -182,27 +174,13 @@ const SelectChara = ({
             <ScrollArea className="mt-2 p-1 w-full h-80 sm:h-96 bg-gray-400/50 rounded-lg">
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-0.5">
                 {userData?.u
-                  .filter((c) => (search ? t(`chara.${c}`).includes(search) : true))
-                  .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
+                  .filter((c) =>
+                    search ? t(`chara.${c}`).includes(search) : true
+                  )
+                  .sort((a, b) =>
+                    t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                  )
                   .map((c) => {
-                    const imgClassNames = ["w-full", "aspect-square"];
-                    switch (chara[c].t[0]) {
-                      case "0":
-                        imgClassNames.push("bg-personality-Cool");
-                        break;
-                      case "1":
-                        imgClassNames.push("bg-personality-Gloomy");
-                        break;
-                      case "2":
-                        imgClassNames.push("bg-personality-Jolly");
-                        break;
-                      case "3":
-                        imgClassNames.push("bg-personality-Mad");
-                        break;
-                      case "4":
-                        imgClassNames.push("bg-personality-Naive");
-                        break;
-                    }
                     return (
                       <div
                         key={c}
@@ -210,7 +188,10 @@ const SelectChara = ({
                       >
                         <img
                           src={`/charas/${c}.png`}
-                          className={imgClassNames.join(" ")}
+                          className={cn(
+                            "w-full aspect-square",
+                            personalityBG[Number(chara[c].t[0]) as Personality]
+                          )}
                           onClick={() => {
                             dispatchUserData({ type: "own", chara: c });
                           }}

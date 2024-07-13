@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ItemSlot from "@/components/parts/item-slot";
+import { personalityBG } from "@/utils/personalityBG";
+import { Personality } from "@/types/enums";
 
 import chara from "@/data/chara";
 import food from "@/data/food";
@@ -373,13 +375,7 @@ const Restaurant = () => {
                               }
                               className={cn(
                                 "rounded w-16 h-16",
-                                [
-                                  "bg-personality-Cool",
-                                  "bg-personality-Gloomy",
-                                  "bg-personality-Jolly",
-                                  "bg-personality-Mad",
-                                  "bg-personality-Naive",
-                                ][Number(chara[c].t[0])]
+                                personalityBG[Number(chara[c].t[0]) as Personality]
                               )}
                             />
                           </div>
@@ -414,13 +410,7 @@ const Restaurant = () => {
                               }
                               className={cn(
                                 "rounded w-16 h-16",
-                                [
-                                  "bg-personality-Cool",
-                                  "bg-personality-Gloomy",
-                                  "bg-personality-Jolly",
-                                  "bg-personality-Mad",
-                                  "bg-personality-Naive",
-                                ][Number(chara[c].t[0])]
+                                personalityBG[Number(chara[c].t[0]) as Personality]
                               )}
                             />
                           </div>

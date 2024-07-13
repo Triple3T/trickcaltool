@@ -29,7 +29,8 @@ import chara from "@/data/chara";
 import purpleboard from "@/data/purpleboard";
 import purpleposition from "@/data/purpleposition";
 import clonefactory from "@/data/clonefactory";
-import { PurpleBoardType, Race, StatType } from "@/types/enums";
+import { Personality, PurpleBoardType, Race, StatType } from "@/types/enums";
+import { personalityBG } from "@/utils/personalityBG";
 
 import userdata from "@/utils/userdata";
 import {
@@ -698,13 +699,7 @@ const PurpleBoard = () => {
               const currentPurpleBoard = purpleboard.c[name]; // b: 보크보드 종류, p: 해당 종류 위치 인덱스
               const charaPersonality = Number(chara[name].t[0]);
               const charaRace = Number(chara[name].t[5]);
-              const personalityClassName = [
-                "bg-personality-Cool",
-                "bg-personality-Gloomy",
-                "bg-personality-Jolly",
-                "bg-personality-Mad",
-                "bg-personality-Naive",
-              ][charaPersonality];
+              const personalityClassName = personalityBG[Number(charaPersonality) as Personality];
               return (
                 <Card
                   key={name}

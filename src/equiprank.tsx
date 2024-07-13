@@ -62,6 +62,7 @@ import RankReqLevelDialog from "@/components/parts/rank-req-level-dialog";
 // import SelectChara from "@/components/parts/select-chara";
 const SelectChara = lazy(() => import("@/components/parts/select-chara"));
 import SubtitleBar from "@/components/parts/subtitlebar";
+import { personalityBG } from "@/utils/personalityBG";
 import rankClassNames from "@/utils/rankClassNames";
 
 import userdata from "@/utils/userdata";
@@ -71,14 +72,6 @@ import sortChange from "@/utils/sortChange";
 import filterChange from "@/utils/filterChange";
 
 const MAX_RANK = 8;
-
-const personalityBG = {
-  [Personality.Cool]: "bg-personality-Cool",
-  [Personality.Gloomy]: "bg-personality-Gloomy",
-  [Personality.Jolly]: "bg-personality-Jolly",
-  [Personality.Mad]: "bg-personality-Mad",
-  [Personality.Naive]: "bg-personality-Naive",
-};
 
 type ViewType = "input" | "rankView" | "targetView";
 

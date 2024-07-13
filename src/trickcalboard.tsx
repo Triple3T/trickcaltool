@@ -60,6 +60,11 @@ import {
   UserDataNthBoard,
   UserDataUnowned,
 } from "@/types/types";
+import {
+  personalityBG,
+  personalityBGDisabled,
+  personalityBGMarked,
+} from "@/utils/personalityBG";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
@@ -1042,90 +1047,45 @@ const TrickcalBoard = () => {
                         <div className="grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] auto-rows-auto">
                           {displayCharas.map((b) => {
                             const { name, ldx, bdx, checked, unowned, clf } = b;
-                            const bgClassNames = [
-                              "min-w-14",
-                              "min-h-14",
-                              "sm:min-w-16",
-                              "sm:min-h-16",
-                              "max-w-24",
-                              "aspect-square",
-                            ];
-                            const imgClassNames = ["aspect-square", "w-full"];
-                            switch (Personality[Number(chara[name].t[0])]) {
-                              case "Cool":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Cool-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Cool-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Cool");
-                                break;
-                              case "Gloomy":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Gloomy-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Gloomy-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Gloomy");
-                                break;
-                              case "Jolly":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Jolly-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Jolly-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Jolly");
-                                break;
-                              case "Mad":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Mad-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Mad-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Mad");
-                                break;
-                              case "Naive":
-                                if (unowned)
-                                  bgClassNames.push(
-                                    "bg-personality-Naive-disabled"
-                                  );
-                                else if (checked)
-                                  bgClassNames.push(
-                                    "bg-personality-Naive-marked"
-                                  );
-                                else bgClassNames.push("bg-personality-Naive");
-                                break;
-                            }
-                            if (unowned) {
-                              imgClassNames.push("grayscale-[90%]");
-                            } else if (checked) {
-                              imgClassNames.push("opacity-50");
-                            }
+                            const bgClassName = (() => {
+                              if (unowned)
+                                return personalityBGDisabled[
+                                  Number(chara[name].t[0]) as Personality
+                                ];
+                              if (checked)
+                                return personalityBGMarked[
+                                  Number(chara[name].t[0]) as Personality
+                                ];
+                              return personalityBG[
+                                Number(chara[name].t[0]) as Personality
+                              ];
+                            })();
+                            const imgClassName = (() => {
+                              if (unowned) return "grayscale-[90%]";
+                              if (checked) return "opacity-50";
+                              return "";
+                            })();
                             return (
                               <div
                                 key={`${name}${ldx}${bdx}`}
                                 className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
                               >
-                                <div className={bgClassNames.join(" ")}>
+                                <div
+                                  className={cn(
+                                    "min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 max-w-24 aspect-square",
+                                    bgClassName
+                                  )}
+                                >
                                   <img
                                     src={
                                       skinData[name]
                                         ? `/charas/${name}Skin${skinData[name]}.png`
                                         : `/charas/${name}.png`
                                     }
-                                    className={imgClassNames.join(" ")}
+                                    className={cn(
+                                      "aspect-square w-full",
+                                      imgClassName
+                                    )}
                                     onClick={() => {
                                       dispatchBoardData({
                                         type: "click",
