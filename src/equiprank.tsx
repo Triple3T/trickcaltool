@@ -31,13 +31,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+import Select from "@/components/common/combobox-select";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -628,6 +629,36 @@ const EquipRank = () => {
                     <div className="flex flex-col gap-1 px-4">
                       <div className="flex flex-row gap-2">
                         <Select
+                          value={rankData?.minRank || 1}
+                          setValue={(v) => {
+                            dispatchRankData({
+                              type: "minrank",
+                              payload: v,
+                            });
+                            if (rankData) {
+                              setDirtyRankCharas(
+                                Object.entries(rankData.charas)
+                                  .filter(
+                                    ([, c]) =>
+                                      c.rank < v || c.rank > rankData.maxRank
+                                  )
+                                  .map(([c]) => c)
+                              );
+                            }
+                          }}
+                          placeholder={t("ui.equiprank.rankText", {
+                            0: "1",
+                          })}
+                          items={Array.from(Array(MAX_RANK).keys()).map(
+                            (i) => ({
+                              value: i + 1,
+                              label: t("ui.equiprank.rankText", {
+                                0: `${i + 1}`,
+                              }),
+                            })
+                          )}
+                        />
+                        {/* <Select
                           value={`${rankData?.minRank || 1}`}
                           onValueChange={(v) => {
                             dispatchRankData({
@@ -665,8 +696,38 @@ const EquipRank = () => {
                               );
                             })}
                           </SelectContent>
-                        </Select>
+                        </Select> */}
                         <Select
+                          value={rankData?.maxRank || 1}
+                          setValue={(v) => {
+                            dispatchRankData({
+                              type: "maxrank",
+                              payload: v,
+                            });
+                            if (rankData) {
+                              setDirtyRankCharas(
+                                Object.entries(rankData.charas)
+                                  .filter(
+                                    ([, c]) =>
+                                      c.rank < rankData.minRank || c.rank > v
+                                  )
+                                  .map(([c]) => c)
+                              );
+                            }
+                          }}
+                          placeholder={t("ui.equiprank.rankText", {
+                            0: "1",
+                          })}
+                          items={Array.from(Array(MAX_RANK).keys()).map(
+                            (i) => ({
+                              value: i + 1,
+                              label: t("ui.equiprank.rankText", {
+                                0: `${i + 1}`,
+                              }),
+                            })
+                          )}
+                        />
+                        {/* <Select
                           value={`${rankData?.maxRank || 1}`}
                           onValueChange={(v) => {
                             dispatchRankData({
@@ -704,7 +765,7 @@ const EquipRank = () => {
                               );
                             })}
                           </SelectContent>
-                        </Select>
+                        </Select> */}
                       </div>
                       <div className="text-right text-red-500 dark:text-red-400 text-sm">
                         {t("ui.equiprank.reqLevel", {

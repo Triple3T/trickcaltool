@@ -21,13 +21,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+import Select from "@/components/common/combobox-select";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -705,6 +706,27 @@ const TrickcalBoard = () => {
                   <SubtitleBar>{t("ui.board.subClassification")}</SubtitleBar>
                   <div className="w-full px-4">
                     <Select
+                      value={boardData?.user.c ?? 0}
+                      setValue={(payload) =>
+                        dispatchBoardData({
+                          type: "classification",
+                          payload,
+                        })
+                      }
+                      placeholder={t("ui.index.personality")}
+                      items={[
+                        "personality",
+                        "defaultstar",
+                        "attack",
+                        "position",
+                        "class",
+                        "race",
+                      ].map((key, value) => ({
+                        value,
+                        label: t(`ui.index.${key}`),
+                      }))}
+                    />
+                    {/* <Select
                       value={`${boardData?.user.c ?? 0}`}
                       onValueChange={(v) =>
                         dispatchBoardData({
@@ -740,7 +762,7 @@ const TrickcalBoard = () => {
                           </SelectItem>
                         ))}
                       </SelectContent>
-                    </Select>
+                    </Select> */}
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
