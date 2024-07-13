@@ -717,29 +717,25 @@ const TrickcalBoard = () => {
                         <SelectValue placeholder={t("ui.index.personality")} />
                       </SelectTrigger>
                       <SelectContent className="font-onemobile">
-                        {Array.from(Array(6).keys()).map((v) => (
+                        {[
+                          "personality",
+                          "defaultstar",
+                          "attack",
+                          "position",
+                          "class",
+                          "race",
+                        ].map((v, i) => (
                           <SelectItem
                             key={v}
-                            value={`${v}`}
+                            value={`${i}`}
                             onClick={() =>
                               dispatchBoardData({
                                 type: "classification",
-                                payload: v,
+                                payload: i,
                               })
                             }
                           >
-                            {t(
-                              `ui.index.${
-                                [
-                                  "personality",
-                                  "defaultstar",
-                                  "attack",
-                                  "position",
-                                  "class",
-                                  "race",
-                                ][v]
-                              }`
-                            )}
+                            {t(`ui.index.${v}`)}
                           </SelectItem>
                         ))}
                       </SelectContent>
