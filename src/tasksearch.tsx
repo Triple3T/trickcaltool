@@ -173,7 +173,7 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-60 p-0 font-onemobile">
+      <PopoverContent className="w-60 md:w-96 p-0 font-onemobile">
         <Command
           filter={(value, search) =>
             value.includes(search) || icSearch(value, search) ? 1 : 0
@@ -186,32 +186,41 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <CommandEmpty>{t("ui.tasksearch.lifeskillNotFound")}</CommandEmpty>
           <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
             <CommandList>
-              <CommandGroup>
+              <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-3 md:[&_[cmdk-group-items]]:grid-cols-5 [&_[cmdk-group-items]]:gap-1 p-2">
                 {Array(lifeskill.n)
                   .fill(0)
-                  .map((_, lifeskillIndex) => (
-                    <CommandItem
-                      key={lifeskillIndex + 1}
-                      value={t(`lifeskill.${lifeskillIndex + 1}`)}
-                      onSelect={(currentValue) => {
-                        setV(currentValue === v ? "" : currentValue);
-                        onChange(
-                          currentValue === v ? "" : `${lifeskillIndex + 1}`
-                        );
-                        setOpen(false);
-                      }}
-                    >
-                      {t(`lifeskill.${lifeskillIndex + 1}`)}
-                      <Check
-                        className={cn(
-                          "ml-auto h-4 w-4",
-                          v === t(`lifeskill.${lifeskillIndex + 1}`)
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
+                  .map((_, lifeskillIndex) => {
+                    const selected = v === t(`lifeskill.${lifeskillIndex + 1}`);
+                    return (
+                      <CommandItem
+                        key={lifeskillIndex + 1}
+                        value={t(`lifeskill.${lifeskillIndex + 1}`)}
+                        onSelect={(currentValue) => {
+                          setV(currentValue === v ? "" : currentValue);
+                          onChange(
+                            currentValue === v ? "" : `${lifeskillIndex + 1}`
+                          );
+                          setOpen(false);
+                        }}
+                      >
+                        <div className="w-full relative flex flex-col items-center">
+                          <LifeskillIcon
+                            id={lifeskillIndex + 1}
+                            size="default"
+                            additionalClassName="-mx-3 -my-2"
+                          />
+                          <div className="text-sm text-center">
+                            {t(`lifeskill.${lifeskillIndex + 1}`)}
+                          </div>
+                          {selected && (
+                            <div className="h-6 w-6 p-1 absolute -top-0.5 -right-1 rounded-full bg-slate-100/80 dark:bg-slate-900/80">
+                              <Check className="w-full h-full" />
+                            </div>
+                          )}
+                        </div>
+                      </CommandItem>
+                    );
+                  })}
               </CommandGroup>
             </CommandList>
           </ScrollArea>
