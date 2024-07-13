@@ -28,6 +28,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
 import {
@@ -35,6 +36,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -88,29 +90,33 @@ const ThemeEventCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.eventcalc.themeEventNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Object.keys(themeevent.e).map((eventId) => (
-              <CommandItem
-                key={eventId}
-                value={t(`themeevent.title.${eventId}`)}
-                onSelect={(currentValue) => {
-                  setV(currentValue === v ? "" : currentValue);
-                  onChange(currentValue === v ? "" : eventId);
-                  setOpen(false);
-                }}
-              >
-                {t(`themeevent.title.${eventId}`)}
-                <Check
-                  className={cn(
-                    "ml-auto h-4 w-4",
-                    v === t(`themeevent.title.${eventId}`)
-                      ? "opacity-100"
-                      : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[40vh] [&_[data-radix-scroll-area-viewport]]:max-h-[40vh]">
+            <CommandList>
+              <CommandGroup>
+                {Object.keys(themeevent.e).map((eventId) => (
+                  <CommandItem
+                    key={eventId}
+                    value={t(`themeevent.title.${eventId}`)}
+                    onSelect={(currentValue) => {
+                      setV(currentValue === v ? "" : currentValue);
+                      onChange(currentValue === v ? "" : eventId);
+                      setOpen(false);
+                    }}
+                  >
+                    {t(`themeevent.title.${eventId}`)}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        v === t(`themeevent.title.${eventId}`)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>

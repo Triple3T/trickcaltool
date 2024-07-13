@@ -18,6 +18,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
 import {
@@ -25,6 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
 // import CharaWithLifeskill from "@/components/parts/chara-with-lifeskill";
 const CharaWithLifeskill = lazy(
@@ -32,6 +34,12 @@ const CharaWithLifeskill = lazy(
 );
 import ItemSlot from "@/components/parts/item-slot";
 import LifeskillIcon from "@/components/parts/lifeskill-icon";
+import {
+  personalityBG,
+  personalityBGDisabled,
+  personalityBGMarked,
+} from "@/utils/personalityBG";
+import { Personality } from "@/types/enums";
 
 import chara from "@/data/chara";
 import lifeskill from "@/data/lifeskill";
@@ -64,7 +72,7 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-60 p-0 font-onemobile">
+      <PopoverContent className="w-60 md:w-96 p-0 font-onemobile">
         <Command
           filter={(value, search) =>
             value.includes(search) || icSearch(value, search) ? 1 : 0
@@ -75,30 +83,70 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.tasksearch.characterNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Object.keys(chara)
-              .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
-              .map((charaId) => (
-                <CommandItem
-                  key={charaId}
-                  value={t(`chara.${charaId}`)}
-                  disabled={chara[charaId].t[1] === "1"}
-                  onSelect={(currentValue) => {
-                    setV(currentValue === v ? "" : currentValue);
-                    onChange(currentValue === v ? "" : charaId);
-                    setOpen(false);
-                  }}
-                >
-                  {t(`chara.${charaId}`)}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      v === t(`chara.${charaId}`) ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
+            <CommandList>
+              <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-2 md:[&_[cmdk-group-items]]:grid-cols-3 [&_[cmdk-group-items]]:gap-1 p-2">
+                {Object.keys(chara)
+                  .sort((a, b) =>
+                    t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                  )
+                  .map((charaId) => {
+                    const disabled = chara[charaId].t[1] === "1";
+                    const selected = v === t(`chara.${charaId}`);
+                    const bg = (() => {
+                      if (disabled)
+                        return personalityBGDisabled[
+                          Number(chara[charaId].t[0]) as Personality
+                        ];
+                      if (selected)
+                        return personalityBG[
+                          Number(chara[charaId].t[0]) as Personality
+                        ];
+                      return personalityBGMarked[
+                        Number(chara[charaId].t[0]) as Personality
+                      ];
+                    })();
+                    return (
+                      <CommandItem
+                        key={charaId}
+                        className={cn(
+                          "p-0 rounded-lg",
+                          disabled && "data-disabled"
+                        )}
+                        value={t(`chara.${charaId}`)}
+                        disabled={disabled}
+                        onSelect={(currentValue) => {
+                          setV(currentValue === v ? "" : currentValue);
+                          onChange(currentValue === v ? "" : charaId);
+                          setOpen(false);
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            "w-full aspect-square relative rounded-lg overflow-hidden border border-background flex",
+                            "hover:scale-110 hover:z-10 transition-transform duration-100",
+                            bg
+                          )}
+                        >
+                          <img
+                            src={`/charas/${charaId}.png`}
+                            className="w-full aspect-square"
+                          />
+                          <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">
+                            {t(`chara.${charaId}`)}
+                          </div>
+                          {selected && (
+                            <div className="h-6 w-6 p-1 absolute top-1 right-1 rounded-full bg-slate-100/80 dark:bg-slate-900/80">
+                              <Check className="w-full h-full" />
+                            </div>
+                          )}
+                        </div>
+                      </CommandItem>
+                    );
+                  })}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>
@@ -136,31 +184,37 @@ const LifeskillCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.tasksearch.lifeskillNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Array(lifeskill.n)
-              .fill(0)
-              .map((_, lifeskillIndex) => (
-                <CommandItem
-                  key={lifeskillIndex + 1}
-                  value={t(`lifeskill.${lifeskillIndex + 1}`)}
-                  onSelect={(currentValue) => {
-                    setV(currentValue === v ? "" : currentValue);
-                    onChange(currentValue === v ? "" : `${lifeskillIndex + 1}`);
-                    setOpen(false);
-                  }}
-                >
-                  {t(`lifeskill.${lifeskillIndex + 1}`)}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      v === t(`lifeskill.${lifeskillIndex + 1}`)
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
+            <CommandList>
+              <CommandGroup>
+                {Array(lifeskill.n)
+                  .fill(0)
+                  .map((_, lifeskillIndex) => (
+                    <CommandItem
+                      key={lifeskillIndex + 1}
+                      value={t(`lifeskill.${lifeskillIndex + 1}`)}
+                      onSelect={(currentValue) => {
+                        setV(currentValue === v ? "" : currentValue);
+                        onChange(
+                          currentValue === v ? "" : `${lifeskillIndex + 1}`
+                        );
+                        setOpen(false);
+                      }}
+                    >
+                      {t(`lifeskill.${lifeskillIndex + 1}`)}
+                      <Check
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          v === t(`lifeskill.${lifeskillIndex + 1}`)
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>
@@ -198,27 +252,31 @@ const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.tasksearch.taskNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Object.keys(task.t).map((taskId) => (
-              <CommandItem
-                key={taskId}
-                value={t(`task.${taskId}`)}
-                onSelect={(currentValue) => {
-                  setV(currentValue === v ? "" : currentValue);
-                  onChange(currentValue === v ? "" : taskId);
-                  setOpen(false);
-                }}
-              >
-                {t(`task.${taskId}`)}
-                <Check
-                  className={cn(
-                    "ml-auto h-4 w-4",
-                    v === t(`task.${taskId}`) ? "opacity-100" : "opacity-0"
-                  )}
-                />
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
+            <CommandList>
+              <CommandGroup>
+                {Object.keys(task.t).map((taskId) => (
+                  <CommandItem
+                    key={taskId}
+                    value={t(`task.${taskId}`)}
+                    onSelect={(currentValue) => {
+                      setV(currentValue === v ? "" : currentValue);
+                      onChange(currentValue === v ? "" : taskId);
+                      setOpen(false);
+                    }}
+                  >
+                    {t(`task.${taskId}`)}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        v === t(`task.${taskId}`) ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>

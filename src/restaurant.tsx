@@ -12,6 +12,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -20,7 +21,11 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ItemSlot from "@/components/parts/item-slot";
-import { personalityBG } from "@/utils/personalityBG";
+import {
+  personalityBG,
+  personalityBGDisabled,
+  personalityBGMarked,
+} from "@/utils/personalityBG";
 import { Personality } from "@/types/enums";
 
 import chara from "@/data/chara";
@@ -54,7 +59,7 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-60 p-0 font-onemobile">
+      <PopoverContent className="w-60 md:w-96 p-0 font-onemobile">
         <Command
           filter={(value, search) =>
             value.includes(search) || icSearch(value, search) ? 1 : 0
@@ -65,30 +70,70 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.restaurant.characterNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Object.keys(chara)
-              .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
-              .map((charaId) => (
-                <CommandItem
-                  key={charaId}
-                  value={t(`chara.${charaId}`)}
-                  disabled={!Object.keys(food.c).includes(charaId)}
-                  onSelect={(currentValue) => {
-                    setV(currentValue === v ? "" : currentValue);
-                    onChange(currentValue === v ? "" : charaId);
-                    setOpen(false);
-                  }}
-                >
-                  {t(`chara.${charaId}`)}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      v === t(`chara.${charaId}`) ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
+            <CommandList>
+              <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-2 md:[&_[cmdk-group-items]]:grid-cols-3 [&_[cmdk-group-items]]:gap-1 p-2">
+                {Object.keys(chara)
+                  .sort((a, b) =>
+                    t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                  )
+                  .map((charaId) => {
+                    const disabled = !Object.keys(food.c).includes(charaId);
+                    const selected = v === t(`chara.${charaId}`);
+                    const bg = (() => {
+                      if (disabled)
+                        return personalityBGDisabled[
+                          Number(chara[charaId].t[0]) as Personality
+                        ];
+                      if (selected)
+                        return personalityBG[
+                          Number(chara[charaId].t[0]) as Personality
+                        ];
+                      return personalityBGMarked[
+                        Number(chara[charaId].t[0]) as Personality
+                      ];
+                    })();
+                    return (
+                      <CommandItem
+                        key={charaId}
+                        className={cn(
+                          "p-0 rounded-lg",
+                          disabled && "data-disabled"
+                        )}
+                        value={t(`chara.${charaId}`)}
+                        disabled={disabled}
+                        onSelect={(currentValue) => {
+                          setV(currentValue === v ? "" : currentValue);
+                          onChange(currentValue === v ? "" : charaId);
+                          setOpen(false);
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            "w-full aspect-square relative rounded-lg overflow-hidden border border-background flex",
+                            "hover:scale-110 hover:z-10 transition-transform duration-100",
+                            bg
+                          )}
+                        >
+                          <img
+                            src={`/charas/${charaId}.png`}
+                            className="w-full aspect-square"
+                          />
+                          <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">
+                            {t(`chara.${charaId}`)}
+                          </div>
+                          {selected && (
+                            <div className="h-6 w-6 p-1 absolute top-1 right-1 rounded-full bg-slate-100/80 dark:bg-slate-900/80">
+                              <Check className="w-full h-full" />
+                            </div>
+                          )}
+                        </div>
+                      </CommandItem>
+                    );
+                  })}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>
@@ -127,29 +172,35 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty>
-          <CommandGroup>
-            {Object.keys(food.f)
-              .sort((a, b) => t(`food.${a}`).localeCompare(t(`food.${b}`)))
-              .map((foodId) => (
-                <CommandItem
-                  key={foodId}
-                  value={t(`food.${foodId}`)}
-                  onSelect={(currentValue) => {
-                    setV(currentValue === v ? "" : currentValue);
-                    onChange(currentValue === v ? "" : foodId);
-                    setOpen(false);
-                  }}
-                >
-                  {t(`food.${foodId}`)}
-                  <Check
-                    className={cn(
-                      "ml-auto h-4 w-4",
-                      v === t(`food.${foodId}`) ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-          </CommandGroup>
+          <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
+            <CommandList>
+              <CommandGroup>
+                {Object.keys(food.f)
+                  .sort((a, b) => t(`food.${a}`).localeCompare(t(`food.${b}`)))
+                  .map((foodId) => (
+                    <CommandItem
+                      key={foodId}
+                      value={t(`food.${foodId}`)}
+                      onSelect={(currentValue) => {
+                        setV(currentValue === v ? "" : currentValue);
+                        onChange(currentValue === v ? "" : foodId);
+                        setOpen(false);
+                      }}
+                    >
+                      {t(`food.${foodId}`)}
+                      <Check
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          v === t(`food.${foodId}`)
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>
@@ -375,7 +426,9 @@ const Restaurant = () => {
                               }
                               className={cn(
                                 "rounded w-16 h-16",
-                                personalityBG[Number(chara[c].t[0]) as Personality]
+                                personalityBG[
+                                  Number(chara[c].t[0]) as Personality
+                                ]
                               )}
                             />
                           </div>
@@ -410,7 +463,9 @@ const Restaurant = () => {
                               }
                               className={cn(
                                 "rounded w-16 h-16",
-                                personalityBG[Number(chara[c].t[0]) as Personality]
+                                personalityBG[
+                                  Number(chara[c].t[0]) as Personality
+                                ]
                               )}
                             />
                           </div>
