@@ -272,7 +272,16 @@ const Setting = () => {
                   onClick={() => {
                     setRemoteHash("");
                     getServerHash()
-                      .then((v) => setRemoteHash(v))
+                      .then((v) => {
+                        setRemoteHash(v);
+                        if (process.env.VERSION_HASH !== v) {
+                          setInstallButtonText("ui.index.versionCheck.update");
+                        } else {
+                          setInstallButtonText(
+                            "ui.index.versionCheck.alreadyLatest"
+                          );
+                        }
+                      })
                       .catch(() => {});
                   }}
                 />
