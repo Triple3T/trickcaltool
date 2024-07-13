@@ -734,7 +734,7 @@ const TrickcalBoard = () => {
                                 payload: i,
                               })
                             }
-                            onTouchStart={(e) => e.preventDefault()}
+                            onTouchStart={(e) => e.stopPropagation()}
                           >
                             {t(`ui.index.${v}`)}
                           </SelectItem>
