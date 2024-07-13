@@ -464,7 +464,7 @@ const Lab = () => {
     const collectionProducible = (
       Object.entries(collection.c).filter(([, c]) =>
         Object.keys(c).includes("m")
-      ) as unknown as [string, CollectionFilteredType][]
+      ) as [string, CollectionFilteredType][]
     ).map(([id, c]) => ({
       id,
       material: c.m,
