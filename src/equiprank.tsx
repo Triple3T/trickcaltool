@@ -72,7 +72,7 @@ import { UserDataEqRank, UserDataUnowned } from "@/types/types";
 import sortChange from "@/utils/sortChange";
 import filterChange from "@/utils/filterChange";
 
-const MAX_RANK = 8;
+const MAX_RANK = 9;
 
 type ViewType = "input" | "rankView" | "targetView";
 
