@@ -60,6 +60,7 @@ i18n
             Marie: "마리",
             Mayo: "마요",
             Meluna: "멜루나",
+            Momo: "모모",
             Mynx: "밍스",
             Naia: "나이아",
             Ner: "네르",
