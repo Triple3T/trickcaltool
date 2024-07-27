@@ -1160,11 +1160,12 @@ const TrickcalBoard = () => {
                                               route.r[
                                                 Race[Number(chara[name].t[5])]
                                               ][boardIndex].s,
-                                            otherBoards: board.c[name].b[
-                                              boardIndex
-                                            ]
-                                              .map((v) => v.toString())
-                                              .join(""),
+                                            otherBoards: board.c[name].b.map(
+                                              (b) =>
+                                                b
+                                                  .map((v) => v.toString())
+                                                  .join("")
+                                            ),
                                             blocked:
                                               ldx === 0
                                                 ? undefined

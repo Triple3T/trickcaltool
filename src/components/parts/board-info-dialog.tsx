@@ -38,7 +38,7 @@ export interface BoardInfoDialogProps {
   charaTypes: string;
   route: string;
   rstart: number;
-  otherBoards: string;
+  otherBoards: string[];
   blocked?: string;
   checked?: boolean;
   unowned?: boolean;
@@ -258,7 +258,7 @@ const BoardInfoDialog = ({
             {t("ui.board.aboutBestRouteDescription")}
           </AlertDescription>
         </Alert>
-        <div className="flex gap-2 justify-evenly">
+        <div className="flex gap-2 justify-evenly -mt-4">
           <div className="flex-auto">
             <SubtitleBar>{t("ui.board.bestRouteExample")}</SubtitleBar>
             <div className="w-32 p-2 mx-auto">
@@ -350,8 +350,8 @@ const BoardInfoDialog = ({
                     <CarouselContent>
                       {blocking.map((bc, i) => {
                         return (
-                          <CarouselItem key={i}>
-                            <div className="w-full max-w-20">
+                          <CarouselItem className="w-full max-w-24" key={i}>
+                            <div>
                               <div className="flex p-2 justify-center">
                                 {bc.split("").map((b, j) => {
                                   return (
@@ -365,7 +365,7 @@ const BoardInfoDialog = ({
                                   );
                                 })}
                               </div>
-                              <div className="text-center w-min mx-auto text-sm">
+                              <div className="text-center w-max mx-auto text-sm">
                                 {i + 1}/{blocking.length}
                               </div>
                             </div>
@@ -381,27 +381,46 @@ const BoardInfoDialog = ({
             )}
           </div>
         </div>
-        <div>
+        <div className="-mt-4">
           <SubtitleBar>
             {t("ui.board.listInCurrentBoard", {
               0: t(`chara.${chara}`),
-              1: t(`ui.board.board${boardIndex + 1}`),
             })}
           </SubtitleBar>
-          <div className="px-4 pt-6 pb-2 flex flex-row justify-center h-12">
-            {otherBoards.split("").map((b, i) => {
-              const bt = BoardType[Number(b)];
-              return (
-                <div className="w-1/6 max-w-12 relative" key={i}>
-                  <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <img
-                      src={`/boards/Tile_${bt}On.png`}
-                      className="bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
-                    />
-                  </div>
-                </div>
-              );
-            })}
+          <div className="px-8 sm:px-16 flex flex-row justify-center -mb-2">
+            <Carousel className="w-full" opts={{ startIndex: boardIndex }}>
+              <CarouselContent className="w-[calc(100%_+_1rem)]">
+                {otherBoards.map((bs, i) => {
+                  return (
+                    <CarouselItem className="w-full" key={i}>
+                      <div className="w-full">
+                        <div className="flex p-4 -mt-1 justify-center h-20">
+                          {bs.split("").map((b, i) => {
+                            const bt = BoardType[Number(b)];
+                            return (
+                              <div className="w-1/6 max-w-12 relative" key={i}>
+                                <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                  <img
+                                    src={`/boards/Tile_${bt}On.png`}
+                                    className="bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="text-center w-max -mt-3 mx-auto text-sm">
+                          {t(`ui.board.board${i + 1}`)}
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+            {/* {otherBoards.split("")} */}
           </div>
         </div>
       </DialogContent>
