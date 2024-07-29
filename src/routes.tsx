@@ -11,6 +11,8 @@ import Loading from "@/components/common/loading";
 // import Lab from "./lab";
 // import BoardSearch from "./boardsearch";
 // import TaskSearch from "./tasksearch";
+// import Restaurant from "./restaurant";
+// import EquipViewer from "./equipviewer";
 // import EventCalc from "./eventcalc";
 // import Checker from "./checker";
 const TrickcalBoard = lazy(() => import("./trickcalboard"));
@@ -20,6 +22,7 @@ const PurpleBoard = lazy(() => import("./purpleboard"));
 const BoardSearch = lazy(() => import("./boardsearch"));
 const TaskSearch = lazy(() => import("./tasksearch"));
 const Restaurant = lazy(() => import("./restaurant"));
+const EquipViewer = lazy(() => import("./equipviewer"));
 const EventCalc = lazy(() => import("./eventcalc"));
 const Checker = lazy(() => import("./checker"));
 
@@ -115,6 +118,18 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout>
         <Suspense fallback={<Loading />}>
           <Restaurant />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/equipviewer",
+    // element: <EquipViewer />,
+    element: (
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <EquipViewer />
         </Suspense>
       </Layout>
     ),

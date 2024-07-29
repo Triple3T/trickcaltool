@@ -95,6 +95,14 @@ const UtilitySetCard = () => {
           <>
             <SubtitleBar>{t("ui.utilities.experimental")}</SubtitleBar>
             <div className={itemContainerClasses}>
+              <Link to={"/equipviewer"}>
+                <div className={experimentalButtonClasses}>
+                  <h4 className={experimentalTextClasses}>
+                    {t("ui.index.testMark")}
+                    {t("ui.equipviewer.title")}
+                  </h4>
+                </div>
+              </Link>
               <Link to={"/eventcalc"}>
                 <div className={experimentalButtonClasses}>
                   <h4 className={experimentalTextClasses}>
