@@ -599,7 +599,10 @@ const EquipViewer = () => {
                   );
                 })}
               </div>
-              <div>아래 데이터가 누락되어 있습니다</div>
+              <div className="break-keep">
+                아래 데이터가 누락되어 있습니다 (표에 없는 사도는 모든 랭크
+                장비 착용 정보가 입력되어 있습니다)
+              </div>
             </div>
           );
         })(
@@ -720,6 +723,7 @@ const EquipViewer = () => {
                 );
               })
           : Object.entries(equip.c)
+              .filter(([, es]) => !es.every((e) => e.length))
               .sort(([a], [b]) =>
                 t(`chara.${a}`).localeCompare(t(`chara.${b}`))
               )
