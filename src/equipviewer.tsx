@@ -28,6 +28,8 @@ import chara from "@/data/chara";
 import equip from "@/data/equip";
 import { Badge } from "./components/ui/badge";
 
+const COMPLETEDRANK = [2, 3, 4, 5];
+
 interface IComboboxOuterProp {
   value: string;
   onChange: (value: string) => void;
@@ -578,7 +580,7 @@ const EquipViewer = () => {
               <div className="p-1">{`Data: ${dt}, Total: ${tt} (${
                 Math.round((dt * 10000) / tt) / 100
               }%)`}</div>
-              <div className="flex justify-center gap-1 p-1">
+              <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 p-1">
                 {rk.map((v, i) => {
                   return (
                     <div
@@ -732,12 +734,13 @@ const EquipViewer = () => {
                   >
                     <div className="flex-1">{t(`chara.${charaId}`)}</div>
                     {es.map((c, i) => {
+                      if (COMPLETEDRANK.includes(i + 1)) return null;
                       return (
                         <div
                           key={`${charaId}-${i}`}
                           className={cn(
                             rankClassNames[i][1],
-                            "flex-0",
+                            "flex-1",
                             c.length ? "opacity-0" : "opacity-100"
                           )}
                         >
