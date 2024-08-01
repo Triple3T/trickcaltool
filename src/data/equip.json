@@ -948,10 +948,10 @@
             ["e.weapon.319","e.armor.313","e.armor.303","e.accessory.305","e.accessory.308","e.armor.322"],
             ["e.armor.414","e.armor.401","e.weapon.420","e.armor.414","e.accessory.407","e.armor.416"],
             ["e.armor.501","e.weapon.517","e.armor.514","e.armor.519","e.accessory.504","e.armor.512"],
+            ["e.weapon.625","e.armor.615","e.armor.603","e.armor.620","e.accessory.606","e.armor.617"],
             [],
             [],
-            [],
-            []
+            ["e.weapon.920","e.armor.911","e.armor.903","e.weapon.933","e.accessory.909","e.armor.917"]
         ],
         "Barong":[
             ["e.weapon.118","e.armor.115","e.armor.101","e.accessory.111","e.accessory.106","e.accessory.103"],
@@ -962,7 +962,7 @@
             [],
             [],
             [],
-            []
+            ["e.weapon.918","e.armor.910","e.armor.903","e.weapon.926","e.accessory.903","e.armor.916"]
         ],
         "Belita":[
             ["e.weapon.125","e.accessory.103","e.armor.102","e.accessory.104","e.accessory.109","e.accessory.105"],
