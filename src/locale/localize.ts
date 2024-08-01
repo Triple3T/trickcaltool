@@ -21,6 +21,8 @@ i18n
             Ashur: "에슈르",
             Aya: "아야",
             Bana: "바나",
+            Barie: "바리에",
+            Barong: "바롱",
             Belita: "벨리타",
             Beni: "베니",
             BigWood: "빅우드",
