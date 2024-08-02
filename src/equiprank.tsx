@@ -446,7 +446,8 @@ const EquipRank = () => {
     });
     const dirty = Object.values(charas).some(
       (c) =>
-        c.rank < (userData.s[0] || 1) || c.rank > (userData.s[1] || MAX_RANK)
+        // c.rank < (userData.s[0] || 1) || c.rank > (userData.s[1] || MAX_RANK)
+      c.rank < (userData.s[0] || 1) || c.rank > MAX_RANK
     );
     dispatchRankData({
       type: "restore",
@@ -456,7 +457,8 @@ const EquipRank = () => {
         user: userData,
         targetStat: userData.v || [],
         minRank: userData.s[0] || 1,
-        maxRank: userData.s[1] || MAX_RANK,
+        // maxRank: userData.s[1] || MAX_RANK,
+        maxRank: MAX_RANK,
         sortAndFilter: userData.f,
         dirty,
         isDirty: dirtyFlag ? 65536 : 0,
@@ -469,7 +471,8 @@ const EquipRank = () => {
           .filter(
             ([, v]) =>
               v.rank < (userData.s[0] || 1) ||
-              v.rank > (userData.s[1] || MAX_RANK)
+              // v.rank > (userData.s[1] || MAX_RANK)
+              v.rank > MAX_RANK
           )
           .map(([c]) => c)
       );
