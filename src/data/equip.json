@@ -135,7 +135,7 @@
             "424": {"s":{"AttackMagic":149,"CriticalResist":107,"CriticalMultResist":150},"i":{"r.weapon.402":12},"g":7500},
             "425": {"s":{"AttackMagic":149,"CriticalResist":107,"CriticalMultResist":150},"i":{"r.weapon.402":12},"g":7500},
             "426": {"s":{"AttackMagic":149,"CriticalResist":107,"CriticalMultResist":150},"i":{"r.weapon.402":12},"g":7500},
-            "427": null,
+            "427": {"s":{"AttackMagic":149,"CriticalResist":107,"CriticalMultResist":150},"i":{"r.weapon.402":12},"g":7500},
             "428": {"s":{"AttackMagic":194,"CriticalResist":107},"i":{"r.weapon.402":12},"g":7500},
             "429": {"s":{"AttackMagic":194,"CriticalResist":107},"i":{"r.weapon.402":12},"g":7500},
             "430": {"s":{"AttackMagic":194,"CriticalResist":107},"i":{"r.weapon.402":12},"g":7500},
@@ -882,8 +882,8 @@
             ["e.weapon.325","e.armor.317","e.armor.301","e.accessory.304","e.weapon.320","e.accessory.303"],
             ["e.weapon.424","e.armor.401","e.weapon.422","e.accessory.407","e.accessory.411","e.armor.418"],
             ["e.weapon.524","e.armor.501","e.weapon.518","e.accessory.505","e.accessory.511","e.armor.516"],
-            [],
-            [],
+            ["e.weapon.623","e.armor.604","e.weapon.623","e.accessory.605","e.armor.620","e.armor.616"],
+            ["e.armor.704","e.armor.712","e.weapon.718","e.accessory.701","e.accessory.707","e.armor.716"],
             ["e.weapon.827","e.armor.810","e.armor.804","e.weapon.817","e.accessory.810","e.armor.819"],
             ["e.weapon.918","e.armor.910","e.armor.904","e.weapon.922","e.accessory.904","e.armor.916"]
         ],
@@ -921,12 +921,12 @@
             ["e.weapon.918","e.armor.910","e.armor.905","e.weapon.923","e.accessory.904","e.armor.916"]
         ],
         "Aya":[
-            [],
+            ["e.weapon.126","e.accessory.103","e.armor.105","e.accessory.105","e.accessory.111","e.armor.118"],
             ["e.weapon.226","e.armor.213","e.armor.204","e.accessory.204","e.accessory.207","e.accessory.203"],
             ["e.weapon.327","e.armor.304","e.weapon.323","e.accessory.306","e.accessory.308","e.armor.313"],
             ["e.weapon.430","e.armor.404","e.weapon.422","e.accessory.409","e.accessory.408","e.armor.413"],
             ["e.weapon.525","e.armor.503","e.weapon.519","e.armor.512","e.accessory.505","e.armor.514"],
-            [],
+            ["e.weapon.625","e.armor.604","e.weapon.618","e.armor.619","e.accessory.605","e.armor.618"],
             ["e.armor.703","e.armor.712","e.weapon.718","e.accessory.701","e.accessory.707","e.armor.716"],
             ["e.weapon.828","e.armor.810","e.armor.804","e.weapon.807","e.accessory.810","e.armor.817"],
             ["e.weapon.917","e.armor.910","e.armor.904","e.weapon.923","e.accessory.904","e.armor.914"]
@@ -1036,18 +1036,18 @@
             ["e.weapon.322","e.armor.311","e.armor.301","e.accessory.303","e.armor.314","e.armor.318"],
             ["e.weapon.424","e.armor.412","e.armor.401","e.armor.420","e.accessory.405","e.armor.416"],
             ["e.weapon.520","e.armor.516","e.armor.501","e.accessory.511","e.accessory.504","e.accessory.505"],
-            [],
+            ["e.weapon.621","e.armor.613","e.armor.601","e.accessory.606","e.accessory.608","e.armor.620"],
             ["e.armor.704","e.accessory.706","e.weapon.723","e.accessory.704","e.accessory.712","e.armor.723"],
             ["e.weapon.825","e.armor.812","e.armor.805","e.weapon.820","e.accessory.801","e.armor.821"],
             ["e.weapon.920","e.armor.912","e.armor.905","e.weapon.933","e.accessory.913","e.armor.918"]
         ],
         "Chloe":[
-            [],
+            ["e.weapon.121","e.armor.108","e.armor.112","e.accessory.109","e.accessory.102","e.accessory.103"],
             ["e.weapon.221","e.armor.208","e.armor.212","e.accessory.210","e.accessory.202","e.armor.214"],
             ["e.weapon.322","e.armor.308","e.weapon.320","e.accessory.310","e.accessory.308","e.armor.320"],
             ["e.weapon.424","e.armor.408","e.weapon.423","e.accessory.409","e.accessory.408","e.armor.419"],
             ["e.weapon.520","e.armor.510","e.weapon.516","e.armor.517","e.accessory.507","e.armor.507"],
-            [],
+            ["e.weapon.621","e.armor.608","e.weapon.616","e.accessory.606","e.accessory.608","e.armor.618"],
             ["e.armor.701","e.armor.711","e.weapon.722","e.accessory.701","e.accessory.707","e.armor.715"],
             ["e.weapon.826","e.armor.809","e.armor.801","e.weapon.805","e.accessory.813","e.armor.817"],
             ["e.weapon.919","e.armor.909","e.armor.901","e.weapon.925","e.accessory.901","e.armor.914"]
@@ -1070,7 +1070,7 @@
             ["e.weapon.417","e.armor.411","e.armor.402","e.accessory.404","e.accessory.402","e.armor.415"],
             ["e.weapon.516","e.armor.511","e.armor.501","e.accessory.508","e.accessory.510","e.accessory.506"],
             [],
-            [],
+            ["e.armor.704","e.accessory.706","e.weapon.723","e.accessory.704","e.accessory.712","e.armor.723"],
             ["e.weapon.825","e.armor.812","e.armor.805","e.weapon.820","e.accessory.801","e.armor.821"],
             ["e.weapon.920","e.armor.912","e.armor.905","e.weapon.933","e.accessory.913","e.armor.918"]
         ],
@@ -1113,13 +1113,13 @@
             ["e.weapon.315","e.armor.310","e.armor.304","e.accessory.310","e.accessory.301","e.accessory.303"],
             ["e.weapon.416","e.armor.410","e.armor.403","e.accessory.408","e.accessory.401","e.accessory.407"],
             ["e.weapon.515","e.armor.509","e.armor.503","e.accessory.505","e.accessory.503","e.armor.518"],
-            [],
+            ["e.weapon.615","e.armor.609","e.armor.603","e.armor.613","e.armor.614","e.armor.619"],
             ["e.armor.703","e.armor.712","e.weapon.708","e.accessory.701","e.accessory.707","e.armor.716"],
             ["e.weapon.814","e.armor.808","e.armor.803","e.weapon.817","e.accessory.810","e.armor.820"],
             ["e.weapon.902","e.armor.908","e.armor.903","e.weapon.907","e.accessory.904","e.armor.917"]
         ],
         "Epica":[
-            [],
+            ["e.weapon.112","e.armor.106","e.armor.109","e.accessory.103","e.accessory.111","e.accessory.105"],
             ["e.weapon.215","e.armor.210","e.armor.204","e.accessory.204","e.accessory.203","e.armor.219"],
             ["e.weapon.314","e.armor.313","e.armor.303","e.accessory.303","e.accessory.313","e.armor.314"],
             ["e.weapon.415","e.armor.401","e.weapon.410","e.accessory.409","e.accessory.408","e.armor.417"],
@@ -1135,7 +1135,7 @@
             ["e.weapon.324","e.armor.312","e.weapon.318","e.armor.317","e.armor.322","e.armor.301"],
             ["e.weapon.429","e.armor.401","e.weapon.420","e.accessory.408","e.accessory.409","e.accessory.407"],
             ["e.weapon.522","e.armor.501","e.weapon.519","e.armor.510","e.accessory.509","e.armor.514"],
-            [],
+            ["e.weapon.622","e.armor.601","e.weapon.617","e.accessory.612","e.accessory.604","e.armor.615"],
             ["e.armor.704","e.armor.712","e.weapon.718","e.accessory.701","e.accessory.707","e.armor.716"],
             ["e.weapon.827","e.armor.810","e.armor.805","e.weapon.805","e.accessory.810","e.armor.817"],
             ["e.weapon.918","e.armor.910","e.armor.905","e.weapon.925","e.accessory.904","e.armor.914"]
@@ -1147,7 +1147,7 @@
             ["e.weapon.425","e.armor.404","e.weapon.418","e.armor.419","e.accessory.406","e.armor.418"],
             ["e.weapon.521","e.armor.511","e.armor.503","e.armor.518","e.accessory.511","e.armor.517"],
             ["e.weapon.625","e.armor.615","e.armor.603","e.armor.620","e.accessory.606","e.armor.617"],
-            [],
+            ["e.armor.708","e.accessory.705","e.weapon.717","e.accessory.702","e.accessory.711","e.armor.720"],
             ["e.weapon.825","e.armor.811","e.armor.803","e.weapon.820","e.accessory.804","e.armor.820"],
             ["e.weapon.920","e.armor.911","e.armor.903","e.weapon.933","e.accessory.910","e.armor.917"]
         ],
@@ -1179,7 +1179,7 @@
             ["e.weapon.323","e.armor.305","e.weapon.317","e.armor.313","e.accessory.311","e.armor.319"],
             ["e.weapon.430","e.accessory.407","e.armor.406","e.accessory.409","e.accessory.402","e.accessory.409"],
             ["e.weapon.525","e.armor.517","e.armor.505","e.armor.510","e.accessory.502","e.armor.517"],
-            [],
+            ["e.weapon.625","e.armor.620","e.armor.604","e.accessory.610","e.accessory.609","e.accessory.608"],
             ["e.armor.708","e.accessory.705","e.weapon.717","e.accessory.702","e.accessory.711","e.armor.720"],
             ["e.weapon.825","e.armor.811","e.armor.803","e.weapon.822","e.accessory.803","e.armor.820"],
             ["e.weapon.920","e.armor.911","e.armor.903","e.weapon.931","e.accessory.911","e.armor.917"]
@@ -1224,7 +1224,7 @@
             ["e.weapon.430","e.armor.402","e.weapon.425","e.armor.415","e.armor.413","e.armor.417"],
             ["e.weapon.525","e.armor.503","e.weapon.517","e.accessory.512","e.accessory.507","e.armor.512"],
             ["e.weapon.619","e.armor.603","e.weapon.621","e.armor.619","e.accessory.612","e.armor.618"],
-            [],
+            ["e.armor.703","e.armor.712","e.weapon.718","e.accessory.701","e.accessory.707","e.armor.716"],
             ["e.weapon.827","e.armor.808","e.armor.804","e.weapon.805","e.accessory.810","e.armor.819"],
             ["e.weapon.918","e.armor.908","e.armor.904","e.weapon.925","e.accessory.904","e.armor.916"]
         ],
@@ -1300,7 +1300,7 @@
             ["e.weapon.310","e.armor.305","e.weapon.302","e.accessory.304","e.accessory.312","e.armor.320"],
             ["e.weapon.407","e.armor.405","e.armor.410","e.armor.410","e.armor.417","e.armor.419"],
             ["e.weapon.507","e.armor.501","e.armor.504","e.armor.516","e.accessory.501","e.armor.509"],
-            [],
+            ["e.weapon.608","e.armor.605","e.weapon.603","e.armor.614","e.accessory.603","e.armor.601"],
             ["e.armor.702","e.armor.712","e.weapon.708","e.accessory.701","e.accessory.707","e.armor.716"],
             ["e.weapon.814","e.armor.810","e.armor.802","e.weapon.804","e.accessory.810","e.armor.817"],
             ["e.weapon.902","e.armor.910","e.armor.902","e.weapon.911","e.accessory.904","e.armor.914"]
@@ -1377,7 +1377,7 @@
             ["e.weapon.315","e.armor.317","e.armor.302","e.accessory.309","e.accessory.305","e.accessory.303"],
             ["e.weapon.416","e.armor.415","e.armor.402","e.armor.420","e.accessory.406","e.armor.413"],
             ["e.weapon.506","e.armor.508","e.armor.502","e.accessory.508","e.accessory.501","e.armor.519"],
-            [],
+            ["e.weapon.607","e.armor.616","e.armor.602","e.accessory.605","e.accessory.606","e.armor.613"],
             ["e.armor.704","e.accessory.703","e.weapon.713","e.accessory.702","e.accessory.711","e.armor.719"],
             ["e.weapon.812","e.armor.811","e.armor.805","e.weapon.802","e.accessory.803","e.armor.821"],
             ["e.weapon.904","e.armor.911","e.armor.905","e.weapon.913","e.accessory.911","e.armor.918"]
@@ -1410,7 +1410,7 @@
             ["e.weapon.312","e.armor.316","e.armor.302","e.accessory.312","e.accessory.307","e.accessory.305"],
             ["e.weapon.413","e.armor.413","e.armor.403","e.accessory.409","e.accessory.408","e.armor.420"],
             ["e.weapon.505","e.armor.508","e.armor.503","e.accessory.503","e.accessory.501","e.accessory.509"],
-            [],
+            ["e.weapon.605","e.armor.610","e.armor.601","e.accessory.611","e.accessory.607","e.armor.615"],
             [],
             ["e.weapon.811","e.armor.812","e.armor.805","e.weapon.820","e.accessory.801","e.armor.821"],
             ["e.weapon.905","e.armor.912","e.armor.905","e.weapon.930","e.accessory.913","e.armor.918"]
@@ -1422,7 +1422,7 @@
             ["e.weapon.428","e.armor.402","e.weapon.418","e.accessory.406","e.accessory.411","e.armor.415"],
             ["e.weapon.518","e.armor.501","e.weapon.517","e.accessory.505","e.accessory.509","e.armor.516"],
             ["e.weapon.618","e.armor.602","e.weapon.617","e.armor.613","e.accessory.602","e.armor.616"],
-            [],
+            ["e.armor.704","e.armor.713","e.weapon.721","e.accessory.701","e.accessory.707","e.armor.717"],
             ["e.weapon.826","e.armor.810","e.armor.804","e.weapon.804","e.accessory.810","e.armor.819"],
             ["e.weapon.919","e.armor.910","e.armor.904","e.weapon.926","e.accessory.904","e.armor.916"]
         ],
@@ -1432,7 +1432,7 @@
             ["e.weapon.320","e.armor.307","e.weapon.316","e.armor.316","e.armor.314","e.armor.312"],
             ["e.weapon.423","e.armor.406","e.weapon.421","e.accessory.405","e.accessory.409","e.armor.419"],
             ["e.weapon.524","e.armor.504","e.weapon.516","e.accessory.512","e.accessory.505","e.armor.518"],
-            [],
+            ["e.weapon.624","e.armor.604","e.weapon.616","e.armor.618","e.accessory.607","e.armor.619"],
             ["e.armor.702","e.armor.713","e.weapon.721","e.accessory.701","e.accessory.707","e.armor.717"],
             ["e.weapon.826","e.armor.808","e.armor.802","e.weapon.805","e.accessory.813","e.armor.817"],
             ["e.weapon.918","e.armor.908","e.armor.902","e.weapon.925","e.accessory.901","e.armor.914"]
@@ -1471,7 +1471,7 @@
             ["e.weapon.919","e.armor.908","e.armor.904","e.weapon.926","e.accessory.903","e.armor.914"]
         ],
         "RenewaAwaken":[
-            [],
+            ["e.weapon.112","e.armor.106","e.armor.109","e.accessory.103","e.accessory.111","e.accessory.105"],
             ["e.weapon.215","e.armor.210","e.armor.204","e.accessory.204","e.accessory.203","e.armor.219"],
             ["e.weapon.314","e.armor.313","e.armor.303","e.accessory.303","e.accessory.313","e.armor.314"],
             ["e.weapon.415","e.armor.401","e.armor.413","e.accessory.409","e.accessory.408","e.armor.417"],
@@ -1509,8 +1509,8 @@
             ["e.weapon.310","e.armor.321","e.armor.308","e.accessory.308","e.accessory.310","e.accessory.303"],
             ["e.weapon.407","e.armor.407","e.weapon.403","e.armor.418","e.accessory.411","e.armor.415"],
             ["e.weapon.505","e.armor.517","e.armor.505","e.accessory.501","e.accessory.503","e.accessory.507"],
-            [],
-            [],
+            ["e.weapon.605","e.armor.619","e.armor.606","e.accessory.610","e.accessory.601","e.armor.618"],
+            ["e.armor.705","e.armor.714","e.weapon.701","e.accessory.702","e.accessory.711","e.armor.718"],
             ["e.weapon.812","e.armor.809","e.armor.802","e.weapon.822","e.accessory.803","e.armor.820"],
             ["e.weapon.904","e.armor.909","e.armor.902","e.weapon.915","e.accessory.911","e.armor.917"]
         ],
@@ -1564,7 +1564,7 @@
             ["e.weapon.322","e.armor.308","e.weapon.320","e.accessory.310","e.accessory.308","e.armor.318"],
             ["e.weapon.424","e.armor.408","e.weapon.423","e.armor.419","e.accessory.408","e.armor.418"],
             ["e.weapon.520","e.armor.510","e.weapon.516","e.armor.517","e.accessory.507","e.armor.507"],
-            [],
+            ["e.weapon.621","e.armor.608","e.weapon.616","e.accessory.606","e.accessory.608","e.armor.618"],
             ["e.armor.701","e.armor.711","e.weapon.722","e.accessory.701","e.accessory.707","e.armor.715"],
             ["e.weapon.826","e.armor.808","e.armor.801","e.weapon.804","e.accessory.810","e.armor.818"],
             ["e.weapon.919","e.armor.908","e.armor.901","e.weapon.926","e.accessory.904","e.armor.915"]
@@ -1641,13 +1641,13 @@
             ["e.weapon.307","e.armor.302","e.weapon.301","e.accessory.303","e.accessory.312","e.armor.316"],
             ["e.weapon.410","e.armor.415","e.weapon.406","e.armor.413","e.accessory.411","e.armor.402"],
             ["e.weapon.509","e.armor.509","e.armor.501","e.armor.513","e.accessory.505","e.armor.514"],
-            [],
+            ["e.weapon.613","e.armor.616","e.armor.602","e.armor.613","e.accessory.605","e.armor.614"],
             ["e.armor.704","e.accessory.710","e.weapon.704","e.accessory.704","e.accessory.712","e.armor.722"],
             ["e.weapon.811","e.armor.812","e.armor.805","e.weapon.820","e.accessory.801","e.armor.821"],
             ["e.weapon.905","e.armor.912","e.armor.905","e.weapon.930","e.accessory.913","e.armor.918"]
         ],
         "Tig":[
-            [],
+            ["e.weapon.112","e.armor.117","e.armor.105","e.accessory.108","e.accessory.103","e.armor.113"],
             ["e.weapon.203","e.armor.207","e.weapon.204","e.accessory.203","e.accessory.211","e.armor.214"],
             ["e.weapon.306","e.armor.305","e.weapon.303","e.accessory.312","e.accessory.308","e.armor.319"],
             ["e.weapon.409","e.armor.407","e.weapon.401","e.accessory.407","e.accessory.408","e.armor.415"],
@@ -1674,7 +1674,7 @@
             ["e.weapon.314","e.armor.306","e.armor.302","e.accessory.311","e.accessory.311","e.armor.317"],
             ["e.weapon.405","e.armor.403","e.weapon.402","e.armor.414","e.accessory.409","e.armor.401"],
             ["e.weapon.508","e.armor.518","e.armor.507","e.accessory.505","e.armor.509","e.accessory.509"],
-            [],
+            ["e.weapon.608","e.armor.603","e.armor.601","e.armor.614","e.accessory.611","e.armor.609"],
             ["e.armor.702","e.armor.711","e.weapon.703","e.accessory.701","e.accessory.707","e.armor.715"],
             ["e.weapon.813","e.armor.808","e.armor.802","e.weapon.802","e.accessory.812","e.armor.817"],
             ["e.weapon.903","e.armor.908","e.armor.902","e.weapon.913","e.accessory.902","e.armor.914"]
@@ -1691,12 +1691,12 @@
             ["e.weapon.905","e.armor.912","e.armor.905","e.weapon.930","e.accessory.913","e.armor.918"]
         ],
         "Vivi":[
-            [],
+            ["e.weapon.121","e.armor.108","e.armor.112","e.accessory.109","e.accessory.102","e.accessory.103"],
             ["e.weapon.221","e.armor.208","e.armor.212","e.accessory.210","e.accessory.202","e.armor.214"],
             ["e.weapon.322","e.armor.308","e.weapon.320","e.accessory.310","e.accessory.308","e.armor.320"],
             ["e.weapon.424","e.armor.408","e.weapon.423","e.accessory.409","e.accessory.408","e.armor.419"],
             ["e.weapon.520","e.armor.510","e.weapon.516","e.armor.517","e.accessory.507","e.armor.507"],
-            [],
+            ["e.weapon.621","e.armor.608","e.weapon.616","e.accessory.606","e.accessory.608","e.armor.618"],
             ["e.armor.701","e.armor.711","e.weapon.722","e.accessory.701","e.accessory.707","e.armor.715"],
             ["e.weapon.827","e.armor.809","e.armor.801","e.weapon.802","e.accessory.812","e.armor.817"],
             ["e.weapon.918","e.armor.909","e.armor.901","e.weapon.928","e.accessory.902","e.armor.914"]
