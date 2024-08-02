@@ -28,7 +28,7 @@ import chara from "@/data/chara";
 import equip from "@/data/equip";
 import { Badge } from "./components/ui/badge";
 
-const COMPLETEDRANK = [2, 3, 4, 5];
+const COMPLETEDRANK = [2, 3, 4, 5, 8, 9];
 
 interface IComboboxOuterProp {
   value: string;
