@@ -28,8 +28,6 @@ import chara from "@/data/chara";
 import equip from "@/data/equip";
 import { Badge } from "./components/ui/badge";
 
-const COMPLETEDRANK = [2, 3, 4, 5, 8, 9];
-
 interface IComboboxOuterProp {
   value: string;
   onChange: (value: string) => void;
@@ -372,12 +370,7 @@ const EquipViewer = () => {
   }, []);
 
   return (
-    <div
-      className={cn(
-        "font-onemobile mx-auto",
-        selectedChara || selectedEquip ? "max-w-lg p-4" : "max-w-3xl"
-      )}
-    >
+    <div className="font-onemobile mx-auto max-w-lg p-4">
       <div className="w-full h-4" />
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
@@ -600,8 +593,8 @@ const EquipViewer = () => {
                 })}
               </div>
               <div className="break-keep">
-                아래 데이터가 누락되어 있습니다 (표에 없는 사도는 모든 랭크
-                장비 착용 정보가 입력되어 있습니다)
+                아래 데이터가 누락되어 있습니다 (표에 없는 사도는 모든 랭크 장비
+                착용 정보가 입력되어 있습니다)
               </div>
             </div>
           );
@@ -732,20 +725,21 @@ const EquipViewer = () => {
                   <div
                     key={charaId}
                     className={cn(
-                      "flex flex-[120%] gap-2 p-1 items-center",
+                      "flex gap-2 px-4 py-1 items-center",
                       idx % 2 ? "bg-slate-200/25" : ""
                     )}
                   >
-                    <div className="flex-1">{t(`chara.${charaId}`)}</div>
+                    <div className="flex-1 text-left">
+                      {t(`chara.${charaId}`)}
+                    </div>
                     {es.map((c, i) => {
-                      if (COMPLETEDRANK.includes(i + 1)) return null;
+                      if (c.length) return null;
                       return (
                         <div
                           key={`${charaId}-${i}`}
                           className={cn(
                             rankClassNames[i][1],
-                            "flex-1",
-                            c.length ? "opacity-0" : "opacity-100"
+                            "flex-0 opacity-100"
                           )}
                         >
                           RANK {i + 1}
