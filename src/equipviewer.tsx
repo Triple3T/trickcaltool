@@ -638,23 +638,24 @@ const EquipViewer = () => {
                             1
                           )}${iNum}`;
                           return (
-                            <ItemSlot
-                              key={si}
-                              item={fileName}
-                              size={3}
-                              fullItemPath
-                              rarityInfo={(() => {
-                                if (["9"].includes(iNum.charAt(0)))
-                                  return { s: "Yellow" };
-                                if (["7", "8", "9"].includes(iNum.charAt(0)))
-                                  return { s: "Purple", b: "#B371F5" };
-                                if (["5", "6"].includes(iNum.charAt(0)))
-                                  return { s: "Blue", b: "#65A7E9" };
-                                if (["3", "4"].includes(iNum.charAt(0)))
-                                  return { s: "Green", b: "#65DD82" };
-                                return { s: "Gray", b: "#B0B0B0" };
-                              })()}
-                            />
+                            <div key={si} onClick={() => searchEquip(e)}>
+                              <ItemSlot
+                                item={fileName}
+                                size={3}
+                                fullItemPath
+                                rarityInfo={(() => {
+                                  if (["9"].includes(iNum.charAt(0)))
+                                    return { s: "Yellow" };
+                                  if (["7", "8", "9"].includes(iNum.charAt(0)))
+                                    return { s: "Purple", b: "#B371F5" };
+                                  if (["5", "6"].includes(iNum.charAt(0)))
+                                    return { s: "Blue", b: "#65A7E9" };
+                                  if (["3", "4"].includes(iNum.charAt(0)))
+                                    return { s: "Green", b: "#65DD82" };
+                                  return { s: "Gray", b: "#B0B0B0" };
+                                })()}
+                              />
+                            </div>
                           );
                         })
                       : "No Data"}
@@ -675,7 +676,9 @@ const EquipViewer = () => {
                 const eqSet = sets[selectedRankIndex];
                 return (
                   <div key={chara}>
-                    <div className="text-lg">{t(`chara.${chara}`)}</div>
+                    <div className="text-lg" onClick={() => searchChara(chara)}>
+                      {t(`chara.${chara}`)}
+                    </div>
                     <div
                       className={cn(
                         "flex flex-wrap justify-center w-32 gap-2 rounded-lg p-2",
@@ -691,23 +694,26 @@ const EquipViewer = () => {
                               1
                             )}${iNum}`;
                             return (
-                              <ItemSlot
-                                key={e}
-                                item={fileName}
-                                size={3}
-                                fullItemPath
-                                rarityInfo={(() => {
-                                  if (["9"].includes(iNum.charAt(0)))
-                                    return { s: "Yellow" };
-                                  if (["7", "8", "9"].includes(iNum.charAt(0)))
-                                    return { s: "Purple", b: "#B371F5" };
-                                  if (["5", "6"].includes(iNum.charAt(0)))
-                                    return { s: "Blue", b: "#65A7E9" };
-                                  if (["3", "4"].includes(iNum.charAt(0)))
-                                    return { s: "Green", b: "#65DD82" };
-                                  return { s: "Gray", b: "#B0B0B0" };
-                                })()}
-                              />
+                              <div key={e} onClick={() => searchEquip(e)}>
+                                <ItemSlot
+                                  item={fileName}
+                                  size={3}
+                                  fullItemPath
+                                  rarityInfo={(() => {
+                                    if (["9"].includes(iNum.charAt(0)))
+                                      return { s: "Yellow" };
+                                    if (
+                                      ["7", "8", "9"].includes(iNum.charAt(0))
+                                    )
+                                      return { s: "Purple", b: "#B371F5" };
+                                    if (["5", "6"].includes(iNum.charAt(0)))
+                                      return { s: "Blue", b: "#65A7E9" };
+                                    if (["3", "4"].includes(iNum.charAt(0)))
+                                      return { s: "Green", b: "#65DD82" };
+                                    return { s: "Gray", b: "#B0B0B0" };
+                                  })()}
+                                />
+                              </div>
                             );
                           })
                         : "No Data"}
