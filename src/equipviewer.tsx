@@ -659,6 +659,43 @@ const EquipViewer = () => {
                           );
                         })
                       : "No Data"}
+                    <div className="flex justify-center items-center gap-1">
+                      <img
+                        src="/icons/CurrencyIcon_0047.png"
+                        alt=""
+                        className="w-5 h-5"
+                      />
+                      <div>
+                        {es.length > 0 &&
+                          es
+                            .reduce((acc, cur) => {
+                              const [, iPart, iNum] = cur.split(".");
+                              const equipInfo =
+                                equip.e[
+                                  iPart as "weapon" | "armor" | "accessory"
+                                ][iNum];
+                              if (!equipInfo) return acc;
+                              if (!("i" in equipInfo)) {
+                                const iRank = Number(iNum.charAt(0));
+                                return acc + equip.v.partsRequire[iRank - 1];
+                              }
+                              const recipe = equipInfo.i;
+                              const cost = Object.entries(recipe).reduce(
+                                (count, [ig, val]) => {
+                                  const [, , igNum] = ig.split(".");
+                                  const igRank = Number(igNum.charAt(0));
+                                  return (
+                                    count +
+                                    val * equip.v.partsRequire[igRank - 1]
+                                  );
+                                },
+                                0
+                              );
+                              return acc + cost;
+                            }, 0)
+                            .toLocaleString()}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
