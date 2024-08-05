@@ -16,6 +16,7 @@ export default equip as {
     enhancePoint: number[];
     enhanceEquip: number[];
     enhanceRequire: number[][];
+    enhanceRate: number[][];
     enhanceCost: number[];
     partsRequire: number[];
   };

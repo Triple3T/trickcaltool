@@ -27,6 +27,7 @@ import rankClassNames from "@/utils/rankClassNames";
 import chara from "@/data/chara";
 import equip from "@/data/equip";
 import { Badge } from "./components/ui/badge";
+import { Checkbox } from "./components/ui/checkbox";
 
 interface IComboboxOuterProp {
   value: string;
@@ -358,6 +359,9 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
 
 const EquipViewer = () => {
   const { t } = useTranslation();
+  const [showEquipPartsRequired, setShowEquipPartsRequired] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [showFullEnhanced, setShowFullEnhanced] = useState(false);
   const [selectedChara, setSelectedChara] = useState("");
   const [selectedEquip, setSelectedEquip] = useState("");
   const searchChara = useCallback((charaId: string) => {
@@ -380,23 +384,51 @@ const EquipViewer = () => {
           </div>
         </div>
         {selectedChara && (
-          <div className="flex">
+          <div className="flex gap-2">
             <img src={`/charas/${selectedChara}.png`} className="w-24 h-24" />
-            <div className="flex flex-col justify-center gap-1 p-1">
+            <div className="flex flex-col justify-start gap-1 p-1">
               <div className="text-2xl">{t(`chara.${selectedChara}`)}</div>
-              <div className="text-sm flex flex-wrap justify-evenly gap-x-2 gap-y-1">
-                {equip.c[selectedChara].map((es, i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      rankClassNames[i][1],
-                      es.length ? "opacity-100" : "opacity-25"
-                    )}
-                  >
-                    RANK {i + 1}
-                  </div>
-                ))}
+              <div className="text-sm flex items-center gap-2">
+                <Checkbox
+                  id="showEquipPartsRequired"
+                  checked={showEquipPartsRequired}
+                  onCheckedChange={(v) => setShowEquipPartsRequired(Boolean(v))}
+                />
+                <label
+                  htmlFor="showEquipPartsRequired"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  정석 비용 보기
+                </label>
               </div>
+              <div className="text-sm flex items-center gap-2">
+                <Checkbox
+                  id="showStats"
+                  checked={showStats}
+                  onCheckedChange={(v) => setShowStats(Boolean(v))}
+                />
+                <label
+                  htmlFor="showStats"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  총합 스탯 보기
+                </label>
+              </div>
+              {showStats && (
+                <div className="text-sm flex items-center gap-2">
+                  <Checkbox
+                    id="showFullEnhanced"
+                    checked={showFullEnhanced}
+                    onCheckedChange={(v) => setShowFullEnhanced(Boolean(v))}
+                  />
+                  <label
+                    htmlFor="showFullEnhanced"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    최대 강화 보기
+                  </label>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -659,43 +691,115 @@ const EquipViewer = () => {
                           );
                         })
                       : "No Data"}
-                    <div className="flex justify-center items-center gap-1">
-                      <img
-                        src="/icons/CurrencyIcon_0047.png"
-                        alt=""
-                        className="w-5 h-5"
-                      />
-                      <div>
-                        {es.length > 0 &&
-                          es
-                            .reduce((acc, cur) => {
-                              const [, iPart, iNum] = cur.split(".");
-                              const equipInfo =
-                                equip.e[
-                                  iPart as "weapon" | "armor" | "accessory"
-                                ][iNum];
-                              if (!equipInfo) return acc;
-                              if (!("i" in equipInfo)) {
-                                const iRank = Number(iNum.charAt(0));
-                                return acc + equip.v.partsRequire[iRank - 1];
-                              }
-                              const recipe = equipInfo.i;
-                              const cost = Object.entries(recipe).reduce(
-                                (count, [ig, val]) => {
-                                  const [, , igNum] = ig.split(".");
-                                  const igRank = Number(igNum.charAt(0));
-                                  return (
-                                    count +
-                                    val * equip.v.partsRequire[igRank - 1]
-                                  );
-                                },
-                                0
-                              );
-                              return acc + cost;
-                            }, 0)
-                            .toLocaleString()}
+                    {showEquipPartsRequired && (
+                      <div className="flex w-full justify-center items-center gap-1">
+                        <img
+                          src="/icons/CurrencyIcon_0047.png"
+                          alt=""
+                          className="w-5 h-5"
+                        />
+                        <div>
+                          {es.length > 0 &&
+                            es
+                              .reduce((acc, cur) => {
+                                const [, iPart, iNum] = cur.split(".");
+                                const equipInfo =
+                                  equip.e[
+                                    iPart as "weapon" | "armor" | "accessory"
+                                  ][iNum];
+                                if (!equipInfo) return acc;
+                                if (!("i" in equipInfo)) {
+                                  const iRank = Number(iNum.charAt(0));
+                                  return acc + equip.v.partsRequire[iRank - 1];
+                                }
+                                const recipe = equipInfo.i;
+                                const cost = Object.entries(recipe).reduce(
+                                  (count, [ig, val]) => {
+                                    const [, , igNum] = ig.split(".");
+                                    const igRank = Number(igNum.charAt(0));
+                                    return (
+                                      count +
+                                      val * equip.v.partsRequire[igRank - 1]
+                                    );
+                                  },
+                                  0
+                                );
+                                return acc + cost;
+                              }, 0)
+                              .toLocaleString()}
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    {es.length > 0 &&
+                      showStats &&
+                      ((stat: Record<string, number>) => {
+                        const statOrder = [
+                          "Hp",
+                          "AttackPhysic",
+                          "AttackMagic",
+                          "DefensePhysic",
+                          "DefenseMagic",
+                          "CriticalRate",
+                          "CriticalMult",
+                          "CriticalResist",
+                          "CriticalMultResist",
+                        ];
+                        return (
+                          <div className="flex flex-col w-full items-stretch gap-1 px-1">
+                            {statOrder.map((s) => {
+                              return (
+                                <div
+                                  key={s}
+                                  className="flex items-center justify-between"
+                                >
+                                  <img
+                                    src={`/icons/Icon_${s}.png`}
+                                    alt=""
+                                    className="w-4 h-4"
+                                  />
+                                  <div className="text-sm">
+                                    {(stat[s] || 0).toLocaleString()}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })(
+                        es.reduce((acc, cur) => {
+                          const [, iPart, iNum] = cur.split(".");
+                          const equipInfo =
+                            equip.e[iPart as "weapon" | "armor" | "accessory"][
+                              iNum
+                            ];
+                          if (!equipInfo) return acc;
+                          if (!("s" in equipInfo)) return acc;
+                          const currentEquipStat = equipInfo.s;
+                          return Object.fromEntries(
+                            [
+                              ...new Set([
+                                ...Object.keys(acc),
+                                ...Object.keys(currentEquipStat),
+                              ]),
+                            ].map((stat) => [
+                              stat,
+                              (acc[stat] || 0) +
+                                (currentEquipStat[stat]
+                                  ? Math.floor(
+                                      (currentEquipStat[stat] *
+                                        (showFullEnhanced
+                                          ? 100 +
+                                            equip.v.enhanceRate[
+                                              Number(iNum.charAt(0)) - 1
+                                            ][4]
+                                          : 100)) /
+                                        100
+                                    )
+                                  : 0),
+                            ])
+                          );
+                        }, {} as Record<string, number>)
+                      )}
                   </div>
                 </div>
               );
