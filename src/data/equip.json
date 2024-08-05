@@ -1226,7 +1226,7 @@
         ],
         "KommySwim":[
             ["e.weapon.121","e.accessory.111","e.armor.102","e.accessory.107","e.accessory.110","e.accessory.103"],
-            ["e.weapon.215","e.armor.213","e.armor.207","e.accessory.211","e.accessory.209","e.armor.220"],
+            ["e.weapon.220","e.armor.201","e.weapon.220","e.accessory.211","e.accessory.207","e.armor.220"],
             ["e.weapon.324","e.armor.302","e.weapon.318","e.armor.313","e.accessory.304","e.armor.316"],
             ["e.weapon.429","e.armor.402","e.weapon.418","e.accessory.406","e.accessory.411","e.armor.415"],
             ["e.weapon.521","e.armor.501","e.weapon.516","e.accessory.505","e.accessory.509","e.armor.516"],
@@ -1237,7 +1237,7 @@
         ],
         "Kyarot":[
             ["e.weapon.121","e.armor.118","e.armor.105","e.accessory.109","e.accessory.111","e.accessory.103"],
-            ["e.weapon.215","e.armor.213","e.armor.207","e.accessory.211","e.accessory.209","e.armor.220"],
+            ["e.weapon.221","e.armor.212","e.armor.203","e.accessory.204","e.accessory.211","e.armor.219"],
             ["e.weapon.327","e.armor.313","e.armor.303","e.accessory.302","e.accessory.312","e.armor.321"],
             ["e.weapon.425","e.armor.414","e.armor.402","e.accessory.402","e.accessory.405","e.armor.416"],
             ["e.weapon.521","e.armor.510","e.armor.502","e.accessory.504","e.accessory.509","e.armor.517"],
