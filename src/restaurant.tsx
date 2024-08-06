@@ -449,38 +449,58 @@ const Restaurant = () => {
                 </ScrollArea>
               </div>
               <div className="w-full overflow-hidden">
-                <div>{t("ui.restaurant.hatingCharacter")}</div>
+                <div>
+                  {Object.entries(food.c).filter(([, foodList]) =>
+                    foodList[3].includes(Number(selectedFood))
+                  ).length
+                    ? t("ui.restaurant.hatingCharacter")
+                    : t("ui.restaurant.indifferenceCharacter")}
+                </div>
                 <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
                   <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
-                    {Object.entries(food.c)
-                      .filter(([, foodList]) =>
-                        foodList[3].includes(Number(selectedFood))
-                      )
-                      .map(([c]) => {
-                        return (
-                          <div
-                            key={c}
-                            className="relative"
-                            onClick={() => {
-                              searchChara(c);
-                            }}
-                          >
-                            <img
-                              src={
-                                skinData[c]
-                                  ? `/charas/${c}Skin${skinData[c]}.png`
-                                  : `/charas/${c}.png`
-                              }
-                              className={cn(
-                                "rounded w-16 h-16",
-                                personalityBG[
-                                  Number(chara[c].t[0]) as Personality
-                                ]
-                              )}
-                            />
-                          </div>
-                        );
-                      })}
+                    {(Object.entries(food.c).filter(([, foodList]) =>
+                      foodList[3].includes(Number(selectedFood))
+                    ).length
+                      ? Object.entries(food.c).filter(([, foodList]) =>
+                          foodList[3].includes(Number(selectedFood))
+                        )
+                      : Object.entries(food.c).filter(
+                          ([, foodList]) =>
+                            !foodList[1].includes(Number(selectedFood)) &&
+                            !foodList[3].includes(Number(selectedFood))
+                        )
+                    ).map(([c]) => {
+                      return (
+                        <div
+                          key={c}
+                          className="relative"
+                          onClick={() => {
+                            searchChara(c);
+                          }}
+                        >
+                          <img
+                            src={
+                              skinData[c]
+                                ? `/charas/${c}Skin${skinData[c]}.png`
+                                : `/charas/${c}.png`
+                            }
+                            className={cn(
+                              "rounded w-16 h-16",
+                              personalityBG[
+                                Number(chara[c].t[0]) as Personality
+                              ]
+                            )}
+                          />
+                        </div>
+                      );
+                    })}
+                    {Object.entries(food.c).every(([, foodList]) =>
+                      foodList[1].includes(Number(selectedFood))
+                    ) && (
+                      <div className="h-16 opacity-75">
+                        {t("ui.restaurant.noCharacter")}
+                      </div>
+                    )}
                   </div>
                   <ScrollBar orientation="horizontal" />
                 </ScrollArea>
