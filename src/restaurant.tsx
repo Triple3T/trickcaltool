@@ -498,7 +498,7 @@ const Restaurant = () => {
                       foodList[1].includes(Number(selectedFood))
                     ) && (
                       <div className="h-16 opacity-75">
-                        {t("ui.restaurant.noCharacter")}
+                        {t("ui.restaurant.everyoneLoves")}
                       </div>
                     )}
                   </div>

@@ -1505,7 +1505,7 @@ i18n
               lovingCharacter: "좋아하는 사도",
               hatingCharacter: "싫어하는 사도",
               indifferenceCharacter: "그럭저럭인 사도",
-              noCharacter: "해당하는 사도가 없습니다.",
+              everyoneLoves: "모든 사도가 좋아합니다.",
               needToSelect: "사도 또는 음식을 선택해주세요!",
               foodScrollableNotice:
                 "음식이 많은 경우 좌우로 스크롤하여 모두 볼 수 있습니다.",
