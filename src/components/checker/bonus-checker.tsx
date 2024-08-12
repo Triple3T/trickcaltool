@@ -19,12 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
 import LazyInput from "@/components/common/lazy-input";
 // import chara from "@/data/chara";
 import chara from "@/data/chara";
@@ -152,7 +146,7 @@ const BonusChecker = (props: BonusStatProps) => {
     setRace(Number(chara[charaId].t.charAt(5)));
   }, []);
   return (
-    <TooltipProvider>
+    <>
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
           <div className="flex flex-col sm:flex-row p-2 gap-2">
@@ -244,12 +238,12 @@ const BonusChecker = (props: BonusStatProps) => {
                       ? loveLevel * 40 || 0
                       : 0)
                   ).toLocaleString()}
-                  <Tooltip>
-                    <TooltipTrigger asChild>
+                  <Popover>
+                    <PopoverTrigger asChild>
                       <CircleHelp className="w-4 h-4 inline align-middle ml-2" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <div className="text-sm flex justify-between gap-2">
+                    </PopoverTrigger>
+                    <PopoverContent className="font-onemobile w-48 min-w-max">
+                      <div className="text-sm flex justify-between gap-4">
                         <div>특수 보드 효과</div>
                         <div>
                           +{(props.boardStat[statName] || 0).toLocaleString()}%
@@ -258,7 +252,7 @@ const BonusChecker = (props: BonusStatProps) => {
                       {chara[selectedChara] &&
                         !chara[selectedChara].e &&
                         loveToggle && (
-                          <div className="text-sm flex justify-between gap-2">
+                          <div className="text-sm flex justify-between gap-4">
                             <div>관심 사도 효과</div>
                             <div>
                               +
@@ -275,13 +269,13 @@ const BonusChecker = (props: BonusStatProps) => {
                           </div>
                         )}
                       <Separator className="my-1" orientation="horizontal" />
-                      <div className="text-sm flex justify-between gap-2">
+                      <div className="text-sm flex justify-between gap-4">
                         <div>상급 보드 효과</div>
                         <div>
                           +{(props.pboardStat[statName] || 0).toLocaleString()}
                         </div>
                       </div>
-                      <div className="text-sm flex justify-between gap-2">
+                      <div className="text-sm flex justify-between gap-4">
                         <div>랭크 전체 효과</div>
                         <div>
                           +{(props.rankStat[statName] || 0).toLocaleString()}
@@ -294,7 +288,7 @@ const BonusChecker = (props: BonusStatProps) => {
                         StatType.DefenseMagic,
                         StatType.Hp,
                       ].includes(stat) && (
-                        <div className="text-sm flex justify-between gap-2">
+                        <div className="text-sm flex justify-between gap-4">
                           <div>스탯 연구 효과</div>
                           <div>
                             +
@@ -310,13 +304,13 @@ const BonusChecker = (props: BonusStatProps) => {
                         StatType.CriticalResist,
                         StatType.CriticalMultResist,
                       ].includes(stat) && (
-                        <div className="text-sm flex justify-between gap-2">
+                        <div className="text-sm flex justify-between gap-4">
                           <div>친밀 레벨 효과</div>
                           <div>+{(loveLevel * 40 || 0).toLocaleString()}</div>
                         </div>
                       )}
-                    </TooltipContent>
-                  </Tooltip>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </Fragment>
             );
@@ -325,7 +319,7 @@ const BonusChecker = (props: BonusStatProps) => {
       ) : (
         <div className="text-muted-foreground mt-8">사도를 선택해주세요!</div>
       )}
-    </TooltipProvider>
+    </>
   );
 };
 
