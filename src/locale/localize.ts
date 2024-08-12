@@ -1617,6 +1617,10 @@ i18n
                 description:
                   "기본 스탯이 올스탯 1인 영춘이의 스탯을 확인합니다.",
               },
+              bonus: {
+                index: "스탯 보너스",
+                description: "적용되는 모든 스탯 보너스를 확인합니다.",
+              },
             },
             utilities: {
               title: "유틸리티",
