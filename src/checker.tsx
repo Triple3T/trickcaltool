@@ -69,7 +69,7 @@ const Checker = () => {
           });
       });
     });
-    console.log("pboardStats", pboardStats);
+    // console.log("pboardStats", pboardStats);
     return pboardStats;
   }, []);
   const rankStat = useMemo(() => {
@@ -91,7 +91,7 @@ const Checker = () => {
       const [statType, statAmount] = eqrank.s[i];
       rankStats[StatType[statType]] = count * statAmount;
     });
-    console.log("rankStats", rankStats);
+    // console.log("rankStats", rankStats);
     return rankStats;
   }, []);
   const labStat = useMemo(() => {
@@ -114,7 +114,7 @@ const Checker = () => {
         }
       });
     });
-    console.log("labStats", labStats);
+    // console.log("labStats", labStats);
     return labStats;
   }, []);
   return (
