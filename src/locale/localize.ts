@@ -1655,6 +1655,8 @@ i18n
               dataLoading: "데이터 불러오는 중...",
               dataLoaded: "데이터를 불러왔습니다.",
               dialogEnableSwitchTitle: "정보 다이얼로그 활성화",
+              logout: "로그아웃",
+              logoutProcessing: "로그아웃 요청 중...",
             },
             error: {
               title: "Error",
