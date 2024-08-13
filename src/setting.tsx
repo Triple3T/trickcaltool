@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader2, Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
+import { Loader2, LogOut, Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
@@ -144,6 +144,16 @@ const Setting = () => {
               t("ui.common.authLoading")
             )}
           </div>
+          {isReady && googleLinked && (
+            <div className="text-right text-sm">
+              <a href="/clear">
+                <Button variant="link">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  {t("ui.common.logout")}
+                </Button>
+              </a>
+            </div>
+          )}
         </div>
         <div>
           <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
