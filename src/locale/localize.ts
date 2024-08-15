@@ -82,6 +82,7 @@ i18n
             Shoupan: "슈팡",
             Silphir: "실피르",
             Sist: "시스트",
+            Snorky: "스노키",
             Speaki: "스피키",
             Sylla: "실라",
             Taida: "타이다",

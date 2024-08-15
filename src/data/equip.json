@@ -1576,6 +1576,17 @@
             ["e.weapon.813","e.armor.810","e.armor.805","e.weapon.809","e.accessory.806","e.armor.819"],
             ["e.weapon.903","e.armor.910","e.armor.905","e.weapon.906","e.accessory.908","e.armor.916"]
         ],
+        "Snorky":[
+            ["e.weapon.112","e.armor.117","e.armor.105","e.accessory.108","e.accessory.103","e.armor.113"],
+            ["e.weapon.203","e.armor.207","e.weapon.204","e.accessory.203","e.accessory.211","e.armor.214"],
+            ["e.weapon.306","e.armor.305","e.weapon.303","e.accessory.312","e.accessory.308","e.armor.319"],
+            ["e.weapon.409","e.armor.407","e.weapon.401","e.accessory.407","e.accessory.408","e.armor.415"],
+            ["e.weapon.508","e.armor.505","e.weapon.501","e.armor.517","e.accessory.501","e.armor.516"],
+            [],
+            [],
+            [],
+            []
+        ],
         "Speaki":[
             ["e.weapon.123","e.armor.117","e.armor.101","e.armor.113","e.accessory.107","e.accessory.105"],
             ["e.weapon.223","e.armor.221","e.armor.201","e.armor.214","e.accessory.212","e.accessory.203"],
