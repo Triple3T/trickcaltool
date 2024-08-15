@@ -228,7 +228,7 @@ const BonusChecker = (props: BonusStatProps) => {
                   {(
                     (props.pboardStat[statName] || 0) +
                     (props.rankStat[statName] || 0) +
-                    (props.labStat[Race[race]][statName] || 0) +
+                    (props.labStat[Race[race]]?.[statName] || 0) +
                     ([
                       StatType.CriticalRate,
                       StatType.CriticalMult,
@@ -293,7 +293,7 @@ const BonusChecker = (props: BonusStatProps) => {
                           <div>
                             +
                             {(
-                              props.labStat[Race[race]][statName] || 0
+                              props.labStat[Race[race]]?.[statName] || 0
                             ).toLocaleString()}
                           </div>
                         </div>
