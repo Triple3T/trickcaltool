@@ -1623,6 +1623,21 @@ i18n
                 description: "적용되는 모든 스탯 보너스를 확인합니다.",
               },
             },
+            goodscalc: {
+              title: "미니 재화 계산기",
+              description: "일부 재화의 계산을 도와줍니다.",
+              mocaroon: {
+                title: "모카롱/슈카롱 계산기",
+                description: "모카롱과 슈카롱의 계산을 도와줍니다.",
+                levelSectionInput: "레벨 구간 입력",
+                levelSectionInputDesc: "아래와 같은 형식으로 입력해주세요.",
+                levelSectionInputFormatDesc:
+                  "Lv.(시작 레벨) → (목표 레벨) x (인원 수)명",
+                requiredTitle: "필요한 모카롱/슈카롱",
+                requiredNotice:
+                  "필요한 양과 소모 단위가 맞아떨어지지 않아 실제 소모량은 조금 더 높을 수 있습니다.",
+              },
+            },
             utilities: {
               title: "유틸리티",
               description: "기타 쓸만한 도구들을 살펴봅니다.",

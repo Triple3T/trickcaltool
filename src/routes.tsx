@@ -14,6 +14,7 @@ import Loading from "@/components/common/loading";
 // import Restaurant from "./restaurant";
 // import EquipViewer from "./equipviewer";
 // import EventCalc from "./eventcalc";
+// import GoodsCalc from "./goodscalc";
 // import Checker from "./checker";
 const TrickcalBoard = lazy(() => import("./trickcalboard"));
 const EquipRank = lazy(() => import("./equiprank"));
@@ -24,6 +25,7 @@ const TaskSearch = lazy(() => import("./tasksearch"));
 const Restaurant = lazy(() => import("./restaurant"));
 const EquipViewer = lazy(() => import("./equipviewer"));
 const EventCalc = lazy(() => import("./eventcalc"));
+const GoodsCalc = lazy(() => import("./goodscalc"));
 const Checker = lazy(() => import("./checker"));
 
 // import Privacy from "./privacy";
@@ -143,6 +145,18 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout>
         <Suspense fallback={<Loading />}>
           <EventCalc />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/goodscalc",
+    // element: <GoodsCalc />,
+    element: (
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <GoodsCalc />
         </Suspense>
       </Layout>
     ),
