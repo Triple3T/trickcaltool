@@ -6,7 +6,7 @@ interface ItemSlotProps {
     s: string;
     b?: string;
   };
-  item: string;
+  item: string | ReactNode;
   fullItemPath?: boolean;
   amount?: number | ReactNode;
   size?: number;
@@ -35,15 +35,19 @@ const ItemSlot = ({
           padding: `${(size * (100 - innerSize)) / 200}rem`,
         }}
       >
-        <img
-          src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
-          className="max-w-full max-h-full"
-          // style={{
-          //   maxWidth: "100%",
-          //   maxHeight: "100%",
-          //   objectFit: "contain",
-          // }}
-        />
+        {typeof item === "string" ? (
+          <img
+            src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
+            className="max-w-full max-h-full"
+            // style={{
+            //   maxWidth: "100%",
+            //   maxHeight: "100%",
+            //   objectFit: "contain",
+            // }}
+          />
+        ) : (
+          <div className="w-full h-full">{item}</div>
+        )}
       </div>
 
       {typeof rarityInfo.b === "string" && (
@@ -70,7 +74,11 @@ const ItemSlot = ({
             textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
           }}
         >
-          {amount > 9999 ? amount > 9999999 ? `${Math.floor(amount / 1000000)}M` : `${Math.floor(amount / 1000)}K` : amount}
+          {amount > 9999
+            ? amount > 9999999
+              ? `${Math.floor(amount / 1000000)}M`
+              : `${Math.floor(amount / 1000)}K`
+            : amount}
         </div>
       ) : (
         amount && (

@@ -42,6 +42,8 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
+import CharaLicense from "@/components/parts/chara-license";
+import ItemSlot from "@/components/parts/item-slot";
 // import SelectChara from "@/components/parts/select-chara";
 const SelectChara = lazy(() => import("@/components/parts/select-chara"));
 import SubtitleBar from "@/components/parts/subtitlebar";
@@ -932,7 +934,7 @@ const EventCalc = () => {
                         key={index}
                         className="p-4 flex-1 bg-green-100/75 dark:bg-green-900/75"
                       >
-                        <div className="min-w-max">
+                        <div className="min-w-max text-lg break-keep">
                           {item.a
                             ? t(
                                 `${item.c}.${item.i}`,
@@ -944,12 +946,37 @@ const EventCalc = () => {
                                   )
                                 )
                               )
-                            : t(`${item.c}.${item.i}`)}{" "}
-                          {item.n > 9999
-                            ? `x${Math.floor(item.n / 1000)}K`
-                            : item.n === 1
-                            ? ""
-                            : `x${item.n}`}
+                            : t(`${item.c}.${item.i}`)}
+                        </div>
+                        <div className="flex min-w-max justify-center min-h-max my-2">
+                          <ItemSlot
+                            rarityInfo={item.r}
+                            item={((i) => {
+                              if (i.c === "collection")
+                                return `/collections/${i.i}`;
+                              if (i.i === "rankEquipSet")
+                                return `/icons/${i.a![0]}_RankBox${i.a![1]}`;
+                              if (i.i === "charaLicense")
+                                return <CharaLicense name={i.a![0]} fullSize />;
+                              if (i.i.startsWith("crayon"))
+                                return `/icons/Item_Crayon${i.i.slice(6)}`;
+                              if (i.i.startsWith("currency"))
+                                return `/icons/CurrencyIcon_${i.i.slice(8)}`;
+                              if (i.i.startsWith("Equip_Enhance"))
+                                return `equips/${i.i}`;
+                              if (i.i.startsWith("gachaTicket"))
+                                return `/icons/Icon_GachaTicket${i.i.slice(
+                                  11
+                                )}`;
+                              if (i.i.includes("Made"))
+                                return `/items/Icon_${i.i}`;
+                              return `/icons/${i.i}`;
+                            })(item)}
+                            fullItemPath
+                            amount={item.n}
+                            size={4}
+                            innerSize={70}
+                          />
                         </div>
                         <div className="flex min-w-max justify-center text-sm text-slate-700/85 dark:text-slate-300/85">
                           {item.l > 0 && (
@@ -964,8 +991,8 @@ const EventCalc = () => {
                             {t("ui.eventcalc.purchasePrice", { 0: item.p })}
                           </div>
                         </div>
-                        <div className="min-w-max flex flex-col">
-                          <div className="text-sm text-right text-green-600/85 dark:text-green-400/85">
+                        <div className="min-w-max flex flex-col mt-1">
+                          <div className="text-sm text-right text-green-600/85 dark:text-green-400/85 mb-px">
                             {t("ui.eventcalc.purchaseCount")}
                           </div>
                           <div className="flex flex-row gap-1 justify-end">

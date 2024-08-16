@@ -14,6 +14,7 @@ export default themeevent as {
         n: number;
         l: number;
         p: number;
+        r: { s: string; b?: string };
       }[];
       f: {
         l: boolean;
