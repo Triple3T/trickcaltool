@@ -1636,6 +1636,7 @@ i18n
                 requiredTitle: "필요한 모카롱/슈카롱",
                 requiredNotice:
                   "필요한 양과 소모 단위가 맞아떨어지지 않아 실제 소모량은 조금 더 높을 수 있습니다.",
+                inputNotice: "레벨 구간을 입력해주세요.",
               },
             },
             utilities: {
