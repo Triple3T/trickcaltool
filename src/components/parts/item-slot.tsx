@@ -70,7 +70,7 @@ const ItemSlot = ({
             textShadow: Array(20).fill("0 0 1.2px #fff").join(", "),
           }}
         >
-          {amount > 9999 ? `${Math.floor(amount / 1000)}K` : amount}
+          {amount > 9999 ? amount > 9999999 ? `${Math.floor(amount / 1000000)}M` : `${Math.floor(amount / 1000)}K` : amount}
         </div>
       ) : (
         amount && (
