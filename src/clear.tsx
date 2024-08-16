@@ -17,17 +17,21 @@ const Clear = () => {
     if (requestToken) {
       fetch("https://api.triple-lab.com/api/v1/tr/clear", {
         credentials: "include",
-      }).then(() => {
-        requestToken(
-          //callback
-          () => setTimeout(() => setFailed(true), 3000),
-          //onerror
-          () => {
-            setSuccess(true);
-            navigate("/");
-          }
-        );
-      });
+      })
+        .then(() => {
+          requestToken(
+            //callback
+            () => setTimeout(() => setFailed(true), 3000),
+            //onerror
+            () => {
+              setSuccess(true);
+              navigate("/");
+            }
+          );
+        })
+        .catch(() => {
+          setFailed(true);
+        });
     }
   }, [navigate, requestToken]);
   useEffect(() => {
