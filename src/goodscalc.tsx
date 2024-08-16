@@ -1,7 +1,5 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { StatType, Race } from "@/types/enums";
 
 import MocaroonCalc from "./components/goodscalc/mocaroon-calc";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
