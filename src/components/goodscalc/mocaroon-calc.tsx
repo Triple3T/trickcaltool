@@ -10,7 +10,8 @@ import LazyInput from "@/components/common/lazy-input";
 import level from "@/data/level";
 
 const { m: mocaroon, s: sucaroon } = level;
-const levelMax = sucaroon.findIndex((v) => v === -1) + 100;
+const levelMax =
+  (sucaroon.findIndex((v) => v === -1) + 1 || sucaroon.length + 1) + 99;
 const calcMocaroon = (start: number, end: number, count: number) => {
   if (start >= end) return 0;
   return mocaroon.slice(start - 1, end - 1).reduce((a, c) => a + c, 0) * count;
