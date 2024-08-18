@@ -19,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Select from "@/components/common/combobox-select";
 import ItemSlot from "@/components/parts/item-slot";
 import { personalityBG, personalityBGMarked } from "@/utils/personalityBG";
 import { Personality } from "@/types/enums";
@@ -364,13 +365,21 @@ const EquipViewer = () => {
   const [showFullEnhanced, setShowFullEnhanced] = useState(false);
   const [selectedChara, setSelectedChara] = useState("");
   const [selectedEquip, setSelectedEquip] = useState("");
+  const [selectedRank, setSelectedRank] = useState(0);
   const searchChara = useCallback((charaId: string) => {
     setSelectedChara(charaId);
     setSelectedEquip("");
+    setSelectedRank(0);
   }, []);
   const searchEquip = useCallback((equipId: string) => {
     setSelectedChara("");
     setSelectedEquip(equipId);
+    setSelectedRank(0);
+  }, []);
+  const searchRank = useCallback((rank: number) => {
+    setSelectedChara("");
+    setSelectedEquip("");
+    setSelectedRank(rank);
   }, []);
 
   return (
@@ -381,6 +390,14 @@ const EquipViewer = () => {
           <div className="flex flex-col sm:flex-row p-2 gap-2">
             <CharacterCombobox value={selectedChara} onChange={searchChara} />
             <EquipCombobox value={selectedEquip} onChange={searchEquip} />
+            <Select
+              value={selectedRank}
+              setValue={searchRank}
+              placeholder="랭크 선택..."
+              items={Array(9)
+                .fill(0)
+                .map((_, i) => ({ value: i + 1, label: `RANK ${i + 1}` }))}
+            />
           </div>
         </div>
         {selectedChara && (
@@ -596,9 +613,17 @@ const EquipViewer = () => {
             </div>
           </div>
         )}
+        {selectedRank > 0 && (
+          <div
+            className={cn("rounded-sm", rankClassNames[selectedRank - 1][1])}
+          >
+            RANK {selectedRank}
+          </div>
+        )}
       </Card>
       {!selectedChara &&
         !selectedEquip &&
+        !selectedRank &&
         (({ dt, tt, rk, ch }) => {
           return (
             <div className="p-1">
@@ -644,7 +669,9 @@ const EquipViewer = () => {
       <div
         className={cn(
           "font-onemobile flex max-w-full justify-center",
-          selectedChara || selectedEquip ? "flex-wrap gap-6 p-4" : "flex-col"
+          selectedChara || selectedEquip || selectedRank
+            ? "flex-wrap gap-6 p-4"
+            : "flex-col"
         )}
       >
         {selectedChara
@@ -862,6 +889,88 @@ const EquipViewer = () => {
                   </div>
                 );
               })
+          : selectedRank
+          ? Object.entries(
+              Object.entries(equip.c)
+                .filter(([, es]) => es[selectedRank - 1].length)
+                .map(([name, es]) => {
+                  const espart = es[selectedRank - 1].reduce((acc, cur) => {
+                    const [, iPart, iNum] = cur.split(".");
+                    const equipInfo =
+                      equip.e[iPart as "weapon" | "armor" | "accessory"][iNum];
+                    if (!equipInfo) return acc;
+                    if (!("i" in equipInfo)) {
+                      const iRank = Number(iNum.charAt(0));
+                      return acc + equip.v.partsRequire[iRank - 1];
+                    }
+                    const recipe = equipInfo.i;
+                    const cost = Object.entries(recipe).reduce(
+                      (count, [ig, val]) => {
+                        const [, , igNum] = ig.split(".");
+                        const igRank = Number(igNum.charAt(0));
+                        return count + val * equip.v.partsRequire[igRank - 1];
+                      },
+                      0
+                    );
+                    return acc + cost;
+                  }, 0);
+                  return [name, espart] as [string, number];
+                })
+                .sort(([aName, aPart], [bName, bPart]) => {
+                  return (
+                    aPart - bPart ||
+                    t(`chara.${aName}`).localeCompare(t(`chara.${bName}`))
+                  );
+                })
+                .reduce((prev, [aName, aPart]) => {
+                  if (!prev[aPart]) prev[aPart] = [];
+                  prev[aPart].push(aName);
+                  return prev;
+                }, {} as Record<string, string[]>)
+            ).map(([part, names]) => {
+              return (
+                <div key={part} className="flex flex-col gap-2 w-full">
+                  <div
+                    className={cn(
+                      "flex justify-center gap-2 p-0.5 rounded items-center",
+                      rankClassNames[selectedRank - 1][0]
+                    )}
+                  >
+                    <img
+                      src="/icons/CurrencyIcon_0047.png"
+                      className="w-5 h-5"
+                    />
+                    {Number(part).toLocaleString()}
+                  </div>
+                  <div className="grid grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] gap-1">
+                    {names.map((name) => {
+                      return (
+                        <div
+                          key={name}
+                          className="flex justify-between sm:min-w-16 md:min-w-20 max-w-32 rounded overflow-hidden border-slate-200 dark:border-slate-800 border-2 bg-slate-200 dark:bg-slate-800"
+                          onClick={() => searchChara(name)}
+                        >
+                          <div className="flex flex-col items-center p-0 sm:min-w-16 sm:min-h-16 md:min-w-20 md:min-h-20 max-w-32 relative">
+                            <img
+                              src={`/charas/${name}.png`}
+                              className={cn(
+                                "w-full aspect-square",
+                                personalityBG[
+                                  Number(chara[name].t[0]) as Personality
+                                ]
+                              )}
+                            />
+                            <div className="w-full -mt-3 bg-slate-200 dark:bg-slate-800 text-xs sm:text-sm break-keep flex-1 flex items-center justify-center py-0.5">
+                              {t(`chara.${name}`)}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })
           : Object.entries(equip.c)
               .filter(([, es]) => !es.every((e) => e.length))
               .sort(([a], [b]) =>
