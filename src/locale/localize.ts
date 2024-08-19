@@ -1689,6 +1689,19 @@ i18n
                   "필요한 양과 소모 단위가 맞아떨어지지 않아 실제 소모량은 조금 더 높을 수 있습니다.",
                 inputNotice: "레벨 구간을 입력해주세요.",
               },
+              aside: {
+                title: "어사이드 하트 계산기",
+                description: "어사이드 레벨업에 사용되는 하트의 계산을 도와줍니다.",
+                levelSectionInput: "레벨 구간 입력",
+                selectRace: "종족 선택",
+                levelStart: "현재 레벨",
+                levelEnd: "목표 레벨",
+                requiredTitle: "필요한 종족 하트",
+                requiredNotice:
+                  "필요한 양과 소모 단위가 맞아떨어지지 않아 실제 소모량은 조금 더 높을 수 있습니다.",
+                otherRaceHeartNotice: "다른 종족 하트를 사용하는 경우 2배가 필요합니다.",
+                inputNotice: "레벨 구간을 입력해주세요.",
+              },
             },
             utilities: {
               title: "유틸리티",
