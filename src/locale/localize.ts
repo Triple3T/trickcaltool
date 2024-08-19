@@ -1702,6 +1702,16 @@ i18n
                 otherRaceHeartNotice: "다른 종족 하트를 사용하는 경우 2배가 필요합니다.",
                 inputNotice: "레벨 구간을 입력해주세요.",
               },
+              skill: {
+                title: "마시멜로 계산기",
+                description: "스킬 레벨업에 사용되는 마시멜로와 골드의 계산을 도와줍니다.",
+                levelSectionInput: "레벨 구간 입력",
+                selectedClass: "역할군 선택",
+                levelStart: "현재 레벨",
+                levelEnd: "목표 레벨",
+                requiredTitle: "필요한 마시멜로/골드",
+                inputNotice: "레벨 구간을 입력해주세요.",
+              },
             },
             utilities: {
               title: "유틸리티",
