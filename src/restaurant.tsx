@@ -147,6 +147,7 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   useEffect(() => {
     setV(value ? t(`food.${value}`) : "");
   }, [t, value]);
+  const [producibleOnly, setProducibleOnly] = useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -172,10 +173,24 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty>
+          <div className="p-2 flex flex-row gap-1.5 items-center">
+            <Checkbox
+              id="producible-only-combobox"
+              checked={producibleOnly}
+              onCheckedChange={(v) => setProducibleOnly(Boolean(v))}
+            />
+            <label
+              htmlFor="producible-only-combobox"
+              className="text-sm font-onemobile"
+            >
+              {t("ui.restaurant.producibleOnly")}
+            </label>
+          </div>
           <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
             <CommandList>
               <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-2 md:[&_[cmdk-group-items]]:grid-cols-3 [&_[cmdk-group-items]]:gap-1 p-2">
                 {Object.keys(food.f)
+                  .filter((foodId) => !producibleOnly || food.f[foodId].t)
                   .sort((a, b) => t(`food.${a}`).localeCompare(t(`food.${b}`)))
                   .map((foodId) => {
                     const selected = v === t(`food.${foodId}`);
