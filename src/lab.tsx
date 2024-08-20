@@ -593,9 +593,11 @@ const Lab = () => {
                           <div className="flex-1">
                             {t(
                               `lab.effect.${v.e}`,
-                              Object.fromEntries(Object.entries(v.v)) as {
-                                [key: string]: number;
-                              }
+                              Object.fromEntries(
+                                Object.entries(v.v as number[]).map(
+                                  ([k, v]) => [k, v.toLocaleString()]
+                                )
+                              )
                             )}
                           </div>
                         </div>
@@ -624,7 +626,7 @@ const Lab = () => {
                           </div>
                           <div className="flex-1">
                             {t(`lab.effect.${vt.e}`, {
-                              0: Object.keys(vt.v)[0],
+                              0: Number(Object.keys(vt.v)[0]).toLocaleString(),
                               1: "",
                               2: t(`stat.${StatType[vt.s]}`),
                             }).trim()}
@@ -681,7 +683,7 @@ const Lab = () => {
                                       );
                                     })}
                                   </div>
-                                  <div>{value}</div>
+                                  <div>{Number(value).toLocaleString()}</div>
                                 </div>
                               );
                             })}

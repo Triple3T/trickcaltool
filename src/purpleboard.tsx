@@ -334,7 +334,7 @@ const BoardCrayonStatistic = ({
                 }Lv.png`}
                 className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
               />
-              <span>{count}</span>
+              <span>{count.toLocaleString()}</span>
             </div>
           ))}
         </div>
@@ -699,7 +699,8 @@ const PurpleBoard = () => {
               const currentPurpleBoard = purpleboard.c[name]; // b: 보크보드 종류, p: 해당 종류 위치 인덱스
               const charaPersonality = Number(chara[name].t[0]);
               const charaRace = Number(chara[name].t[5]);
-              const personalityClassName = personalityBG[Number(charaPersonality) as Personality];
+              const personalityClassName =
+                personalityBG[Number(charaPersonality) as Personality];
               return (
                 <Card
                   key={name}

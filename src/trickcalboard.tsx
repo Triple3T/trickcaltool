@@ -408,7 +408,7 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
                 }Lv.png`}
                 className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
               />
-              <span>{count}</span>
+              <span>{count.toLocaleString()}</span>
             </div>
           ))}
         </div>

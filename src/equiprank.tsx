@@ -447,7 +447,7 @@ const EquipRank = () => {
     const dirty = Object.values(charas).some(
       (c) =>
         // c.rank < (userData.s[0] || 1) || c.rank > (userData.s[1] || MAX_RANK)
-      c.rank < (userData.s[0] || 1) || c.rank > MAX_RANK
+        c.rank < (userData.s[0] || 1) || c.rank > MAX_RANK
     );
     dispatchRankData({
       type: "restore",
@@ -1095,13 +1095,14 @@ const EquipRank = () => {
                               {t(`stat.${stat}`)}
                             </div>
                             <div className="text-right flex-auto">
-                              {withBoardStat
+                              {(withBoardStat
                                 ? Math.round(
                                     (statValue *
                                       ((boardStat[stat] ?? 0) + 100)) /
                                       100
                                   )
-                                : statValue}
+                                : statValue
+                              ).toLocaleString()}
                             </div>
                           </div>
                         </div>
