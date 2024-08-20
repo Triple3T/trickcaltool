@@ -173,7 +173,7 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             className="h-9"
           />
           <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty>
-          <div className="p-2 flex flex-row gap-1.5 items-center">
+          <div className="p-2 flex flex-row gap-1.5 items-center border-b">
             <Checkbox
               id="producible-only-combobox"
               checked={producibleOnly}
@@ -203,9 +203,19 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                           onChange(currentValue === v ? "" : foodId);
                           setOpen(false);
                         }}
+                        style={{
+                          backgroundColor: `${food.r[food.f[foodId].r].b}7F`,
+                        }}
                       >
-                        <div className="w-full relative flex flex-col items-center py-0.5">
-                          <div className="text-sm text-center break-keep absolute h-12 -top-1 flex items-center">
+                        <div className="w-full relative flex flex-col items-center py-0.5 hover:scale-110 hover:z-10 transition-transform duration-100">
+                          <div
+                            className="text-sm text-center break-keep absolute h-12 -top-1 flex items-center"
+                            // style={{
+                            // textShadow: Array(20)
+                            //   .fill(`0 0 1.2px ${food.r[food.f[foodId].r].b}`)
+                            //   .join(", "),
+                            // }}
+                          >
                             {t(`food.${foodId}`)}
                           </div>
                           <div className="flex w-[5.8125rem] h-[5.8125rem] md:w-[calc(19.375rem_/_3)] md:h-[calc(19.375rem_/_3)] px-4 pt-6 pb-3 mt-4 justify-center items-end bg-dish bg-cover bg-no-repeat">
