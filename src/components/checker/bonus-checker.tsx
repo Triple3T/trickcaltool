@@ -21,7 +21,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import LazyInput from "@/components/common/lazy-input";
 import Select from "@/components/common/combobox-select";
-// import chara from "@/data/chara";
 import chara from "@/data/chara";
 import { personalityBG, personalityBGMarked } from "@/utils/personalityBG";
 import { Personality, Race, StatType } from "@/types/enums";
