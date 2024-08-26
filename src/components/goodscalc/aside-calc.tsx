@@ -29,88 +29,82 @@ const AsideCalc = () => {
     setRequirement(calcAside(levelSection[0], levelSection[1]));
   }, [levelSection]);
   return (
-    <>
-      <Card className="p-4 max-w-80 mx-auto">
-        <div className="text-xl">
-          {t("ui.goodscalc.aside.levelSectionInput")}
-        </div>
-        <div className="text-sm opacity-75">
-          {/* <p>{t("ui.goodscalc.aside.levelSectionInputDesc")}</p>
+    <Card className="p-4 max-w-80 mx-auto">
+      <div className="text-xl">{t("ui.goodscalc.aside.levelSectionInput")}</div>
+      <div className="text-sm opacity-75">
+        {/* <p>{t("ui.goodscalc.aside.levelSectionInputDesc")}</p>
           <p>{t("ui.goodscalc.aside.levelSectionInputFormatDesc")}</p> */}
+      </div>
+      <div className="px-4 mt-4">
+        <div className="flex items-baseline rounded p-1 w-full">
+          Lv.
+          <LazyInput
+            value={`${levelSection[0]}`}
+            onValueChange={(a) =>
+              setLevelSection(([, b]) => [
+                Math.min(Math.max(Number(a), 1), levelMax),
+                b,
+              ])
+            }
+            placeholder="시작 레벨"
+            className={cn(
+              inputClassName,
+              "w-12",
+              levelSection[0] < levelSection[1] ? "" : wrongInputClassName
+            )}
+          />
+          →
+          <LazyInput
+            value={`${levelSection[1]}`}
+            onValueChange={(b) =>
+              setLevelSection(([a]) => [
+                a,
+                Math.min(Math.max(Number(b), 1), levelMax),
+              ])
+            }
+            placeholder="종료 레벨"
+            className={cn(
+              inputClassName,
+              "w-12",
+              levelSection[0] < levelSection[1] ? "" : wrongInputClassName
+            )}
+          />
+          <div className="flex-1" />
+          <Select
+            value={race + 1}
+            setValue={(v) => setRace(v - 1)}
+            items={Object.values(Race)
+              .filter((v) => typeof v === "string")
+              .map((v) => ({
+                value: Race[v as keyof typeof Race] + 1,
+                label: t(`race.${v}`),
+              }))}
+          />
         </div>
-        <div className="px-4 mt-4">
-          <div className="flex items-baseline rounded p-1 w-full">
-            Lv.
-            <LazyInput
-              value={`${levelSection[0]}`}
-              onValueChange={(a) =>
-                setLevelSection(([, b]) => [
-                  Math.min(Math.max(Number(a), 1), levelMax),
-                  b,
-                ])
-              }
-              placeholder="시작 레벨"
-              className={cn(
-                inputClassName,
-                "w-12",
-                levelSection[0] < levelSection[1] ? "" : wrongInputClassName
-              )}
-            />
-            →
-            <LazyInput
-              value={`${levelSection[1]}`}
-              onValueChange={(b) =>
-                setLevelSection(([a]) => [
-                  a,
-                  Math.min(Math.max(Number(b), 1), levelMax),
-                ])
-              }
-              placeholder="종료 레벨"
-              className={cn(
-                inputClassName,
-                "w-12",
-                levelSection[0] < levelSection[1] ? "" : wrongInputClassName
-              )}
-            />
-            <div className="flex-1" />
-            <Select
-              value={race + 1}
-              setValue={(v) => setRace(v - 1)}
-              items={Object.values(Race)
-                .filter((v) => typeof v === "string")
-                .map((v) => ({
-                  value: Race[v as keyof typeof Race] + 1,
-                  label: t(`race.${v}`),
-                }))}
-            />
-          </div>
-        </div>
-        <Separator className="my-4" />
-        <div className="text-lg">{t("ui.goodscalc.aside.requiredTitle")}</div>
-        <div className="flex justify-evenly px-4 my-4">
-          {requirement > 0 && (
-            <ItemSlot
-              rarityInfo={{ s: "Gray", b: "#B0B0B0" }}
-              item={`/commonicons/Item_TribeHeart_${
-                [6, 3, 1, 2, 5, 4, 7][race]
-              }`}
-              fullItemPath
-              amount={requirement}
-            />
-          )}
-        </div>
-        <div className="text-xs opacity-75 break-keep">
-          {requirement > 0
-            ? t("ui.goodscalc.aside.requiredNotice")
-            : t("ui.goodscalc.aside.inputNotice")}
-        </div>
+      </div>
+      <Separator className="my-4" />
+      <div className="text-lg">{t("ui.goodscalc.aside.requiredTitle")}</div>
+      <div className="flex justify-evenly px-4 my-4">
         {requirement > 0 && (
-          <div className="text-xs opacity-75 break-keep">
-            {t("ui.goodscalc.aside.otherRaceHeartNotice")}
-          </div>
+          <ItemSlot
+            rarityInfo={{ s: "Gray", b: "#B0B0B0" }}
+            item={`/commonicons/Item_TribeHeart_${[6, 3, 1, 2, 5, 4, 7][race]}`}
+            fullItemPath
+            amount={requirement}
+          />
         )}
-      </Card>
-    </>
+      </div>
+      <div className="text-xs opacity-75 break-keep">
+        {requirement > 0
+          ? t("ui.goodscalc.aside.requiredNotice")
+          : t("ui.goodscalc.aside.inputNotice")}
+      </div>
+      {requirement > 0 && (
+        <div className="text-xs opacity-75 break-keep">
+          {t("ui.goodscalc.aside.otherRaceHeartNotice")}
+        </div>
+      )}
+    </Card>
   );
 };
 

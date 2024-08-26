@@ -54,134 +54,126 @@ const MocaroonCalc = () => {
     );
   }, [levelSections]);
   return (
-    <>
-      <Card className="p-4 max-w-80 mx-auto">
-        <div className="text-xl">
-          {t("ui.goodscalc.mocaroon.levelSectionInput")}
-        </div>
-        <div className="text-sm opacity-75">
-          <p>{t("ui.goodscalc.mocaroon.levelSectionInputDesc")}</p>
-          <p>{t("ui.goodscalc.mocaroon.levelSectionInputFormatDesc")}</p>
-        </div>
-        <div className="px-4 mt-4">
-          {levelSections.map((levelSection, i) => {
-            return (
-              <div
-                key={i}
-                className="mb-4 pb-4 break-keep flex justify-between items-center"
-              >
-                <div className="flex items-baseline rounded py-1 -my-1 px-1 ">
-                  Lv.
-                  <LazyInput
-                    value={`${levelSection[0]}`}
-                    onValueChange={(v) =>
-                      setLevelSections((s) => {
-                        const newSections = s.map((v) => [...v]);
-                        newSections[i][0] = Math.min(
-                          Math.max(Number(v), 1),
-                          levelMax
-                        );
-                        return newSections;
-                      })
-                    }
-                    placeholder="시작 레벨"
-                    className={cn(
-                      inputClassName,
-                      "w-12",
-                      levelSection[0] < levelSection[1]
-                        ? ""
-                        : wrongInputClassName
-                    )}
-                  />
-                  →
-                  <LazyInput
-                    value={`${levelSection[1]}`}
-                    onValueChange={(v) =>
-                      setLevelSections((s) => {
-                        const newSections = s.map((v) => [...v]);
-                        newSections[i][1] = Math.min(
-                          Math.max(Number(v), 1),
-                          levelMax
-                        );
-                        return newSections;
-                      })
-                    }
-                    placeholder="종료 레벨"
-                    className={cn(
-                      inputClassName,
-                      "w-12",
-                      levelSection[0] < levelSection[1]
-                        ? ""
-                        : wrongInputClassName
-                    )}
-                  />
-                  &nbsp;x
-                  <LazyInput
-                    value={`${levelSection[2]}`}
-                    onValueChange={(v) =>
-                      setLevelSections((s) => {
-                        const newSections = s.map((v) => [...v]);
-                        newSections[i][2] = Math.max(Number(v), 0);
-                        return newSections;
-                      })
-                    }
-                    placeholder="인원 수"
-                    className={cn(inputClassName, "w-10")}
-                  />
-                  명
-                </div>
-                {i !== 0 && (
-                  <X
-                    className="w-4 h-4 inline cursor-pointer opacity-50"
-                    onClick={() =>
-                      setLevelSections((s) => s.filter((_, j) => j !== i))
-                    }
-                  />
-                )}
-              </div>
-            );
-          })}
-          <div className="mb-0 pb-0">
-            <Button
-              className="w-full"
-              variant="outline"
-              onClick={() => {
-                setLevelSections((s) => [...s, [1, 100, 0]]);
-              }}
+    <Card className="p-4 max-w-80 mx-auto">
+      <div className="text-xl">
+        {t("ui.goodscalc.mocaroon.levelSectionInput")}
+      </div>
+      <div className="text-sm opacity-75">
+        <p>{t("ui.goodscalc.mocaroon.levelSectionInputDesc")}</p>
+        <p>{t("ui.goodscalc.mocaroon.levelSectionInputFormatDesc")}</p>
+      </div>
+      <div className="px-4 mt-4">
+        {levelSections.map((levelSection, i) => {
+          return (
+            <div
+              key={i}
+              className="mb-4 pb-4 break-keep flex justify-between items-center"
             >
-              <Plus className="w-8 h-8 opacity-50" strokeWidth={4} />
-            </Button>
-          </div>
+              <div className="flex items-baseline rounded py-1 -my-1 px-1 ">
+                Lv.
+                <LazyInput
+                  value={`${levelSection[0]}`}
+                  onValueChange={(v) =>
+                    setLevelSections((s) => {
+                      const newSections = s.map((v) => [...v]);
+                      newSections[i][0] = Math.min(
+                        Math.max(Number(v), 1),
+                        levelMax
+                      );
+                      return newSections;
+                    })
+                  }
+                  placeholder="시작 레벨"
+                  className={cn(
+                    inputClassName,
+                    "w-12",
+                    levelSection[0] < levelSection[1] ? "" : wrongInputClassName
+                  )}
+                />
+                →
+                <LazyInput
+                  value={`${levelSection[1]}`}
+                  onValueChange={(v) =>
+                    setLevelSections((s) => {
+                      const newSections = s.map((v) => [...v]);
+                      newSections[i][1] = Math.min(
+                        Math.max(Number(v), 1),
+                        levelMax
+                      );
+                      return newSections;
+                    })
+                  }
+                  placeholder="종료 레벨"
+                  className={cn(
+                    inputClassName,
+                    "w-12",
+                    levelSection[0] < levelSection[1] ? "" : wrongInputClassName
+                  )}
+                />
+                &nbsp;x
+                <LazyInput
+                  value={`${levelSection[2]}`}
+                  onValueChange={(v) =>
+                    setLevelSections((s) => {
+                      const newSections = s.map((v) => [...v]);
+                      newSections[i][2] = Math.max(Number(v), 0);
+                      return newSections;
+                    })
+                  }
+                  placeholder="인원 수"
+                  className={cn(inputClassName, "w-10")}
+                />
+                명
+              </div>
+              {i !== 0 && (
+                <X
+                  className="w-4 h-4 inline cursor-pointer opacity-50"
+                  onClick={() =>
+                    setLevelSections((s) => s.filter((_, j) => j !== i))
+                  }
+                />
+              )}
+            </div>
+          );
+        })}
+        <div className="mb-0 pb-0">
+          <Button
+            className="w-full"
+            variant="outline"
+            onClick={() => {
+              setLevelSections((s) => [...s, [1, 100, 0]]);
+            }}
+          >
+            <Plus className="w-8 h-8 opacity-50" strokeWidth={4} />
+          </Button>
         </div>
-        <Separator className="my-4" />
-        <div className="text-lg">
-          {t("ui.goodscalc.mocaroon.requiredTitle")}
-        </div>
-        <div className="flex justify-evenly px-4 my-4">
-          {requirements[0] > 0 && (
-            <ItemSlot
-              rarityInfo={{ s: "Orange" }}
-              item="/icons/CurrencyIcon_0007"
-              fullItemPath
-              amount={requirements[0]}
-            />
-          )}
-          {requirements[1] > 0 && (
-            <ItemSlot
-              rarityInfo={{ s: "Orange" }}
-              item="/icons/CurrencyIcon_0041"
-              fullItemPath
-              amount={requirements[1]}
-            />
-          )}
-        </div>
-        <div className="text-xs opacity-75 break-keep">
-          {requirements.some((v) => v > 0)
-            ? t("ui.goodscalc.mocaroon.requiredNotice")
-            : t("ui.goodscalc.mocaroon.inputNotice")}
-        </div>
-      </Card>
-    </>
+      </div>
+      <Separator className="my-4" />
+      <div className="text-lg">{t("ui.goodscalc.mocaroon.requiredTitle")}</div>
+      <div className="flex justify-evenly px-4 my-4">
+        {requirements[0] > 0 && (
+          <ItemSlot
+            rarityInfo={{ s: "Orange" }}
+            item="/icons/CurrencyIcon_0007"
+            fullItemPath
+            amount={requirements[0]}
+          />
+        )}
+        {requirements[1] > 0 && (
+          <ItemSlot
+            rarityInfo={{ s: "Orange" }}
+            item="/icons/CurrencyIcon_0041"
+            fullItemPath
+            amount={requirements[1]}
+          />
+        )}
+      </div>
+      <div className="text-xs opacity-75 break-keep">
+        {requirements.some((v) => v > 0)
+          ? t("ui.goodscalc.mocaroon.requiredNotice")
+          : t("ui.goodscalc.mocaroon.inputNotice")}
+      </div>
+    </Card>
   );
 };
 
