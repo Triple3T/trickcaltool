@@ -53,7 +53,7 @@ const ThemeEventBonusDialog = ({ bonus }: ThemeEventBonusDialogProps) => {
                 <div className="absolute top-10 w-full">
                   <Badge
                     variant="outline"
-                    className="bg-slate-900/70 font-thin py-px text-xs"
+                    className="bg-slate-100/70 dark:bg-slate-900/70 font-thin py-px text-xs"
                   >
                     {b}%
                   </Badge>
