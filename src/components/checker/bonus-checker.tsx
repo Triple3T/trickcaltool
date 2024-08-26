@@ -385,10 +385,10 @@ const BonusChecker = (props: BonusStatProps) => {
               <div className="text-lg pb-2">스탯 입력</div>
               <div className="flex justify-stretch">
                 <Select
-                  value={statType}
-                  setValue={setStatType}
+                  value={statType + 1}
+                  setValue={(v) => setStatType(v - 1)}
                   items={[1, 0, 7, 6, 4, 2, 5, 3, 8].map((s) => ({
-                    value: s,
+                    value: s + 1,
                     label: t(`stat.${StatType[s]}`),
                   }))}
                 />
