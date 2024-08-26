@@ -263,7 +263,7 @@ const PurpleBoardStatStatistic = ({
               ) *
                 (100 + percentStat)) /
                 100
-            )}
+            ).toLocaleString()}
           </div>
         </div>
         <div className="bg-gradient-to-r from-transparent via-[#e9f5cf] dark:via-[#169a2d] via-[28px] to-[#e9f5cf] dark:to-[#169a2d] py-px pr-2.5 pl-8 rounded-r-[11px] flex flex-row gap-1 text-sm dark:contrast-125 dark:brightness-80">

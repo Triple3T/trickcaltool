@@ -341,10 +341,9 @@ const BoardStatStatistic = ({
         <div className="bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
           <div className="text-left flex-auto">{t(`stat.${stat}`)}</div>
           <div className="text-right flex-auto">
-            {statStatistic.reduce(
-              (a, b) => a + b.stat.reduce((a, b) => a + b, 0),
-              0
-            )}
+            {statStatistic
+              .reduce((a, b) => a + b.stat.reduce((a, b) => a + b, 0), 0)
+              .toLocaleString()}
             %
           </div>
         </div>
