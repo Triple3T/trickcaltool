@@ -11,6 +11,7 @@ interface HighTierEquipProp extends LowTierEquipProp {
   i: Record<string, number>;
   g: number;
 }
+type EquipProp = LowTierEquipProp | HighTierEquipProp;
 export default equip as {
   v: {
     enhancePoint: number[];
@@ -20,7 +21,7 @@ export default equip as {
     enhanceCost: number[];
     partsRequire: number[];
   };
-  e: EquipTypeRecord<Record<string, LowTierEquipProp | HighTierEquipProp | null>>;
+  e: EquipTypeRecord<Record<string, EquipProp | null>>;
   p: EquipTypeRecord<string[]>;
   r: EquipTypeRecord<string[]>;
   d: Record<string, string[][]>;
