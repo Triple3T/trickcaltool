@@ -1,18 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-const cuts = [
-  "CG_Event01_01",
-  "CG_Event03_16",
-  "CG_Event09_03",
-  "CG_Event10_07",
-  "CG_Event13_01",
-  "CG_SoloEnd_04",
-];
+import cuts from "./cuts";
 
 const UnknownError = ({
   message,
@@ -21,14 +13,18 @@ const UnknownError = ({
   message: string;
   stack: string;
 }) => {
-  const ref = useRef<string>(cuts[Math.floor(Math.random() * cuts.length)]);
+  const [bgFileName, setBgFileName] = useState<string>("");
+  useEffect(
+    () => setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]),
+    []
+  );
   const { t } = useTranslation();
   const [viewStack, setViewStack] = useState<boolean>(false);
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div
         className="absolute left-0 top-0 bg-center bg-cover w-full h-full font-onemobile bg-no-repeat bg-blend-overlay bg-slate-100/90 dark:bg-slate-900/90"
-        style={{ backgroundImage: `url(/dialogcut/${ref.current}.png)` }}
+        style={{ backgroundImage: `url(/dialogcut/${bgFileName}.png)` }}
       >
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full p-8 opacity-70 max-h-full overflow-y-auto">
           <div className="text-6xl">{t("ui.error.title")}</div>
