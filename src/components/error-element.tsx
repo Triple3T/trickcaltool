@@ -21,7 +21,7 @@ interface RouteErrorProps {
   status: number;
   statusText: string;
 }
-type ErrorType = ErrorObjectProps | RouteErrorProps;
+type ErrorType = ErrorObjectProps | RouteErrorProps | unknown;
 const ErrorElement = () => {
   const error = useRouteError() as ErrorType;
   useEffect(() => {
@@ -30,9 +30,11 @@ const ErrorElement = () => {
   }, [error]);
   // error as RouteErrorProps
   if ((error as RouteErrorProps).data) {
+    // not found
     if ((error as RouteErrorProps).status === 404) {
       return <Error404 message={(error as RouteErrorProps).error.message} />;
     }
+    // unknown error
     return (
       <UnknownError
         message={(error as RouteErrorProps).error.message}
@@ -42,22 +44,34 @@ const ErrorElement = () => {
   }
 
   // error as ErrorObjectProps
-  if (
-    (error as ErrorObjectProps).message
-      .toLowerCase()
-      .includes("dynamically imported module")
-  ) {
+  if ((error as ErrorObjectProps).message) {
+    // need update
+    if (
+      (error as ErrorObjectProps).message
+        .toLowerCase()
+        .includes("dynamically imported module")
+    ) {
+      return (
+        <NeedUpdate
+          message={(error as ErrorObjectProps).message}
+          stack={(error as ErrorObjectProps).stack}
+        />
+      );
+    }
+    // unknown error
     return (
-      <NeedUpdate
+      <UnknownError
         message={(error as ErrorObjectProps).message}
         stack={(error as ErrorObjectProps).stack}
       />
     );
   }
+
+  //error as unknown error type
   return (
     <UnknownError
-      message={(error as ErrorObjectProps).message}
-      stack={(error as ErrorObjectProps).stack}
+      message={"Unknown Error"}
+      stack={JSON.stringify(error, Object.getOwnPropertyNames(error), 2)}
     />
   );
 };
