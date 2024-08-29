@@ -498,7 +498,7 @@ const TrickcalBoard = () => {
       );
       if (userData.b[c].some((b) => b.length !== board.c[c].b.length)) {
         userData.b[c] = board.c[c].b.map((a, i) =>
-          a.map((_, j) => userData.b[c][i][j] ?? 0)
+          a.map((_, j) => userData.b[c]?.[i]?.[j] ?? 0)
         );
       }
     });
