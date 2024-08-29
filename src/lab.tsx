@@ -1378,21 +1378,16 @@ const Lab = () => {
                 <div className="top-16 z-10 flex flex-col gap-2">
                   {lab.l[page].map((labeffect, indexDepth2) => {
                     const indexDepth1 = page;
+                    const incompleted =
+                      indexDepth1 * 10000 + indexDepth2 >
+                      (labData?.currentLab.indexDepth1 ?? 0) * 10000 +
+                        (labData?.currentLab.indexDepth2 ?? 0);
                     return (
                       <Card
                         key={indexDepth2}
                         className={cn(
                           "text-center font-onemobile p-1 flex flex-row gap-2",
-                          indexDepth1.toString() +
-                            indexDepth2.toString().padStart(4, "0") >
-                            (labData?.currentLab.indexDepth1.toString() ??
-                              "0") +
-                              (
-                                labData?.currentLab.indexDepth2.toString() ??
-                                "0"
-                              ).padStart(4, "0")
-                            ? ""
-                            : "bg-[#f2f9e7] dark:bg-[#36a52d]"
+                          incompleted ? "" : "bg-[#f2f9e7] dark:bg-[#36a52d]"
                         )}
                         onClick={() =>
                           dispatchLabData({
@@ -1404,16 +1399,7 @@ const Lab = () => {
                         <div
                           className={cn(
                             "flex flex-col gap-1 flex-1",
-                            indexDepth1.toString() +
-                              indexDepth2.toString().padStart(4, "0") >
-                              (labData?.currentLab.indexDepth1.toString() ??
-                                "0") +
-                                (
-                                  labData?.currentLab.indexDepth2.toString() ??
-                                  "0"
-                                ).padStart(4, "0")
-                              ? ""
-                              : "opacity-50"
+                            incompleted ? "" : "opacity-50"
                           )}
                         >
                           <div className="flex flex-row gap-1">
@@ -1427,7 +1413,7 @@ const Lab = () => {
                                 }.png`}
                               />
                             </div>
-                            <div>
+                            <div className="break-keep">
                               {labeffect.t && lab.e[labeffect.e].s !== undefined
                                 ? t(`lab.effect.${lab.e[labeffect.e].e}`, {
                                     0: lab.e[labeffect.e].v,
@@ -1455,16 +1441,7 @@ const Lab = () => {
                           <div
                             className={cn(
                               "flex justify-center",
-                              indexDepth1.toString() +
-                                indexDepth2.toString().padStart(4, "0") >
-                                (labData?.currentLab.indexDepth1.toString() ??
-                                  "0") +
-                                  (
-                                    labData?.currentLab.indexDepth2.toString() ??
-                                    "0"
-                                  ).padStart(4, "0")
-                                ? ""
-                                : "opacity-50"
+                              incompleted ? "" : "opacity-50"
                             )}
                           >
                             {Object.entries(labeffect.m).map(
@@ -1483,12 +1460,7 @@ const Lab = () => {
                               }
                             )}
                           </div>
-                          {indexDepth1.toString() +
-                            indexDepth2.toString().padStart(4, "0") >
-                          (labData?.currentLab.indexDepth1.toString() ?? "0") +
-                            (
-                              labData?.currentLab.indexDepth2.toString() ?? "0"
-                            ).padStart(4, "0") ? null : (
+                          {!incompleted && (
                             <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
                               <img
                                 src="/icons/Stage_RewardChack.png"
