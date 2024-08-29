@@ -1416,7 +1416,7 @@ const Lab = () => {
                             <div className="break-keep">
                               {labeffect.t && lab.e[labeffect.e].s !== undefined
                                 ? t(`lab.effect.${lab.e[labeffect.e].e}`, {
-                                    0: lab.e[labeffect.e].v,
+                                    0: lab.e[labeffect.e].v[0].toLocaleString(),
                                     1: t(`race.${Race[labeffect.t[0]]}`),
                                     2: t(
                                       `stat.${
@@ -1425,7 +1425,7 @@ const Lab = () => {
                                     ),
                                   })
                                 : t(`lab.effect.${lab.e[labeffect.e].e}`, {
-                                    0: lab.e[labeffect.e].v,
+                                    0: lab.e[labeffect.e].v[0].toLocaleString(),
                                   })}
                             </div>
                           </div>
@@ -1434,7 +1434,7 @@ const Lab = () => {
                               className="w-6 h-6 mr-1 inline align-middle"
                               src="/icons/CurrencyIcon_0008.png"
                             />
-                            {labeffect.g}
+                            {labeffect.g.toLocaleString()}
                           </div>
                         </div>
                         <div className="relative">
