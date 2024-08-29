@@ -1423,13 +1423,13 @@
             ["e.weapon.918","e.armor.910","e.armor.902","e.weapon.925","e.accessory.904","e.armor.916"]
         ],
         "Pira":[
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
-            [],
+            ["e.weapon.103","e.armor.109","e.armor.105","e.accessory.103","e.accessory.105","e.accessory.111"],
+            ["e.weapon.209","e.armor.213","e.armor.204","e.accessory.205","e.accessory.207","e.armor.221"],
+            ["e.weapon.313","e.accessory.306","e.armor.304","e.accessory.303","e.accessory.308","e.accessory.305"],
+            ["e.weapon.414","e.armor.415","e.armor.402","e.armor.416","e.armor.413","e.armor.421"],
+            ["e.weapon.513","e.armor.512","e.armor.503","e.accessory.505","e.accessory.508","e.armor.513"],
+            ["e.weapon.606","e.armor.617","e.armor.603","e.accessory.606","e.accessory.612","e.armor.613"],
+            ["e.armor.703","e.armor.713","e.weapon.703","e.accessory.701","e.accessory.707","e.armor.717"],
             [],
             []
         ],
