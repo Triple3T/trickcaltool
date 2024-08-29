@@ -77,6 +77,12 @@ export enum LabEffectCategory {
   Schedule = 2,
   Restaurant = 3,
   Battle = 4,
+  SoloRaidArtifactCountUp = 5,
+  SoloEndDefaultCoinUp = 6,
+  ArtifactManageSlotUp = 7,
+  SpellManageSlotUp = 8,
+  BattleGemValueUp = 9,
+  FarmValueUp = 10,
 }
 
 export enum SortOrFilter {

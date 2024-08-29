@@ -91,7 +91,7 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                     t(`chara.${a}`).localeCompare(t(`chara.${b}`))
                   )
                   .map((charaId) => {
-                    const disabled = chara[charaId].t[1] === "1";
+                    const disabled = charaId === "Pira" || chara[charaId].t[1] === "1";
                     const selected = v === t(`chara.${charaId}`);
                     const bg = (() => {
                       if (disabled)

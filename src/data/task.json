@@ -1,193 +1,208 @@
 {
-    "t": {
-        "Arbeit1": {
-            "s": [4,6,22,24],
-            "m": ["MadeLow13","MadeLow7"]
+    "t":{
+        "Arbeit1":{
+            "s":[4,6,22,24],
+            "m":["MadeLow13","MadeLow7"]
         },
-        "Arbeit2": {
-            "s": [8,27,30],
-            "m": ["FoodMadeLow13","FoodMadeLow4","FoodMadeLow15"],
-            "f": 83
+        "Arbeit2":{
+            "s":[8,27,30],
+            "m":["FoodMadeLow13","FoodMadeLow4","FoodMadeLow15"],
+            "f":83
         },
-        "Arbeit3": {
-            "s": [3,8,30,31],
-            "m": ["MadeLow11","MadeLow6"]
+        "Arbeit3":{
+            "s":[3,8,30,31],
+            "m":["MadeLow11","MadeLow6"]
         },
-        "Arbeit4": {
-            "s": [4,6,16,24],
-            "m": ["CollectMadeLow2","MadeLow9"]
+        "Arbeit4":{
+            "s":[4,6,16,24],
+            "m":["CollectMadeLow2","MadeLow9"]
         },
-        "Arbeit5": {
-            "s": [5,6,13,22],
-            "m": ["FoodMadeLow6","FoodMadeLow18"]
+        "Arbeit5":{
+            "s":[5,6,13,22],
+            "m":["FoodMadeLow6","FoodMadeLow18"]
         },
-        "Arbeit6": {
-            "s": [26],
-            "m": ["MadeLow6","MadeLow5"]
+        "Arbeit6":{
+            "s":[26],
+            "m":["MadeLow6","MadeLow5"]
         },
-        "Arbeit7": {
-            "s": [12,27],
-            "m": ["MadeLow7","MadeLow3"]
+        "Arbeit7":{
+            "s":[12,27],
+            "m":["MadeLow7","MadeLow3"]
         },
-        "Arbeit8": {
-            "s": [7,9,10,33],
-            "m": ["MadeLow4","MadeLow2"],
-            "f": 100
+        "Arbeit8":{
+            "s":[7,9,10,33],
+            "m":["MadeLow4","MadeLow2"],
+            "f":100
         },
-        "Arbeit9": {
-            "s": [6,16,24],
-            "m": ["FoodMadeLow14","FoodMadeLow7","FoodMadeLow16"]
+        "Arbeit9":{
+            "s":[6,16,24],
+            "m":["FoodMadeLow14","FoodMadeLow7","FoodMadeLow16"]
         },
-        "Arbeit10": {
-            "s": [7,9,32],
-            "m": ["MadeLow3","MadeLow12"]
+        "Arbeit10":{
+            "s":[7,9,32],
+            "m":["MadeLow3","MadeLow12"]
         },
-        "Arbeit11": {
-            "s": [15,18,25],
-            "m": ["MadeLow16","FoodMadeLow12"],
-            "f": 100
+        "Arbeit11":{
+            "s":[15,18,25],
+            "m":["MadeLow16","FoodMadeLow12"],
+            "f":100
         },
-        "Arbeit12": {
-            "s": [13,28],
-            "m": ["FoodMadeLow11","FoodMadeLow10"]
+        "Arbeit12":{
+            "s":[13,28],
+            "m":["FoodMadeLow11","FoodMadeLow10"]
         },
-        "Arbeit13": {
-            "s": [14,17,28,34],
-            "m": ["MadeLow1","MadeLow4"]
+        "Arbeit13":{
+            "s":[14,17,28,34],
+            "m":["MadeLow1","MadeLow4"]
         },
-        "Arbeit14": {
-            "s": [3,12,30,32],
-            "m": ["MadeLow4","MadeLow3"]
+        "Arbeit14":{
+            "s":[3,12,30,32],
+            "m":["MadeLow4","MadeLow3"]
         },
-        "Arbeit15": {
-            "s": [10,18,21],
-            "m": ["MadeLow9","MadeLow14"],
-            "f": 100
+        "Arbeit15":{
+            "s":[10,18,21],
+            "m":["MadeLow9","MadeLow14"],
+            "f":100
         },
-        "Arbeit16": {
-            "s": [26],
-            "m": ["MadeLow8","MadeLow4"]
+        "Arbeit16":{
+            "s":[26],
+            "m":["MadeLow8","MadeLow4"]
         },
-        "Arbeit17": {
-            "s": [2,3,19,31],
-            "m": ["FurnMadeLow2","FoodMadeLow6"]
+        "Arbeit17":{
+            "s":[2,3,19,31],
+            "m":["FurnMadeLow2","FoodMadeLow6"]
         },
-        "Arbeit18": {
-            "s": [2,14,27],
-            "m": ["MadeLow14","MadeLow2"]
+        "Arbeit18":{
+            "s":[2,14,27],
+            "m":["MadeLow14","MadeLow2"]
         },
-        "Arbeit19": {
-            "s": [10,21,29],
-            "m": ["CollectMadeLow1","MadeLow12"],
-            "f": 100
+        "Arbeit19":{
+            "s":[10,21,29],
+            "m":["CollectMadeLow1","MadeLow12"],
+            "f":100
         },
-        "Arbeit20": {
-            "s": [17,18,25],
-            "m": ["FoodMadeLow9","MadeLow16"],
-            "f": 100
+        "Arbeit20":{
+            "s":[17,18,25],
+            "m":["FoodMadeLow9","MadeLow16"],
+            "f":100
         },
-        "Arbeit21": {
-            "s": [1,7,19],
-            "m": ["MadeLow10","MadeLow2"]
+        "Arbeit21":{
+            "s":[1,7,19],
+            "m":["MadeLow10","MadeLow2"]
         },
-        "Arbeit22": {
-            "s": [4,5,28,30],
-            "m": ["FurnMadeLow3","MadeLow16"]
+        "Arbeit22":{
+            "s":[4,5,28,30],
+            "m":["FurnMadeLow3","MadeLow16"]
         },
-        "Arbeit23": {
-            "s": [20,25,29],
-            "m": ["FoodMadeLow5","FoodMadeLow1","FoodMadeLow6"],
-            "f": 100
+        "Arbeit23":{
+            "s":[20,25,29],
+            "m":["FoodMadeLow5","FoodMadeLow1","FoodMadeLow6"],
+            "f":100
         },
-        "Arbeit24": {
-            "s": [9,15,9],
-            "m": ["FurnMadeLow1","MadeLow3"],
-            "f": 100
+        "Arbeit24":{
+            "s":[9,15,9],
+            "m":["FurnMadeLow1","MadeLow3"],
+            "f":100
         },
-        "Arbeit25": {
-            "s": [11,23,32],
-            "m": ["FoodMadeLow3","FoodMadeLow17"]
+        "Arbeit25":{
+            "s":[11,23,32],
+            "m":["FoodMadeLow3","FoodMadeLow17"]
         },
-        "Arbeit26": {
-            "s": [12,15,16],
-            "m": ["MadeLow5","MadeLow9"],
-            "f": 100
+        "Arbeit26":{
+            "s":[12,15,16],
+            "m":["MadeLow5","MadeLow9"],
+            "f":100
         },
-        "Arbeit27": {
-            "s": [5,8,16,34],
-            "m": ["FoodMadeLow1","FoodMadeLow2"],
-            "f": 100
+        "Arbeit27":{
+            "s":[5,8,16,34],
+            "m":["FoodMadeLow1","FoodMadeLow2"],
+            "f":100
         },
-        "Arbeit28": {
-            "s": [9,22,23],
-            "m": ["MadeLow13","FoodMadeLow8"],
-            "f": 100
+        "Arbeit28":{
+            "s":[9,22,23],
+            "m":["MadeLow13","FoodMadeLow8"],
+            "f":100
         },
-        "Arbeit29": {
-            "s": [2,3,11,23],
-            "m": ["MadeHigh7","MadeLow1"]
+        "Arbeit29":{
+            "s":[2,3,11,23],
+            "m":["MadeHigh7","MadeLow1"]
         },
-        "Arbeit30": {
-            "s": [1,17,21],
-            "m": ["MadeLow2","MadeLow1"]
+        "Arbeit30":{
+            "s":[1,17,21],
+            "m":["MadeLow2","MadeLow1"]
         },
-        "Arbeit31": {
-            "s": [10,13,24],
-            "m": ["MadeLow15","MadeLow14"]
+        "Arbeit31":{
+            "s":[10,13,24],
+            "m":["MadeLow15","MadeLow14"]
         },
-        "Arbeit32": {
-            "s": [1,17,31],
-            "m": ["MadeLow1","MadeLow6"]
+        "Arbeit32":{
+            "s":[1,17,31],
+            "m":["MadeLow1","MadeLow6"]
         },
-        "Arbeit33": {
-            "s": [19,29],
-            "m": ["MadeLow7","MadeLow13"],
-            "f": 100
+        "Arbeit33":{
+            "s":[19,29],
+            "m":["MadeLow7","MadeLow13"],
+            "f":100
         },
-        "Arbeit34": {
-            "s": [1,18,21],
-            "m": ["MadeHigh1","MadeLow6"]
+        "Arbeit34":{
+            "s":[1,18,21],
+            "m":["MadeHigh1","MadeLow6"]
         },
-        "Rest1": {
-            "s": [20],
-            "m": []
+        "Arbeit35":{
+            "s":[35],
+            "m":["MadeLow17"],
+            "f":100
         },
-        "Rest2": {
-            "s": [20,33],
-            "m": []
+        "Arbeit37":{
+            "s":[37],
+            "m":["MadeLow19"],
+            "f":100
         },
-        "Rest3": {
-            "s": [4,13,14],
-            "m": []
+        "Arbeit39":{
+            "s":[39],
+            "m":["MadeLow21"],
+            "f":100
         },
-        "Rest4": {
-            "s": [11,23],
-            "m": []
+        "Rest1":{
+            "s":[20],
+            "m":[]
         },
-        "Rest5": {
-            "s": [2,12,32],
-            "m": []
+        "Rest2":{
+            "s":[20,33],
+            "m":[]
         },
-        "Rest6": {
-            "s": [26,34],
-            "m": []
+        "Rest3":{
+            "s":[4,13,14],
+            "m":[]
         },
-        "Rest7": {
-            "s": [5],
-            "m": []
+        "Rest4":{
+            "s":[11,23],
+            "m":[]
         },
-        "Rest8": {
-            "s": [8,11,28,34],
-            "m": [],
-            "f": 100
+        "Rest5":{
+            "s":[2,12,32],
+            "m":[]
         },
-        "Rest9": {
-            "s": [22,29,33],
-            "m": []
+        "Rest6":{
+            "s":[26,34],
+            "m":[]
         },
-        "Rest10": {
-            "s": [20,33],
-            "m": []
+        "Rest7":{
+            "s":[5],
+            "m":[]
+        },
+        "Rest8":{
+            "s":[8,11,28,34],
+            "m":[],
+            "f":100
+        },
+        "Rest9":{
+            "s":[22,29,33],
+            "m":[]
+        },
+        "Rest10":{
+            "s":[20,33],
+            "m":[]
         }
     }
 }

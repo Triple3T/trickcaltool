@@ -144,6 +144,11 @@
                 "MadeHigh9":2
             }
         },
+        "MadeHigh14":{"r":3,"m":{}},
+        "MadeHigh15":{"r":2,"m":{"MadeHigh7":3,"MadeLow18":8}},
+        "MadeHigh16":{"r":3,"m":{}},
+        "MadeHigh17":{"r":2,"m":{"MadeLow10":3,"MadeLow20":8}},
+        "MadeHigh18":{"r":3,"m":{}},
         "MadeLow1":{"r":0,"g":true},
         "MadeLow2":{"r":0,"g":true},
         "MadeLow3":{"r":0,"g":true},
@@ -171,6 +176,11 @@
         "MadeLow13":{"r":0,"g":true},
         "MadeLow14":{"r":0,"g":true},
         "MadeLow15":{"r":0,"g":true},
-        "MadeLow16":{"r":0,"g":true}
+        "MadeLow16":{"r":0,"g":true},
+        "MadeLow17":{"r":1,"m":{"MadeLow15":4,"MadeLow6":2},"g":true},
+        "MadeLow18":{"r":1,"m":{"MadeLow9":4,"MadeLow2":2},"g":true},
+        "MadeLow19":{"r":1,"m":{"MadeLow1":4,"MadeLow12":2},"g":true},
+        "MadeLow20":{"r":1,"m":{"MadeLow13":4,"MadeLow1":2},"g":true},
+        "MadeLow21":{"r":1,"m":{"MadeLow7":4,"MadeLow14":2},"g":true}
     }
 }

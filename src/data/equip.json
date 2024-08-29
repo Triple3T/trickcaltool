@@ -1422,6 +1422,17 @@
             ["e.weapon.826","e.armor.810","e.armor.802","e.weapon.805","e.accessory.810","e.armor.819"],
             ["e.weapon.918","e.armor.910","e.armor.902","e.weapon.925","e.accessory.904","e.armor.916"]
         ],
+        "Pira":[
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ],
         "Posher":[
             ["e.weapon.118","e.armor.118","e.armor.106","e.accessory.105","e.accessory.111","e.accessory.103"],
             ["e.weapon.219","e.armor.219","e.armor.204","e.accessory.212","e.accessory.202","e.accessory.205"],
