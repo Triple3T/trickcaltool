@@ -1560,9 +1560,18 @@ i18n
               showMyHomeUpgradeMaterials: "교단 건물 레벨업 재료 표시",
               showLabMaterials: "남은 연구에 필요한 재료 표시",
               showCollectionMaterials: "남은 수집품 제작에 필요한 재료 표시",
-              showRemainAsSubMaterials: "하위 재료로 표시",
-              remainMaterialsDepth1: "전체 단계",
-              remainMaterialsDepth2: "현재 단계",
+              showLabRemainMode: {
+                label: "연구 재료 합산 범위",
+                current: "현재 단계",
+                complete: "전체 단계",
+              },
+              showMaterialRemainMode: {
+                label: "재료 표시 모드",
+                NoDecomp: "그대로",
+                DecompOneStep: "1단계 하위 재료로",
+                DecompTwoStep: "2단계 하위 재료로",
+                DecompProdOnly: "모험회 획득 재료로",
+              },
               myHomeCategory: "시설",
               myHomeCurrentLevel: "현재 레벨",
               myHomeGoalLevel: "목표 레벨",
@@ -1757,7 +1766,8 @@ i18n
               },
               aside: {
                 title: "어사이드 하트 계산기",
-                description: "어사이드 레벨업에 사용되는 하트의 계산을 도와줍니다.",
+                description:
+                  "어사이드 레벨업에 사용되는 하트의 계산을 도와줍니다.",
                 levelSectionInput: "레벨 구간 입력",
                 selectRace: "종족 선택",
                 levelStart: "현재 레벨",
@@ -1765,12 +1775,14 @@ i18n
                 requiredTitle: "필요한 종족 하트",
                 requiredNotice:
                   "필요한 양과 소모 단위가 맞아떨어지지 않아 실제 소모량은 조금 더 높을 수 있습니다.",
-                otherRaceHeartNotice: "다른 종족 하트를 사용하는 경우 2배가 필요합니다.",
+                otherRaceHeartNotice:
+                  "다른 종족 하트를 사용하는 경우 2배가 필요합니다.",
                 inputNotice: "레벨 구간을 입력해주세요.",
               },
               skill: {
                 title: "마시멜로 계산기",
-                description: "스킬 레벨업에 사용되는 마시멜로와 골드의 계산을 도와줍니다.",
+                description:
+                  "스킬 레벨업에 사용되는 마시멜로와 골드의 계산을 도와줍니다.",
                 levelSectionInput: "레벨 구간 입력",
                 selectedClass: "역할군 선택",
                 levelStart: "현재 레벨",

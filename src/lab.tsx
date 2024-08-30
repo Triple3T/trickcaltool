@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import Select from "@/components/common/combobox-select";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -381,16 +382,12 @@ const labDataReducer = (
   }
 };
 
-const mergeDecomp = (
-  prev: { [key: string]: number },
-  curr: { [key: string]: number }
-): { [key: string]: number } => {
-  Object.entries(curr).forEach(([k, v]) => {
-    if (prev[k]) prev[k] += v;
-    else prev[k] = v;
-  });
-  return prev;
-};
+enum DecompMode {
+  NoDecomp = 0,
+  DecompOneStep = 1,
+  DecompTwoStep = 2,
+  DecompProdOnly = 3,
+}
 
 const decompOnlyProd = (
   key: string,
@@ -402,28 +399,31 @@ const decompOnlyProd = (
   if (smt && (!depth || isOnlyProd)) {
     return Object.entries(smt)
       .map(([k, v]) => decompOnlyProd(k, v * value, depth + 1))
-      .reduce(mergeDecomp, {} as { [key: string]: number });
+      .reduce(materialObjectMerge, {} as { [key: string]: number });
   }
   return { [key]: value };
 };
 
-const decomp = (key: string, value: number): { [key: string]: number } => {
-  const smt = material.m[key].m;
-  if (smt) {
-    return Object.entries(smt)
-      .map(([k, v]) => decomp(k, v * value))
-      .reduce(mergeDecomp, {} as { [key: string]: number });
-  }
-  return { [key]: value };
-};
-
-const decompAll = (
-  m: { [key: string]: number },
-  f?: boolean
-): { [key: string]: number } => {
-  return Object.entries(m)
-    .map(([k, v]) => (f ? decomp(k, v) : decompOnlyProd(k, v, 0)))
-    .reduce(mergeDecomp, {} as { [key: string]: number });
+const decompAll = (materials: { [key: string]: number }, mode: DecompMode) => {
+  if (mode === DecompMode.DecompProdOnly)
+    return Object.entries(materials)
+      .map(([k, v]) => decompOnlyProd(k, v, 0))
+      .reduce(materialObjectMerge, {} as { [key: string]: number });
+  const decompList = Object.entries(materials)
+    .map(([k, v]) => {
+      const recipe = material.m[k].m;
+      const canDecomp = recipe && Object.keys(recipe).length !== 0;
+      if (canDecomp)
+        return Object.fromEntries(
+          Object.entries(recipe).map(([mat, val]) => [mat, val * v])
+        );
+      return { [k]: v };
+    })
+    .reduce(materialObjectMerge, {} as { [key: string]: number });
+  if (mode === DecompMode.DecompOneStep) return decompList;
+  if (mode === DecompMode.DecompTwoStep)
+    return decompAll(decompList, DecompMode.DecompOneStep);
+  return materials;
 };
 
 type CollectionFilteredType = {
@@ -443,7 +443,9 @@ const Lab = () => {
   const [showMaterialRemainCategory, setShowMaterialRemainCategory] = useState<
     boolean[]
   >([true, true, false]);
-  const [showAsSubMaterial, setShowAsSubMaterial] = useState(false);
+  const [showAsSubMaterial, setShowAsSubMaterial] = useState<DecompMode>(
+    DecompMode.NoDecomp
+  );
   const [collectionCategory, setCollectionCategory] =
     useState<string>("Figure");
   const [page, setPage] = useState(0);
@@ -698,24 +700,6 @@ const Lab = () => {
           <AccordionItem value="item-2">
             <AccordionTrigger>{t("ui.lab.remainMaterials")}</AccordionTrigger>
             <AccordionContent className="text-base">
-              <Tabs value={materialDepth} className="w-full">
-                <TabsList className="w-full flex">
-                  <TabsTrigger
-                    value="indexDepth2"
-                    className="flex-1"
-                    onClick={() => setMaterialDepth("indexDepth2")}
-                  >
-                    <div>{t("ui.lab.remainMaterialsDepth2")}</div>
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="indexDepth1"
-                    className="flex-1"
-                    onClick={() => setMaterialDepth("indexDepth1")}
-                  >
-                    <div>{t("ui.lab.remainMaterialsDepth1")}</div>
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
               <div className="my-2 text-left flex items-center gap-2">
                 <Switch
                   id="show-my-home-upgrade-materials"
@@ -753,35 +737,64 @@ const Lab = () => {
                 </Label>
               </div>
               <div className="my-2 text-left flex items-center gap-2">
-                <Switch
-                  id="show-as-sub-materials"
-                  checked={showAsSubMaterial}
-                  onCheckedChange={(c) => {
-                    setShowAsSubMaterial(c);
-                  }}
-                />
-                <Label htmlFor="show-as-sub-materials">
-                  {t("ui.lab.showRemainAsSubMaterials")}
-                </Label>
+                <div className="w-max text-sm">
+                  {t("ui.lab.showLabRemainMode.label")}
+                </div>
+                <div className="flex-1">
+                  <Select
+                    value={materialDepth}
+                    setValue={setMaterialDepth}
+                    items={[
+                      {
+                        value: "indexDepth2",
+                        label: t("ui.lab.showLabRemainMode.current"),
+                      },
+                      {
+                        value: "indexDepth1",
+                        label: t("ui.lab.showLabRemainMode.complete"),
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <div className="my-2 text-left flex items-center gap-2">
+                <div className="w-max text-sm">
+                  {t("ui.lab.showMaterialRemainMode.label")}
+                </div>
+                <div className="flex-1">
+                  <Select
+                    value={showAsSubMaterial + 1}
+                    setValue={(c) => setShowAsSubMaterial(c - 1)}
+                    items={Object.values(DecompMode)
+                      .filter((v) => typeof v !== "number")
+                      .map((v) => ({
+                        value: DecompMode[v as keyof typeof DecompMode] + 1,
+                        label: t(`ui.lab.showMaterialRemainMode.${v}`),
+                      }))}
+                  />
+                </div>
               </div>
               {labData && (
                 <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-evenly">
                   {Object.entries(
                     [
                       showMaterialRemainCategory[0]
-                        ? showAsSubMaterial
-                          ? decompAll(labData.myHomeMaterialRemain.m)
-                          : labData.myHomeMaterialRemain.m
+                        ? decompAll(
+                            labData.myHomeMaterialRemain.m,
+                            showAsSubMaterial
+                          )
                         : {},
                       showMaterialRemainCategory[1]
-                        ? showAsSubMaterial
-                          ? decompAll(labData.materialRemain[materialDepth].m)
-                          : labData.materialRemain[materialDepth].m
+                        ? decompAll(
+                            labData.materialRemain[materialDepth].m,
+                            showAsSubMaterial
+                          )
                         : {},
                       showMaterialRemainCategory[2]
-                        ? showAsSubMaterial
-                          ? decompAll(labData.collectionMaterialRemain.m)
-                          : labData.collectionMaterialRemain.m
+                        ? decompAll(
+                            labData.collectionMaterialRemain.m,
+                            showAsSubMaterial
+                          )
                         : {},
                     ].reduce(materialObjectMerge, {})
                   ).map(([item, amount]) => {
