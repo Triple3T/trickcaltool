@@ -1551,7 +1551,7 @@ i18n
               noSameRankBonus: "같은 랭크 효과를 가진 다른 사도가 없습니다.",
             },
             lab: {
-              title: "교단 연구 노트",
+              title: "교단 연구 일지",
               description: "교단의 연구 현황을 체크합니다.",
               subDescription: "루포야 일하자",
               labStep: "{{0}}단계",
