@@ -229,7 +229,8 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                       "font-normal text-center",
                       selectedRank === rank
                         ? rankClassNames[Number(rank) - 1][2]
-                        : "opacity-80"
+                        : "opacity-80",
+                      rankClassNames[Number(rank) - 1][6]
                     )}
                     key={rank}
                     onClick={() => setSelectedRank(rank)}

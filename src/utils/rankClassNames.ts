@@ -6,6 +6,7 @@ const rankClassNames = [
     "bg-red-300",
     "text-red-800",
     "border-red-300",
+    "hover:bg-red-500 dark:hover:bg-red-400",
   ],
   [
     "bg-orange-300 dark:bg-orange-800",
@@ -14,6 +15,7 @@ const rankClassNames = [
     "bg-orange-300",
     "text-orange-800",
     "border-orange-300",
+    "hover:bg-orange-500 dark:hover:bg-orange-400",
   ],
   [
     "bg-yellow-300 dark:bg-yellow-800",
@@ -22,6 +24,7 @@ const rankClassNames = [
     "bg-yellow-300",
     "text-yellow-800",
     "border-yellow-300",
+    "hover:bg-yellow-500 dark:hover:bg-yellow-400",
   ],
   [
     "bg-lime-300 dark:bg-lime-800",
@@ -30,6 +33,7 @@ const rankClassNames = [
     "bg-lime-300",
     "text-lime-800",
     "border-lime-300",
+    "hover:bg-lime-500 dark:hover:bg-lime-400",
   ],
   [
     "bg-emerald-300 dark:bg-emerald-800",
@@ -38,6 +42,7 @@ const rankClassNames = [
     "bg-emerald-300",
     "text-emerald-800",
     "border-emerald-300",
+    "hover:bg-emerald-500 dark:hover:bg-emerald-400",
   ],
   [
     "bg-cyan-300 dark:bg-cyan-800",
@@ -46,6 +51,7 @@ const rankClassNames = [
     "bg-cyan-300",
     "text-cyan-800",
     "border-cyan-300",
+    "hover:bg-cyan-500 dark:hover:bg-cyan-400",
   ],
   [
     "bg-indigo-300 dark:bg-indigo-800",
@@ -54,6 +60,7 @@ const rankClassNames = [
     "bg-indigo-300",
     "text-indigo-800",
     "border-indigo-300",
+    "hover:bg-indigo-500 dark:hover:bg-indigo-400",
   ],
   [
     "bg-fuchsia-300 dark:bg-fuchsia-800",
@@ -62,6 +69,7 @@ const rankClassNames = [
     "bg-fuchsia-300",
     "text-fuchsia-800",
     "border-fuchsia-300",
+    "hover:bg-fuchsia-500 dark:hover:bg-fuchsia-400",
   ],
   [
     "bg-pink-300 dark:bg-pink-800",
@@ -70,6 +78,7 @@ const rankClassNames = [
     "bg-pink-300",
     "text-pink-800",
     "border-pink-300",
+    "hover:bg-pink-500 dark:hover:bg-pink-400",
   ],
 ];
 
