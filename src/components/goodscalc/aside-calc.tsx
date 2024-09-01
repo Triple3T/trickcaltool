@@ -90,7 +90,7 @@ const AsideCalc = () => {
             rarityInfo={{ s: "Gray", b: "#B0B0B0" }}
             item={`/commonicons/Item_TribeHeart_${[6, 3, 1, 2, 5, 4, 7][race]}`}
             fullItemPath
-            amount={requirement}
+            amount={Math.ceil(requirement / 2)}
           />
         )}
       </div>
