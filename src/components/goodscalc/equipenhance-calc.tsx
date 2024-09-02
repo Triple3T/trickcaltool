@@ -404,7 +404,14 @@ const EquipEnhanceCalc = () => {
               return (
                 <ItemSlot
                   key={i}
-                  rarityInfo={{ s: "Gray" }}
+                  rarityInfo={
+                    [
+                      { s: "Gray" },
+                      { s: "Green" },
+                      { s: "Blue" },
+                      { s: "Gray" },
+                    ][i]
+                  }
                   item={`/equips/Equip_EnhanceStone${i + 1}`}
                   fullItemPath
                   amount={v}
@@ -439,7 +446,7 @@ const EquipEnhanceCalc = () => {
                   </div>
                   <div className="text-right flex-auto flex flex-row justify-end gap-px items-baseline">
                     <div
-                      className="text-[#5082e6] mr-0.5"
+                      className="text-[#5082e6] mr-1"
                       style={{
                         textShadow: Array(20).fill("0 0 2px #fff").join(","),
                       }}
@@ -451,7 +458,9 @@ const EquipEnhanceCalc = () => {
                           100
                       ).toLocaleString()}
                     </div>
-                    <div className="opacity-80 text-sm">{value.toLocaleString()}</div>
+                    <div className="opacity-80 text-sm">
+                      {value.toLocaleString()}
+                    </div>
                     <div className="text-sm">
                       +
                       {Math.floor(
