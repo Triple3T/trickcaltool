@@ -1790,6 +1790,17 @@ i18n
                 requiredTitle: "필요한 마시멜로/골드",
                 inputNotice: "레벨 구간을 입력해주세요.",
               },
+              equipenhance: {
+                title: "장비 강화 계산기",
+                description:
+                  "장비 강화에 필요한 포인트와 골드, 그리고 강화 효과의 계산을 도와줍니다.",
+                equipInput: "장비 입력",
+                enhanceInput: "장비 강화 입력",
+                equipInputNotice: "장비를 선택해주세요.",
+                requiredTitle: "필요한 강화석/골드",
+                inputNotice: "장비와 강화 등급을 입력해주세요.",
+                enhancedStatTitle: "강화 시 능력치",
+              },
             },
             utilities: {
               title: "유틸리티",
