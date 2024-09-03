@@ -404,14 +404,7 @@ const EquipEnhanceCalc = () => {
               return (
                 <ItemSlot
                   key={i}
-                  rarityInfo={
-                    [
-                      { s: "Gray" },
-                      { s: "Green" },
-                      { s: "Blue" },
-                      { s: "Gray" },
-                    ][i]
-                  }
+                  rarityInfo={{ s: ["Gray", "Green", "Blue", "Gray"][i] }}
                   item={`/equips/Equip_EnhanceStone${i + 1}`}
                   fullItemPath
                   amount={v}
