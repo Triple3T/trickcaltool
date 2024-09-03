@@ -92,6 +92,16 @@ const MenuButton = () => {
           />
           {t("ui.restaurant.title")}
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/goodscalc")}
+          disabled={matchPath(location.pathname, "/goodscalc") ? true : false}
+        >
+          <img
+            src="/icons/CurrencyIcon_0041.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.goodscalc.title")}
+        </DropdownMenuItem>
         {/* <Separator className="my-1" /> */}
         {/* <DropdownMenuItem
           onClick={() => navigate("/eventcalc")}

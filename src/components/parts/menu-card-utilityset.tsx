@@ -29,10 +29,7 @@ const UtilitySetCard = () => {
     <Dialog>
       <DialogTrigger asChild>
         <div className="flex flex-col bg-gray-200/60 dark:bg-gray-500/60 p-4 rounded-lg shadow-md space-y-4">
-          <img
-            src={"/scenes/Dron.png"}
-            className="h-6 w-6 lg:h-8 lg:w-8"
-          />
+          <img src={"/scenes/Dron.png"} className="h-6 w-6 lg:h-8 lg:w-8" />
           <h3 className="text-lg font-medium lg:text-xl text-gray-800 dark:text-gray-200">
             {t("ui.utilities.title")}
           </h3>
@@ -86,6 +83,17 @@ const UtilitySetCard = () => {
               </h4>
             </div>
           </Link>
+          <Link to={"/goodscalc"}>
+            <div className={utilityButtonClasses}>
+              <h4 className={utilityTextClasses}>
+                <img
+                  src="/icons/CurrencyIcon_0041.png"
+                  className="h-6 w-6 inline-block align-middle mr-2"
+                />
+                {t("ui.goodscalc.title")}
+              </h4>
+            </div>
+          </Link>
         </div>
         <ShowExperimentalPopup
           show={showExperimental}
@@ -108,14 +116,6 @@ const UtilitySetCard = () => {
                   <h4 className={experimentalTextClasses}>
                     {t("ui.index.testMark")}
                     {t("ui.eventcalc.title")}
-                  </h4>
-                </div>
-              </Link>
-              <Link to={"/goodscalc"}>
-                <div className={experimentalButtonClasses}>
-                  <h4 className={experimentalTextClasses}>
-                    {t("ui.index.testMark")}
-                    {t("ui.goodscalc.title")}
                   </h4>
                 </div>
               </Link>
