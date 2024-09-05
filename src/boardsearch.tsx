@@ -290,9 +290,8 @@ const BoardSearch = () => {
                 key={`${fb.name}-${fb.index}`}
                 name={fb.name}
                 index={fb.index}
-                board={board.c[fb.name].b[fb.index - 1]
-                  .map((b) => b.toString())
-                  .join("")}
+                board={board.c[fb.name].b[fb.index - 1]}
+                blockedBy={board.c[fb.name].k[fb.index - 1]}
                 search={includeBoardType}
                 unlocked={fb.index <= ownedCharas[fb.name]}
                 skin={skinData[fb.name] || 0}
