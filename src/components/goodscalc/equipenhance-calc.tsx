@@ -287,17 +287,28 @@ const getStoneAfter250 = (reqPoint: number): Array<number> => {
   const remainingPointAfter60 = remainingPointAfter150 - 60 * i60;
   return [i60, i150, i250, remainingPointAfter60];
 };
-const enhanceRequire = (
+const getEnhanceRequire = (
   rank: number,
-  enhance: number
+  [enhanceStart, enhanceEnd]: number[]
 ): [number, number, number[]] => {
-  if (enhance === 0) return [0, 0, []];
+  if (enhanceStart === enhanceEnd) return [0, 0, []];
   if (rank === 0) return [0, 0, []];
-  const reqPoint = v.enhanceRequire[rank - 1][enhance - 1];
+  const reqPointStart =
+    enhanceStart > 0 ? v.enhanceRequire[rank - 1][enhanceStart - 1] : 0;
+  const reqPointEnd =
+    enhanceEnd > 0 ? v.enhanceRequire[rank - 1][enhanceEnd - 1] : 0;
+  const reqPoint = Math.abs(reqPointStart - reqPointEnd);
+  console.log(reqPoint);
   const reqGold = reqPoint * v.enhanceCost[rank - 1];
   if (reqPoint < 250) return [reqPoint, reqGold, getStoneBefore250(reqPoint)];
   return [reqPoint, reqGold, getStoneAfter250(reqPoint)];
 };
+const getEnhancedStat = (value: number, rank: number, level: number) =>
+  level > 0
+    ? Math.floor(
+        (value * (equip.v.enhanceRate[rank - 1][level - 1] + 100)) / 100
+      )
+    : value;
 
 const EquipEnhanceCalc = () => {
   const { t } = useTranslation();
@@ -308,12 +319,12 @@ const EquipEnhanceCalc = () => {
   ]);
   const [selectedEquip, setSelectedEquip] = useState<string>("");
   const [rank, setRank] = useState<number>(0);
-  const [enhanceLevel, setEnhanceLevel] = useState<number>(0);
+  const [enhanceLevel, setEnhanceLevel] = useState<number[]>([0, 0]);
   useEffect(() => {
     if (selectedEquip) {
       const r = Number(selectedEquip.split(".")[2].charAt(0));
       setRank(r);
-      setRequirements(enhanceRequire(r, enhanceLevel));
+      setRequirements(getEnhanceRequire(r, enhanceLevel));
     } else {
       setRank(0);
       setRequirements([0, 0, []]);
@@ -361,9 +372,9 @@ const EquipEnhanceCalc = () => {
                     textShadow: Array(20).fill("0 0 2px #fff").join(","),
                   }}
                 >
-                  +0
+                  +{Math.min(...enhanceLevel)}
                 </div>
-                {enhanceLevel > 0 && (
+                {enhanceLevel[0] !== enhanceLevel[1] && (
                   <>
                     <img src="/common/CommonLevelUpArrow.png" className="h-3" />
                     <div
@@ -372,15 +383,16 @@ const EquipEnhanceCalc = () => {
                         textShadow: Array(20).fill("0 0 2px #fff").join(","),
                       }}
                     >
-                      +{enhanceLevel}
+                      +{Math.max(...enhanceLevel)}
                     </div>
                   </>
                 )}
               </div>
             </div>
             <Slider
-              value={[enhanceLevel]}
-              onValueChange={([v]) => setEnhanceLevel(v)}
+              value={enhanceLevel}
+              onValueChange={setEnhanceLevel}
+              defaultValue={[0, 0]}
               min={0}
               max={5}
               step={1}
@@ -444,22 +456,40 @@ const EquipEnhanceCalc = () => {
                         textShadow: Array(20).fill("0 0 2px #fff").join(","),
                       }}
                     >
-                      {Math.floor(
+                      {getEnhancedStat(
+                        value,
+                        rank,
+                        Math.max(...enhanceLevel)
+                      ).toLocaleString()}
+                      {/* {Math.floor(
                         (value *
                           (equip.v.enhanceRate[rank - 1][enhanceLevel - 1] +
                             100)) /
                           100
-                      ).toLocaleString()}
+                      ).toLocaleString()} */}
                     </div>
                     <div className="opacity-80 text-sm">
-                      {value.toLocaleString()}
+                      {/* {value.toLocaleString()} */}
+                      {getEnhancedStat(
+                        value,
+                        rank,
+                        Math.min(...enhanceLevel)
+                      ).toLocaleString()}
                     </div>
                     <div className="text-sm">
                       +
-                      {Math.floor(
+                      {/* {Math.floor(
                         (value *
                           equip.v.enhanceRate[rank - 1][enhanceLevel - 1]) /
                           100
+                      ).toLocaleString()} */}
+                      {(
+                        getEnhancedStat(
+                          value,
+                          rank,
+                          Math.max(...enhanceLevel)
+                        ) -
+                        getEnhancedStat(value, rank, Math.min(...enhanceLevel))
                       ).toLocaleString()}
                     </div>
                   </div>
