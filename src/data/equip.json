@@ -999,10 +999,10 @@
             ["e.weapon.312","e.armor.304","e.weapon.304","e.armor.313","e.accessory.312","e.armor.319"],
             ["e.weapon.413","e.armor.404","e.weapon.403","e.armor.409","e.accessory.405","e.armor.418"],
             ["e.weapon.507","e.armor.503","e.weapon.505","e.armor.519","e.accessory.506","e.armor.518"],
-            [],
-            [],
-            [],
-            []
+            ["e.weapon.612","e.armor.609","e.armor.603","e.accessory.609","e.accessory.609","e.armor.617"],
+            ["e.armor.707","e.accessory.703","e.weapon.713","e.accessory.702","e.accessory.711","e.armor.719"],
+            ["e.weapon.812","e.armor.811","e.armor.805","e.weapon.801","e.accessory.802","e.armor.820"],
+            ["e.weapon.904","e.armor.911","e.armor.905","e.weapon.914","e.accessory.912","e.armor.917"]
         ],
         "Carren":[
             ["e.weapon.121","e.armor.113","e.armor.102","e.accessory.111","e.accessory.105","e.accessory.103"],
