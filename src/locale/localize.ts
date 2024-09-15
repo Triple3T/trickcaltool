@@ -1479,6 +1479,7 @@ i18n
               sitePoweredBy: "Trickcal Note powered by Triple",
               textPrivacy: "Privacy",
               textSetting: "Setting",
+              textUpdateLog: "Log",
               suspenseLoading: "Loading...",
             },
             board: {
