@@ -13,10 +13,10 @@ import {
 
 const Checker = () => {
   const { t } = useTranslation();
-  const boardStat = useMemo(getTotalBoardStat, []);
-  const pboardStat = useMemo(getTotalPboardStat, []);
-  const rankStat = useMemo(getTotalRankStat, []);
-  const labStat = useMemo(getTotalLabStat, []);
+  const boardStat = useMemo(() => getTotalBoardStat(), []);
+  const pboardStat = useMemo(() => getTotalPboardStat(), []);
+  const rankStat = useMemo(() => getTotalRankStat(), []);
+  const labStat = useMemo(() => getTotalLabStat(), []);
   return (
     <>
       <Tabs className="font-onemobile w-full mt-4" defaultValue="percent">
