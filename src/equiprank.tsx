@@ -45,7 +45,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
 import SearchBox from "@/components/common/search-with-icon";
-import board from "@/data/board";
+// import board from "@/data/board";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import clonefactory from "@/data/clonefactory";
@@ -71,6 +71,7 @@ import { UserDataEqRank, UserDataUnowned } from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 import sortChange from "@/utils/sortChange";
 import filterChange from "@/utils/filterChange";
+import { getTotalBoardStat } from "@/utils/getTotalStatBonus";
 
 const MAX_RANK = 9;
 
@@ -524,35 +525,38 @@ const EquipRank = () => {
     if (rankData && rankData.isDirty) autosaver();
   }, [autosaver, rankData]);
 
-  const getBoardStats = useCallback(() => {
-    if (Object.keys(boardStat).length !== 0) return;
-    const boardStats: { [key: string]: number } = {};
-    const boardData = userdata.board.load().b;
-    Object.entries(boardData).forEach(([c, b]) => {
-      const charaBoard = board.c[c].b;
-      charaBoard.forEach((nthboard, i) => {
-        nthboard.forEach((boardList, j) => {
-          boardList
-            .toString(10)
-            .split("")
-            .forEach((targetBoardString, k) => {
-              const targetBoard = Number(targetBoardString);
-              const isChecked = b[i][j] & (1 << k);
-              if (isChecked) {
-                const statList = board.s[targetBoard];
-                statList.forEach((stat, statIndex) => {
-                  const statType = StatType[stat];
-                  const statValue = board.b[targetBoard][statIndex][i];
-                  boardStats[statType] =
-                    (boardStats[statType] ?? 0) + statValue;
-                });
-              }
-            });
-        });
-      });
-    });
-    setBoardStat(boardStats);
-  }, [boardStat]);
+  useEffect(() => {
+    setBoardStat(getTotalBoardStat());
+  }, []);
+  // const getBoardStats = useCallback(() => {
+  //   if (Object.keys(boardStat).length !== 0) return;
+  //   const boardStats: { [key: string]: number } = {};
+  //   const boardData = userdata.board.load().b;
+  //   Object.entries(boardData).forEach(([c, b]) => {
+  //     const charaBoard = board.c[c].b;
+  //     charaBoard.forEach((nthboard, i) => {
+  //       nthboard.forEach((boardList, j) => {
+  //         boardList
+  //           .toString(10)
+  //           .split("")
+  //           .forEach((targetBoardString, k) => {
+  //             const targetBoard = Number(targetBoardString);
+  //             const isChecked = b[i][j] & (1 << k);
+  //             if (isChecked) {
+  //               const statList = board.s[targetBoard];
+  //               statList.forEach((stat, statIndex) => {
+  //                 const statType = StatType[stat];
+  //                 const statValue = board.b[targetBoard][statIndex][i];
+  //                 boardStats[statType] =
+  //                   (boardStats[statType] ?? 0) + statValue;
+  //               });
+  //             }
+  //           });
+  //       });
+  //     });
+  //   });
+  //   setBoardStat(boardStats);
+  // }, [boardStat]);
 
   const changeRank = useCallback((chara: string, rank: number) => {
     dispatchRankData({ type: "rank", payload: { chara, rank } });
@@ -1046,7 +1050,7 @@ const EquipRank = () => {
                   checked={withBoardStat}
                   onCheckedChange={(c) => {
                     setWithBoardStat(c);
-                    if (c) getBoardStats();
+                    // if (c) getBoardStats();
                   }}
                 />
                 <Label htmlFor="view-all-stat-with-board">

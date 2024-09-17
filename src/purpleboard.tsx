@@ -24,7 +24,7 @@ import { toast } from "sonner";
 import SearchBox from "@/components/common/search-with-icon";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
-import board from "@/data/board";
+// import board from "@/data/board";
 import chara from "@/data/chara";
 import purpleboard from "@/data/purpleboard";
 import purpleposition from "@/data/purpleposition";
@@ -38,6 +38,7 @@ import {
   UserDataNthBoard,
   UserDataUnowned,
 } from "@/types/types";
+import { getTotalBoardStat } from "@/utils/getTotalStatBonus";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
 interface BoardDataPropsBoard {
@@ -505,34 +506,37 @@ const PurpleBoard = () => {
   }, [autosaver, boardData]);
 
   useEffect(() => {
-    const boardStats: { [key: string]: number } = {};
-    const boardData = userdata.board.load().b;
-    Object.entries(boardData).forEach(([c, b]) => {
-      if (c === "Canta" || c === "Sherum") return; // temporary unavailable
-      const charaBoard = board.c[c].b;
-      charaBoard.forEach((nthboard, i) => {
-        nthboard.forEach((boardList, j) => {
-          boardList
-            .toString(10)
-            .split("")
-            .forEach((targetBoardString, k) => {
-              const targetBoard = Number(targetBoardString);
-              const isChecked = b[i][j] & (1 << k);
-              if (isChecked) {
-                const statList = board.s[targetBoard];
-                statList.forEach((stat, statIndex) => {
-                  const statType = StatType[stat];
-                  const statValue = board.b[targetBoard][statIndex][i];
-                  boardStats[statType] =
-                    (boardStats[statType] ?? 0) + statValue;
-                });
-              }
-            });
-        });
-      });
-    });
-    setBoardStatPercent(boardStats);
+    setBoardStatPercent(getTotalBoardStat());
   }, []);
+  // useEffect(() => {
+  //   const boardStats: { [key: string]: number } = {};
+  //   const boardData = userdata.board.load().b;
+  //   Object.entries(boardData).forEach(([c, b]) => {
+  //     if (c === "Canta" || c === "Sherum") return; // temporary unavailable
+  //     const charaBoard = board.c[c].b;
+  //     charaBoard.forEach((nthboard, i) => {
+  //       nthboard.forEach((boardList, j) => {
+  //         boardList
+  //           .toString(10)
+  //           .split("")
+  //           .forEach((targetBoardString, k) => {
+  //             const targetBoard = Number(targetBoardString);
+  //             const isChecked = b[i][j] & (1 << k);
+  //             if (isChecked) {
+  //               const statList = board.s[targetBoard];
+  //               statList.forEach((stat, statIndex) => {
+  //                 const statType = StatType[stat];
+  //                 const statValue = board.b[targetBoard][statIndex][i];
+  //                 boardStats[statType] =
+  //                   (boardStats[statType] ?? 0) + statValue;
+  //               });
+  //             }
+  //           });
+  //       });
+  //     });
+  //   });
+  //   setBoardStatPercent(boardStats);
+  // }, []);
 
   return (
     <>
