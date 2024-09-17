@@ -154,13 +154,13 @@ function App() {
             >
               {t("ui.index.textSetting")}
             </Link>
-            <Link
+            <a
               className="text-xs text-white dark:text-gray-400 hover:underline"
-              to="https://triple3t.notion.site/102c52e157ae80f5a581dda26232a96b"
+              href="https://triple3t.notion.site/102c52e157ae80f5a581dda26232a96b"
             >
               {t("ui.index.textUpdateLog")}
               <ExternalLink className="w-3 h-3 ml-0.5 inline" />
-            </Link>
+            </a>
             {/* <Link
               className="text-xs text-white dark:text-gray-400 hover:underline"
               to="#"
