@@ -1443,6 +1443,7 @@ i18n
                 installing: "업데이트 설치 중...",
                 updateCompleted: "업데이트 완료!",
                 updateFailed: "새로고침 중...",
+                updateLog: "업데이트 내역",
                 dangerZone: "위험 구역",
                 hardReset: "앱 리셋",
                 hardResetTitle: "정말 리셋할까요?",
