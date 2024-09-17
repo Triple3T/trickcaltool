@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader2, LogOut, Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
+import { ExternalLink, Loader2, LogOut, Moon, RotateCcw, Sun, SunMoon } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
