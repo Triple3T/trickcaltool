@@ -1483,6 +1483,7 @@ i18n
               textSetting: "Setting",
               textUpdateLog: "Log",
               suspenseLoading: "Loading...",
+              buyMeACoffee: "실례가 안 된다면...",
             },
             board: {
               title: "최상급 보드 노트",
