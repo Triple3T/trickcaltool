@@ -52,7 +52,7 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           aria-expanded={open}
           className="w-60 justify-between font-onemobile"
         >
-          {v ? v : t("ui.tasksearch.selectCharacter")}
+          {v ? v : t("ui.equipviewer.selectCharacter")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -63,10 +63,10 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           }
         >
           <CommandInput
-            placeholder={t("ui.tasksearch.searchCharacter")}
+            placeholder={t("ui.equipviewer.searchCharacter")}
             className="h-9"
           />
-          <CommandEmpty>{t("ui.tasksearch.characterNotFound")}</CommandEmpty>
+          <CommandEmpty>{t("ui.equipviewer.characterNotFound")}</CommandEmpty>
           <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
             <CommandList>
               <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-2 md:[&_[cmdk-group-items]]:grid-cols-3 [&_[cmdk-group-items]]:gap-1 p-2">
@@ -197,8 +197,9 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           aria-expanded={open}
           className="w-60 justify-between font-onemobile"
         >
-          {/* {v ? v : t("ui.restaurant.selectFood")} */}
-          {v ? t(`equip.${idToLocKey(v)}`) || "???" : "아이템 선택..."}
+          {v
+            ? t(`equip.${idToLocKey(v)}`) || t("ui.equipviewer.unknownEquip")
+            : t("ui.equipviewer.selectEquip")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -212,14 +213,12 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           }
         >
           <CommandInput
-            // placeholder={t("ui.restaurant.searchFood")}
-            placeholder={"아이템 검색..."}
+            placeholder={t("ui.equipviewer.searchEquip")}
             className="h-9"
             value={searchValue}
             onValueChange={setSearchValue}
           />
-          {/* <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty> */}
-          <CommandEmpty>{"아이템을 찾을 수 없습니다."}</CommandEmpty>
+          <CommandEmpty>{t("ui.equipviewer.equipNotFound")}</CommandEmpty>
           {!searchValue && (
             <div className="flex flex-wrap p-1 gap-1 justify-evenly">
               {Object.keys(rankEquips).map((rank) => {
@@ -365,6 +364,7 @@ const EquipViewer = () => {
     useState<boolean>(false);
   const [showStats, setShowStats] = useState<boolean>(false);
   const [showFullEnhanced, setShowFullEnhanced] = useState<boolean>(false);
+  const [showEquipName, setShowEquipName] = useState<boolean>(false);
   const [selectedChara, setSelectedChara] = useState<string>("");
   const [selectedEquip, setSelectedEquip] = useState<string>("");
   const [selectedRank, setSelectedRank] = useState<number>(0);
@@ -396,10 +396,13 @@ const EquipViewer = () => {
             <Select
               value={selectedRank}
               setValue={searchRank}
-              placeholder="랭크 선택..."
+              placeholder={t("ui.equipviewer.selectRank")}
               items={Array(9)
                 .fill(0)
-                .map((_, i) => ({ value: i + 1, label: `RANK ${i + 1}` }))}
+                .map((_, i) => ({
+                  value: i + 1,
+                  label: t("ui.equipviewer.rankText", { 0: i + 1 }),
+                }))}
             />
           </div>
         </div>
@@ -418,7 +421,20 @@ const EquipViewer = () => {
                   htmlFor="showEquipPartsRequired"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  정석 비용 보기
+                  {t("ui.equipviewer.showEquipPartsRequired")}
+                </label>
+              </div>
+              <div className="text-sm flex items-center gap-2">
+                <Checkbox
+                  id="showEquipName"
+                  checked={showEquipName}
+                  onCheckedChange={(v) => setShowEquipName(Boolean(v))}
+                />
+                <label
+                  htmlFor="showEquipName"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {t("ui.equipviewer.showEquipName")}
                 </label>
               </div>
               <div className="text-sm flex items-center gap-2">
@@ -431,7 +447,7 @@ const EquipViewer = () => {
                   htmlFor="showStats"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  총합 스탯 보기
+                  {t("ui.equipviewer.showTotalStat")}
                 </label>
               </div>
               {showStats && (
@@ -445,7 +461,7 @@ const EquipViewer = () => {
                     htmlFor="showFullEnhanced"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    최대 강화 보기
+                    {t("ui.equipviewer.showFullEnhanced")}
                   </label>
                 </div>
               )}
@@ -481,7 +497,7 @@ const EquipViewer = () => {
                   `equip.equip.${selectedEquip.split(".")[1]}.${
                     selectedEquip.split(".")[2]
                   }`
-                ) || "???"}
+                ) || t("ui.equip.unknownEquip")}
               </div>
             </div>
             <div className="text-sm flex justify-evenly gap-x-2 gap-y-1">
@@ -515,12 +531,12 @@ const EquipViewer = () => {
                           </div>
                         ) : (
                           <div className="flex-1 text-sm text-center opacity-75">
-                            스탯 없음
+                            {t("ui.equipviewer.noStat")}
                           </div>
                         )
                       ) : (
                         <div className="flex-1 text-sm text-center text-red-500">
-                          스탯 데이터 없음
+                          {t("ui.equipviewer.noDataForStat")}
                         </div>
                       )}
                     </div>
@@ -589,17 +605,17 @@ const EquipViewer = () => {
                             </div>
                           ) : (
                             <div className="text-sm text-center text-red-500">
-                              레시피 데이터 없음
+                              {t("ui.equipviewer.noDataForRecipe")}
                             </div>
                           )
                         ) : (
                           <div className="text-sm text-center opacity-75">
-                            레시피 없음
+                            {t("ui.equipviewer.noRecipe")}
                           </div>
                         )
                       ) : (
                         <div className="text-sm text-center text-red-500">
-                          레시피 데이터 없음
+                          {t("ui.equipviewer.noDataForRecipe")}
                         </div>
                       )}
                     </div>
@@ -614,19 +630,34 @@ const EquipViewer = () => {
                 ][selectedEquip.split(".")[2]]
               )}
             </div>
+            <div>
+              <div className="text-sm flex items-center gap-2">
+                <Checkbox
+                  id="showEquipName"
+                  checked={showEquipName}
+                  onCheckedChange={(v) => setShowEquipName(Boolean(v))}
+                />
+                <label
+                  htmlFor="showEquipName"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {t("ui.equipviewer.showOtherEquipName")}
+                </label>
+              </div>
+            </div>
           </div>
         )}
         {selectedRank > 0 && (
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
               <Select
-                value={sortBy[0]}
-                setValue={(a) => setSortBy(([, b]) => [a, b])}
-                placeholder="정렬 기준 선택..."
+                value={sortBy[0] < 0 ? sortBy[0] : sortBy[0] + 1}
+                setValue={(a) => setSortBy(([, b]) => [a > 0 ? a - 1 : a, b])}
+                placeholder={t("ui.equipviewer.selectSortBy")}
                 items={[
-                  { value: -1, label: "장비의정석" },
+                  { value: -1, label: t("ui.equipviewer.equipPartsName") },
                   ...[8, 1, 0, 7, 6, 4, 2, 5, 3].map((stat) => ({
-                    value: stat as StatType,
+                    value: (stat as StatType) + 1,
                     label: t(`stat.${StatType[stat]}`),
                   })),
                 ]}
@@ -647,7 +678,7 @@ const EquipViewer = () => {
                 </Button>
               )}
             </div>
-            {sortBy[0] !== -1 && (
+            {sortBy[0] >= 0 && (
               <div className="text-sm flex items-center gap-2">
                 <Checkbox
                   id="showFullEnhanced"
@@ -658,58 +689,18 @@ const EquipViewer = () => {
                   htmlFor="showFullEnhanced"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  최대 강화 보기
+                  {t("ui.equipviewer.showFullEnhanced")}
                 </label>
               </div>
             )}
           </div>
         )}
       </Card>
-      {!selectedChara &&
-        !selectedEquip &&
-        !selectedRank &&
-        (({ dt, tt, rk, ch }) => {
-          return (
-            <div className="p-1">
-              <div className="p-1">{`Data: ${dt}, Total: ${tt} (${
-                Math.round((dt * 10000) / tt) / 100
-              }%)`}</div>
-              <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 p-1">
-                {rk.map((v, i) => {
-                  return (
-                    <div
-                      key={i}
-                      className={cn(
-                        rankClassNames[i][1],
-                        "px-1",
-                        v === ch && "opacity-60"
-                      )}
-                    >
-                      <div>RANK {i + 1}</div>
-                      <div className="text-sm">
-                        {v}/{ch}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="break-keep">
-                아래 데이터가 누락되어 있습니다 (표에 없는 사도는 모든 랭크 장비
-                착용 정보가 입력되어 있습니다)
-              </div>
-            </div>
-          );
-        })(
-          Object.values(equip.c).reduce(
-            (acc, cur) => ({
-              dt: acc.dt + cur.filter((c) => c.length).length,
-              tt: acc.tt + cur.length,
-              rk: cur.map((v, i) => (acc.rk[i] || 0) + (v.length ? 1 : 0)),
-              ch: acc.ch + 1,
-            }),
-            { dt: 0, tt: 0, rk: [0], ch: 0 }
-          )
-        )}
+      {!selectedChara && !selectedEquip && !selectedRank && (
+        <div className="mt-4">
+          <div className="break-keep">{t("ui.equipviewer.selectAny")}</div>
+        </div>
+      )}
       <div
         className={cn(
           "font-onemobile flex max-w-full justify-center",
@@ -724,44 +715,62 @@ const EquipViewer = () => {
               return (
                 <div key={`${selectedChara}-${i}`}>
                   <div className={cn("text-lg", rankClassNames[i][1])}>
-                    RANK {i + 1}
+                    {t("ui.equipviewer.rankText", { 0: i + 1 })}
                   </div>
                   <div
                     className={cn(
-                      "flex flex-wrap justify-center w-32 gap-2 rounded-lg p-2",
+                      "flex flex-wrap justify-center gap-2 rounded-lg p-2",
+                      showEquipName ? "w-48" : "w-32",
                       rankClassNames[i][0]
                     )}
                   >
-                    {es.length
-                      ? es.map((e, si) => {
-                          const [iType, iPart, iNum] = e.split(".");
-                          const fileName = `/equips/Equip_${
-                            { e: "", p: "Piece_", r: "Recipe_" }[iType]
-                          }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(
-                            1
-                          )}${iNum}`;
-                          return (
-                            <div key={si} onClick={() => searchEquip(e)}>
-                              <ItemSlot
-                                item={fileName}
-                                size={3}
-                                fullItemPath
-                                rarityInfo={(() => {
-                                  if (["9"].includes(iNum.charAt(0)))
-                                    return { s: "Yellow" };
-                                  if (["7", "8", "9"].includes(iNum.charAt(0)))
-                                    return { s: "Purple", b: "#B371F5" };
-                                  if (["5", "6"].includes(iNum.charAt(0)))
-                                    return { s: "Blue", b: "#65A7E9" };
-                                  if (["3", "4"].includes(iNum.charAt(0)))
-                                    return { s: "Green", b: "#65DD82" };
-                                  return { s: "Gray", b: "#B0B0B0" };
-                                })()}
-                              />
-                            </div>
-                          );
-                        })
-                      : "No Data"}
+                    <div className="grid grid-cols-2 gap-2">
+                      {es.length
+                        ? es.map((e, si) => {
+                            const [iType, iPart, iNum] = e.split(".");
+                            const fileName = `/equips/Equip_${
+                              { e: "", p: "Piece_", r: "Recipe_" }[iType]
+                            }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(
+                              1
+                            )}${iNum}`;
+                            return (
+                              <div
+                                key={si}
+                                onClick={() => searchEquip(e)}
+                                className="flex flex-col items-center"
+                              >
+                                <ItemSlot
+                                  item={fileName}
+                                  size={3}
+                                  fullItemPath
+                                  rarityInfo={(() => {
+                                    if (["9"].includes(iNum.charAt(0)))
+                                      return { s: "Yellow" };
+                                    if (
+                                      ["7", "8", "9"].includes(iNum.charAt(0))
+                                    )
+                                      return { s: "Purple", b: "#B371F5" };
+                                    if (["5", "6"].includes(iNum.charAt(0)))
+                                      return { s: "Blue", b: "#65A7E9" };
+                                    if (["3", "4"].includes(iNum.charAt(0)))
+                                      return { s: "Green", b: "#65DD82" };
+                                    return { s: "Gray", b: "#B0B0B0" };
+                                  })()}
+                                />
+                                <div className="text-sm">
+                                  {showEquipName &&
+                                    (t(
+                                      `equip.equip.${e.split(".")[1]}.${
+                                        e.split(".")[2]
+                                      }`
+                                    ) ||
+                                      t("ui.equip.unknownEquip"))}
+                                </div>
+                              </div>
+                            );
+                          })
+                        : t("ui.equipviewer.noData")}
+                    </div>
                     {showEquipPartsRequired && (
                       <div className="flex w-full justify-center items-center gap-1">
                         <img
@@ -893,12 +902,14 @@ const EquipViewer = () => {
                     </div>
                     <div
                       className={cn(
-                        "flex flex-wrap justify-center w-32 gap-2 rounded-lg p-2",
+                        "flex flex-wrap justify-center gap-2 rounded-lg p-2 my-2",
+                        showEquipName ? "w-48" : "w-32",
                         rankClassNames[selectedRankIndex][0]
                       )}
                     >
-                      {eqSet.length
-                        ? eqSet.map((e) => {
+                      {eqSet.length ? (
+                        <div className="grid grid-cols-2 gap-2">
+                          {eqSet.map((e) => {
                             const [iType, iPart, iNum] = e.split(".");
                             const fileName = `/equips/Equip_${
                               { e: "", p: "Piece_", r: "Recipe_" }[iType]
@@ -906,7 +917,11 @@ const EquipViewer = () => {
                               1
                             )}${iNum}`;
                             return (
-                              <div key={e} onClick={() => searchEquip(e)}>
+                              <div
+                                key={e}
+                                onClick={() => searchEquip(e)}
+                                className="flex flex-col items-center"
+                              >
                                 <ItemSlot
                                   item={fileName}
                                   size={3}
@@ -925,10 +940,22 @@ const EquipViewer = () => {
                                     return { s: "Gray", b: "#B0B0B0" };
                                   })()}
                                 />
+                                <div className="text-sm">
+                                  {showEquipName &&
+                                    (t(
+                                      `equip.equip.${e.split(".")[1]}.${
+                                        e.split(".")[2]
+                                      }`
+                                    ) ||
+                                      t("ui.equip.unknownEquip"))}
+                                </div>
                               </div>
                             );
-                          })
-                        : "No Data"}
+                          })}
+                        </div>
+                      ) : (
+                        "No Data"
+                      )}
                     </div>
                   </div>
                 );
@@ -1087,7 +1114,7 @@ const EquipViewer = () => {
                             "flex-0 opacity-100"
                           )}
                         >
-                          RANK {i + 1}
+                          {t("ui.equipviewer.rankText", { 0: i + 1 })}
                         </div>
                       );
                     })}
