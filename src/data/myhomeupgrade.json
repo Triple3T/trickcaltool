@@ -15,7 +15,8 @@
     "r":[
         {"MadeLow2":10,"MadeLow12":10,"MadeLow14":10,"g":10000},
         {"MadeLow2":20,"MadeLow12":20,"MadeLow14":20,"g":50000},
-        {"MadeLow2":40,"MadeLow12":40,"MadeLow14":40,"g":200000}
+        {"MadeLow2":40,"MadeLow12":40,"MadeLow14":40,"g":200000},
+        {"MadeLow2":60,"MadeLow12":60,"MadeLow14":60,"g":500000}
     ],
     "m":[
         {"MadeLow1":2,"MadeLow2":4,"g":10000},
