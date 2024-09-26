@@ -1202,6 +1202,17 @@
             ["e.weapon.827","e.armor.808","e.armor.804","e.weapon.805","e.accessory.810","e.armor.819"],
             ["e.weapon.918","e.armor.908","e.armor.904","e.weapon.925","e.accessory.904","e.armor.916"]
         ],
+        "Joanne":[
+            ["e.weapon.112","e.armor.106","e.armor.109","e.accessory.103","e.accessory.111","e.accessory.105"],
+            ["e.weapon.215","e.armor.210","e.armor.204","e.accessory.204","e.accessory.203","e.armor.219"],
+            ["e.weapon.314","e.armor.313","e.armor.303","e.accessory.303","e.accessory.313","e.armor.314"],
+            ["e.weapon.415","e.armor.401","e.armor.413","e.accessory.409","e.accessory.408","e.armor.417"],
+            ["e.weapon.515","e.armor.514","e.armor.504","e.armor.512","e.accessory.509","e.accessory.505"],
+            ["e.weapon.614","e.armor.604","e.weapon.601","e.armor.620","e.accessory.605","e.accessory.608"],
+            ["e.armor.703","e.armor.713","e.weapon.703","e.accessory.701","e.accessory.707","e.armor.717"],
+            ["e.weapon.813","e.armor.810","e.armor.803","e.weapon.804","e.accessory.812","e.armor.819"],
+            ["e.weapon.902","e.armor.910","e.armor.903","e.weapon.911","e.accessory.902","e.armor.916"]
+        ],
         "Jubee":[
             ["e.weapon.107","e.armor.118","e.armor.103","e.accessory.105","e.accessory.101","e.accessory.104"],
             ["e.weapon.208","e.armor.219","e.armor.201","e.accessory.212","e.accessory.205","e.armor.213"],

@@ -171,6 +171,26 @@
             "m":["MadeLow21"],
             "f":100
         },
+        "Arbeit40":{
+            "s":[40],
+            "m":["FoodMadeLow19"]
+        },
+        "Arbeit41":{
+            "s":[41],
+            "m":["FoodMadeLow20"]
+        },
+        "Arbeit42":{
+            "s":[42],
+            "m":["FoodMadeLow21"]
+        },
+        "Arbeit43":{
+            "s":[43],
+            "m":["FoodMadeLow22"]
+        },
+        "Arbeit44":{
+            "s":[44],
+            "m":["FoodMadeLow23"]
+        },
         "Rest1":{
             "s":[20],
             "m":[]

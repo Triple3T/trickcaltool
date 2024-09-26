@@ -53,6 +53,7 @@ export enum Position {
   Front = 0,
   Middle = 1,
   Back = 2,
+  Free = 3,
 }
 
 export enum Class {

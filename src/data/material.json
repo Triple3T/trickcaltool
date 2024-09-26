@@ -40,6 +40,31 @@
         "FoodMadeLow16":{"r":0,"g":true},
         "FoodMadeLow17":{"r":0,"g":true},
         "FoodMadeLow18":{"r":0,"g":true},
+        "FoodMadeLow19":{
+            "r":1,
+            "g":true,
+            "m":{"FoodMadeLow17":4,"FoodMadeLow6":2}
+        },
+        "FoodMadeLow20":{
+            "r":1,
+            "g":true,
+            "m":{"FoodMadeLow7":4,"MadeLow16":2}
+        },
+        "FoodMadeLow21":{
+            "r":1,
+            "g":true,
+            "m":{"FoodMadeLow14":4,"FoodMadeLow12":2}
+        },
+        "FoodMadeLow22":{
+            "r":1,
+            "g":true,
+            "m":{"FoodMadeLow9":4,"FoodMadeLow10":2}
+        },
+        "FoodMadeLow23":{
+            "r":1,
+            "g":true,
+            "m":{"FoodMadeLow18":4,"FoodMadeLow11":2}
+        },
         "FurnMadeHigh1":{
             "r":2,
             "m":{

@@ -382,7 +382,7 @@ const PurpleBoard = () => {
       userData.o
         .filter((c) => !userData.p[c])
         .forEach((c) => {
-          if (c === "Canta" || c === "Sherum") return; // temporary unavailable
+          if (c === "Canta" || c === "Sherum" || c === "Joanne") return; // temporary unavailable
           userData.p[c] = purpleboard.c[c].b.map((a) =>
             a
               .toString(10)
@@ -429,7 +429,7 @@ const PurpleBoard = () => {
       )
     );
     charaList.forEach((c) => {
-      if (c === "Canta" || c === "Sherum") return; // temporary unavilable
+      if (c === "Canta" || c === "Sherum" || c === "Joanne") return; // temporary unavilable
       const charaBoard = purpleboard.c[c].b;
       const charaBoardPos = purpleboard.c[c].p;
       const charaRace = Number(chara[c].t[5]);
@@ -512,7 +512,7 @@ const PurpleBoard = () => {
   //   const boardStats: { [key: string]: number } = {};
   //   const boardData = userdata.board.load().b;
   //   Object.entries(boardData).forEach(([c, b]) => {
-  //     if (c === "Canta" || c === "Sherum") return; // temporary unavailable
+  //     if (c === "Canta" || c === "Sherum" || c === "Joanne") return; // temporary unavailable
   //     const charaBoard = board.c[c].b;
   //     charaBoard.forEach((nthboard, i) => {
   //       nthboard.forEach((boardList, j) => {
@@ -695,7 +695,7 @@ const PurpleBoard = () => {
           )}
         >
           {boardData.user.o
-            .filter((c) => c !== "Canta" && c !== "Sherum") // temporary unavailable
+            .filter((c) => c !== "Canta" && c !== "Sherum" && c !== "Joanne") // temporary unavailable
             .filter((c) =>
               search
                 ? t(`chara.${c}`).includes(search) ||
