@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Search } from "lucide-react";
 // import { cn } from "@/lib/utils";
@@ -23,8 +23,21 @@ const RaidBossStatDialog = ({
   apply: (value: number) => void;
 }) => {
   const { t } = useTranslation();
-  const [stage, setStage] = useState("15");
-  const [bossId, setBossId] = useState("");
+  const [stage, setStage] = useState(15);
+  const [bossSeason, setBossSeason] = useState("");
+  const [currentBoss, setCurrentBoss] = useState<
+    null | (typeof soloraidstat)["s"][string][number]
+  >(null);
+  useEffect(() => {
+    if (!stage || !bossSeason) setCurrentBoss(null);
+    else {
+      const searchedBoss = soloraidstat.s[bossSeason].find(
+        (s) => s.s === stage
+      );
+      if (searchedBoss) setCurrentBoss(searchedBoss);
+      else setCurrentBoss(null);
+    }
+  }, [bossSeason, stage]);
   return (
     <Dialog>
       <DialogTrigger>
@@ -42,25 +55,35 @@ const RaidBossStatDialog = ({
           <Select
             value={stage}
             setValue={(v) => {
-              if (v !== stage) setBossId("");
+              if (v !== stage) setBossSeason("");
               setStage(v);
             }}
-            items={Object.keys(soloraidstat.s).map((v) => ({
-              value: v,
-              label: `${v}단계`,
-            }))}
+            items={Array(7)
+              .fill(0)
+              .map((_, v) => ({
+                value: v + 15,
+                label: `${v + 15}단계`,
+              }))}
           />
           <Select
-            value={bossId}
-            setValue={(v) => setBossId(v)}
-            items={Object.keys(soloraidstat.s[stage]).map((v) => ({
-              value: v,
-              label: t(`monster.${v}`),
-            }))}
+            value={bossSeason}
+            setValue={(v) => setBossSeason(v)}
+            items={
+              Object.entries(soloraidstat.s)
+                .map(([season, bossEntries]) => {
+                  const boss = bossEntries.find((v) => v.s === stage);
+                  if (!boss) return null;
+                  return {
+                    value: season,
+                    label: `${season}. ` + t(`monster.${boss.b}`),
+                  };
+                })
+                .filter((e) => e !== null) as { value: string; label: string }[]
+            }
             placeholder="보스 선택..."
           />
         </div>
-        {stage && bossId ? (
+        {currentBoss ? (
           <>
             <Separator />
             <div className="px-2 py-1">
@@ -74,7 +97,7 @@ const RaidBossStatDialog = ({
                     />
                     물리 공격력
                   </div>
-                  <div>{soloraidstat.s[stage][bossId].p.toLocaleString()}</div>
+                  <div>{currentBoss.p.toLocaleString()}</div>
                 </div>
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
@@ -84,7 +107,7 @@ const RaidBossStatDialog = ({
                     />
                     마법 공격력
                   </div>
-                  <div>{soloraidstat.s[stage][bossId].m.toLocaleString()}</div>
+                  <div>{currentBoss.m.toLocaleString()}</div>
                 </div>
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
@@ -98,7 +121,7 @@ const RaidBossStatDialog = ({
                     />
                     치명 스탯
                   </div>
-                  <div>{soloraidstat.s[stage][bossId].c.toLocaleString()}</div>
+                  <div>{currentBoss.c.toLocaleString()}</div>
                 </div>
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
@@ -112,7 +135,7 @@ const RaidBossStatDialog = ({
                     />
                     저항 스탯
                   </div>
-                  <div>{soloraidstat.s[stage][bossId].r.toLocaleString()}</div>
+                  <div>{currentBoss.r.toLocaleString()}</div>
                 </div>
               </div>
             </div>
@@ -125,15 +148,15 @@ const RaidBossStatDialog = ({
                     src="/icons/Icon_Hp.png"
                     className="w-5 h-5 inline mr-1"
                   />
-                  {soloraidstat.s[stage][bossId].h.toLocaleString()}{" "}
-                  {soloraidstat.s[stage][bossId].h !== 0 && (
+                  {currentBoss.h.toLocaleString()}{" "}
+                  {currentBoss.h !== 0 && (
                     <span className="text-red-600/90 dark:text-red-400/90">
-                      (받는 피해 감소 {soloraidstat.s[stage][bossId].l / 100}%)
+                      (받는 피해 감소 {currentBoss.l / 100}%)
                     </span>
                   )}
                 </div>
               </div>
-              {soloraidstat.s[stage][bossId].h !== 0 && (
+              {currentBoss.h !== 0 && (
                 <div className="text-right">
                   실질{" "}
                   <img
@@ -141,8 +164,7 @@ const RaidBossStatDialog = ({
                     className="w-5 h-5 inline mr-1"
                   />
                   {Math.round(
-                    (soloraidstat.s[stage][bossId].h * 10000) /
-                      (10000 - soloraidstat.s[stage][bossId].l)
+                    (currentBoss.h * 10000) / (10000 - currentBoss.l)
                   ).toLocaleString()}
                 </div>
               )}
@@ -157,12 +179,12 @@ const RaidBossStatDialog = ({
                   onClick={() =>
                     apply(
                       [
-                        soloraidstat.s[stage][bossId].m,
-                        soloraidstat.s[stage][bossId].p,
-                        soloraidstat.s[stage][bossId].c + 10120,
-                        soloraidstat.s[stage][bossId].r - 1480,
-                        soloraidstat.s[stage][bossId].c,
-                        soloraidstat.s[stage][bossId].r,
+                        currentBoss.m,
+                        currentBoss.p,
+                        currentBoss.c + 10120,
+                        currentBoss.r - 1480,
+                        currentBoss.c,
+                        currentBoss.r,
                         0,
                         0,
                         0,
@@ -175,12 +197,12 @@ const RaidBossStatDialog = ({
                     className="w-5 h-5 inline mr-1"
                   />
                   {[
-                    soloraidstat.s[stage][bossId].m,
-                    soloraidstat.s[stage][bossId].p,
-                    soloraidstat.s[stage][bossId].c + 10120,
-                    soloraidstat.s[stage][bossId].r - 1480,
-                    soloraidstat.s[stage][bossId].c,
-                    soloraidstat.s[stage][bossId].r,
+                    currentBoss.m,
+                    currentBoss.p,
+                    currentBoss.c + 10120,
+                    currentBoss.r - 1480,
+                    currentBoss.c,
+                    currentBoss.r,
                     0,
                     0,
                     0,

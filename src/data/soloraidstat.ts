@@ -1,5 +1,7 @@
 import soloraidstat from "./soloraidstat.json";
 interface StatType {
+  s: number; //stage
+  b: string; //boss
   p: number;
   m: number;
   c: number;
@@ -8,5 +10,5 @@ interface StatType {
   l: number; // 10000x
 }
 export default soloraidstat as {
-  s: { [key: string]: Record<string, StatType> };
+  s: { [key: string]: StatType[] };
 };

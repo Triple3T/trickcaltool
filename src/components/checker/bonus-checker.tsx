@@ -19,14 +19,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
 import LazyInput from "@/components/common/lazy-input";
 import Select from "@/components/common/combobox-select";
+import RaidBossStatDialog from "@/components/parts/raid-boss-stat-dialog";
 import chara from "@/data/chara";
 import { personalityBG, personalityBGMarked } from "@/utils/personalityBG";
 import { Personality, Race, StatType } from "@/types/enums";
-import { Separator } from "../ui/separator";
-import { Slider } from "../ui/slider";
-import RaidBossStatDialog from "../parts/raid-boss-stat-dialog";
 
 const inputClassName =
   "h-min px-2 py-1 bg-transparent text-right mx-1 rounded-none ring-0 border-x-0 border-t-0 border-b-2 focus-visible:border-b-greenicon focus-visible:ring-0 focus-visible:bg-greenicon/25 transition-colors";
