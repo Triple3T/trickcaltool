@@ -1927,6 +1927,7 @@ i18n
               authLoading: "연동 확인 중...",
               authButtonText: "Google 계정으로 로그인...",
               authAlreadyCompleted: "Google 계정 연동이 완료되었습니다.",
+              beforeAuthAnnounce: "계정 연동 시, 입력한 데이터가 Google Drive에 동기화되어 여러 기기에서 편리하게 사용할 수 있고, 로컬 데이터가 리셋되어도 손쉽게 복원할 수 있습니다. (인게임 데이터를 불러오는 기능은 지원되지 않습니다.)",
               themeTitle: "테마",
               themeLight: "라이트",
               themeDark: "다크",

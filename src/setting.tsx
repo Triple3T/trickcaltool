@@ -4,6 +4,7 @@ import {
   ExternalLink,
   Loader2,
   LogOut,
+  MessageCircleWarning,
   Moon,
   RotateCcw,
   Sun,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme-provider";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -141,28 +143,35 @@ const Setting = () => {
           </div>
           <div>
             <SubtitleBar>{t("ui.common.authTitle")}</SubtitleBar>
-            <div className="p-2">
-              {isReady ? (
-                googleLinked ? (
-                  t("ui.common.authAlreadyCompleted")
-                ) : (
+            {isReady ? (
+              googleLinked ? (
+                <div className="p-2">
+                  <div>{t("ui.common.authAlreadyCompleted")}</div>
+                  <div className="text-right text-sm">
+                    <a href="/clear">
+                      <Button variant="link">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        {t("ui.common.logout")}
+                      </Button>
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-2">
                   <a href={googleAccessUrl} target="_self" rel="noreferrer">
                     {t("ui.common.authButtonText")}
                   </a>
-                )
-              ) : (
-                t("ui.common.authLoading")
-              )}
-            </div>
-            {isReady && googleLinked && (
-              <div className="text-right text-sm">
-                <a href="/clear">
-                  <Button variant="link">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    {t("ui.common.logout")}
-                  </Button>
-                </a>
-              </div>
+                  <Alert variant="default" className="mt-2">
+                    <MessageCircleWarning className="h-5 w-5" />
+                    {/* <AlertTitle>{t("ui.board.aboutBestRouteTitle")}</AlertTitle> */}
+                    <AlertDescription className="break-keep text-sm">
+                      {t("ui.common.beforeAuthAnnounce")}
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              )
+            ) : (
+              <div className="p-2">{t("ui.common.authLoading")}</div>
             )}
           </div>
           <div>
