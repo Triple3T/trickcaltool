@@ -1722,6 +1722,8 @@ i18n
               foodNotFound: "해당 음식을 찾을 수 없습니다.",
               producibleOnly: "요리할 수 있는 음식만 보기",
               showValue: "친밀도 상승 값 표시",
+              showIngredients: "레시피 표시",
+              uncookable: "요리 불가",
               mostFavoriteFood: "특히 좋아하는 음식",
               favoriteFood: "좋아하는 음식",
               dislikeFood: "싫어하는 음식",

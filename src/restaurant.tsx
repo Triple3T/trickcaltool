@@ -30,6 +30,7 @@ import { Personality } from "@/types/enums";
 
 import chara from "@/data/chara";
 import food from "@/data/food";
+import material from "@/data/material";
 
 import userdata from "@/utils/userdata";
 
@@ -248,11 +249,12 @@ const Restaurant = () => {
   useEffect(() => {
     setSkinData(userdata.skin.load());
   }, []);
-  const [selectedChara, setSelectedChara] = useState("");
-  const [selectedFood, setSelectedFood] = useState("");
-  // const [selectedMaterial, setSelectedMaterial] = useState("");
-  const [producibleOnly, setProducibleOnly] = useState(false);
-  const [showValue, setShowValue] = useState(false);
+  const [selectedChara, setSelectedChara] = useState<string>("");
+  const [selectedFood, setSelectedFood] = useState<string>("");
+  // const [selectedMaterial, setSelectedMaterial] = useState<string>("");
+  const [producibleOnly, setProducibleOnly] = useState<boolean>(false);
+  const [showValue, setShowValue] = useState<boolean>(false);
+  const [showIngredients, setShowIngredients] = useState<boolean>(false);
   const searchChara = useCallback((charaId: string) => {
     setSelectedChara(charaId);
     setSelectedFood("");
@@ -304,6 +306,21 @@ const Restaurant = () => {
                 {t("ui.restaurant.showValue")}
               </label>
             </div>
+            {selectedFood && (
+              <div className="flex items-center gap-1.5">
+                <Checkbox
+                  id="show-ingredients"
+                  checked={showIngredients}
+                  onCheckedChange={(v) => setShowIngredients(Boolean(v))}
+                />
+                <label
+                  htmlFor="show-ingredients"
+                  className="text-sm font-onemobile"
+                >
+                  {t("ui.restaurant.showIngredients")}
+                </label>
+              </div>
+            )}
           </div>
         </div>
       </Card>
@@ -464,12 +481,50 @@ const Restaurant = () => {
                     food.p[food.f[selectedFood].r][1] + 1
                   }~${food.p[food.f[selectedFood].r][1] + 3}`}</div>
                 )}
-                <div className="flex w-48 h-48 px-10 pt-12 pb-8 justify-center items-end bg-dish bg-cover bg-no-repeat -mt-4">
+                <div className="flex w-48 h-48 px-10 pt-12 pb-8 justify-center items-end bg-dish bg-cover bg-no-repeat -mt-4 mx-auto">
                   <img
                     src={`/foods/Icon_Food_${selectedFood}.png`}
                     className="max-w-full max-h-full"
                   />
                 </div>
+                {showIngredients && (
+                  <div className="flex -mt-12 gap-1 justify-center">
+                    {food.f[selectedFood].m ? (
+                      Object.entries(food.f[selectedFood].m).map(([k, v]) => {
+                        if (Number.isNaN(Number(k))) {
+                          const mat = material.m[k];
+                          const rarity = material.r[mat.r];
+                          return (
+                            <ItemSlot
+                              key={k}
+                              rarityInfo={rarity}
+                              item={k}
+                              amount={v}
+                              size={3.5}
+                            />
+                          );
+                        } else {
+                          const mat = food.f[k];
+                          const rarity = food.r[mat.r];
+                          return (
+                            <ItemSlot
+                              key={k}
+                              rarityInfo={rarity}
+                              item={`/foods/Icon_Food_${k}`}
+                              fullItemPath
+                              amount={v}
+                              size={3.5}
+                            />
+                          );
+                        }
+                      })
+                    ) : (
+                      <div className="rounded-full px-4 py-0.5 bg-rose-300 dark:bg-rose-700">
+                        {t("ui.restaurant.uncookable")}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex flex-col justify-between w-full overflow-hidden">
