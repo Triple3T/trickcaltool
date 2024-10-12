@@ -1569,6 +1569,29 @@ i18n
               selectBoardType: "보드 종류 선택",
               selectBoardTypeAll: "모두 표시",
               selectBoardTypeRecommended: "추천 설정",
+              recommendBoardDialogTitle: "환영합니다!",
+              recommendBoardDesc1Front: "이 엘리아스에서 ",
+              recommendBoardDescItemName: "최상급 크레파스",
+              recommendBoardDesc1Back: "는 굉장히 귀한 재화입니다.",
+              recommendBoardDesc2:
+                "메인 성장의 거의 전부라고 해도 과언이 아닐 만큼 중요해서, 따로 사용 가이드를 준비했습니다.",
+              recommendBoardDesc3:
+                '만약 가이드가 기억나지 않는다면 "추천 설정" 버튼을 다시 눌러주세요!',
+              boardGuide1:
+                '기본적으로 최상급 크레파스를 사용하는 "특수 칸"은 보유한 모든 사도에게 적용됩니다. 즉, 사도가 누구냐에 상관 없이 같은 특수 칸은 같은 효과를 발휘합니다.',
+              boardGuide2:
+                "먼저, 초기 침략을 수월하게 진행하기 위해 치명타 4개를 칠해주세요. (치명 피해와는 다릅니다)",
+              boardGuide3:
+                "이후 공격력과 체력을 2:1에서 3:1 정도의 비율로 칠하다가, 한 쪽을 전부 칠했다면 다른 쪽도 전부 칠해주세요.",
+              boardGuide4:
+                "전반적인 피해량을 올리기 위해, 치명타와 치명 피해를 전부 칠해주세요.",
+              boardGuide5:
+                "받는 치명타 피해량을 경감시키기 위해, 치명 저항과 치명 피해 저항 중 하나만 선택해서 전부 칠해주세요.",
+              boardGuide6:
+                "물리 방어력, 마법 방어력은 칠하지 마세요! 칠했다면 보드 초기화 버튼을 눌러 지워 주세요.",
+              boardGuide7:
+                "관문은 아직 열지 마세요! 관문을 열지 않고서는 쓸모 없는 스탯만 남아 더 칠할 칸이 없는 경우에만 관문을 열기 시작하세요.",
+              closeGuide: "알겠어요",
               mainClassification: "대분류",
               subClassification: "소분류",
               allStatBaseTotal: "전체 적용 스탯 총합",
@@ -1929,7 +1952,8 @@ i18n
               authLoading: "연동 확인 중...",
               authButtonText: "Google 계정으로 로그인...",
               authAlreadyCompleted: "Google 계정 연동이 완료되었습니다.",
-              beforeAuthAnnounce: "계정 연동 시, 입력한 데이터가 Google Drive에 동기화되어 여러 기기에서 편리하게 사용할 수 있고, 로컬 데이터가 리셋되어도 손쉽게 복원할 수 있습니다. (인게임 데이터를 불러오는 기능은 지원되지 않습니다.)",
+              beforeAuthAnnounce:
+                "계정 연동 시, 입력한 데이터가 Google Drive에 동기화되어 여러 기기에서 편리하게 사용할 수 있고, 로컬 데이터가 리셋되어도 손쉽게 복원할 수 있습니다. (인게임 데이터를 불러오는 기능은 지원되지 않습니다.)",
               themeTitle: "테마",
               themeLight: "라이트",
               themeDark: "다크",

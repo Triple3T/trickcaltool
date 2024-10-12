@@ -113,6 +113,7 @@ module.exports = {
       },
       brightness: {
         80: ".8",
+        15: ".15",
       },
       rotate: {
         10: "10deg",

@@ -41,6 +41,7 @@ import {
   BoardInfoDialogTrigger,
 } from "@/components/parts/board-info-dialog";
 import type { BoardInfoDialogProps } from "@/components/parts/board-info-dialog";
+import BoardGuideDialog from "@/components/parts/board-guide-dialog";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import route from "@/data/route";
@@ -638,23 +639,19 @@ const TrickcalBoard = () => {
                     >
                       {t("ui.board.selectBoardTypeAll")}
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
+                    <BoardGuideDialog 
                       onClick={() =>
                         dispatchBoardData({
                           type: "visible",
                           payload: [
                             BoardType.AttackBoth,
+                            BoardType.CriticalMult,
                             BoardType.CriticalRate,
                             BoardType.Hp,
                           ],
                         })
                       }
-                    >
-                      {t("ui.board.selectBoardTypeRecommended")}
-                    </Button>
+                    />
                   </div>
                   <div className="px-4">
                     <ToggleGroup
