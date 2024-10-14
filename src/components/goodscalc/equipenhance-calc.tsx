@@ -263,7 +263,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
 };
 
 const { v } = equip;
-const getStoneBefore250 = (reqPoint: number): Array<number> => {
+const getStoneBefore250 = (reqPoint: number): number[] => {
   if (reqPoint < 60) return [0, 0, 0, reqPoint];
   if (reqPoint < 150) return [Math.floor(reqPoint / 60), 0, 0, reqPoint % 60];
   const r150 = Math.floor((reqPoint % 60) / 30);
@@ -274,7 +274,7 @@ const getStoneBefore250 = (reqPoint: number): Array<number> => {
   const remainingPointAfter60 = remainingPointAfter150 - 60 * i60;
   return [i60, i150, 0, remainingPointAfter60];
 };
-const getStoneAfter250 = (reqPoint: number): Array<number> => {
+const getStoneAfter250 = (reqPoint: number): number[] => {
   const r250 = Math.floor((reqPoint % 60) / 10) % 3;
   const m250 = Math.floor(reqPoint / 250);
   const i250 = Math.min(r250, m250);
@@ -286,6 +286,16 @@ const getStoneAfter250 = (reqPoint: number): Array<number> => {
   const i60 = Math.floor(remainingPointAfter150 / 60);
   const remainingPointAfter60 = remainingPointAfter150 - 60 * i60;
   return [i60, i150, i250, remainingPointAfter60];
+};
+const returnStone = (reqPoint: number): number[] => {
+  const returnAmount = Math.floor((reqPoint * 6) / 10);
+  if (returnAmount < 1) return [0, 0, 0, 0];
+  const amount250 = Math.floor(returnAmount / 250);
+  const remainAfter250 = returnAmount % 250;
+  const amount150 = Math.floor(remainAfter250 / 150);
+  const remainAfter150 = remainAfter250 % 150;
+  const amount60 = Math.floor(remainAfter150 / 60);
+  return [amount60, amount150, amount250, remainAfter150 % 60];
 };
 const getEnhanceRequire = (
   rank: number,
@@ -312,11 +322,9 @@ const getEnhancedStat = (value: number, rank: number, level: number) =>
 
 const EquipEnhanceCalc = () => {
   const { t } = useTranslation();
-  const [requirements, setRequirements] = useState<[number, number, number[]]>([
-    0,
-    0,
-    [],
-  ]);
+  const [requirements, setRequirements] = useState<
+    [number, number, number[], number[]]
+  >([0, 0, [], []]);
   const [selectedEquip, setSelectedEquip] = useState<string>("");
   const [rank, setRank] = useState<number>(0);
   const [enhanceLevel, setEnhanceLevel] = useState<number[]>([0, 0]);
@@ -324,10 +332,12 @@ const EquipEnhanceCalc = () => {
     if (selectedEquip) {
       const r = Number(selectedEquip.split(".")[2].charAt(0));
       setRank(r);
-      setRequirements(getEnhanceRequire(r, enhanceLevel));
+      const req = getEnhanceRequire(r, enhanceLevel);
+      const ret = returnStone(req[0]);
+      setRequirements([...req, ret]);
     } else {
       setRank(0);
-      setRequirements([0, 0, []]);
+      setRequirements([0, 0, [], []]);
     }
   }, [enhanceLevel, selectedEquip]);
   return (
@@ -497,6 +507,29 @@ const EquipEnhanceCalc = () => {
               );
             })}
           </div>
+          {requirements[0] > 0 && (
+            <>
+              <Separator className="my-4" />
+              <div className="text-lg">
+                {t("ui.goodscalc.equipenhance.rankUpReturnGoods")}
+              </div>
+              <div className="flex justify-evenly my-4">
+                {requirements[3].map((v, i) => {
+                  if (!v) return null;
+                  return (
+                    <ItemSlot
+                      key={i}
+                      rarityInfo={{ s: ["Gray", "Green", "Blue", "Gray"][i] }}
+                      item={`/equips/Equip_EnhanceStone${i + 1}`}
+                      fullItemPath
+                      amount={v}
+                      size={3.5}
+                    />
+                  );
+                })}
+              </div>
+            </>
+          )}
         </>
       ) : (
         <div className="text-xs opacity-75 break-keep">

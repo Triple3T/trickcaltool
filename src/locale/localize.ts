@@ -1929,6 +1929,7 @@ i18n
                 requiredTitle: "필요한 강화석/골드",
                 inputNotice: "장비와 강화 등급을 입력해주세요.",
                 enhancedStatTitle: "강화 시 능력치",
+                rankUpReturnGoods: "랭크업 시 반환 아이템",
               },
             },
             utilities: {
