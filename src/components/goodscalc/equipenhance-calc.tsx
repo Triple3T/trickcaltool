@@ -333,7 +333,11 @@ const EquipEnhanceCalc = () => {
       const r = Number(selectedEquip.split(".")[2].charAt(0));
       setRank(r);
       const req = getEnhanceRequire(r, enhanceLevel);
-      const ret = returnStone(req[0]);
+      const ret = returnStone(
+        enhanceLevel[1] === 0
+          ? 0
+          : equip.v.enhanceRequire[r - 1][enhanceLevel[1] - 1]
+      );
       setRequirements([...req, ret]);
     } else {
       setRank(0);
@@ -507,7 +511,7 @@ const EquipEnhanceCalc = () => {
               );
             })}
           </div>
-          {requirements[0] > 0 && (
+          {selectedEquip && enhanceLevel[1] > 0 && (
             <>
               <Separator className="my-4" />
               <div className="text-lg">
