@@ -1932,6 +1932,9 @@ i18n
                 rankUpReturnGoods: "랭크업 시 반환 아이템",
               },
             },
+            normaldrop: {
+              title: "순한맛 드랍 테이블",
+            },
             utilities: {
               title: "유틸리티",
               description: "기타 쓸만한 도구들을 살펴봅니다.",

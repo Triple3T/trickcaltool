@@ -111,6 +111,14 @@ const UtilitySetCard = () => {
                   </h4>
                 </div>
               </Link>
+              <Link to={"/normaldrop"}>
+                <div className={experimentalButtonClasses}>
+                  <h4 className={experimentalTextClasses}>
+                    {t("ui.index.testMark")}
+                    {t("ui.normaldrop.title")}
+                  </h4>
+                </div>
+              </Link>
               <Link to={"/eventcalc"}>
                 <div className={experimentalButtonClasses}>
                   <h4 className={experimentalTextClasses}>

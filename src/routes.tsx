@@ -6,12 +6,13 @@ import ErrorElement from "@/components/error-element";
 import Layout from "@/components/layout";
 import Loading from "@/components/common/loading";
 // import TrickcalBoard from "./trickcalboard";
-// import PurpleBoard from "./purpleboard";
 // import EquipRank from "./equiprank";
 // import Lab from "./lab";
+// import PurpleBoard from "./purpleboard";
 // import BoardSearch from "./boardsearch";
 // import TaskSearch from "./tasksearch";
 // import Restaurant from "./restaurant";
+// import NormalDrop from "./normaldrop";
 // import EquipViewer from "./equipviewer";
 // import EventCalc from "./eventcalc";
 // import GoodsCalc from "./goodscalc";
@@ -23,6 +24,7 @@ const PurpleBoard = lazy(() => import("./purpleboard"));
 const BoardSearch = lazy(() => import("./boardsearch"));
 const TaskSearch = lazy(() => import("./tasksearch"));
 const Restaurant = lazy(() => import("./restaurant"));
+const NormalDrop = lazy(() => import("./normaldrop"));
 const EquipViewer = lazy(() => import("./equipviewer"));
 const EventCalc = lazy(() => import("./eventcalc"));
 const GoodsCalc = lazy(() => import("./goodscalc"));
@@ -121,6 +123,18 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout>
         <Suspense fallback={<Loading />}>
           <Restaurant />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/normaldrop",
+    // element: <NormalDrop />,
+    element: (
+      <Layout>
+        <Suspense fallback={<Loading />}>
+          <NormalDrop />
         </Suspense>
       </Layout>
     ),
