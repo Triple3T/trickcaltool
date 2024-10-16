@@ -324,7 +324,7 @@ const NormalDrop = () => {
                         <ItemSlot
                           key={drop}
                           item={fileName}
-                          size={4}
+                          size={3}
                           amount={
                             Number(stage.split("-")[0]) < 3
                               ? "--%"
