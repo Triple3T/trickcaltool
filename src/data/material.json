@@ -13,6 +13,20 @@
                 "CollectMadeLow2":6
             }
         },
+        "CollectMadeHigh3":{
+            "r":2,
+            "m":{
+                "CollectMadeLow6":6,
+                "CollectMadeLow1":4
+            }
+        },
+        "CollectMadeHigh5":{
+            "r":3,
+            "m":{
+                "MadeHigh13":3,
+                "CollectMadeLow5":4
+            }
+        },
         "CollectMadeLow1":{"r":1,"g":true},
         "CollectMadeLow2":{
             "r":1,
@@ -20,6 +34,30 @@
             "m":{
                 "MadeLow9":6,
                 "MadeLow12":4
+            }
+        },
+        "CollectMadeLow3":{
+            "r":1,
+            "g":true,
+            "m":{
+                "MadeLow15":4,
+                "MadeLow14":2
+            }
+        },
+        "CollectMadeLow5":{
+            "r":1,
+            "g":true,
+            "m":{
+                "MadeLow9":4,
+                "CollectMadeLow1":2
+            }
+        },
+        "CollectMadeLow6":{
+            "r":1,
+            "g":true,
+            "m":{
+                "MadeLow7":4,
+                "MadeLow2":2
             }
         },
         "FoodMadeLow1":{"r":0,"g":true},

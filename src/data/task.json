@@ -191,6 +191,18 @@
             "s":[44],
             "m":["FoodMadeLow23"]
         },
+        "Arbeit45":{
+            "s":[45],
+            "m":["CollectMadeLow3"]
+        },
+        "Arbeit47":{
+            "s":[47],
+            "m":["CollectMadeLow5"]
+        },
+        "Arbeit48":{
+            "s":[48],
+            "m":["CollectMadeLow6"]
+        },
         "Rest1":{
             "s":[20],
             "m":[]
