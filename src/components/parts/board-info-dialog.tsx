@@ -2,8 +2,14 @@ import { HTMLAttributes, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dot, Info, Pencil, Waypoints } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -26,8 +32,14 @@ import {
   Position,
   Race,
 } from "@/types/enums";
-import { Accordion, AccordionContent, AccordionItem } from "../ui/accordion";
-import { Button } from "../ui/button";
+
+const boardButtonBgCommon =
+  "bg-transparent hover:bg-transparent bg-gradient-to-b from-primary hover:from-primary/90 from-85% to-85%";
+const boardButtonBgs = [
+  "to-slate-400 hover:to-slate-400/90",
+  "to-emerald-500 hover:to-emerald-500/90",
+  "to-amber-400 hover:to-amber-400/90",
+];
 
 interface BoardInfoDialogTriggerProps extends HTMLAttributes<HTMLDivElement> {
   route: string;
@@ -240,18 +252,16 @@ const BoardInfoDialog = ({
                       </>
                     )}
                     <span className="w-2 m-0 p-0" />
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="align-middle w-6 h-6 -m-1 p-1"
-                      onClick={
-                        changeBoardIndex
-                          ? () => setBoardIndexSettingOpen((v) => !v)
-                          : undefined
-                      }
-                    >
-                      <Pencil />
-                    </Button>
+                    {changeBoardIndex && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="align-middle w-6 h-6 -m-1 p-1"
+                        onClick={() => setBoardIndexSettingOpen((v) => !v)}
+                      >
+                        <Pencil />
+                      </Button>
+                    )}
                   </div>
                   {changeBoardIndex && (
                     <Accordion
@@ -272,7 +282,11 @@ const BoardInfoDialog = ({
                                   <Button
                                     key={i}
                                     size="sm"
-                                    className="px-2 py-1 h-min flex-1"
+                                    className={cn(
+                                      "px-2 py-1 h-min flex-1",
+                                      boardButtonBgCommon,
+                                      boardButtonBgs[i]
+                                    )}
                                     onClick={() => {
                                       changeBoardIndex(i + 1);
                                       setCurrentUnlockedIndex(i + 1);

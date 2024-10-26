@@ -293,7 +293,8 @@ const boardDataChangeBoardIndexActionHandler = (
             {
               charas: charas.map((c) => ({
                 ...c,
-                checked: c.name === action.payload.charaName ? false : c.checked,
+                checked:
+                  c.name === action.payload.charaName ? false : c.checked,
               })),
             },
           ];
@@ -1226,14 +1227,16 @@ const TrickcalBoard = () => {
                                             skin: skinData[name] || 0,
                                             unlockedBoard:
                                               boardData.user.n[name] || 0,
-                                            changeBoardIndex: (i) =>
-                                              dispatchBoardData({
-                                                type: "boardindex",
-                                                payload: {
-                                                  charaName: name,
-                                                  boardIndex: i,
-                                                },
-                                              }),
+                                            changeBoardIndex: unowned
+                                              ? undefined
+                                              : (i) =>
+                                                  dispatchBoardData({
+                                                    type: "boardindex",
+                                                    payload: {
+                                                      charaName: name,
+                                                      boardIndex: i,
+                                                    },
+                                                  }),
                                           });
                                           setBoardDialogOpened(true);
                                         }}
