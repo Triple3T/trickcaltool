@@ -233,14 +233,14 @@ const boardDataChangeClassificationActionHandler = (
   };
 };
 
-interface boardDataChangeVisibleBoardAction {
+interface BoardDataChangeVisibleBoardAction {
   type: "visible";
   payload: BoardType[];
 }
 
 const boardDataChangeVisibleBoardActionHandler = (
   state: NonNullable<BoardDataProps>,
-  action: boardDataChangeVisibleBoardAction
+  action: BoardDataChangeVisibleBoardAction
 ): BoardDataProps => {
   const userData = {
     ...state.user,
@@ -251,6 +251,55 @@ const boardDataChangeVisibleBoardActionHandler = (
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
     visibleBoard: action.payload,
+    user: userData,
+  };
+};
+
+interface BoardDataChangeBoardIndexAction {
+  type: "boardindex";
+  payload: {
+    charaName: string;
+    boardIndex: number;
+  };
+}
+
+const boardDataChangeBoardIndexActionHandler = (
+  state: NonNullable<BoardDataProps>,
+  action: BoardDataChangeBoardIndexAction
+): BoardDataProps => {
+  const userData = {
+    ...state.user,
+    b: {
+      ...state.user.b,
+      [action.payload.charaName]: state.user.b[action.payload.charaName].map(
+        (a, i) => (i < action.payload.boardIndex ? a : a.fill(0))
+      ),
+    },
+    n: {
+      ...state.user.n,
+      [action.payload.charaName]: action.payload.boardIndex,
+    },
+  };
+  saveBoardData(userData);
+  return {
+    ...state,
+    isDirty: ((state.isDirty + 1) % 32768) + 65536,
+    board: state.board.map((nthboard, n) => {
+      if (n < action.payload.boardIndex) return nthboard;
+      return Object.fromEntries(
+        Object.entries(nthboard).map(([bt, { charas }]) => {
+          return [
+            bt,
+            {
+              charas: charas.map((c) => ({
+                ...c,
+                checked: c.name === action.payload.charaName ? false : c.checked,
+              })),
+            },
+          ];
+        })
+      );
+    }),
     user: userData,
   };
 };
@@ -272,7 +321,8 @@ type BoardDataReduceAction =
   | BoardDataRestoreAction
   | BoardDataClickAction
   | BoardDataChangeClassificationAction
-  | boardDataChangeVisibleBoardAction
+  | BoardDataChangeVisibleBoardAction
+  | BoardDataChangeBoardIndexAction
   | BoardDataClean;
 
 const boardDataReducer = (
@@ -290,6 +340,8 @@ const boardDataReducer = (
       return boardDataChangeClassificationActionHandler(state, action);
     case "visible":
       return boardDataChangeVisibleBoardActionHandler(state, action);
+    case "boardindex":
+      return boardDataChangeBoardIndexActionHandler(state, action);
     case "clean":
       return boardDataCleanActionHandler(state);
     default:
@@ -639,7 +691,7 @@ const TrickcalBoard = () => {
                     >
                       {t("ui.board.selectBoardTypeAll")}
                     </Button>
-                    <BoardGuideDialog 
+                    <BoardGuideDialog
                       onClick={() =>
                         dispatchBoardData({
                           type: "visible",
@@ -1174,6 +1226,14 @@ const TrickcalBoard = () => {
                                             skin: skinData[name] || 0,
                                             unlockedBoard:
                                               boardData.user.n[name] || 0,
+                                            changeBoardIndex: (i) =>
+                                              dispatchBoardData({
+                                                type: "boardindex",
+                                                payload: {
+                                                  charaName: name,
+                                                  boardIndex: i,
+                                                },
+                                              }),
                                           });
                                           setBoardDialogOpened(true);
                                         }}

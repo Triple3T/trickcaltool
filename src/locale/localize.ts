@@ -1641,6 +1641,7 @@ i18n
               importantBoardTilesAfter: "",
               importantBoardTilesMultiple: "x",
               importantBoardCombination: "가능한 특수 칸 조합",
+              maxBoardIndex: "열려 있는 최고 차수 보드",
               listInCurrentBoard: "{{0}}의 특수 칸 목록",
             },
             equiprank: {

@@ -1,6 +1,6 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dot, Info, Waypoints } from "lucide-react";
+import { Dot, Info, Pencil, Waypoints } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,8 @@ import {
   Position,
   Race,
 } from "@/types/enums";
+import { Accordion, AccordionContent, AccordionItem } from "../ui/accordion";
+import { Button } from "../ui/button";
 
 interface BoardInfoDialogTriggerProps extends HTMLAttributes<HTMLDivElement> {
   route: string;
@@ -46,6 +48,7 @@ export interface BoardInfoDialogProps {
   onOpenChange: (open: boolean) => void;
   skin: number;
   unlockedBoard: number;
+  changeBoardIndex?: (boardIndex: number) => void;
   eldain?: number;
 }
 
@@ -106,9 +109,17 @@ const BoardInfoDialog = ({
   onOpenChange,
   skin,
   unlockedBoard,
+  changeBoardIndex,
   eldain,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
+  const [boardIndexSettingOpen, setBoardIndexSettingOpen] =
+    useState<boolean>(false);
+  const [currentUnlockedIndex, setCurrentUnlockedIndex] =
+    useState<number>(unlockedBoard);
+  useEffect(() => {
+    setCurrentUnlockedIndex(unlockedBoard);
+  }, [unlockedBoard, chara]);
   const brLength = route.length;
   const brRowCount = Math.floor(brLength / 7);
   const brRows = Array(brRowCount)
@@ -198,7 +209,7 @@ const BoardInfoDialog = ({
                       }.png`}
                       className="w-5 h-5 inline-block align-middle"
                     />
-                    {unlockedBoard > 0 && (
+                    {currentUnlockedIndex > 0 && (
                       <>
                         <Dot className="inline-block w-5 h-5 mx-px align-middle" />
                         <div className="inline-block align-middle p-1 -ml-1 w-5 h-5">
@@ -210,25 +221,73 @@ const BoardInfoDialog = ({
                                 "bg-slate-400",
                                 "bg-emerald-500",
                                 "bg-amber-400",
-                              ][unlockedBoard]
+                              ][currentUnlockedIndex]
                             )}
                           />
                         </div>
                         <div
                           className={cn(
                             "inline-block align-middle text-sm",
-                            unlockedBoard > boardIndex
+                            currentUnlockedIndex > boardIndex
                               ? ""
                               : "text-red-600 dark:text-red-400"
                           )}
                         >
                           {t("ui.board.nthBoardOpened", {
-                            0: `${unlockedBoard}`,
+                            0: `${currentUnlockedIndex}`,
                           })}
                         </div>
                       </>
                     )}
+                    <span className="w-2 m-0 p-0" />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="align-middle w-6 h-6 -m-1 p-1"
+                      onClick={
+                        changeBoardIndex
+                          ? () => setBoardIndexSettingOpen((v) => !v)
+                          : undefined
+                      }
+                    >
+                      <Pencil />
+                    </Button>
                   </div>
+                  {changeBoardIndex && (
+                    <Accordion
+                      type="multiple"
+                      className="w-full"
+                      value={boardIndexSettingOpen ? ["open"] : []}
+                    >
+                      <AccordionItem value="open" className="border-none">
+                        <AccordionContent>
+                          <div className="text-base">
+                            {t("ui.board.maxBoardIndex")}
+                          </div>
+                          <div className="flex gap-2 justify-between items-center">
+                            {Array(3)
+                              .fill(0)
+                              .map((_, i) => {
+                                return (
+                                  <Button
+                                    key={i}
+                                    size="sm"
+                                    className="px-2 py-1 h-min flex-1"
+                                    onClick={() => {
+                                      changeBoardIndex(i + 1);
+                                      setCurrentUnlockedIndex(i + 1);
+                                      setBoardIndexSettingOpen(false);
+                                    }}
+                                  >
+                                    {t(`ui.board.board${i + 1}`)}
+                                  </Button>
+                                );
+                              })}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  )}
                   <div className="text-2xl">
                     {t(`chara.${chara}`)}
                     {unowned && (
