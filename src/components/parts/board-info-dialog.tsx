@@ -145,7 +145,13 @@ const BoardInfoDialog = ({
         .map((_, i) => blocked.slice(i * crayon4Count, (i + 1) * crayon4Count))
     : [];
   return (
-    <Dialog open={opened} onOpenChange={onOpenChange}>
+    <Dialog
+      open={opened}
+      onOpenChange={(o) => {
+        if (!o) setBoardIndexSettingOpen(false);
+        onOpenChange(o);
+      }}
+    >
       <DialogContent
         className="font-onemobile"
         onOpenAutoFocus={(e) => e.preventDefault()}
