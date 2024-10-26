@@ -448,7 +448,9 @@ const BoardCrayonStatistic = ({ data }: { data: BoardDataPropsBoard[] }) => {
             {t(`ui.board.usedCountLabel`)}
           </div>
           <div className="text-right flex-auto">
-            {statStatistic.reduce((a, b, i) => a + b * (i + 1), 0) * 2}
+            {(
+              statStatistic.reduce((a, b, i) => a + b * (i + 1), 0) * 2
+            ).toLocaleString()}
             {t("ui.board.crayonCountUnit")}
           </div>
         </div>
