@@ -352,7 +352,7 @@ const Setting = () => {
                 </Button>
                 <div className="text-right text-sm">
                   <a
-                    className="text-xs text-white dark:text-gray-400 hover:underline"
+                    className="text-xs hover:underline"
                     href="https://triple3t.notion.site/102c52e157ae80f5a581dda26232a96b"
                   >
                     {t("ui.index.versionCheck.updateLog")}
