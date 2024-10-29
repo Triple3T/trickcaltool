@@ -138,6 +138,7 @@ module.exports = {
         "board-high-disabled": "url('/boards/Rect_07.png')",
         "board-normal": "url('/boards/Rect_01.png')",
         "board-normal-disabled": "url('/boards/Rect_02.png')",
+        "board-gate": "url('/boards/Rect_04.png')",
         "task-title": "url('/schedule/Deco_Task_Colored.png')",
         "item-slot-value": "url('/itemslot/ItemSlot_ValueBase.png')",
         "restaurant": "url('/foods/MyHomeRestaurant_background_crop.png')",

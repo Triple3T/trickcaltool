@@ -15,13 +15,13 @@ import SubtitleBar from "./subtitlebar";
 const itemContainerClasses =
   "grid grid-cols-1 sm:grid-cols-2 gap-2 px-2 pb-2 w-72 sm:w-[35.5rem] text-center";
 const utilityButtonClasses =
-  "flex flex-col bg-slate-200 dark:bg-slate-600 p-4 rounded-lg shadow-md space-y-4";
+  "flex flex-col bg-slate-200 dark:bg-slate-600 p-2 rounded-lg shadow-md space-y-4";
 const utilityTextClasses =
-  "text-lg font-medium lg:text-xl text-slate-950 dark:text-slate-50";
+  "text-base font-medium lg:text-lg text-slate-950 dark:text-slate-50";
 const experimentalButtonClasses =
-  "flex flex-col bg-slate-200 dark:bg-slate-600 p-4 rounded-lg shadow-md space-y-4";
+  "flex flex-col bg-slate-200 dark:bg-slate-600 p-2 rounded-lg shadow-md space-y-4";
 const experimentalTextClasses =
-  "font-medium lg:text-lg text-slate-950 dark:text-slate-50";
+  "text-sm font-medium lg:text-base text-slate-950 dark:text-slate-50";
 const UtilitySetCard = () => {
   const { t } = useTranslation();
   const [showExperimental, setShowExperimental] = useState<boolean>(false);
@@ -116,6 +116,14 @@ const UtilitySetCard = () => {
                   <h4 className={experimentalTextClasses}>
                     {t("ui.index.testMark")}
                     {t("ui.normaldrop.title")}
+                  </h4>
+                </div>
+              </Link>
+              <Link to={"/personal"}>
+                <div className={experimentalButtonClasses}>
+                  <h4 className={experimentalTextClasses}>
+                    {t("ui.index.testMark")}
+                    {t("ui.personal.title")}
                   </h4>
                 </div>
               </Link>
