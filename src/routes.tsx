@@ -164,6 +164,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
         </Suspense>
       </Layout>
     ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/eventcalc",
