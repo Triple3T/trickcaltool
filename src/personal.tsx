@@ -47,13 +47,12 @@ const Personal = () => {
             .map(([name, meta]) => {
               const [
                 personality,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                initialStar,
+                // initialStar,
+                ,
                 attackType,
                 position,
                 unitClass,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                race,
+                // race,
               ] = meta.t.split("").map((v) => Number(v)) as CharaMetaType;
               return (
                 <div
