@@ -151,7 +151,7 @@ const RaidBossStatDialog = ({
                   {currentBoss.h.toLocaleString()}{" "}
                   {currentBoss.h !== 0 && (
                     <span className="text-red-600/90 dark:text-red-400/90">
-                      (받는 피해 감소 {currentBoss.l / 100}%)
+                      (받는 최종 피해 감소 {currentBoss.l / 100}%)
                     </span>
                   )}
                 </div>
