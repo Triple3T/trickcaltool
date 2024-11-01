@@ -193,7 +193,8 @@
         },
         "Arbeit45":{
             "s":[45],
-            "m":["CollectMadeLow3"]
+            "m":["CollectMadeLow3"],
+            "f":100
         },
         "Arbeit47":{
             "s":[47],
