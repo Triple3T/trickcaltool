@@ -107,8 +107,16 @@ export default defineConfig({
     },
   },
   define: {
-    "process.env.VERSION_HASH": `"${process.env.CF_PAGES_COMMIT_SHA ?? "DEV0001"}"`,
-    "process.env.HOSTNAME": `"${process.env.VITE_HOSTNAME ?? "https://tr.triple-lab.com"}"`,
+    "process.env.VERSION_HASH": `"${
+      process.env.CF_PAGES_COMMIT_SHA ?? "DEV0001"
+    }"`,
+    "process.env.HOSTNAME": `"${
+      process.env.VITE_HOSTNAME ?? "https://tr.triple-lab.com"
+    }"`,
+    "process.env.GOOGLE_CLIENT_ID": `"${
+      process.env.REACT_APP_GAPI_CLIENT_ID ??
+      "637944158863-l548alrsg15njgk49kpaq13d5gnijo3j.apps.googleusercontent.com"
+    }"`,
   },
   build: {
     rollupOptions: {
