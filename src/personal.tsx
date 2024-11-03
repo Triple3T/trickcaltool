@@ -10,6 +10,7 @@ import { personalityBG } from "@/utils/personalityBG";
 import rankClassNames from "@/utils/rankClassNames";
 import board from "@/data/board";
 import chara from "@/data/chara";
+import clonefactory from "@/data/clonefactory";
 import equip from "@/data/equip";
 import food from "@/data/food";
 import purpleboard from "@/data/purpleboard";
@@ -214,6 +215,32 @@ const Personal = () => {
               ? t(`eldain.${chara[charaName].e}`)
               : `${initialStar}성`}
           </div>
+        </div>
+      </Card>
+      <Card className="p-2 mt-2 flex items-start gap-4">
+        <img
+          src="/clonefactoryicon/GradeDungeon_Logo.png"
+          className="w-16 flex-initial"
+        />
+        <div className="flex items-center gap-4 flex-wrap flex-1">
+          {Object.entries(clonefactory.l).map(([date, lineup]) => {
+            const charaList = lineup.flat();
+            if (charaList.includes(charaName)) {
+              const [year, month, day] = date.split("-");
+              return (
+                <div key={date} className="ring rounded-md px-2 py-1">
+                  <div className="text-xs">{year}</div>
+                  <div className="text-sm">{`${month}/${day}`}</div>
+                </div>
+              );
+            }
+            return null;
+          })}
+          {!Object.values(clonefactory.l).flat().flat().includes(charaName) && (
+            <div className="flex items-center flex-1 h-full mt-2">
+              편성된 적이 없어요
+            </div>
+          )}
         </div>
       </Card>
       <Tabs className="mt-4" value={tab} onValueChange={setTab}>
