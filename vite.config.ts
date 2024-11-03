@@ -107,7 +107,8 @@ export default defineConfig({
     },
   },
   define: {
-    "process.env.VERSION_HASH": `"${process.env.CF_PAGES_COMMIT_SHA}"`,
+    "process.env.VERSION_HASH": `"${process.env.CF_PAGES_COMMIT_SHA ?? "DEV0001"}"`,
+    "process.env.HOSTNAME": `"${process.env.VITE_HOSTNAME ?? "https://tr.triple-lab.com"}"`,
   },
   build: {
     rollupOptions: {
