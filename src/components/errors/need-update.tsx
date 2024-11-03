@@ -7,12 +7,14 @@ import { cn } from "@/lib/utils";
 import cuts from "./cuts";
 
 const NeedUpdate = ({ message, stack }: { message: string; stack: string }) => {
-  const [bgFileName, setBgFileName] = useState<string>("");
-  useEffect(
-    () => setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]),
-    []
-  );
   const { t } = useTranslation();
+  const [bgFileName, setBgFileName] = useState<string>("");
+  useEffect(() => {
+    const componentTitle = t("ui.error.title");
+    const appTitle = t("ui.index.title");
+    document.title = `${componentTitle} - ${appTitle}`;
+    setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]);
+  }, [t]);
   const [viewStack, setViewStack] = useState<boolean>(false);
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import cuts from "./cuts";
 
 const Error404 = ({ message }: { message?: string }) => {
-  const [bgFileName, setBgFileName] = useState<string>("");
-  useEffect(
-    () => setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]),
-    []
-  );
   const { t } = useTranslation();
+  const [bgFileName, setBgFileName] = useState<string>("");
+  useEffect(() => {
+    const componentTitle = t("ui.error.title404");
+    const appTitle = t("ui.index.title");
+    document.title = `${componentTitle} - ${appTitle}`;
+    setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]);
+  }, [t]);
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div

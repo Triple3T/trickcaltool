@@ -1,10 +1,26 @@
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ThemeProvider } from "./theme-provider";
 import { ModeToggle } from "./mode-toggle";
 import { QuickSync } from "./quick-sync";
 import BackButton from "./common/back-button";
 import MenuButton from "./common/menu-button";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({
+  title,
+  children,
+}: {
+  title?: string;
+  children: React.ReactNode;
+}) => {
+  const { t } = useTranslation();
+  useEffect(() => {
+    const componentTitle = title ? t(title) ?? "" : "";
+    const appTitle = t("ui.index.title");
+    document.title = componentTitle
+      ? `${componentTitle} - ${appTitle}`
+      : appTitle;
+  }, [t, title]);
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="fixed top-0 left-0 p-2 w-auto flex gap-2 z-20">

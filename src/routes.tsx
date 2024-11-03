@@ -50,7 +50,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/board",
     // element: <TrickcalBoard />,
     element: (
-      <Layout>
+      <Layout title="ui.board.title">
         <Suspense fallback={<Loading />}>
           <TrickcalBoard />
         </Suspense>
@@ -62,7 +62,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/eqrank",
     // element: <EquipRank />,
     element: (
-      <Layout>
+      <Layout title="ui.equiprank.title">
         <Suspense fallback={<Loading />}>
           <EquipRank />
         </Suspense>
@@ -74,7 +74,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/lab",
     // element: <Lab />,
     element: (
-      <Layout>
+      <Layout title="ui.lab.title">
         <Suspense fallback={<Loading />}>
           <Lab />
         </Suspense>
@@ -86,7 +86,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/pboard",
     // element: <PurpleBoard />,
     element: (
-      <Layout>
+      <Layout title="ui.board.pboardTitle">
         <Suspense fallback={<Loading />}>
           <PurpleBoard />
         </Suspense>
@@ -98,7 +98,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/boardsearch",
     // element: <BoardSearch />,
     element: (
-      <Layout>
+      <Layout title="ui.boardsearch.title">
         <Suspense fallback={<Loading />}>
           <BoardSearch />
         </Suspense>
@@ -110,7 +110,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/tasksearch",
     // element: <TaskSearch />,
     element: (
-      <Layout>
+      <Layout title="ui.tasksearch.title">
         <Suspense fallback={<Loading />}>
           <TaskSearch />
         </Suspense>
@@ -122,7 +122,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/restaurant",
     // element: <Restaurant />,
     element: (
-      <Layout>
+      <Layout title="ui.restaurant.title">
         <Suspense fallback={<Loading />}>
           <Restaurant />
         </Suspense>
@@ -134,7 +134,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/normaldrop",
     // element: <NormalDrop />,
     element: (
-      <Layout>
+      <Layout title="ui.normaldrop.title">
         <Suspense fallback={<Loading />}>
           <NormalDrop />
         </Suspense>
@@ -146,7 +146,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/equipviewer",
     // element: <EquipViewer />,
     element: (
-      <Layout>
+      <Layout title="ui.equipviewer.title">
         <Suspense fallback={<Loading />}>
           <EquipViewer />
         </Suspense>
@@ -158,7 +158,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/personal",
     // element: <Personal />,
     element: (
-      <Layout>
+      <Layout title="ui.personal.title">
         <Suspense fallback={<Loading />}>
           <Personal />
         </Suspense>
@@ -170,7 +170,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/eventcalc",
     // element: <EventCalc />,
     element: (
-      <Layout>
+      <Layout title="ui.eventcalc.title">
         <Suspense fallback={<Loading />}>
           <EventCalc />
         </Suspense>
@@ -182,7 +182,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/goodscalc",
     // element: <GoodsCalc />,
     element: (
-      <Layout>
+      <Layout title="ui.goodscalc.title">
         <Suspense fallback={<Loading />}>
           <GoodsCalc />
         </Suspense>
@@ -194,7 +194,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/check",
     // element: <Checker />,
     element: (
-      <Layout>
+      <Layout title="ui.check.title">
         <Suspense fallback={<Loading />}>
           <Checker />
         </Suspense>
@@ -205,7 +205,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
   {
     path: "/setting",
     element: (
-      <Layout>
+      <Layout title="ui.index.setting">
         <Setting />
       </Layout>
     ),
@@ -215,7 +215,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/privacy",
     // element: <Privacy />,
     element: (
-      <Layout>
+      <Layout title="ui.index.privacyPolicy">
         <Suspense fallback={<Loading />}>
           <Privacy />
         </Suspense>

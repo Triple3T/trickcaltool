@@ -56,7 +56,10 @@ function App() {
         if (v !== process.env.VERSION_HASH) setIsHashUpdated(true);
       })
       .catch(() => {});
-  });
+  }, []);
+  useEffect(() => {
+    document.title = t("ui.index.title");
+  }, [t]);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
