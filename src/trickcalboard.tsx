@@ -1087,14 +1087,14 @@ const TrickcalBoard = () => {
                             <>
                               <img
                                 className="w-6 mr-1 inline-flex align-middle"
-                                src={`/icons/${
+                                src={`${
                                   [
-                                    "Common_UnitPersonality_",
-                                    "",
-                                    "Common_UnitAttack",
-                                    "Common_Position",
-                                    "Common_Unit",
-                                    "Common_UnitRace_",
+                                    "/icons/Common_UnitPersonality_",
+                                    "/icons/",
+                                    "/icons/Common_UnitAttack",
+                                    "/icons/Common_Position",
+                                    "/icons/Common_Unit",
+                                    "/album/Album_Icon_",
                                   ][boardData.user.c]
                                 }${k}.png`}
                               />

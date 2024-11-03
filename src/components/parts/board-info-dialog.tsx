@@ -222,7 +222,7 @@ const BoardInfoDialog = ({
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
-                      src={`/icons/Common_UnitRace_${
+                      src={`/album/Album_Icon_${
                         Race[Number(charaTypes[5])]
                       }.png`}
                       className="w-5 h-5 inline-block align-middle"

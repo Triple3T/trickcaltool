@@ -679,7 +679,7 @@ const Lab = () => {
                                         <img
                                           key={race}
                                           className="w-6 h-6 inline-block align-middle"
-                                          src={`/icons/Common_UnitRace_${Race[race]}.png`}
+                                          src={`/album/Album_Icon_${Race[race]}.png`}
                                           alt={t(`race.${Race[race]}`)}
                                         />
                                       );

@@ -188,7 +188,7 @@ const Personal = () => {
         <div className="p-2">
           <div>
             <img
-              src={`/icons/Common_UnitRace_${Race[race]}.png`}
+              src={`/album/Album_Icon_${Race[race]}.png`}
               alt=""
               className="w-8 h-8 inline"
             />
