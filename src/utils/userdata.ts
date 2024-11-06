@@ -44,6 +44,7 @@ const saveDialogEnableData: SaveData<UserDataDialogEnable> = (data) => {
     DIALOG_KEY,
     JSON.stringify(data ?? defaultDialogEnableData)
   );
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadDialogEnableData: LoadData<UserDataDialogEnable> = () => {
   const data = localStorage.getItem(DIALOG_KEY);
@@ -63,6 +64,7 @@ const defaultBoardData: UserDataBoard = {
 };
 const saveBoardData: SaveData<UserDataBoard> = (data) => {
   localStorage.setItem(BOARD_KEY, JSON.stringify(data ?? defaultBoardData));
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadBoardData: LoadData<UserDataBoard> = () => {
   const data = localStorage.getItem(BOARD_KEY);
@@ -84,6 +86,7 @@ const savePurpleBoardData: SaveData<UserDataPurpleBoard> = (data) => {
     PBOARD_KEY,
     JSON.stringify(data ?? defaultPurpleBoardData)
   );
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadPurpleBoardData: LoadData<UserDataPurpleBoard> = () => {
   const data = localStorage.getItem(PBOARD_KEY);
@@ -104,6 +107,7 @@ const saveNthBoardData: SaveData<UserDataNthBoard> = (data) => {
     NTHBOARD_KEY,
     JSON.stringify(data ?? defaultNthBoardData)
   );
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadNthBoardData: LoadData<UserDataNthBoard> = () => {
   const data = localStorage.getItem(NTHBOARD_KEY);
@@ -124,6 +128,7 @@ const defaultEqRankData = {
 };
 const saveEqRankData: SaveData<UserDataEqRank> = (data) => {
   localStorage.setItem(EQRANK_KEY, JSON.stringify(data ?? defaultEqRankData));
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadEqRankData: LoadData<UserDataEqRank> = () => {
   const data = localStorage.getItem(EQRANK_KEY);
@@ -139,6 +144,7 @@ const loadEqRankData: LoadData<UserDataEqRank> = () => {
 const defaultUnownedData = { o: [], u: Object.keys(chara) };
 const saveUnownedData: SaveData<UserDataUnowned> = (data) => {
   localStorage.setItem(UNOWNED_KEY, JSON.stringify(data ?? defaultUnownedData));
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadUnownedData: LoadData<UserDataUnowned> = () => {
   const data = localStorage.getItem(UNOWNED_KEY);
@@ -179,6 +185,7 @@ const defaultLabData = {
 };
 const saveLabData: SaveData<UserDataLab> = (data) => {
   localStorage.setItem(LAB_KEY, JSON.stringify(data ?? defaultLabData));
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadLabData: LoadData<UserDataLab> = () => {
   const data = localStorage.getItem(LAB_KEY);
@@ -200,6 +207,7 @@ const defaultMyHomeData = {
 };
 const saveMyHomeData: SaveData<UserDataMyHome> = (data) => {
   localStorage.setItem(MYHOME_KEY, JSON.stringify(data ?? defaultMyHomeData));
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadMyHomeData: LoadData<UserDataMyHome> = () => {
   const data = localStorage.getItem(MYHOME_KEY);
@@ -218,6 +226,7 @@ const saveCollectionData: SaveData<UserDataCollection> = (data) => {
     COLLECTION_KEY,
     JSON.stringify(data ?? defaultCollectionData)
   );
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadCollectionData: LoadData<UserDataCollection> = () => {
   const data = localStorage.getItem(COLLECTION_KEY);
@@ -248,6 +257,7 @@ const saveEventCalcData: SaveData<UserDataEventCalc> = (dt) => {
     EVENTCALC_KEY,
     JSON.stringify(data ?? defaultEventCalcData)
   );
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
   const data = localStorage.getItem(EVENTCALC_KEY);
@@ -262,6 +272,7 @@ const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
 
 const saveSkinData: SaveData<UserDataSkin> = (data) => {
   localStorage.setItem(SKIN_KEY, JSON.stringify(data ?? {}));
+  localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadSkinData: LoadDataWithoutAutoRepaired<UserDataSkin> = () => {
   const data = localStorage.getItem(SKIN_KEY);

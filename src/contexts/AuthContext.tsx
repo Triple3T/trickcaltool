@@ -288,13 +288,25 @@ ${fileData}
           getNewToken(async (newToken) => {
             const content = await getFileContent(newToken, fileId);
             if (content) {
-              dataFileImport(content);
+              const result = dataFileImport(content);
+              if (
+                result.success === false &&
+                result.reason === "ui.index.fileSync.oldDataImported"
+              ) {
+                autoSave();
+              }
             }
           });
         } else {
           const content = await getFileContent(token, fileId);
           if (content) {
-            dataFileImport(content);
+            const result = dataFileImport(content);
+            if (
+              result.success === false &&
+              result.reason === "ui.index.fileSync.oldDataImported"
+            ) {
+              autoSave();
+            }
           }
         }
       } else {
@@ -302,7 +314,13 @@ ${fileData}
         if (id) {
           const content = await getFileContent(token, id);
           if (content) {
-            dataFileImport(content);
+            const result = dataFileImport(content);
+            if (
+              result.success === false &&
+              result.reason === "ui.index.fileSync.oldDataImported"
+            ) {
+              autoSave();
+            }
           }
         } else {
           setNoFile(true);

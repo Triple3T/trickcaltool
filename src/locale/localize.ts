@@ -1884,6 +1884,7 @@ i18n
                 incorrectPadding: "파일 패딩이 올바르지 않습니다.",
                 noFileProvided: "파일이 제공되지 않았습니다.",
                 invalidFileInput: "파일이 올바르지 않습니다.",
+                oldDataImported: "이전 데이터를 가져왔습니다.",
               },
               newCharacterAlert:
                 "사도 목록 변경을 감지했습니다.\n미보유 사도 설정을 다시 확인해 주세요.",

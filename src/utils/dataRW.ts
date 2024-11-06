@@ -21,6 +21,7 @@ export const exportTextFile = ({ fileName, data }: ExportTextFileProps) => {
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 
 export const dataFileExport = () => {
+  const timestamp = localStorage.getItem("timestamp");
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {autoRepaired: ar01, ...bdtp} = userdata.board.load();
   const {autoRepaired: ar02, ...pdtp} = userdata.pboard.load();
@@ -44,6 +45,7 @@ export const dataFileExport = () => {
     lab: ldtp,
     myhome: mdtp,
     collection: cdtp,
+    timestamp: Number(timestamp),
   });
   // input: 3 * 8(UTF-8), output: 4 * 6(A-Za-z0-9+/).
   const bdt = rdt.split("").map((c) => c.charCodeAt(0));
@@ -104,7 +106,7 @@ interface DataReadFailed {
   reason: string;
 }
 type DataReadResult = DataReadSuccess | DataReadFailed;
-export const dataFileImport = (data: string): DataReadResult => {
+export const dataFileImport = (data: string, force?: boolean): DataReadResult => {
   const startSignature = data.substring(0, 2);
   if (
     !data.startsWith(currentSignature) &&
@@ -158,6 +160,13 @@ export const dataFileImport = (data: string): DataReadResult => {
         .join("");
     })();
     const fdt = sigConvert(`${dth}${dtt}`, startSignature);
+    const currentTimestamp = Number(localStorage.getItem("timestamp") ?? "0");
+    if (currentTimestamp > (fdt.timestamp ?? 0) && !force) {
+      return {
+        success: false,
+        reason: "ui.index.fileSync.oldDataImported",
+      };
+    }
     userdata.board.save(fdt.board);
     userdata.pboard.save(fdt.pboard);
     userdata.nthboard.save(fdt.nthboard);
@@ -176,7 +185,7 @@ export const dataFileRead = async (
     if (files && files.length > 0) {
       const file = files[0];
       const dProto = await file.text();
-      return dataFileImport(dProto);
+      return dataFileImport(dProto, true);
     } else {
       return { success: false, reason: "ui.index.fileSync.noFileProvided" };
     }
