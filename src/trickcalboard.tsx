@@ -1090,7 +1090,7 @@ const TrickcalBoard = () => {
                                 src={`${
                                   [
                                     "/icons/Common_UnitPersonality_",
-                                    "/icons/",
+                                    "",
                                     "/icons/Common_UnitAttack",
                                     "/icons/Common_Position",
                                     "/icons/Common_Unit",
