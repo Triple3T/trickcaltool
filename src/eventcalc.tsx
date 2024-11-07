@@ -568,18 +568,21 @@ const EventCalc = () => {
         useCustom,
         timestamp,
       } = eventCalcData;
-      userdata.eventcalc.save({
-        a: allCleared,
-        b: customBonus,
-        c: dailyCompleted,
-        d: dayCount,
-        h: possibleChallenge,
-        r: remainItem,
-        e: selectedThemeEvent,
-        s: shopPurchaseCounts,
-        u: useCustom,
-        t: timestamp,
-      });
+      userdata.eventcalc.save(
+        {
+          a: allCleared,
+          b: customBonus,
+          c: dailyCompleted,
+          d: dayCount,
+          h: possibleChallenge,
+          r: remainItem,
+          e: selectedThemeEvent,
+          s: shopPurchaseCounts,
+          u: useCustom,
+          t: timestamp,
+        },
+        false
+      );
       dispatchEventCalcData({ type: "clean" });
     }, 2000);
   }, [eventCalcData]);

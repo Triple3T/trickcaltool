@@ -167,14 +167,17 @@ export const dataFileImport = (data: string, force?: boolean): DataReadResult =>
         reason: "ui.index.fileSync.oldDataImported",
       };
     }
-    userdata.board.save(fdt.board);
-    userdata.pboard.save(fdt.pboard);
-    userdata.nthboard.save(fdt.nthboard);
-    userdata.eqrank.save(fdt.eqrank);
-    userdata.unowned.save(fdt.unowned);
-    userdata.lab.save(fdt.lab);
-    userdata.myhome.save(fdt.myhome);
-    userdata.collection.save(fdt.collection);
+    if (currentTimestamp <= (fdt.timestamp ?? 0)) {
+      localStorage.setItem("timestamp", String(fdt.timestamp));
+    }
+    userdata.board.save(fdt.board, true);
+    userdata.pboard.save(fdt.pboard, true);
+    userdata.nthboard.save(fdt.nthboard, true);
+    userdata.eqrank.save(fdt.eqrank, true);
+    userdata.unowned.save(fdt.unowned, true);
+    userdata.lab.save(fdt.lab, true);
+    userdata.myhome.save(fdt.myhome, true);
+    userdata.collection.save(fdt.collection, true);
     return { success: true };
   }
 };

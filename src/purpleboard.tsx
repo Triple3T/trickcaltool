@@ -63,12 +63,13 @@ interface BoardDataPropsCore {
 type BoardDataProps = BoardDataPropsCore | undefined;
 
 const saveBoardData = (
-  boardData: UserDataPurpleBoard & UserDataNthBoard & UserDataUnowned
+  boardData: UserDataPurpleBoard & UserDataNthBoard & UserDataUnowned,
+  withoutTimestamp: boolean
 ) => {
   const { d, n, o, p, u } = boardData;
-  userdata.pboard.save({ p, d });
-  userdata.nthboard.save({ n });
-  userdata.unowned.save({ o, u });
+  userdata.pboard.save({ p, d }, withoutTimestamp);
+  userdata.nthboard.save({ n }, withoutTimestamp);
+  userdata.unowned.save({ o, u }, withoutTimestamp);
 };
 
 interface BoardDataRestoreAction {
@@ -118,7 +119,7 @@ const boardDataClickActionHandler = (
       ),
     },
   };
-  saveBoardData(userData);
+  saveBoardData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -163,7 +164,7 @@ const boardDataNthBoardOpenActionHandler = (
   const chara = action.payload.charaName;
   const index = action.payload.index;
   userData.n[chara] = index;
-  saveBoardData(userData);
+  saveBoardData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -418,7 +419,7 @@ const PurpleBoard = () => {
         );
       }
     });
-    saveBoardData(userData);
+    saveBoardData(userData, true);
     const pBoardTypes = Object.values(PurpleBoardType).filter(
       (bt) => typeof bt === "string"
     ) as string[];

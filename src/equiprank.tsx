@@ -109,10 +109,13 @@ interface RankDataPropsCore {
 
 type RankDataProps = RankDataPropsCore | undefined;
 
-const saveUserData = (rankData: UserDataEqRank & UserDataUnowned) => {
+const saveUserData = (
+  rankData: UserDataEqRank & UserDataUnowned,
+  withoutTimestamp: boolean
+) => {
   const { r, o, u, s, v, f } = rankData;
-  userdata.eqrank.save({ r, s, v, f });
-  userdata.unowned.save({ o, u });
+  userdata.eqrank.save({ r, s, v, f }, withoutTimestamp);
+  userdata.unowned.save({ o, u }, withoutTimestamp);
 };
 
 interface RankDataRestoreAction {
@@ -140,7 +143,7 @@ const rankDataCharaRankModifyActionHandler = (
       [chara]: rank,
     },
   };
-  saveUserData(userData);
+  saveUserData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -168,7 +171,7 @@ const rankDataChangeTargetStatActionHandler = (
     ...state.user,
     v: action.payload,
   };
-  saveUserData(userData);
+  saveUserData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -228,7 +231,7 @@ const rankDataApplyMinMaxActionHandler = (
     ),
     s: [state.minRank, state.maxRank],
   };
-  saveUserData(userData);
+  saveUserData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -262,7 +265,7 @@ const rankDataChangeSortActionHandler = (
     ...state.user,
     f: sortAndFilterData,
   };
-  saveUserData(userData);
+  saveUserData(userData, false);
   return {
     ...state,
     sortAndFilter: sortAndFilterData,
@@ -292,7 +295,7 @@ const rankDataChangeFilterActionHandler = (
     ...state.user,
     f: sortAndFilterData,
   };
-  saveUserData(userData);
+  saveUserData(userData, false);
   return {
     ...state,
     sortAndFilter: sortAndFilterData,
@@ -397,7 +400,7 @@ const EquipRank = () => {
         );
       }
       setNewCharaAlert(true);
-      saveUserData(userData);
+      saveUserData(userData, true);
     }
     const sortedCharaList = [...charaList].sort(
       (a, b) => Number(chara[b].t) - Number(chara[a].t)
@@ -484,7 +487,7 @@ const EquipRank = () => {
     setEnableDialog(enabled);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { autoRepaired, ...userDialogData } = userdata.dialog.load();
-    userdata.dialog.save({ ...userDialogData, eqrank: enabled });
+    userdata.dialog.save({ ...userDialogData, eqrank: enabled }, true);
   }, []);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);

@@ -19,7 +19,7 @@ interface LoadDataAdditionalProps {
 }
 
 type LoadData<T> = () => T & LoadDataAdditionalProps;
-type SaveData<T> = (data: T) => void;
+type SaveData<T> = (data: T, withoutTimestamp: boolean) => void;
 type LoadDataWithoutAutoRepaired<T> = () => T;
 
 const DIALOG_KEY = "trn.dialog";
@@ -39,17 +39,21 @@ const defaultDialogEnableData: UserDataDialogEnable = {
   board: true,
   eqrank: true,
 };
-const saveDialogEnableData: SaveData<UserDataDialogEnable> = (data) => {
+const saveDialogEnableData: SaveData<UserDataDialogEnable> = (
+  data,
+  withoutTimestamp
+) => {
   localStorage.setItem(
     DIALOG_KEY,
     JSON.stringify(data ?? defaultDialogEnableData)
   );
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadDialogEnableData: LoadData<UserDataDialogEnable> = () => {
   const data = localStorage.getItem(DIALOG_KEY);
   if (!data) {
-    saveDialogEnableData(defaultDialogEnableData);
+    saveDialogEnableData(defaultDialogEnableData, true);
     return { ...defaultDialogEnableData, autoRepaired: true };
   }
   const finalData = { ...defaultDialogEnableData, ...JSON.parse(data) };
@@ -62,14 +66,15 @@ const defaultBoardData: UserDataBoard = {
   c: 0,
   v: [0, 2, 3, 4, 5, 6, 7, 9],
 };
-const saveBoardData: SaveData<UserDataBoard> = (data) => {
+const saveBoardData: SaveData<UserDataBoard> = (data, withoutTimestamp) => {
   localStorage.setItem(BOARD_KEY, JSON.stringify(data ?? defaultBoardData));
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadBoardData: LoadData<UserDataBoard> = () => {
   const data = localStorage.getItem(BOARD_KEY);
   if (!data) {
-    saveBoardData(defaultBoardData);
+    saveBoardData(defaultBoardData, true);
     return { ...defaultBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultBoardData, ...JSON.parse(data) };
@@ -81,17 +86,21 @@ const defaultPurpleBoardData = {
   p: {},
   d: [],
 };
-const savePurpleBoardData: SaveData<UserDataPurpleBoard> = (data) => {
+const savePurpleBoardData: SaveData<UserDataPurpleBoard> = (
+  data,
+  withoutTimestamp
+) => {
   localStorage.setItem(
     PBOARD_KEY,
     JSON.stringify(data ?? defaultPurpleBoardData)
   );
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadPurpleBoardData: LoadData<UserDataPurpleBoard> = () => {
   const data = localStorage.getItem(PBOARD_KEY);
   if (!data) {
-    savePurpleBoardData(defaultPurpleBoardData);
+    savePurpleBoardData(defaultPurpleBoardData, true);
     return { ...defaultPurpleBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultPurpleBoardData, ...JSON.parse(data) };
@@ -102,17 +111,21 @@ const loadPurpleBoardData: LoadData<UserDataPurpleBoard> = () => {
 const defaultNthBoardData = {
   n: {},
 };
-const saveNthBoardData: SaveData<UserDataNthBoard> = (data) => {
+const saveNthBoardData: SaveData<UserDataNthBoard> = (
+  data,
+  withoutTimestamp
+) => {
   localStorage.setItem(
     NTHBOARD_KEY,
     JSON.stringify(data ?? defaultNthBoardData)
   );
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadNthBoardData: LoadData<UserDataNthBoard> = () => {
   const data = localStorage.getItem(NTHBOARD_KEY);
   if (!data) {
-    saveNthBoardData(defaultNthBoardData);
+    saveNthBoardData(defaultNthBoardData, true);
     return { ...defaultNthBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultNthBoardData, ...JSON.parse(data) };
@@ -126,14 +139,15 @@ const defaultEqRankData = {
   v: [],
   f: [[0, 0, 0]],
 };
-const saveEqRankData: SaveData<UserDataEqRank> = (data) => {
+const saveEqRankData: SaveData<UserDataEqRank> = (data, withoutTimestamp) => {
   localStorage.setItem(EQRANK_KEY, JSON.stringify(data ?? defaultEqRankData));
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadEqRankData: LoadData<UserDataEqRank> = () => {
   const data = localStorage.getItem(EQRANK_KEY);
   if (!data) {
-    saveEqRankData(defaultEqRankData);
+    saveEqRankData(defaultEqRankData, true);
     return { ...defaultEqRankData, autoRepaired: true };
   }
   const finalData = { ...defaultEqRankData, ...JSON.parse(data) };
@@ -142,14 +156,15 @@ const loadEqRankData: LoadData<UserDataEqRank> = () => {
 };
 
 const defaultUnownedData = { o: [], u: Object.keys(chara) };
-const saveUnownedData: SaveData<UserDataUnowned> = (data) => {
+const saveUnownedData: SaveData<UserDataUnowned> = (data, withoutTimestamp) => {
   localStorage.setItem(UNOWNED_KEY, JSON.stringify(data ?? defaultUnownedData));
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadUnownedData: LoadData<UserDataUnowned> = () => {
   const data = localStorage.getItem(UNOWNED_KEY);
   if (!data) {
-    saveUnownedData(defaultUnownedData);
+    saveUnownedData(defaultUnownedData, true);
     return { ...defaultUnownedData, autoRepaired: true };
   }
   const parsed = JSON.parse(data) as UserDataUnowned;
@@ -174,7 +189,7 @@ const loadUnownedData: LoadData<UserDataUnowned> = () => {
       return !parsed.o.includes(v) && !parsed.u.includes(v);
     });
     parsed.u = [...parsed.u, ...missing];
-    saveUnownedData(parsed);
+    saveUnownedData(parsed, true);
   }
   return { ...parsed, autoRepaired };
 };
@@ -183,14 +198,15 @@ const defaultLabData = {
   1: 0,
   2: 0,
 };
-const saveLabData: SaveData<UserDataLab> = (data) => {
+const saveLabData: SaveData<UserDataLab> = (data, withoutTimestamp) => {
   localStorage.setItem(LAB_KEY, JSON.stringify(data ?? defaultLabData));
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadLabData: LoadData<UserDataLab> = () => {
   const data = localStorage.getItem(LAB_KEY);
   if (!data) {
-    saveLabData(defaultLabData);
+    saveLabData(defaultLabData, true);
     return { ...defaultLabData, autoRepaired: true };
   }
   const finalData = { ...defaultLabData, ...JSON.parse(data) };
@@ -205,14 +221,15 @@ const defaultMyHomeData = {
   s: [0, 0],
   a: [0, 0],
 };
-const saveMyHomeData: SaveData<UserDataMyHome> = (data) => {
+const saveMyHomeData: SaveData<UserDataMyHome> = (data, withoutTimestamp) => {
   localStorage.setItem(MYHOME_KEY, JSON.stringify(data ?? defaultMyHomeData));
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadMyHomeData: LoadData<UserDataMyHome> = () => {
   const data = localStorage.getItem(MYHOME_KEY);
   if (!data) {
-    saveMyHomeData(defaultMyHomeData);
+    saveMyHomeData(defaultMyHomeData, true);
     return { ...defaultMyHomeData, autoRepaired: true };
   }
   const finalData = { ...defaultMyHomeData, ...JSON.parse(data) };
@@ -221,17 +238,21 @@ const loadMyHomeData: LoadData<UserDataMyHome> = () => {
 };
 
 const defaultCollectionData = { c: [] };
-const saveCollectionData: SaveData<UserDataCollection> = (data) => {
+const saveCollectionData: SaveData<UserDataCollection> = (
+  data,
+  withoutTimestamp
+) => {
   localStorage.setItem(
     COLLECTION_KEY,
     JSON.stringify(data ?? defaultCollectionData)
   );
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadCollectionData: LoadData<UserDataCollection> = () => {
   const data = localStorage.getItem(COLLECTION_KEY);
   if (!data) {
-    saveCollectionData(defaultCollectionData);
+    saveCollectionData(defaultCollectionData, true);
     return { ...defaultCollectionData, autoRepaired: true };
   }
   const finalData = { ...defaultCollectionData, ...JSON.parse(data) };
@@ -251,18 +272,22 @@ const defaultEventCalcData = {
   u: [false, false, false],
   t: 0,
 };
-const saveEventCalcData: SaveData<UserDataEventCalc> = (dt) => {
+const saveEventCalcData: SaveData<UserDataEventCalc> = (
+  dt,
+  withoutTimestamp
+) => {
   const data = { ...dt, t: Date.now() };
   localStorage.setItem(
     EVENTCALC_KEY,
     JSON.stringify(data ?? defaultEventCalcData)
   );
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
   const data = localStorage.getItem(EVENTCALC_KEY);
   if (!data) {
-    saveEventCalcData(defaultEventCalcData);
+    saveEventCalcData(defaultEventCalcData, true);
     return { ...defaultEventCalcData, autoRepaired: true };
   }
   const finalData = { ...defaultEventCalcData, ...JSON.parse(data) };
@@ -270,14 +295,15 @@ const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
   return { ...finalData, autoRepaired };
 };
 
-const saveSkinData: SaveData<UserDataSkin> = (data) => {
+const saveSkinData: SaveData<UserDataSkin> = (data, withoutTimestamp) => {
   localStorage.setItem(SKIN_KEY, JSON.stringify(data ?? {}));
-  localStorage.setItem("timestamp", new Date().getTime().toString());
+  if (!withoutTimestamp)
+    localStorage.setItem("timestamp", new Date().getTime().toString());
 };
 const loadSkinData: LoadDataWithoutAutoRepaired<UserDataSkin> = () => {
   const data = localStorage.getItem(SKIN_KEY);
   if (!data) {
-    saveSkinData({});
+    saveSkinData({}, true);
     return {};
   }
   const finalData = { ...JSON.parse(data) };

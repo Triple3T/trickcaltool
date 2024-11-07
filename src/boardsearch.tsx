@@ -45,7 +45,7 @@ const BoardSearch = () => {
         userDataUnownedProto.o.includes(c)
       )
     );
-    userdata.nthboard.save({ n: userDataNthBoard });
+    userdata.nthboard.save({ n: userDataNthBoard }, true);
     setOwnedCharas(userDataNthBoard);
     setSkinData(userdata.skin.load());
   }, []);

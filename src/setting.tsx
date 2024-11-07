@@ -55,7 +55,8 @@ const Setting = () => {
     setUserSkinData(userdata.skin.load());
   }, []);
   useEffect(() => {
-    if (Object.keys(userSkinData).length) userdata.skin.save(userSkinData);
+    if (Object.keys(userSkinData).length)
+      userdata.skin.save(userSkinData, true);
   }, [userSkinData]);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.cleaning");

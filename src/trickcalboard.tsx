@@ -92,12 +92,13 @@ interface BoardDataPropsCore {
 type BoardDataProps = BoardDataPropsCore | undefined;
 
 const saveBoardData = (
-  boardData: UserDataBoard & UserDataUnowned & UserDataNthBoard
+  boardData: UserDataBoard & UserDataUnowned & UserDataNthBoard,
+  withoutTimestamp: boolean
 ) => {
   const { b, c, n, o, u, v } = boardData;
-  userdata.board.save({ b, c, v });
-  userdata.nthboard.save({ n });
-  userdata.unowned.save({ o, u });
+  userdata.board.save({ b, c, v }, withoutTimestamp);
+  userdata.nthboard.save({ n }, withoutTimestamp);
+  userdata.unowned.save({ o, u }, withoutTimestamp);
 };
 
 interface BoardDataRestoreAction {
@@ -139,7 +140,7 @@ const boardDataClickActionHandler = (
       u: state.user.u.filter((c) => c !== action.payload.charaName),
       n: { ...state.user.n, [action.payload.charaName]: boardIndex + 1 },
     };
-    saveBoardData(inIfUserData);
+    saveBoardData(inIfUserData, false);
     return {
       ...state,
       isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -183,7 +184,7 @@ const boardDataClickActionHandler = (
       ),
     },
   };
-  saveBoardData(outIfUserData);
+  saveBoardData(outIfUserData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -225,7 +226,7 @@ const boardDataChangeClassificationActionHandler = (
     ...state.user,
     c: action.payload,
   };
-  saveBoardData(userData);
+  saveBoardData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -246,7 +247,7 @@ const boardDataChangeVisibleBoardActionHandler = (
     ...state.user,
     v: action.payload,
   };
-  saveBoardData(userData);
+  saveBoardData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -280,7 +281,7 @@ const boardDataChangeBoardIndexActionHandler = (
       [action.payload.charaName]: action.payload.boardIndex,
     },
   };
-  saveBoardData(userData);
+  saveBoardData(userData, false);
   return {
     ...state,
     isDirty: ((state.isDirty + 1) % 32768) + 65536,
@@ -558,7 +559,7 @@ const TrickcalBoard = () => {
         );
       }
     });
-    saveBoardData(userData);
+    saveBoardData(userData, true);
     const sortedCharaList = [...charaList].sort(
       (a, b) =>
         Number(chara[b].t[userData.c]) - Number(chara[a].t[userData.c]) ||
@@ -610,7 +611,7 @@ const TrickcalBoard = () => {
     setEnableDialog(enabled);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { autoRepaired, ...userDialogData } = userdata.dialog.load();
-    userdata.dialog.save({ ...userDialogData, board: enabled });
+    userdata.dialog.save({ ...userDialogData, board: enabled }, true);
   }, []);
   const saveSelectChara = useCallback(() => {
     setCharaDrawerOpen(false);

@@ -218,7 +218,7 @@ const labDataChangeIndexActionHandler = (
   action: LabDataChangeIndexAction
 ): LabDataProps => {
   const { indexDepth1, indexDepth2 } = action.payload;
-  userdata.lab.save({ 1: indexDepth1, 2: indexDepth2 });
+  userdata.lab.save({ 1: indexDepth1, 2: indexDepth2 }, false);
   const currentLab = { indexDepth1, indexDepth2 };
   const effectTotal = reduceEffectTotal(currentLab);
   const materialRemain = reduceMaterialRemain(currentLab);
@@ -262,13 +262,16 @@ const labDataChangeMyHomeLevelActionHandler = (
     ...state.myHomeLevels,
     [target]: [...targetLevel],
   };
-  userdata.myhome.save({
-    l: myHomeLevelsAfter.lab,
-    r: myHomeLevelsAfter.restaurant,
-    m: myHomeLevelsAfter.myhome,
-    s: myHomeLevelsAfter.schedule,
-    a: myHomeLevelsAfter.archive,
-  });
+  userdata.myhome.save(
+    {
+      l: myHomeLevelsAfter.lab,
+      r: myHomeLevelsAfter.restaurant,
+      m: myHomeLevelsAfter.myhome,
+      s: myHomeLevelsAfter.schedule,
+      a: myHomeLevelsAfter.archive,
+    },
+    false
+  );
   const labMaterialRemain = myhomeupgrade.l
     .slice(myHomeLevelsAfter.lab[0], myHomeLevelsAfter.lab[1])
     .reduce(materialObjectMerge, { g: 0 });
@@ -316,9 +319,12 @@ const labDataChangeCollectionActionHandler = (
   const collectionProducible = state.collectionProducible.map((v) =>
     v.id === id ? { ...v, collected } : v
   );
-  userdata.collection.save({
-    c: collectionProducible.filter((v) => v.collected).map((v) => v.id),
-  });
+  userdata.collection.save(
+    {
+      c: collectionProducible.filter((v) => v.collected).map((v) => v.id),
+    },
+    false
+  );
   const remainingCollectionProducible = collectionProducible.filter(
     (v) => !v.collected
   );

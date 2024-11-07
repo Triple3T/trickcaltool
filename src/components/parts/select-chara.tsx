@@ -106,7 +106,7 @@ const SelectChara = ({
 
   const setToUserData = useCallback((u: UserDataUnowned | undefined) => {
     if (!u) return;
-    userdata.unowned.save(u);
+    userdata.unowned.save(u, false);
   }, []);
 
   useEffect(() => {
