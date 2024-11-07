@@ -934,6 +934,41 @@
                 "h":[100,108,116,124,132],
                 "v":[135,145,155,165,175]
             }
+        },
+        "26":{
+            "b":[
+                {"c":"Polan","b":40},
+                {"c":"Ner","b":30},
+                {"c":"Erpin","b":30},
+                {"c":"Shoupan","b":30},
+                {"c":"Ashur","b":30},
+                {"c":"Lethe","b":30},
+                {"c":"Canta","b":30},
+                {"c":"Silphir","b":30},
+                {"c":"Beni","b":20},
+                {"c":"Sari","b":20}
+            ],
+            "c":0,
+            "s":[
+                {"i":"FigureL35","c":"collection","n":1,"l":1,"p":1800,"r":{"s":"Yellow"}},
+                {"i":"charaLicense","c":"themeevent.shop","a":{"0":"Polan"},"n":1,"l":10,"p":400,"r":{"s":"LightGreen"}},
+                {"i":"crayon3","c":"themeevent.shop","n":1,"l":10,"p":600,"r":{"s":"Purple"}},
+                {"i":"crayon4","c":"themeevent.shop","n":1,"l":4,"p":1600,"r":{"s":"Yellow"}},
+                {"i":"currency0008","c":"themeevent.shop","n":100000,"l":10,"p":500,"r":{"s":"Gold"}},
+                {"i":"gachaTicketHero","c":"themeevent.shop","n":1,"l":10,"p":200,"r":{"s":"Yellow"}},
+                {"i":"gachaTicketCard","c":"themeevent.shop","n":1,"l":10,"p":200,"r":{"s":"Yellow"}},
+                {"i":"currency0047","c":"themeevent.shop","n":210,"l":4,"p":420,"r":{"s":"Yellow"}},
+                {"i":"Equip_EnhanceStone3","c":"themeevent.shop","n":1,"l":6,"p":300,"r":{"s":"Blue"}},
+                {"i":"MadeLow8","c":"material","n":1,"l":30,"p":300,"r":{"s":"Green"}},
+                {"i":"MadeLow10","c":"material","n":1,"l":30,"p":300,"r":{"s":"Green"}},
+                {"i":"currency0008","c":"themeevent.shop","n":10000,"l":-1,"p":250,"r":{"s":"Gold"}}
+            ],
+            "f":{
+                "l":false,
+                "n":[[19,22],[21,24],[23,26],[25,28],[27,30],[28,32],[30,34],[32,36],[34,38],[36,40]],
+                "h":[40,44,48,52,56,60,64,68,72,76],
+                "v":[55,60,65,70,75,80,85,90,95,100]
+            }
         }
     }
 }
