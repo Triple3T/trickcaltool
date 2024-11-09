@@ -45,6 +45,7 @@ import chara from "@/data/chara";
 import lifeskill from "@/data/lifeskill";
 import material from "@/data/material";
 import task from "@/data/task";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 interface IComboboxOuterProp {
   value: string;
@@ -291,29 +292,115 @@ const TaskCombobox = ({ value, onChange }: IComboboxOuterProp) => {
     </Popover>
   );
 };
+const MaterialCombobox = ({ value, onChange }: IComboboxOuterProp) => {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [v, setV] = useState(value);
+  useEffect(() => {
+    setV(value ? t(`material.${value}`) : "");
+  }, [t, value]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-60 justify-between font-onemobile"
+        >
+          {v ? v : t("ui.tasksearch.selectMaterial")}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-60 md:w-96 p-0 font-onemobile">
+        <Command
+          filter={(value, search) =>
+            value.includes(search) || icSearch(value, search) ? 1 : 0
+          }
+        >
+          <CommandInput
+            placeholder={t("ui.tasksearch.searchMaterial")}
+            className="h-9"
+          />
+          <CommandEmpty>{t("ui.tasksearch.materialNotFound")}</CommandEmpty>
+          <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
+            <CommandList>
+              <CommandGroup className="[&_[cmdk-group-items]]:grid [&_[cmdk-group-items]]:grid-cols-3 md:[&_[cmdk-group-items]]:grid-cols-5 [&_[cmdk-group-items]]:gap-1 p-2">
+                {Object.entries(material.m)
+                  .filter(([, materialInfo]) => materialInfo.g)
+                  .map(([materialId, materialInfo]) => {
+                    const selected = v === t(`material.${materialId}`);
+                    return (
+                      <CommandItem
+                        key={materialId}
+                        value={t(`material.${materialId}`)}
+                        onSelect={(currentValue) => {
+                          setV(currentValue === v ? "" : currentValue);
+                          onChange(currentValue === v ? "" : materialId);
+                          setOpen(false);
+                        }}
+                      >
+                        <div className="w-full h-full relative flex flex-col items-center justify-start">
+                          <ItemSlot
+                            rarityInfo={material.r[materialInfo.r]}
+                            item={materialId}
+                            size={3}
+                          />
+                          <div className="text-sm text-center">
+                            {t(`material.${materialId}`)}
+                          </div>
+                          {selected && (
+                            <div className="h-6 w-6 p-1 absolute -top-0.5 -right-1 rounded-full bg-slate-100/80 dark:bg-slate-900/80">
+                              <Check className="w-full h-full" />
+                            </div>
+                          )}
+                        </div>
+                      </CommandItem>
+                    );
+                  })}
+              </CommandGroup>
+            </CommandList>
+          </ScrollArea>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 const TaskSearch = () => {
   const { t } = useTranslation();
   const [selectedChara, setSelectedChara] = useState("");
   const [selectedLifeskill, setSelectedLifeskill] = useState("");
   const [selectedTask, setSelectedTask] = useState("");
+  const [selectedMaterial, setSelectedMaterial] = useState("");
   const [bannedIndex, setBannedIndex] = useState<number[]>([]);
   const searchChara = useCallback((charaId: string) => {
     setSelectedChara(charaId);
     setSelectedLifeskill("");
     setSelectedTask("");
+    setSelectedMaterial("");
     setBannedIndex([]);
   }, []);
   const searchLifeskill = useCallback((lifeskillId: string) => {
     setSelectedChara("");
     setSelectedLifeskill(lifeskillId);
     setSelectedTask("");
+    setSelectedMaterial("");
     setBannedIndex([]);
   }, []);
   const searchTask = useCallback((taskId: string) => {
     setSelectedChara("");
     setSelectedLifeskill("");
     setSelectedTask(taskId);
+    setSelectedMaterial("");
+    setBannedIndex([]);
+  }, []);
+  const searchMaterial = useCallback((materialId: string) => {
+    setSelectedChara("");
+    setSelectedLifeskill("");
+    setSelectedTask("");
+    setSelectedMaterial(materialId);
     setBannedIndex([]);
   }, []);
 
@@ -322,13 +409,17 @@ const TaskSearch = () => {
       <div className="w-full h-4" />
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
-          <div className="flex flex-col sm:flex-row p-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 p-2 gap-2">
             <CharacterCombobox value={selectedChara} onChange={searchChara} />
             <LifeskillCombobox
               value={selectedLifeskill}
               onChange={searchLifeskill}
             />
             <TaskCombobox value={selectedTask} onChange={searchTask} />
+            <MaterialCombobox
+              value={selectedMaterial}
+              onChange={searchMaterial}
+            />
           </div>
           {selectedChara && (
             <div className="flex flex-col sm:flex-row gap-4">
@@ -425,7 +516,7 @@ const TaskSearch = () => {
             </div>
           )}
           {selectedTask && (
-            <div className="flex flex-col md:flex-row items-center justify-center md:justify-evenly">
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-evenly p-4 gap-4">
               <div className="w-64 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border">
                 <div className="pl-2 mb-1">
                   <div className="pr-2 pb-2 pt-px bg-contain bg-no-repeat bg-center bg-task-title">
@@ -561,16 +652,53 @@ const TaskSearch = () => {
               </Accordion>
             </div>
           )}
+          {selectedMaterial && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-2">
+                <ItemSlot
+                  rarityInfo={material.r[material.m[selectedMaterial].r]}
+                  item={selectedMaterial}
+                  size={3}
+                />
+                <div className="text-2xl text-right py-2">
+                  {t(`material.${selectedMaterial}`)}
+                </div>
+              </div>
+              <div>
+                <div className="text-left p-1">
+                  {t("ui.tasksearch.materialUsage")}
+                </div>
+                <div className="flex flex-row gap-1 flex-wrap py-1">
+                  {Object.entries(material.m)
+                    .filter(([, materialInfo]) =>
+                      materialInfo.m
+                        ? Object.keys(materialInfo.m).includes(selectedMaterial)
+                        : false
+                    )
+                    .map(([materialId]) => {
+                      return (
+                        <ItemSlot
+                          key={materialId}
+                          rarityInfo={material.r[material.m[materialId].r]}
+                          item={materialId}
+                          size={3}
+                        />
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          )}
           {!selectedChara &&
             !selectedLifeskill &&
             !selectedTask &&
+            !selectedMaterial &&
             t("ui.tasksearch.needToSelect")}
         </div>
       </Card>
-      <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
-        {!selectedLifeskill &&
-          !selectedTask &&
-          Object.keys(task.t).map((taskId) => {
+      {!selectedLifeskill && !selectedTask && !selectedMaterial && (
+        <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
+          {Object.keys(task.t).map((taskId) => {
             const currentTask = task.t[taskId];
             if (
               selectedChara &&
@@ -656,43 +784,140 @@ const TaskSearch = () => {
               </div>
             );
           })}
-        {selectedLifeskill &&
-          Object.entries(chara)
-            .filter(
-              ([charaId, v]) =>
-                v.t[1] !== "1" &&
-                lifeskill.c[charaId].s.includes(Number(selectedLifeskill))
-            )
-            .sort(([a], [b]) => {
-              return (
-                (lifeskill.c[a].s.indexOf(Number(selectedLifeskill)) && 1) -
-                  (lifeskill.c[b].s.indexOf(Number(selectedLifeskill)) && 1) ||
-                t(`chara.${a}`).localeCompare(t(`chara.${b}`))
-              );
-            })
-            .map(([charaId]) => {
-              const cls = lifeskill.c[charaId].s;
-              return (
-                <Suspense
-                  key={charaId}
-                  fallback={
-                    <Loader2
-                      className="w-4 h-4 animate-spin absolute right-0"
-                      strokeWidth={3}
-                    />
-                  }
-                >
-                  <CharaWithLifeskill
-                    charaId={charaId}
-                    lifeskills={cls}
-                    selectedLifeskills={[Number(selectedLifeskill)]}
-                    searchChara={searchChara}
-                  />
-                </Suspense>
-              );
-            })}
-        {selectedTask &&
-          Object.entries(chara)
+        </div>
+      )}
+      {selectedLifeskill && (
+        <div className="font-onemobile flex flex-col p-4">
+          <Tabs defaultValue="Chara">
+            <TabsList className="flex">
+              <TabsTrigger value="Chara" className="flex-1">
+                {t("ui.tasksearch.matchCharacter")}
+              </TabsTrigger>
+              <TabsTrigger value="Task" className="flex-1">
+                {t("ui.tasksearch.matchTask")}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="Chara"
+              className="flex flex-wrap mt-6 gap-6 justify-center"
+            >
+              {Object.entries(chara)
+                .filter(
+                  ([charaId, v]) =>
+                    v.t[1] !== "1" &&
+                    lifeskill.c[charaId].s.includes(Number(selectedLifeskill))
+                )
+                .sort(([a], [b]) => {
+                  return (
+                    (lifeskill.c[a].s.indexOf(Number(selectedLifeskill)) && 1) -
+                      (lifeskill.c[b].s.indexOf(Number(selectedLifeskill)) &&
+                        1) || t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                  );
+                })
+                .map(([charaId]) => {
+                  const cls = lifeskill.c[charaId].s;
+                  return (
+                    <Suspense
+                      key={charaId}
+                      fallback={
+                        <Loader2
+                          className="w-4 h-4 animate-spin absolute right-0"
+                          strokeWidth={3}
+                        />
+                      }
+                    >
+                      <CharaWithLifeskill
+                        charaId={charaId}
+                        lifeskills={cls}
+                        selectedLifeskills={[Number(selectedLifeskill)]}
+                        searchChara={searchChara}
+                      />
+                    </Suspense>
+                  );
+                })}
+            </TabsContent>
+            <TabsContent
+              value="Task"
+              className="flex flex-wrap mt-6 gap-6 justify-center"
+            >
+              {Object.entries(task.t)
+                .filter(([, taskInfo]) =>
+                  taskInfo.s.includes(Number(selectedLifeskill))
+                )
+                .map(([taskId, taskInfo]) => {
+                  return (
+                    <div
+                      key={taskId}
+                      className="w-72 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border"
+                    >
+                      <div className="pl-2 mb-1">
+                        <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
+                          <div className="text-xl">{t(`task.${taskId}`)}</div>
+                        </div>
+                      </div>
+                      <div className="w-full relative aspect-[254/176]">
+                        <img
+                          className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
+                          src={`/tasks/Img_${taskId}_Back.png`}
+                        />
+                        {taskInfo.f && (
+                          <img
+                            className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
+                            src={`/tasks/Img_${taskId}_Front.png`}
+                            style={{ width: `${taskInfo.f}%` }}
+                          />
+                        )}
+                        <div className="absolute bottom-0 left-0 flex items-end">
+                          <LifeskillIcon
+                            id={taskInfo.s[0]}
+                            active={taskInfo.s[0] === Number(selectedLifeskill)}
+                            additionalClassName="scale-125"
+                          />
+                          {taskInfo.s.slice(1).map((lifeskillId, index) => {
+                            return (
+                              <LifeskillIcon
+                                key={index}
+                                id={lifeskillId}
+                                active={
+                                  lifeskillId === Number(selectedLifeskill)
+                                }
+                                size="small"
+                                additionalClassName="-mx-1"
+                              />
+                            );
+                          })}
+                        </div>
+                        <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-taskcard-border rounded-sm bg-taskcard">
+                          <Search
+                            className="w-3 h-3"
+                            strokeWidth={3}
+                            onClick={() => searchTask(taskId)}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
+                        {taskInfo.m.map((materialId, index) => {
+                          const currrentMaterial = material.m[materialId];
+                          return (
+                            <ItemSlot
+                              key={index}
+                              rarityInfo={material.r[currrentMaterial.r]}
+                              item={materialId}
+                              size={3.5}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+            </TabsContent>
+          </Tabs>
+        </div>
+      )}
+      {selectedTask && (
+        <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
+          {Object.entries(chara)
             .filter(
               ([charaId, v]) =>
                 v.t[1] !== "1" &&
@@ -731,7 +956,186 @@ const TaskSearch = () => {
                 </Suspense>
               );
             })}
-      </div>
+        </div>
+      )}
+      {selectedMaterial && (
+        <div className="font-onemobile flex flex-col p-4">
+          <Tabs defaultValue="Chara">
+            <TabsList className="flex">
+              <TabsTrigger value="Chara" className="flex-1">
+                {t("ui.tasksearch.matchCharacter")}
+              </TabsTrigger>
+              <TabsTrigger value="Task" className="flex-1">
+                {t("ui.tasksearch.matchTask")}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent
+              value="Chara"
+              className="flex flex-wrap mt-6 gap-6 justify-center"
+            >
+              {(() => {
+                const taskLineup: Array<
+                  [string, { score: number; skillset: number[] }]
+                > = Object.entries(task.t)
+                  .filter(([, taskInfo]) =>
+                    taskInfo.m.includes(selectedMaterial)
+                  )
+                  .map(([taskId, taskInfo]) => [
+                    taskId,
+                    {
+                      score: [4, 2, 1][taskInfo.m.indexOf(selectedMaterial)],
+                      skillset: taskInfo.s,
+                    },
+                  ]);
+                const skillLineup = [
+                  ...new Set(
+                    taskLineup.map(([, { skillset }]) => skillset).flat()
+                  ),
+                ];
+                return Object.entries(chara)
+                  .filter(
+                    ([charaId, v]) =>
+                      v.t[1] !== "1" &&
+                      lifeskill.c[charaId].s.some((charaSkillEntry) =>
+                        skillLineup.includes(charaSkillEntry)
+                      )
+                  )
+                  .sort(([a], [b]) => {
+                    const getFinalScore = (charaId: string) => {
+                      const [charaMainSkill, ...charaSubSkills] =
+                        lifeskill.c[charaId].s;
+                      return taskLineup
+                        .map(([, { score, skillset }]) => {
+                          const [taskMainSkill, ...taskSubSkills] = skillset;
+                          const bothMainSkillScore =
+                            skillset[0] === charaMainSkill ? 7 : 0;
+                          const charaMainSkillScore = taskSubSkills.includes(
+                            charaMainSkill
+                          )
+                            ? 6
+                            : 0;
+                          const taskMainSkillScore = charaSubSkills.includes(
+                            taskMainSkill
+                          )
+                            ? 4
+                            : 0;
+                          const bothSubSkillScore =
+                            taskSubSkills.filter((s) =>
+                              charaSubSkills.includes(s)
+                            ).length * 3;
+                          return (
+                            score *
+                            (bothMainSkillScore +
+                              charaMainSkillScore +
+                              taskMainSkillScore +
+                              bothSubSkillScore)
+                          );
+                        })
+                        .reduce((p, c) => p + c, 0);
+                    };
+                    return (
+                      getFinalScore(b) - getFinalScore(a) ||
+                      t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                    );
+                  })
+                  .map(([charaId]) => {
+                    const cls = lifeskill.c[charaId].s;
+                    return (
+                      <Suspense
+                        key={charaId}
+                        fallback={
+                          <Loader2
+                            className="w-4 h-4 animate-spin absolute right-0"
+                            strokeWidth={3}
+                          />
+                        }
+                      >
+                        <CharaWithLifeskill
+                          charaId={charaId}
+                          lifeskills={cls}
+                          selectedLifeskills={skillLineup}
+                          searchChara={searchChara}
+                        />
+                      </Suspense>
+                    );
+                  });
+              })()}
+            </TabsContent>
+            <TabsContent
+              value="Task"
+              className="flex flex-wrap mt-6 gap-6 justify-center"
+            >
+              {Object.entries(task.t)
+                .filter(([, taskInfo]) =>
+                  taskInfo.m.includes(selectedMaterial)
+                )
+                .map(([taskId, taskInfo]) => {
+                  return (
+                    <div
+                      key={taskId}
+                      className="w-72 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border"
+                    >
+                      <div className="pl-2 mb-1">
+                        <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
+                          <div className="text-xl">{t(`task.${taskId}`)}</div>
+                        </div>
+                      </div>
+                      <div className="w-full relative aspect-[254/176]">
+                        <img
+                          className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
+                          src={`/tasks/Img_${taskId}_Back.png`}
+                        />
+                        {taskInfo.f && (
+                          <img
+                            className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
+                            src={`/tasks/Img_${taskId}_Front.png`}
+                            style={{ width: `${taskInfo.f}%` }}
+                          />
+                        )}
+                        <div className="absolute bottom-0 left-0 flex items-end">
+                          <LifeskillIcon
+                            id={taskInfo.s[0]}
+                            additionalClassName="scale-125"
+                          />
+                          {taskInfo.s.slice(1).map((lifeskillId, index) => {
+                            return (
+                              <LifeskillIcon
+                                key={index}
+                                id={lifeskillId}
+                                size="small"
+                                additionalClassName="-mx-1"
+                              />
+                            );
+                          })}
+                        </div>
+                        <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-taskcard-border rounded-sm bg-taskcard">
+                          <Search
+                            className="w-3 h-3"
+                            strokeWidth={3}
+                            onClick={() => searchTask(taskId)}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
+                        {taskInfo.m.map((materialId, index) => {
+                          const currrentMaterial = material.m[materialId];
+                          return (
+                            <ItemSlot
+                              key={index}
+                              rarityInfo={material.r[currrentMaterial.r]}
+                              item={materialId}
+                              size={3.5}
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+            </TabsContent>
+          </Tabs>
+        </div>
+      )}
     </>
   );
 };
