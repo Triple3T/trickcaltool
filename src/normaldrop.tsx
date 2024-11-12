@@ -213,7 +213,7 @@ const NormalDrop = () => {
   const [errorFlag, setErrorFlag] = useState<boolean | undefined>(undefined);
   useEffect(() => {
     if (selectedEquip) {
-      setEquips((prev) => [...prev, selectedEquip]);
+      setEquips((prev) => [...new Set([...prev, selectedEquip])]);
       setSelectedEquip("");
     }
   }, [selectedEquip]);
