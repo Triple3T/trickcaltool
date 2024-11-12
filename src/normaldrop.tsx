@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronsUpDown, Check, X } from "lucide-react";
+import { ChevronsUpDown, Check, X, Dot } from "lucide-react";
 import { cn } from "./lib/utils";
 import {
   Accordion,
@@ -233,6 +233,18 @@ const NormalDrop = () => {
   useEffect(() => {
     fetchDrop();
   }, [fetchDrop]);
+  const getStageExpectation = useCallback(
+    (stageInfo: [string, string[]]) => {
+      const [stage, drops] = stageInfo;
+      return drops
+        .filter((d) => equips.includes(d))
+        .map((drop) =>
+          Number((/(\d+)%/.exec(probs[stage]?.p?.[drop]) ?? ["0%", "0"])[1])
+        )
+        .reduce((acc, cur) => acc + cur, 0);
+    },
+    [equips, probs]
+  );
   if (typeof errorFlag === "undefined") {
     return (
       <div className="font-onemobile flex flex-col mt-16 justify-center items-center">
@@ -304,21 +316,24 @@ const NormalDrop = () => {
       <div className="w-full font-onemobile">
         <div className="flex flex-row gap-2 flex-wrap">
           {Object.entries(dropTable)
-            .sort(
-              ([, drops1], [, drops2]) =>
-                drops2.filter((d) => equips.includes(d)).length -
-                drops1.filter((d) => equips.includes(d)).length
-            )
+            .sort((stage1, stage2) => {
+              return getStageExpectation(stage2) - getStageExpectation(stage1);
+            })
             .map(([stage, drops]) => {
               if (equips.length && !drops.some((d) => equips.includes(d)))
                 return null;
+              const expectation = getStageExpectation([stage, drops]);
               return (
                 <Card key={stage} className="p-4">
                   <div className="flex gap-2 items-baseline">
                     <div className="text-lg text-left">{stage}</div>
-                    <div className="opacity-75">
-                      {drops.filter((d) => equips.includes(d)).length}개 일치
-                    </div>
+                    {equips.length > 0 && (
+                      <div className="opacity-75">
+                        {drops.filter((d) => equips.includes(d)).length}개 일치
+                        <Dot className="inline-block" />
+                        기댓값 {(expectation / 100).toFixed(2)}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex flex-row gap-2">
