@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronsUpDown, Check } from "lucide-react";
+import { ChevronsUpDown, Check, X } from "lucide-react";
 import { cn } from "./lib/utils";
 import {
   Accordion,
@@ -27,6 +27,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ItemSlot from "@/components/parts/item-slot";
 import Loading from "@/components/common/loading";
 import icSearch from "@/lib/initialConsonantSearch";
+import rankClassNames from "@/utils/rankClassNames";
 
 import equip from "@/data/equip";
 
@@ -263,7 +264,7 @@ const NormalDrop = () => {
                   onChange={setSelectedEquip}
                 />
               </div>
-              <div>
+              <div className="mt-2">
                 {equips.map((equip) => {
                   const [equipType, equipPos, equipNum] = equip.split(".");
                   const equipLocKey = idToLocKey(equip);
@@ -273,7 +274,13 @@ const NormalDrop = () => {
                     1
                   )}${equipNum}.png`;
                   return (
-                    <div key={equip} className="flex items-center gap-2">
+                    <div
+                      key={equip}
+                      className={cn(
+                        "flex items-center gap-2 w-max pl-2 pr-1 py-0.5 m-1 rounded-full",
+                        rankClassNames[Number(equipNum.charAt(0)) - 1][0]
+                      )}
+                    >
                       <img src={fileName} alt="" className="w-6 h-6" />
                       {t(`equip.${equipLocKey}`)}
                       <div
@@ -281,7 +288,10 @@ const NormalDrop = () => {
                           setEquips((prev) => prev.filter((v) => v !== equip))
                         }
                       >
-                        X
+                        <X
+                          className="p-0.5 w-5 h-5 rounded-full text-background bg-foreground opacity-75 cursor-pointer"
+                          strokeWidth={3}
+                        />
                       </div>
                     </div>
                   );
