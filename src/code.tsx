@@ -15,12 +15,10 @@ const Code = () => {
 
   useEffect(() => {
     if (requestToken && searchParams && searchParams.get("code")) {
-      fetch(
-        `https://api.triple-lab.com/api/v1/tr/code?code=${searchParams.get(
-          "code"
-        )}`,
-        { credentials: "include" }
-      ).then(() => {
+      const code = searchParams.get("code");
+      fetch(`https://api.triple-lab.com/api/v1/tr/code?code=${code}`, {
+        credentials: "include",
+      }).then(() => {
         requestToken(
           //callback
           () => {
