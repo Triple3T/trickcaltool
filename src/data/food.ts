@@ -8,6 +8,7 @@ export default food as {
       t?: number;
       r: number;
       u?: number;
+      d?: number;
     };
   };
   c: { [key: string]: { "3": number[]; "1": number[]; "5": number[] } };
