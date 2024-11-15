@@ -1868,7 +1868,7 @@ i18n
               title: "트릭컬 노트",
               description: "내 성장 현황 메모하기",
               newVersionDetected: "새 버전이 나왔어요!",
-              reportBoard: "보드판 스크린샷을 제보해 주세요",
+              surveyParticipate: "설문조사에 참여해 주세요",
               theme: {
                 title: "테마",
                 light: "라이트",
