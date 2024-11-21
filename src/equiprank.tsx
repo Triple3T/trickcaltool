@@ -102,6 +102,7 @@ interface RankDataPropsCore {
   targetStat: StatType[]; // 스탯 종류
   minRank: number;
   maxRank: number;
+  totalRank: number;
   sortAndFilter: number[][]; // 정렬 및 필터
   dirty: boolean;
   isDirty: number;
@@ -136,6 +137,7 @@ const rankDataCharaRankModifyActionHandler = (
   action: RankDataCharaRankModify
 ) => {
   const { chara, rank } = action.payload;
+  const totalDifference = state.user.r[chara] - rank;
   const userData = {
     ...state.user,
     r: {
@@ -155,6 +157,7 @@ const rankDataCharaRankModifyActionHandler = (
         rank,
       },
     },
+    totalRank: state.totalRank - totalDifference,
   };
 };
 
@@ -231,6 +234,10 @@ const rankDataApplyMinMaxActionHandler = (
     ),
     s: [state.minRank, state.maxRank],
   };
+  const totalRank = Object.values(userData.r).reduce(
+    (acc, cur) => acc + cur,
+    0
+  );
   saveUserData(userData, false);
   return {
     ...state,
@@ -247,6 +254,7 @@ const rankDataApplyMinMaxActionHandler = (
         ];
       })
     ),
+    totalRank,
     dirty: false,
   };
 };
@@ -412,14 +420,17 @@ const EquipRank = () => {
     );
     const rankStat: RankDataPropsCore["rankStat"] = {};
     const charas: RankDataPropsCore["charas"] = {};
+    let totalRank = 0;
     userData.o.forEach((c) => {
+      const rank = userData.r[c];
       charas[c] = {
-        rank: userData.r[c],
+        rank,
         unowned: false,
         clf: clonefactory.l[clonefactory.f].flat().includes(c)
           ? clonefactory.l[clonefactory.f].findIndex((a) => a.includes(c))
           : false,
       };
+      totalRank += rank;
     });
     sortedCharaList.forEach((chara) => {
       const rankStatList = rankStatLists[eqrank.c[chara].r];
@@ -463,6 +474,7 @@ const EquipRank = () => {
         minRank: userData.s[0] || 1,
         // maxRank: userData.s[1] || MAX_RANK,
         maxRank: MAX_RANK,
+        totalRank,
         sortAndFilter: userData.f,
         dirty,
         isDirty: dirtyFlag ? 65536 : 0,
@@ -1308,8 +1320,15 @@ const EquipRank = () => {
             <TabsContent value="rankView">
               <div className="flex flex-col gap-4">
                 <div>
-                  <div className="text-xl w-full text-left">
-                    {t("ui.equiprank.rankProgressTitle")}
+                  <div className="flex flex-row w-full gap-2 justify-between items-end">
+                    <div className="text-xl flex-auto text-left">
+                      {t("ui.equiprank.rankProgressTitle")}
+                    </div>
+                    <div className="flex-auto text-right text-sm opacity-80">
+                      {t("ui.equiprank.rankTotal", {
+                        0: rankData.totalRank.toLocaleString(),
+                      })}
+                    </div>
                   </div>
                   <div className="flex flex-col gap-1 items-stretch w-full">
                     {/* <div></div> */}

@@ -2048,6 +2048,7 @@ i18n
               rankMinMax: "최소/최대 랭크",
               applyMinMax: "최소/최대 랭크 적용",
               rankProgressTitle: "진행 현황",
+              rankTotal: "전체 사도 랭크 {{0}}",
               aboutApplyMinMax:
                 "붉은 색으로 표시된 랭크가 모두 맞는지 확인 후,\n최소/최대 랭크 적용 버튼을 눌러주세요.",
               aboutSortingCriteria:
