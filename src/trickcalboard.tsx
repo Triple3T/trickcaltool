@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
+import { CircleArrowDown, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/contexts/AuthContext";
 import {
@@ -360,6 +360,14 @@ const BoardStatStatistic = ({
 }) => {
   const { t } = useTranslation();
   const statType = StatType[stat as keyof typeof StatType];
+  const xref = board.s
+    .map<[number[], number]>((v, i) => [v, i])
+    .filter(([s]) => s.includes(statType))
+    .map(([s, i]) => [
+      i,
+      board.b[i][s.indexOf(statType)].reduce((a, b) => a + b, 0),
+    ])
+    .sort((a, b) => b[1] - a[1])[0][0];
   const statStatistic = Object.entries(data).map(([b, d]) => {
     const boardType = BoardType[b as keyof typeof BoardType];
     const statMult = board.b[boardType][board.s[boardType].indexOf(statType)];
@@ -401,6 +409,21 @@ const BoardStatStatistic = ({
               .toLocaleString()}
             %
           </div>
+          <CircleArrowDown
+            className="w-4 h-4 my-1 ml-1 -mr-1"
+            onClick={() => {
+              const element = document.querySelector(
+                `#statcard${BoardType[xref]}`
+              );
+              if (!element) return;
+              element.scrollIntoView({
+                block: "start",
+                inline: "nearest",
+                behavior: "smooth",
+              });
+              element.scrollBy(0, -50);
+            }}
+          />
         </div>
         <div className="bg-gradient-to-r from-transparent via-[#e9f5cf] dark:via-[#169a2d] via-[28px] to-[#e9f5cf] dark:to-[#169a2d] py-px pr-2.5 pl-8 rounded-r-[11px] flex flex-row gap-1 text-sm dark:contrast-125 dark:brightness-80">
           {statCheckedTotal.max.map((m, i) => {
@@ -1021,7 +1044,8 @@ const TrickcalBoard = () => {
             return (
               <Card
                 key={bt}
-                className="p-4 object-cover max-w-full break-inside-avoid mt-0 mb-4"
+                id={`statcard${bt}`}
+                className="p-4 object-cover max-w-full break-inside-avoid mt-0 mb-4 scroll-mt-14"
               >
                 {/* title bar */}
                 <div className="flex gap-2 items-center">
