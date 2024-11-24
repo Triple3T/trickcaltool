@@ -368,6 +368,7 @@ const BoardStatStatistic = ({
       board.b[i][s.indexOf(statType)].reduce((a, b) => a + b, 0),
     ])
     .sort((a, b) => b[1] - a[1])[0][0];
+  const elementQuery = `#statcard${BoardType[xref]}`;
   const statStatistic = Object.entries(data).map(([b, d]) => {
     const boardType = BoardType[b as keyof typeof BoardType];
     const statMult = board.b[boardType][board.s[boardType].indexOf(statType)];
@@ -410,11 +411,14 @@ const BoardStatStatistic = ({
             %
           </div>
           <CircleArrowDown
-            className="w-4 h-4 my-1 ml-1 -mr-1"
+            className={cn(
+              "w-4 h-4 my-1 ml-1 -mr-1",
+              document.querySelector(elementQuery)
+                ? "cursor-pointer"
+                : "opacity-60"
+            )}
             onClick={() => {
-              const element = document.querySelector(
-                `#statcard${BoardType[xref]}`
-              );
+              const element = document.querySelector(elementQuery);
               if (!element) return;
               element.scrollIntoView({
                 block: "start",
