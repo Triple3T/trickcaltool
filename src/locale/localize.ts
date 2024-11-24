@@ -2166,6 +2166,7 @@ i18n
               mostFavoriteFood: "특히 좋아하는 음식",
               favoriteFood: "좋아하는 음식",
               dislikeFood: "싫어하는 음식",
+              indifferenceFood: "그럭저럭인 음식",
               mostLovingCharacter: "특히 좋아하는 사도",
               lovingCharacter: "좋아하는 사도",
               hatingCharacter: "싫어하는 사도",

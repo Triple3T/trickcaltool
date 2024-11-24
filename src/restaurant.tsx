@@ -588,6 +588,29 @@ const Restaurant = () => {
                   <ScrollBar orientation="horizontal" />
                 </ScrollArea>
               </div>
+              {showValue && (
+                <div className="w-full">
+                  <div>{t("ui.restaurant.indifferenceFood")}</div>
+                  <div className="w-full flex flex-row flex-wrap justify-stretch items-center p-2 gap-2 rounded-lg bg-background/80 dark:bg-background/50">
+                    {food.r.map((v, i) => {
+                      return (
+                        <div
+                          key={i}
+                          className="flex flex-row flex-1 items-center gap-0.5 justify-center"
+                        >
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: v.b }}
+                          />
+                          <div className="text-sm text-center">
+                            +{food.p[i][1] + 1}~{food.p[i][1] + 3}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
