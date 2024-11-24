@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import "./App.css";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
