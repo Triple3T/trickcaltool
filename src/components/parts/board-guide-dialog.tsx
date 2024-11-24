@@ -8,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Checkbox } from "../ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -20,10 +21,26 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 import chara from "@/data/chara";
+import { BoardType } from "@/types/enums";
 
-const BoardGuideDialog = ({ onClick }: { onClick: () => void }) => {
+interface BoardGuideDialogProps {
+  onCloseGuide: (arg: { type: "visible"; payload: BoardType[] }) => void;
+  commonProps: BoardType[];
+  criticalResistProp: BoardType;
+  criticalResistDefault: boolean;
+  criticalMultResistProp: BoardType;
+  criticalMultResistDefault: boolean;
+}
+
+const BoardGuideDialog = (props: BoardGuideDialogProps) => {
   const { t } = useTranslation();
   const [randomCharas, setRandomCharas] = useState<string[]>([]);
+  const [showCriticalResist, setShowCriticalResist] = useState(
+    props.criticalResistDefault
+  );
+  const [showCriticalMultResist, setShowCriticalMultResist] = useState(
+    props.criticalMultResistDefault
+  );
   useEffect(() => {
     const charaList = Object.keys(chara);
     const random1 = charaList.splice(
@@ -40,9 +57,16 @@ const BoardGuideDialog = ({ onClick }: { onClick: () => void }) => {
     )[0];
     setRandomCharas([random1, random2, random3]);
   }, []);
+  useEffect(() => {
+    setShowCriticalResist(props.criticalResistDefault);
+  }, [props.criticalResistDefault]);
+  useEffect(() => {
+    setShowCriticalMultResist(props.criticalMultResistDefault);
+  }, [props.criticalMultResistDefault]);
+
   return (
     <Dialog>
-      <DialogTrigger onClick={onClick} asChild>
+      <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="flex-1">
           {t("ui.board.selectBoardTypeRecommended")}
         </Button>
@@ -437,9 +461,55 @@ const BoardGuideDialog = ({ onClick }: { onClick: () => void }) => {
             </Carousel>
           </div>
         </div>
+        <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-1">
+            <Checkbox
+              id="showCriticalResist"
+              checked={showCriticalResist}
+              onCheckedChange={(v) => setShowCriticalResist(Boolean(v))}
+            />
+            <label
+              htmlFor="showCriticalResist"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("ui.board.selectCriticalResist")}
+            </label>
+          </div>
+          <div className="flex flex-row gap-1">
+            <Checkbox
+              id="showCriticalMultResist"
+              checked={showCriticalMultResist}
+              onCheckedChange={(v) => setShowCriticalMultResist(Boolean(v))}
+            />
+            <label
+              htmlFor="showCriticalMultResist"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("ui.board.selectCriticalMultResist")}
+            </label>
+          </div>
+        </div>
         <DialogFooter className="flex-row justify-end">
           <DialogClose asChild>
-            <Button type="submit" variant="default" className="w-max">{t("ui.board.closeGuide")}</Button>
+            <Button
+              type="submit"
+              variant="default"
+              className="w-max"
+              onClick={() =>
+                props.onCloseGuide({
+                  type: "visible",
+                  payload: [
+                    ...props.commonProps,
+                    ...(showCriticalResist ? [props.criticalResistProp] : []),
+                    ...(showCriticalMultResist
+                      ? [props.criticalMultResistProp]
+                      : []),
+                  ],
+                })
+              }
+            >
+              {t("ui.board.closeGuide")}
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

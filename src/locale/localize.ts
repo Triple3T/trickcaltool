@@ -1994,6 +1994,8 @@ i18n
                 "물리 방어력, 마법 방어력은 칠하지 마세요! 칠했다면 보드 초기화 버튼을 눌러 지워 주세요.",
               boardGuide7:
                 "관문은 아직 열지 마세요! 관문을 열지 않고서는 쓸모 없는 스탯만 남아 더 칠할 칸이 없는 경우에만 관문을 열기 시작하세요.",
+              selectCriticalResist: "치명타 저항 할게요",
+              selectCriticalMultResist: "치명 피해 저항 할게요",
               closeGuide: "알겠어요",
               mainClassification: "대분류",
               subClassification: "소분류",

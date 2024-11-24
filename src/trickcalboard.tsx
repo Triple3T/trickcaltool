@@ -696,16 +696,36 @@ const TrickcalBoard = () => {
                       {t("ui.board.selectBoardTypeAll")}
                     </Button>
                     <BoardGuideDialog
-                      onClick={() =>
-                        dispatchBoardData({
-                          type: "visible",
-                          payload: [
-                            BoardType.AttackBoth,
-                            BoardType.CriticalMult,
-                            BoardType.CriticalRate,
-                            BoardType.Hp,
-                          ],
-                        })
+                      onCloseGuide={dispatchBoardData}
+                      commonProps={[
+                        BoardType.AttackBoth,
+                        BoardType.CriticalMult,
+                        BoardType.CriticalRate,
+                        BoardType.Hp,
+                      ]}
+                      criticalResistProp={BoardType.CriticalResist}
+                      criticalMultResistProp={BoardType.CriticalMultResist}
+                      criticalResistDefault={
+                        (boardData?.visibleBoard.includes(
+                          BoardType.CriticalResist
+                        ) ??
+                          false) &&
+                        !(
+                          boardData?.visibleBoard.includes(
+                            BoardType.CriticalMultResist
+                          ) ?? false
+                        )
+                      }
+                      criticalMultResistDefault={
+                        (boardData?.visibleBoard.includes(
+                          BoardType.CriticalMultResist
+                        ) ??
+                          false) &&
+                        !(
+                          boardData?.visibleBoard.includes(
+                            BoardType.CriticalResist
+                          ) ?? false
+                        )
                       }
                     />
                   </div>
