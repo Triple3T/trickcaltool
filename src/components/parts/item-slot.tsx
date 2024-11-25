@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-interface ItemSlotProps {
+export interface ItemSlotProps {
   rarityInfo: {
     s: string;
     b?: string;
@@ -12,6 +12,7 @@ interface ItemSlotProps {
   size?: number;
   innerSize?: number;
 }
+
 const ItemSlot = ({
   rarityInfo,
   item,

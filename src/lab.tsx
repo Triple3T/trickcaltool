@@ -33,6 +33,7 @@ import material from "@/data/material";
 import { StatType, Race, LabEffectCategory } from "@/types/enums";
 
 import userdata from "@/utils/userdata";
+import ItemSlotWithRecipe from "./components/parts/item-slot-with-recipe";
 // import { UserDataLab } from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
@@ -804,13 +805,25 @@ const Lab = () => {
                         : {},
                     ].reduce(materialObjectMerge, {})
                   ).map(([item, amount]) => {
-                    const rarityInfo = material.r[material.m[item].r];
+                    const itemObject = material.m[item];
+                    const rarityInfo = material.r[itemObject.r];
                     return (
-                      <ItemSlot
+                      <ItemSlotWithRecipe
+                        nameKey={`material.${item}`}
                         rarityInfo={rarityInfo}
                         item={item}
                         amount={amount}
                         key={item}
+                        recipe={
+                          itemObject.m &&
+                          Object.entries(itemObject.m).map(([v, c]) => {
+                            return {
+                              rarityInfo: material.r[material.m[v].r],
+                              item: v,
+                              amount: c,
+                            };
+                          })
+                        }
                       />
                     );
                   })}
