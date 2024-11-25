@@ -850,7 +850,12 @@ const Restaurant = () => {
                 className="bg-foodcard ring-2 ring-foodcard-border rounded-lg p-4 min-w-60 max-w-full flex flex-col sm:flex-row gap-4"
               >
                 <div className="flex flex-row justify-center items-start">
-                  <div className="w-max p-1.5 bg-foodcard-frame relative">
+                  <div
+                    className="w-max p-1.5 bg-foodcard-frame relative"
+                    onClick={() => {
+                      setSelectedChara(c);
+                    }}
+                  >
                     <img
                       src={`/charas/${c}.png`}
                       className="w-48 h-48 bg-restaurant bg-cover bg-no-repeat"
