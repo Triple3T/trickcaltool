@@ -415,7 +415,7 @@ const BoardStatStatistic = ({
               "w-4 h-4 my-1 ml-1 -mr-1",
               document.querySelector(elementQuery)
                 ? "cursor-pointer"
-                : "opacity-60"
+                : "opacity-50"
             )}
             onClick={() => {
               const element = document.querySelector(elementQuery);
@@ -425,7 +425,6 @@ const BoardStatStatistic = ({
                 inline: "nearest",
                 behavior: "smooth",
               });
-              element.scrollBy(0, -50);
             }}
           />
         </div>
