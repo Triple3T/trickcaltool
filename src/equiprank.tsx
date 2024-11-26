@@ -6,7 +6,6 @@ import {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -526,19 +525,17 @@ const EquipRank = () => {
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
 
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const autosaver = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      dispatchRankData({ type: "clean" });
-      if (isReady && googleLinked && autoSave) {
-        autoSave();
-      }
-    }, 500);
-  }, [autoSave, googleLinked, isReady]);
   useEffect(() => {
-    if (rankData && rankData.isDirty) autosaver();
-  }, [autosaver, rankData]);
+    if (rankData && rankData.isDirty) {
+      const timer = setTimeout(() => {
+        dispatchRankData({ type: "clean" });
+        if (isReady && googleLinked && autoSave) {
+          autoSave();
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoSave, googleLinked, isReady, rankData]);
 
   useEffect(() => {
     setBoardStat(getTotalBoardStat());

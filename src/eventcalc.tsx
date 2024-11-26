@@ -5,7 +5,6 @@ import {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -552,43 +551,41 @@ const EventCalc = () => {
     };
   }, [autoCalculatedBonus, eventCalcData]);
 
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const autosaver = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      const {
-        allCleared,
-        customBonus,
-        dailyCompleted,
-        dayCount,
-        possibleChallenge,
-        remainItem,
-        selectedThemeEvent,
-        shopPurchaseCounts,
-        useCustom,
-        timestamp,
-      } = eventCalcData;
-      userdata.eventcalc.save(
-        {
-          a: allCleared,
-          b: customBonus,
-          c: dailyCompleted,
-          d: dayCount,
-          h: possibleChallenge,
-          r: remainItem,
-          e: selectedThemeEvent,
-          s: shopPurchaseCounts,
-          u: useCustom,
-          t: timestamp,
-        },
-        false
-      );
-      dispatchEventCalcData({ type: "clean" });
-    }, 2000);
-  }, [eventCalcData]);
   useEffect(() => {
-    if (eventCalcData && eventCalcData.isDirty) autosaver();
-  }, [autosaver, eventCalcData]);
+    if (eventCalcData && eventCalcData.isDirty) {
+      const timer = setTimeout(() => {
+        const {
+          allCleared,
+          customBonus,
+          dailyCompleted,
+          dayCount,
+          possibleChallenge,
+          remainItem,
+          selectedThemeEvent,
+          shopPurchaseCounts,
+          useCustom,
+          timestamp,
+        } = eventCalcData;
+        userdata.eventcalc.save(
+          {
+            a: allCleared,
+            b: customBonus,
+            c: dailyCompleted,
+            d: dayCount,
+            h: possibleChallenge,
+            r: remainItem,
+            e: selectedThemeEvent,
+            s: shopPurchaseCounts,
+            u: useCustom,
+            t: timestamp,
+          },
+          false
+        );
+        dispatchEventCalcData({ type: "clean" });
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [eventCalcData]);
 
   return (
     <>

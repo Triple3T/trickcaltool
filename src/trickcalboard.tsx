@@ -5,7 +5,6 @@ import {
   useContext,
   useEffect,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -664,19 +663,17 @@ const TrickcalBoard = () => {
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
 
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const autosaver = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      dispatchBoardData({ type: "clean" });
-      if (isReady && googleLinked && autoSave) {
-        autoSave();
-      }
-    }, 500);
-  }, [autoSave, googleLinked, isReady]);
   useEffect(() => {
-    if (boardData && boardData.isDirty) autosaver();
-  }, [autosaver, boardData]);
+    if (boardData && boardData.isDirty) {
+      const timer = setTimeout(() => {
+        dispatchBoardData({ type: "clean" });
+        if (isReady && googleLinked && autoSave) {
+          autoSave();
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoSave, boardData, googleLinked, isReady]);
 
   return (
     <>

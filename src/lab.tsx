@@ -3,7 +3,6 @@ import {
   useContext,
   useEffect,
   useReducer,
-  useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -560,19 +559,17 @@ const Lab = () => {
     })();
   }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
 
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-  const autosaver = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      dispatchLabData({ type: "clean" });
-      if (isReady && googleLinked && autoSave) {
-        autoSave();
-      }
-    }, 500);
-  }, [autoSave, googleLinked, isReady]);
   useEffect(() => {
-    if (labData && labData.isDirty) autosaver();
-  }, [autosaver, labData]);
+    if (labData && labData.isDirty) {
+      const timer = setTimeout(() => {
+        dispatchLabData({ type: "clean" });
+        if (isReady && googleLinked && autoSave) {
+          autoSave();
+        }
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoSave, googleLinked, isReady, labData]);
 
   return (
     <>
