@@ -2392,6 +2392,8 @@ i18n
               dialogEnableSwitchTitle: "정보 다이얼로그 활성화",
               logout: "로그아웃",
               logoutProcessing: "로그아웃 요청 중...",
+              noRecipe: "제작 불가",
+              count: "{{0}}개",
             },
             error: {
               title: "Error",
