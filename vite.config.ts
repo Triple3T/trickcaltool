@@ -16,17 +16,17 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       registerType: "autoUpdate",
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,jpg,svg,webp,json,ttf,otf}"],
+        globPatterns: ["**/*.{js,css}"],
         skipWaiting: true,
         clientsClaim: true,
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\/api/,
+            urlPattern: /^https:\/\/tr\.triple-lab\.com\/api\//,
             handler: "NetworkOnly",
           },
           {
-            urlPattern: /^https:\/\/api\.triple-lab\.com\/api/,
+            urlPattern: /^https:\/\/api\.triple-lab\.com\/api\//,
             handler: "NetworkOnly",
           },
           {
@@ -39,11 +39,49 @@ export default defineConfig({
             handler: "CacheFirst",
             options: {
               cacheName: "workbox-asset-https://tr.triple-lab.com/",
+              expiration: {
+                maxEntries: 720,
+                maxAgeSeconds: 60 * 60 * 24 * 28,
+                matchOptions: {
+                  ignoreSearch: true,
+                },
+              },
             },
           },
           {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com/,
+            urlPattern:
+              /^https:\/\/tr\.triple-lab\.com\/.*\.(js|css)(\?.*)?$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "workbox-component-https://tr.triple-lab.com/",
+              expiration: {
+                maxEntries: 60,
+                maxAgeSeconds: 60 * 60 * 24 * 28,
+              },
+            },
+          },
+          {
+            urlPattern:
+              /^https:\/\/tr\.triple-lab\.com\/.*\.(html)(\?.*)?$/,
             handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "workbox-base-https://tr.triple-lab.com/",
+              expiration: {
+                maxEntries: 6,
+                maxAgeSeconds: 60 * 60 * 24 * 14,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/tr\.triple-lab\.com\//,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "workbox-fallback-https://tr.triple-lab.com/",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 7,
+              },
+            },
           },
         ],
       },
