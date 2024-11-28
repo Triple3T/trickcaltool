@@ -211,7 +211,7 @@
         "MadeHigh15":{"r":2,"m":{"MadeHigh7":3,"MadeLow18":8}},
         "MadeHigh16":{"r":3,"m":{"MadeHigh6":3,"MadeLow19":8}},
         "MadeHigh17":{"r":2,"m":{"MadeLow10":3,"MadeLow20":8}},
-        "MadeHigh18":{"r":3,"m":{"MadeLow4":3,"MadeLow21":8}},
+        "MadeHigh18":{"r":3,"m":{"MadeHigh4":3,"MadeLow21":8}},
         "MadeLow1":{"r":0,"g":true},
         "MadeLow2":{"r":0,"g":true},
         "MadeLow3":{"r":0,"g":true},
