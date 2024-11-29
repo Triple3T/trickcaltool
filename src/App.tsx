@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import "./App.css";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
@@ -95,20 +95,20 @@ function App() {
                 {t("ui.index.description")}
               </p>
             )}
-            {/* <a
+            <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://forms.gle/NY9va4ovX2LE25JW6"
+              href="https://triple3t.notion.site/1-14cc52e157ae80618170e928ba76de74"
             >
               <Button
                 variant="outline"
                 size="sm"
                 className="bg-background/30 text-sm"
               >
-                {t("ui.index.surveyParticipate")}
+                {t("ui.index.afterSurvey")}
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
-            </a> */}
+            </a>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-16">
               <MainMenuCardSwitchable
                 title={t("ui.board.title")}
