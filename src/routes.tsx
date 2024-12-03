@@ -37,6 +37,8 @@ const Privacy = lazy(() => import("./privacy"));
 import Setting from "./setting";
 import Code from "./code";
 import Clear from "./clear";
+// import DealDesc from "./dealdesc";
+const DealDesc = lazy(() => import("./dealdesc"));
 import Error404 from "./components/errors/404";
 
 const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
@@ -232,6 +234,10 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/clear",
     element: <Clear />,
     errorElement: <ErrorElement />,
+  },
+  {
+    path: "/dealdesc",
+    element: <DealDesc />,
   },
   {
     path: "/*",

@@ -2366,6 +2366,9 @@ i18n
             normaldrop: {
               title: "순한맛 드랍 테이블",
             },
+            dealdesc: {
+              title: "피해량 공식 체험관",
+            },
             utilities: {
               title: "유틸리티",
               description: "기타 쓸만한 도구들을 살펴봅니다.",
