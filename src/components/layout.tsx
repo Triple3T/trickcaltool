@@ -53,7 +53,7 @@ const Layout = ({
       </div>
       <div
         className={cn(
-          "fixed right-2 transition-all duration-300 ease-in-out w-7 h-7 p-1 bg-foreground/70 rounded-full shadow-md",
+          "fixed right-2 transition-all duration-300 ease-in-out w-7 h-7 p-1 bg-foreground/70 rounded-full shadow-md z-50",
           displayScrollToTop ? "bottom-3" : "-bottom-10"
         )}
       >
