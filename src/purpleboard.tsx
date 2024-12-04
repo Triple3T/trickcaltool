@@ -6,8 +6,8 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import { VirtuosoGrid } from "react-virtuoso";
 import { AuthContext } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
 import {
   Accordion,
@@ -702,48 +702,44 @@ const PurpleBoard = () => {
         placeholder={t("ui.charaSelect.searchByName")}
       />
       {boardData && (
-        <div
-          className={cn(
-            "font-onemobile gap-2 py-4",
-            "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-            "max-w-80 md:max-w-3xl lg:max-w-full",
-            "mx-auto"
-          )}
-        >
-          {boardData.user.o
+        <VirtuosoGrid
+          useWindowScroll
+          className="font-onemobile mt-4"
+          listClassName="gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-80 md:max-w-3xl lg:max-w-full mx-auto"
+          data={boardData.user.o
             .filter((c) =>
               search
                 ? t(`chara.${c}`).includes(search) ||
                   icSearch(t(`chara.${c}`), search)
                 : true
             )
-            .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))
-            .map((name) => {
-              // const currentBoard = board.c[name].b;
-              const currentPurpleBoard = purpleboard.c[name]; // b: 보크보드 종류, p: 해당 종류 위치 인덱스
-              const charaPersonality = Number(chara[name].t[0]);
-              const charaRace = Number(chara[name].t[5]);
-              const personalityClassName =
-                personalityBG[Number(charaPersonality) as Personality];
-              const openBoardIndex = boardData.user.n[name];
-              const skin: number | undefined = skinData[name];
-              return (
-                <PurpleBoardCard
-                  key={name}
-                  name={name}
-                  currentPurpleBoard={currentPurpleBoard}
-                  // charaPersonality,
-                  charaRace={charaRace}
-                  personalityClassName={personalityClassName}
-                  skin={skin}
-                  openBoardIndex={openBoardIndex}
-                  dispatchClickBoardData={dispatchClickBoardData}
-                  dispatchNthBoardData={dispatchNthBoardData}
-                  pboard={boardData.pboard}
-                />
-              );
-            })}
-        </div>
+            .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))}
+          itemContent={(_, name) => {
+            // const currentBoard = board.c[name].b;
+            const currentPurpleBoard = purpleboard.c[name]; // b: 보크보드 종류, p: 해당 종류 위치 인덱스
+            const charaPersonality = Number(chara[name].t[0]);
+            const charaRace = Number(chara[name].t[5]);
+            const personalityClassName =
+              personalityBG[Number(charaPersonality) as Personality];
+            const openBoardIndex = boardData.user.n[name];
+            const skin: number | undefined = skinData[name];
+            return (
+              <PurpleBoardCard
+                key={name}
+                name={name}
+                currentPurpleBoard={currentPurpleBoard}
+                // charaPersonality,
+                charaRace={charaRace}
+                personalityClassName={personalityClassName}
+                skin={skin}
+                openBoardIndex={openBoardIndex}
+                dispatchClickBoardData={dispatchClickBoardData}
+                dispatchNthBoardData={dispatchNthBoardData}
+                pboard={boardData.pboard}
+              />
+            );
+          }}
+        />
       )}
     </>
   );

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { GroupedVirtuoso } from "react-virtuoso";
 import { ArrowDown10, ArrowUp01, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -18,7 +21,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollAreaViewportRef } from "@/components/ui/scroll-area";
 import Select from "@/components/common/combobox-select";
 import ItemSlot from "@/components/parts/item-slot";
 import { personalityBG, personalityBGMarked } from "@/utils/personalityBG";
@@ -27,8 +30,6 @@ import rankClassNames from "@/utils/rankClassNames";
 
 import chara from "@/data/chara";
 import equip from "@/data/equip";
-import { Badge } from "./components/ui/badge";
-import { Checkbox } from "./components/ui/checkbox";
 
 interface IComboboxOuterProp {
   value: string;
@@ -187,6 +188,21 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   }, [t, value]);
   const [searchValue, setSearchValue] = useState("");
   const [selectedRank, setSelectedRank] = useState("9");
+  const [scrollParent, setScrollParent] = useState<HTMLDivElement | null>(null);
+  const refScrollParent = useCallback(
+    (element: HTMLDivElement) => setScrollParent(element),
+    []
+  );
+  const [totalListHeight, setTotalListHeight] = useState<number>(9999);
+
+  const filteredValues = Object.values(rankEquips).map((values) =>
+    values.filter((value) =>
+      searchValue
+        ? t(`equip.${idToLocKey(value)}`).includes(searchValue) ||
+          icSearch(t(`equip.${idToLocKey(value)}`), searchValue)
+        : value.split(".")[2].charAt(0) === selectedRank
+    )
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -205,12 +221,13 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
       </PopoverTrigger>
       <PopoverContent className="w-60 p-0 font-onemobile">
         <Command
-          filter={(value, search) =>
-            t(`equip.${idToLocKey(value)}`).includes(search) ||
-            icSearch(t(`equip.${idToLocKey(value)}`), search)
-              ? 1
-              : 0
-          }
+          // filter={(value, search) =>
+          //   t(`equip.${idToLocKey(value)}`).includes(search) ||
+          //   icSearch(t(`equip.${idToLocKey(value)}`), search)
+          //     ? 1
+          //     : 0
+          // }
+          shouldFilter={false}
         >
           <CommandInput
             placeholder={t("ui.equipviewer.searchEquip")}
@@ -233,91 +250,48 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                     )}
                     key={rank}
                     onClick={() => setSelectedRank(rank)}
-                  >{`RANK ${rank}`}</Badge>
+                  >
+                    {t("ui.equiprank.rankText", { 0: rank })}
+                  </Badge>
                 );
               })}
             </div>
           )}
-          <ScrollArea className="max-h-[60vh] [&_[data-radix-scroll-area-viewport]]:max-h-[60vh]">
-            <CommandList>
-              {!searchValue ? (
-                <CommandGroup>
-                  {rankEquips[selectedRank] &&
-                    rankEquips[selectedRank].map((equipId) => {
-                      const [, equipPos, equipNum] = equipId.split(".");
-                      const equipLocKey = idToLocKey(equipId);
-                      const selected = v === equipId;
-                      const fileName = `/equips/Equip_Icon_${equipPos
-                        .charAt(0)
-                        .toUpperCase()}${equipPos.slice(1)}${equipNum}.png`;
-                      return (
-                        <CommandItem
-                          key={equipId}
-                          value={equipId}
-                          onSelect={(currentValue) => {
-                            setV(currentValue === v ? "" : currentValue);
-                            onChange(currentValue === v ? "" : equipId);
-                            setOpen(false);
-                          }}
-                        >
-                          <div className="w-full relative flex flex-row items-center gap-2">
-                            <img src={fileName} alt="" className="w-4 h-4" />
-                            <div className="flex-1">
-                              {t(`equip.${equipLocKey}`)}
-                            </div>
-                            <Check
-                              className={cn(
-                                "w-4 h-4",
-                                selected ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                          </div>
-                        </CommandItem>
-                      );
-                    })}
-                </CommandGroup>
-              ) : (
-                Object.entries(rankEquips).map(([rank, equips]) => {
+          <ScrollAreaViewportRef
+            ref={refScrollParent}
+            id="equip-combobox-scroll-area"
+            className="max-h-[60vh] [&_[data-radix-scroll-area-viewport]]:max-h-[60vh]"
+          >
+            <CommandList
+              style={{
+                scrollbarWidth: "none",
+              }}
+            >
+              <GroupedVirtuoso
+                style={{ height: `${totalListHeight}px`, maxHeight: "60vh" }}
+                overscan={128}
+                totalListHeightChanged={setTotalListHeight}
+                customScrollParent={scrollParent ?? undefined}
+                groupCounts={filteredValues
+                  .map((f) => f.length)
+                  .filter((length) => length > 0)}
+                groupContent={(i) => {
                   return (
-                    <CommandGroup key={rank} heading={`RANK ${rank}`}>
-                      {equips.map((equipId) => {
-                        const [, equipPos, equipNum] = equipId.split(".");
-                        const equipLocKey = idToLocKey(equipId);
-                        const selected = v === equipId;
-                        const fileName = `/equips/Equip_Icon_${equipPos
-                          .charAt(0)
-                          .toUpperCase()}${equipPos.slice(1)}${equipNum}.png`;
-                        return (
-                          <CommandItem
-                            key={equipId}
-                            value={equipId}
-                            onSelect={(currentValue) => {
-                              setV(currentValue === v ? "" : currentValue);
-                              onChange(currentValue === v ? "" : equipId);
-                              setOpen(false);
-                            }}
-                          >
-                            <div className="w-full relative flex flex-row items-center gap-2">
-                              <img src={fileName} alt="" className="w-4 h-4" />
-                              <div className="flex-1">
-                                {t(`equip.${equipLocKey}`) || "???"}
-                              </div>
-                              <Check
-                                className={cn(
-                                  "w-4 h-4",
-                                  selected ? "opacity-100" : "opacity-0"
-                                )}
-                              />
-                            </div>
-                          </CommandItem>
-                        );
+                    <CommandGroup
+                      heading={t("ui.equiprank.rankText", {
+                        0: filteredValues
+                          .map((values, index) => ({
+                            rank: index + 1,
+                            length: values.length,
+                          }))
+                          .filter(({ length }) => length > 0)[i].rank,
                       })}
-                    </CommandGroup>
+                      className="bg-popover"
+                    />
                   );
-                })
-              )}
-              {/* <CommandGroup>
-                {allEquipArray.map((equipId) => {
+                }}
+                itemContent={(index) => {
+                  const equipId = filteredValues.flat()[index];
                   const [, equipPos, equipNum] = equipId.split(".");
                   const equipLocKey = idToLocKey(equipId);
                   const selected = v === equipId;
@@ -348,10 +322,10 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                       </div>
                     </CommandItem>
                   );
-                })}
-              </CommandGroup> */}
+                }}
+              />
             </CommandList>
-          </ScrollArea>
+          </ScrollAreaViewportRef>
         </Command>
       </PopoverContent>
     </Popover>
