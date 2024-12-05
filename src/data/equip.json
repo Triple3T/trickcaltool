@@ -1343,6 +1343,17 @@
             ["e.weapon.812","e.armor.810","e.armor.805","e.weapon.801","e.accessory.801","e.armor.820"],
             ["e.weapon.904","e.armor.910","e.armor.905","e.weapon.914","e.accessory.913","e.armor.917"]
         ],
+        "Lion":[
+            ["e.weapon.102","e.armor.103","e.weapon.102","e.armor.115","e.armor.113","e.armor.104"],
+            ["e.weapon.215","e.armor.213","e.armor.207","e.accessory.211","e.accessory.209","e.armor.220"],
+            ["e.weapon.314","e.armor.308","e.weapon.301","e.armor.315","e.accessory.310","e.armor.318"],
+            ["e.weapon.415","e.armor.408","e.weapon.404","e.armor.419","e.accessory.405","e.armor.418"],
+            ["e.weapon.514","e.armor.507","e.weapon.501","e.armor.508","e.accessory.508","e.armor.518"],
+            ["e.weapon.608","e.armor.608","e.weapon.603","e.accessory.605","e.accessory.608","e.armor.619"],
+            ["e.armor.701","e.armor.711","e.weapon.703","e.accessory.701","e.accessory.707","e.armor.715"],
+            ["e.weapon.814","e.armor.811","e.armor.801","e.weapon.805","e.accessory.808","e.armor.817"],
+            ["e.weapon.902","e.armor.911","e.armor.901","e.weapon.910","e.accessory.906","e.armor.914"]
+        ],
         "MaestroMK2":[
             ["e.weapon.101","e.armor.109","e.armor.107","e.accessory.111","e.accessory.106","e.accessory.104"],
             ["e.weapon.201","e.armor.209","e.armor.206","e.accessory.205","e.accessory.203","e.armor.216"],

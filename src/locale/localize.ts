@@ -59,6 +59,7 @@ i18n
             Leets: "리츠",
             Lethe: "레테",
             Levi: "레비",
+            Lion: "리온",
             MaestroMK2: "마에스트로 2호",
             Mago: "마고",
             Maison: "메죵",
@@ -146,6 +147,7 @@ i18n
             Leets: "만 번 담근 강철",
             Lethe: "망각의 유령",
             Levi: "아르바이트 전문가",
+            Lion: "수수께끼의 히어로",
             MaestroMK2: "최고 사양 로봇",
             Mago: "평화를 사랑하는 수인",
             Maison: "매일매일 안식일",
@@ -465,6 +467,7 @@ i18n
             },
             // Lethe: "레테",
             // Levi: "레비",
+            // Lion: "리온",
             MaestroMK2: {
               name: "최신형 그래픽 카드",
               skill1: "자가 회복 기능",
