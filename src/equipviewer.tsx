@@ -257,18 +257,13 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
               })}
             </div>
           )}
-          <ScrollAreaViewportRef
-            ref={refScrollParent}
-            id="equip-combobox-scroll-area"
-            className="max-h-[60vh] [&_[data-radix-scroll-area-viewport]]:max-h-[60vh]"
-          >
-            <CommandList
-              style={{
-                scrollbarWidth: "none",
-              }}
+          <CommandList className="h-fit">
+            <ScrollAreaViewportRef
+              ref={refScrollParent}
+              className="max-h-[60vh] [&_[data-radix-scroll-area-viewport]]:max-h-[60vh]"
+              style={{ height: `${totalListHeight}px` }}
             >
               <GroupedVirtuoso
-                style={{ height: `${totalListHeight}px`, maxHeight: "60vh" }}
                 overscan={128}
                 totalListHeightChanged={setTotalListHeight}
                 customScrollParent={scrollParent ?? undefined}
@@ -324,8 +319,8 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                   );
                 }}
               />
-            </CommandList>
-          </ScrollAreaViewportRef>
+            </ScrollAreaViewportRef>
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
