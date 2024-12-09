@@ -126,6 +126,13 @@ const MenuButton = () => {
           {t("ui.check.title")}
         </DropdownMenuItem> */}
         <Separator className="my-1" />
+        <a
+          href="https://triple3t.notion.site/155c52e157ae80d49106d63711dfd84c"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <DropdownMenuItem>{t("ui.index.help")}</DropdownMenuItem>
+        </a>
         <DropdownMenuItem
           onClick={() => navigate("/setting")}
           disabled={matchPath(location.pathname, "/setting") ? true : false}
