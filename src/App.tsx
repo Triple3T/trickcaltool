@@ -160,6 +160,13 @@ function App() {
             </Link>
             <a
               className="text-xs text-white dark:text-gray-400 hover:underline"
+              href="https://triple3t.notion.site/155c52e157ae80d49106d63711dfd84c"
+            >
+              {t("ui.index.textHelp")}
+              <ExternalLink className="w-3 h-3 ml-0.5 inline" />
+            </a>
+            <a
+              className="text-xs text-white dark:text-gray-400 hover:underline"
               href="https://triple3t.notion.site/102c52e157ae80f5a581dda26232a96b"
             >
               {t("ui.index.textUpdateLog")}

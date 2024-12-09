@@ -1957,6 +1957,7 @@ i18n
               sitePoweredBy: "Trickcal Note powered by Triple",
               textPrivacy: "Privacy",
               textSetting: "Setting",
+              textHelp: "Help",
               textUpdateLog: "Log",
               suspenseLoading: "Loading...",
               buyMeACoffee: "실례가 안 된다면...",
