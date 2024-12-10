@@ -237,7 +237,14 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
   },
   {
     path: "/dealdesc",
-    element: <DealDesc />,
+    element: (
+      <Layout title="ui.dealdesc.title">
+        <Suspense fallback={<Loading />}>
+          <DealDesc />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
   },
   {
     path: "/*",
