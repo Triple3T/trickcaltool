@@ -41,7 +41,7 @@ const UtilitySetCard = () => {
         </div>
       </DialogTrigger>
       <DialogContent
-        className="font-onemobile max-w-max rounded-lg"
+        className="font-onemobile max-w-max rounded-lg max-h-[600px] overflow-y-auto"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>

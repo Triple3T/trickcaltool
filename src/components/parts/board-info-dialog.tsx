@@ -153,7 +153,7 @@ const BoardInfoDialog = ({
       }}
     >
       <DialogContent
-        className="font-onemobile"
+        className="font-onemobile max-h-[600px] overflow-y-auto"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
