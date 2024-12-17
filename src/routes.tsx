@@ -39,6 +39,8 @@ import Code from "./code";
 import Clear from "./clear";
 // import DealDesc from "./dealdesc";
 const DealDesc = lazy(() => import("./dealdesc"));
+// import PickupLog from "./pickups";
+const PickupLog = lazy(() => import("./pickups"));
 import Error404 from "./components/errors/404";
 
 const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
@@ -241,6 +243,17 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout title="ui.dealdesc.title">
         <Suspense fallback={<Loading />}>
           <DealDesc />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/pickups",
+    element: (
+      <Layout title="ui.pickuplog.title">
+        <Suspense fallback={<Loading />}>
+          <PickupLog />
         </Suspense>
       </Layout>
     ),

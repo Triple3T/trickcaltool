@@ -2414,6 +2414,9 @@ i18n
             dealdesc: {
               title: "피해량 공식 체험관",
             },
+            pickuplog: {
+              title: "픽업 목록",
+            },
             utilities: {
               title: "유틸리티",
               description: "기타 쓸만한 도구들을 살펴봅니다.",
