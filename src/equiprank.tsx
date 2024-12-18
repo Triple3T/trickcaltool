@@ -72,7 +72,7 @@ import sortChange from "@/utils/sortChange";
 import filterChange from "@/utils/filterChange";
 import { getTotalBoardStat } from "@/utils/getTotalStatBonus";
 
-const MAX_RANK = 9;
+const MAX_RANK = 10;
 
 type ViewType = "input" | "rankView" | "targetView";
 
