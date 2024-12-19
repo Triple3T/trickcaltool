@@ -554,7 +554,7 @@ const Personal = () => {
           스킬 추가할까 말까 이거 개 노가단데
         </TabsContent>
         <TabsContent value="Aside">
-          {chara[charaName].s ? (
+          {chara[charaName].a ? (
             <div>
               <div className="text-lg">{t(`aside.${charaName}.name`)}</div>
               <div className="text-base mt-4">
