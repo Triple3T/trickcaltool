@@ -28,6 +28,8 @@ import rankClassNames from "@/utils/rankClassNames";
 
 import equip from "@/data/equip";
 
+const MAX_RANK = 9;
+
 interface IComboboxOuterProp {
   value: string;
   onChange: (value: string) => void;
@@ -60,8 +62,9 @@ const allEquipArray = (() => {
     returnArr.push({ type: "equip", pos: "weapon", num })
   );
   returnArr.sort((a, b) => {
-    if (a.num.charAt(0) !== b.num.charAt(0))
-      return b.num.charAt(0).localeCompare(a.num.charAt(0));
+    const aRank = Math.floor(Number(a.num) / 100);
+    const bRank = Math.floor(Number(b.num) / 100);
+    if (aRank !== bRank) return bRank - aRank;
     if (a.type !== b.type)
       return typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (a.pos !== b.pos)
@@ -76,9 +79,9 @@ const rankEquips = (() => {
   for (const eq of allEquipArray) {
     const [equipType, , equipNum] = eq.split(".");
     if (equipType !== "e") continue;
-    const targetRank = equipNum.charAt(0);
+    const targetRank = Math.floor(Number(equipNum) / 100);
     if (!returnObj[targetRank]) returnObj[targetRank] = [];
-    returnObj[equipNum.charAt(0)].push(eq);
+    returnObj[targetRank].push(eq);
   }
   return returnObj;
 })();
@@ -91,7 +94,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
     setV(value ? value : "");
   }, [t, value]);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedRank, setSelectedRank] = useState("9");
+  const [selectedRank, setSelectedRank] = useState(MAX_RANK);
   const [scrollParent, setScrollParent] = useState<HTMLDivElement | null>(null);
   const refScrollParent = useCallback(
     (element: HTMLDivElement) => setScrollParent(element),
@@ -104,7 +107,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
       searchValue
         ? t(`equip.${idToLocKey(value)}`).includes(searchValue) ||
           icSearch(t(`equip.${idToLocKey(value)}`), searchValue)
-        : value.split(".")[2].charAt(0) === selectedRank
+        : Math.floor(Number(value.split(".")[2]) / 100) === selectedRank
     )
   );
 
@@ -143,15 +146,16 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <CommandEmpty>{"아이템을 찾을 수 없습니다."}</CommandEmpty>
           {!searchValue && (
             <div className="flex flex-wrap p-1 gap-1 justify-evenly">
-              {Object.keys(rankEquips).map((rank) => {
+              {Object.keys(rankEquips).map((r) => {
+                const rank = Number(r);
                 return (
                   <Badge
                     className={cn(
                       "font-normal text-center",
                       selectedRank === rank
-                        ? rankClassNames[Number(rank) - 1][2]
+                        ? rankClassNames[rank - 1][2]
                         : "opacity-80",
-                      rankClassNames[Number(rank) - 1][6]
+                      rankClassNames[rank - 1][6]
                     )}
                     key={rank}
                     onClick={() => setSelectedRank(rank)}
@@ -300,7 +304,7 @@ const EquipEnhanceCalc = () => {
   const [enhanceLevel, setEnhanceLevel] = useState<number[]>([0, 0]);
   useEffect(() => {
     if (selectedEquip) {
-      const r = Number(selectedEquip.split(".")[2].charAt(0));
+      const r = Math.floor(Number(selectedEquip.split(".")[2]) / 100);
       setRank(r);
       const req = getEnhanceRequire(r, enhanceLevel);
       const ret = returnStone(
@@ -325,13 +329,13 @@ const EquipEnhanceCalc = () => {
           <div className="flex flex-initial">
             <ItemSlot
               rarityInfo={(() => {
-                const er = selectedEquip.split(".")[2].charAt(0);
-                if (["9"].includes(er)) return { s: "Yellow" };
-                if (["7", "8", "9"].includes(er))
-                  return { s: "Purple", b: "#B371F5" };
-                if (["5", "6"].includes(er)) return { s: "Blue", b: "#65A7E9" };
-                if (["3", "4"].includes(er))
-                  return { s: "Green", b: "#65DD82" };
+                const er = Math.floor(
+                  Number(selectedEquip.split(".")[2]) / 100
+                );
+                if ([9, 10].includes(er)) return { s: "Yellow" };
+                if ([7, 8].includes(er)) return { s: "Purple", b: "#B371F5" };
+                if ([5, 6].includes(er)) return { s: "Blue", b: "#65A7E9" };
+                if ([3, 4].includes(er)) return { s: "Green", b: "#65DD82" };
                 return { s: "Gray", b: "#B0B0B0" };
               })()}
               item={`/equips/Equip_Icon_${selectedEquip

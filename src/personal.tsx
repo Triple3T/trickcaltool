@@ -430,6 +430,7 @@ const Personal = () => {
                         }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(
                           1
                         )}${iNum}`;
+                        const iRank = Math.floor(Number(iNum) / 100);
                         return (
                           <div key={si} className="flex flex-col items-center">
                             <ItemSlot
@@ -437,13 +438,13 @@ const Personal = () => {
                               size={3}
                               fullItemPath
                               rarityInfo={(() => {
-                                if (["9"].includes(iNum.charAt(0)))
+                                if ([9, 10].includes(iRank))
                                   return { s: "Yellow" };
-                                if (["7", "8", "9"].includes(iNum.charAt(0)))
+                                if ([7, 8].includes(iRank))
                                   return { s: "Purple", b: "#B371F5" };
-                                if (["5", "6"].includes(iNum.charAt(0)))
+                                if ([5, 6].includes(iRank))
                                   return { s: "Blue", b: "#65A7E9" };
-                                if (["3", "4"].includes(iNum.charAt(0)))
+                                if ([3, 4].includes(iRank))
                                   return { s: "Green", b: "#65DD82" };
                                 return { s: "Gray", b: "#B0B0B0" };
                               })()}

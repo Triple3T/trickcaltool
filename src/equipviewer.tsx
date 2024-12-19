@@ -31,6 +31,8 @@ import rankClassNames from "@/utils/rankClassNames";
 import chara from "@/data/chara";
 import equip from "@/data/equip";
 
+const MAX_RANK = 9;
+
 interface IComboboxOuterProp {
   value: string;
   onChange: (value: string) => void;
@@ -156,8 +158,9 @@ const allEquipArray = (() => {
     returnArr.push({ type: "equip", pos: "weapon", num })
   );
   returnArr.sort((a, b) => {
-    if (a.num.charAt(0) !== b.num.charAt(0))
-      return b.num.charAt(0).localeCompare(a.num.charAt(0));
+    const aRank = Math.floor(Number(a.num) / 100);
+    const bRank = Math.floor(Number(b.num) / 100);
+    if (aRank !== bRank) return bRank - aRank;
     if (a.type !== b.type)
       return typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (a.pos !== b.pos)
@@ -172,9 +175,9 @@ const rankEquips = (() => {
   for (const eq of allEquipArray) {
     const [equipType, , equipNum] = eq.split(".");
     if (equipType !== "e") continue;
-    const targetRank = equipNum.charAt(0);
+    const targetRank = Math.floor(Number(equipNum) / 100);
     if (!returnObj[targetRank]) returnObj[targetRank] = [];
-    returnObj[equipNum.charAt(0)].push(eq);
+    returnObj[targetRank].push(eq);
   }
   return returnObj;
 })();
@@ -187,7 +190,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
     setV(value ? value : "");
   }, [t, value]);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedRank, setSelectedRank] = useState("9");
+  const [selectedRank, setSelectedRank] = useState(MAX_RANK);
   const [scrollParent, setScrollParent] = useState<HTMLDivElement | null>(null);
   const refScrollParent = useCallback(
     (element: HTMLDivElement) => setScrollParent(element),
@@ -200,7 +203,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
       searchValue
         ? t(`equip.${idToLocKey(value)}`).includes(searchValue) ||
           icSearch(t(`equip.${idToLocKey(value)}`), searchValue)
-        : value.split(".")[2].charAt(0) === selectedRank
+        : Math.floor(Number(value.split(".")[2]) / 100) === selectedRank
     )
   );
 
@@ -214,7 +217,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           className="w-60 justify-between font-onemobile"
         >
           {v
-            ? t(`equip.${idToLocKey(v)}`) || t("ui.equipviewer.unknownEquip")
+            ? t(`equip.${idToLocKey(v)}`) || t("equip.unknown")
             : t("ui.equipviewer.selectEquip")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -238,15 +241,16 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           <CommandEmpty>{t("ui.equipviewer.equipNotFound")}</CommandEmpty>
           {!searchValue && (
             <div className="flex flex-wrap p-1 gap-1 justify-evenly">
-              {Object.keys(rankEquips).map((rank) => {
+              {Object.keys(rankEquips).map((r) => {
+                const rank = Number(r);
                 return (
                   <Badge
                     className={cn(
                       "font-normal text-center",
                       selectedRank === rank
-                        ? rankClassNames[Number(rank) - 1][2]
+                        ? rankClassNames[rank - 1][2]
                         : "opacity-80",
-                      rankClassNames[Number(rank) - 1][6]
+                      rankClassNames[rank - 1][6]
                     )}
                     key={rank}
                     onClick={() => setSelectedRank(rank)}
@@ -366,7 +370,7 @@ const EquipViewer = () => {
               value={selectedRank}
               setValue={searchRank}
               placeholder={t("ui.equipviewer.selectRank")}
-              items={Array(9)
+              items={Array(MAX_RANK)
                 .fill(0)
                 .map((_, i) => ({
                   value: i + 1,
@@ -450,14 +454,13 @@ const EquipViewer = () => {
                 size={4}
                 fullItemPath
                 rarityInfo={(() => {
-                  const er = selectedEquip.split(".")[2].charAt(0);
-                  if (["9"].includes(er)) return { s: "Yellow" };
-                  if (["7", "8", "9"].includes(er))
-                    return { s: "Purple", b: "#B371F5" };
-                  if (["5", "6"].includes(er))
-                    return { s: "Blue", b: "#65A7E9" };
-                  if (["3", "4"].includes(er))
-                    return { s: "Green", b: "#65DD82" };
+                  const er = Math.floor(
+                    Number(selectedEquip.split(".")[2]) / 100
+                  );
+                  if ([9, 10].includes(er)) return { s: "Yellow" };
+                  if ([7, 8].includes(er)) return { s: "Purple", b: "#B371F5" };
+                  if ([5, 6].includes(er)) return { s: "Blue", b: "#65A7E9" };
+                  if ([3, 4].includes(er)) return { s: "Green", b: "#65DD82" };
                   return { s: "Gray", b: "#B0B0B0" };
                 })()}
               />
@@ -466,7 +469,7 @@ const EquipViewer = () => {
                   `equip.equip.${selectedEquip.split(".")[1]}.${
                     selectedEquip.split(".")[2]
                   }`
-                ) || t("ui.equip.unknownEquip")}
+                ) || t("equip.unknown")}
               </div>
             </div>
             <div className="text-sm flex justify-evenly gap-x-2 gap-y-1">
@@ -525,6 +528,9 @@ const EquipViewer = () => {
                                     }Icon_${iPart
                                       .charAt(0)
                                       .toUpperCase()}${iPart.slice(1)}${iNum}`;
+                                    const iRank = Math.floor(
+                                      Number(iNum) / 100
+                                    );
                                     return (
                                       <ItemSlot
                                         key={ig}
@@ -533,25 +539,17 @@ const EquipViewer = () => {
                                         size={3}
                                         fullItemPath
                                         rarityInfo={(() => {
-                                          if (
-                                            ["7", "8", "9"].includes(
-                                              iNum.charAt(0)
-                                            )
-                                          )
+                                          if ([7, 8, 9, 10].includes(iRank))
                                             return {
                                               s: "Purple",
                                               b: "#B371F5",
                                             };
-                                          if (
-                                            ["5", "6"].includes(iNum.charAt(0))
-                                          )
+                                          if ([5, 6].includes(iRank))
                                             return {
                                               s: "Blue",
                                               b: "#65A7E9",
                                             };
-                                          if (
-                                            ["3", "4"].includes(iNum.charAt(0))
-                                          )
+                                          if ([3, 4].includes(iRank))
                                             return {
                                               s: "Green",
                                               b: "#65DD82",
@@ -702,6 +700,7 @@ const EquipViewer = () => {
                             }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(
                               1
                             )}${iNum}`;
+                            const iRank = Math.floor(Number(iNum) / 100);
                             return (
                               <div
                                 key={si}
@@ -713,15 +712,13 @@ const EquipViewer = () => {
                                   size={3}
                                   fullItemPath
                                   rarityInfo={(() => {
-                                    if (["9"].includes(iNum.charAt(0)))
+                                    if ([9, 10].includes(iRank))
                                       return { s: "Yellow" };
-                                    if (
-                                      ["7", "8", "9"].includes(iNum.charAt(0))
-                                    )
+                                    if ([7, 8].includes(iRank))
                                       return { s: "Purple", b: "#B371F5" };
-                                    if (["5", "6"].includes(iNum.charAt(0)))
+                                    if ([5, 6].includes(iRank))
                                       return { s: "Blue", b: "#65A7E9" };
-                                    if (["3", "4"].includes(iNum.charAt(0)))
+                                    if ([3, 4].includes(iRank))
                                       return { s: "Green", b: "#65DD82" };
                                     return { s: "Gray", b: "#B0B0B0" };
                                   })()}
@@ -733,7 +730,7 @@ const EquipViewer = () => {
                                         e.split(".")[2]
                                       }`
                                     ) ||
-                                      t("ui.equip.unknownEquip"))}
+                                      t("equip.unknown"))}
                                 </div>
                               </div>
                             );
@@ -758,14 +755,16 @@ const EquipViewer = () => {
                                   ][iNum];
                                 if (!equipInfo) return acc;
                                 if (!("i" in equipInfo)) {
-                                  const iRank = Number(iNum.charAt(0));
+                                  const iRank = Math.floor(Number(iNum) / 100);
                                   return acc + equip.v.partsRequire[iRank - 1];
                                 }
                                 const recipe = equipInfo.i;
                                 const cost = Object.entries(recipe).reduce(
                                   (count, [ig, val]) => {
                                     const [, , igNum] = ig.split(".");
-                                    const igRank = Number(igNum.charAt(0));
+                                    const igRank = Math.floor(
+                                      Number(igNum) / 100
+                                    );
                                     return (
                                       count +
                                       val * equip.v.partsRequire[igRank - 1]
@@ -839,7 +838,7 @@ const EquipViewer = () => {
                                         (showFullEnhanced
                                           ? 100 +
                                             equip.v.enhanceRate[
-                                              Number(iNum.charAt(0)) - 1
+                                              Math.floor(Number(iNum) / 100) - 1
                                             ][4]
                                           : 100)) /
                                         100
@@ -857,12 +856,12 @@ const EquipViewer = () => {
           ? Object.entries(equip.c)
               .filter(([, sets]) => {
                 const selectedRankIndex =
-                  Number(selectedEquip.split(".")[2].substring(0, 1)) - 1;
-                return sets[selectedRankIndex].includes(selectedEquip);
+                  Math.floor(Number(selectedEquip.split(".")[2]) / 100) - 1;
+                return sets[selectedRankIndex]?.includes(selectedEquip);
               })
               .map(([chara, sets]) => {
                 const selectedRankIndex =
-                  Number(selectedEquip.split(".")[2].substring(0, 1)) - 1;
+                  Math.floor(Number(selectedEquip.split(".")[2]) / 100) - 1;
                 const eqSet = sets[selectedRankIndex];
                 return (
                   <div key={chara}>
@@ -885,6 +884,7 @@ const EquipViewer = () => {
                             }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(
                               1
                             )}${iNum}`;
+                            const iRank = Math.floor(Number(iNum) / 100);
                             return (
                               <div
                                 key={e}
@@ -896,15 +896,13 @@ const EquipViewer = () => {
                                   size={3}
                                   fullItemPath
                                   rarityInfo={(() => {
-                                    if (["9"].includes(iNum.charAt(0)))
+                                    if ([9, 10].includes(iRank))
                                       return { s: "Yellow" };
-                                    if (
-                                      ["7", "8", "9"].includes(iNum.charAt(0))
-                                    )
+                                    if ([7, 8].includes(iRank))
                                       return { s: "Purple", b: "#B371F5" };
-                                    if (["5", "6"].includes(iNum.charAt(0)))
+                                    if ([5, 6].includes(iRank))
                                       return { s: "Blue", b: "#65A7E9" };
-                                    if (["3", "4"].includes(iNum.charAt(0)))
+                                    if ([3, 4].includes(iRank))
                                       return { s: "Green", b: "#65DD82" };
                                     return { s: "Gray", b: "#B0B0B0" };
                                   })()}
@@ -916,7 +914,7 @@ const EquipViewer = () => {
                                         e.split(".")[2]
                                       }`
                                     ) ||
-                                      t("ui.equip.unknownEquip"))}
+                                      t("equip.unknown"))}
                                 </div>
                               </div>
                             );
@@ -944,14 +942,14 @@ const EquipViewer = () => {
                             ];
                           if (!equipInfo) return acc;
                           if (!("i" in equipInfo)) {
-                            const iRank = Number(iNum.charAt(0));
+                            const iRank = Math.floor(Number(iNum) / 100);
                             return acc + equip.v.partsRequire[iRank - 1];
                           }
                           const recipe = equipInfo.i;
                           const cost = Object.entries(recipe).reduce(
                             (count, [ig, val]) => {
                               const [, , igNum] = ig.split(".");
-                              const igRank = Number(igNum.charAt(0));
+                              const igRank = Math.floor(Number(igNum) / 100);
                               return (
                                 count + val * equip.v.partsRequire[igRank - 1]
                               );
@@ -984,7 +982,7 @@ const EquipViewer = () => {
                                         (showFullEnhanced
                                           ? 100 +
                                             equip.v.enhanceRate[
-                                              Number(iNum.charAt(0)) - 1
+                                              Math.floor(Number(iNum) / 100) - 1
                                             ][4]
                                           : 100)) /
                                         100

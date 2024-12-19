@@ -79,8 +79,9 @@ const droppableEquip = (() => {
     returnArr.push({ type: "recipe", pos: "weapon", num });
   });
   returnArr.sort((a, b) => {
-    if (a.num.charAt(0) !== b.num.charAt(0))
-      return b.num.charAt(0).localeCompare(a.num.charAt(0));
+    const aRank = Math.floor(Number(a.num) / 100);
+    const bRank = Math.floor(Number(b.num) / 100);
+    if (aRank !== bRank) return bRank - aRank;
     if (a.type !== b.type)
       return typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     if (a.pos !== b.pos)
@@ -285,12 +286,13 @@ const NormalDrop = () => {
                   }Icon_${equipPos.charAt(0).toUpperCase()}${equipPos.slice(
                     1
                   )}${equipNum}.png`;
+                  const equipRank = Math.floor(Number(equipNum) / 100);
                   return (
                     <div
                       key={equip}
                       className={cn(
                         "flex items-center gap-2 w-max pl-2 pr-1 py-0.5 m-1 rounded-full",
-                        rankClassNames[Number(equipNum.charAt(0)) - 1][0]
+                        rankClassNames[equipRank - 1][0]
                       )}
                     >
                       <img src={fileName} alt="" className="w-6 h-6" />
@@ -345,6 +347,7 @@ const NormalDrop = () => {
                       }Icon_${equipPos.charAt(0).toUpperCase()}${equipPos.slice(
                         1
                       )}${equipNum}`;
+                      const equipRank = Math.floor(Number(equipNum) / 100);
                       return (
                         <ItemSlot
                           key={drop}
@@ -357,11 +360,11 @@ const NormalDrop = () => {
                           }
                           fullItemPath
                           rarityInfo={(() => {
-                            if (["7", "8", "9"].includes(equipNum.charAt(0)))
+                            if ([7, 8, 9, 10].includes(equipRank))
                               return { s: "Purple", b: "#B371F5" };
-                            if (["5", "6"].includes(equipNum.charAt(0)))
+                            if ([5, 6].includes(equipRank))
                               return { s: "Blue", b: "#65A7E9" };
-                            if (["3", "4"].includes(equipNum.charAt(0)))
+                            if ([3, 4].includes(equipRank))
                               return { s: "Green", b: "#65DD82" };
                             return { s: "Gray", b: "#B0B0B0" };
                           })()}
