@@ -353,11 +353,7 @@ const NormalDrop = () => {
                           key={drop}
                           item={fileName}
                           size={3}
-                          amount={
-                            Number(stage.split("-")[0]) < 3
-                              ? "--%"
-                              : probs[stage].p[drop]
-                          }
+                          amount={probs[stage]?.p?.[drop] ?? "--%"}
                           fullItemPath
                           rarityInfo={(() => {
                             if ([7, 8, 9, 10].includes(equipRank))
