@@ -46,17 +46,17 @@ const droppableEquip = (() => {
     num: string;
   }[] = [];
   Object.keys(acc)
-    .filter((key) => /1\d\d/.test(key))
+    .filter((key) => /^1\d\d$/.test(key))
     .forEach((num) => {
       returnArr.push({ type: "equip", pos: "accessory", num });
     });
   Object.keys(arm)
-    .filter((key) => /1\d\d/.test(key))
+    .filter((key) => /^1\d\d$/.test(key))
     .forEach((num) => {
       returnArr.push({ type: "equip", pos: "armor", num });
     });
   Object.keys(wpn)
-    .filter((key) => /1\d\d/.test(key))
+    .filter((key) => /^1\d\d$/.test(key))
     .forEach((num) => {
       returnArr.push({ type: "equip", pos: "weapon", num });
     });
