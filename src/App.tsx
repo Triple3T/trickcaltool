@@ -95,20 +95,32 @@ function App() {
                 {t("ui.index.description")}
               </p>
             )}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://triple3t.notion.site/1-14cc52e157ae80618170e928ba76de74"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-background/30 text-sm"
+            <div className="flex flex-col sm:flex-row gap-2 items-center sm:items-baseline justify-center">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://triple3t.notion.site/1-14cc52e157ae80618170e928ba76de74"
               >
-                {t("ui.index.afterSurvey")}
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-background/30 text-sm"
+                >
+                  {t("ui.index.afterSurvey")}
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
+              <Link to="/minigamehilde">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-background/30 text-sm"
+                >
+                  {t("ui.index.minigameHildeLinkText")}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-16">
               <MainMenuCardSwitchable
                 title={t("ui.board.title")}

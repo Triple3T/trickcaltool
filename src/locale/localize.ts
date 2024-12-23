@@ -1991,6 +1991,7 @@ i18n
               description: "내 성장 현황 메모하기",
               newVersionDetected: "새 버전이 나왔어요!",
               // surveyParticipate: "설문조사에 참여해 주세요",
+              minigameHildeLinkText: "힐데 미니게임 족보",
               afterSurvey: "1주년 기념 편지",
               theme: {
                 title: "테마",
