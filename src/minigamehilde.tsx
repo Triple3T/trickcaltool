@@ -28,7 +28,7 @@ const MiniGameHilde = () => {
   }, []);
 
   return (
-    <div className="font-onemobile max-w-96 mx-auto">
+    <div className="font-onemobile max-w-96 mx-auto pt-6">
       <div className="flex flex-row">
         <Input
           ref={inputRef}
