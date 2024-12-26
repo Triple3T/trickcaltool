@@ -9,8 +9,15 @@
         "CollectMadeHigh1":{
             "r":2,
             "m":{
-                "CollectMadeLow1":4,
-                "CollectMadeLow2":6
+                "CollectMadeLow2":6,
+                "CollectMadeLow1":4
+            }
+        },
+        "CollectMadeHigh2":{
+            "r":2,
+            "m":{
+                "CollectMadeLow4":6,
+                "CollectMadeLow1":4
             }
         },
         "CollectMadeHigh3":{
@@ -18,6 +25,13 @@
             "m":{
                 "CollectMadeLow6":6,
                 "CollectMadeLow1":4
+            }
+        },
+        "CollectMadeHigh4":{
+            "r":3,
+            "m":{
+                "MadeHigh12":3,
+                "CollectMadeLow3":4
             }
         },
         "CollectMadeHigh5":{
@@ -42,6 +56,14 @@
             "m":{
                 "MadeLow15":4,
                 "MadeLow14":2
+            }
+        },
+        "CollectMadeLow4":{
+            "r":1,
+            "g":true,
+            "m":{
+                "MadeLow13":4,
+                "MadeLow12":2
             }
         },
         "CollectMadeLow5":{

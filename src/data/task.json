@@ -196,6 +196,11 @@
             "m":["CollectMadeLow3"],
             "f":100
         },
+        "Arbeit46":{
+            "s":[46],
+            "m":["CollectMadeLow4"],
+            "f":100
+        },
         "Arbeit47":{
             "s":[47],
             "m":["CollectMadeLow5"]
