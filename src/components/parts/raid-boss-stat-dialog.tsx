@@ -58,7 +58,7 @@ const RaidBossStatDialog = ({
               if (v !== stage) setBossSeason("");
               setStage(v);
             }}
-            items={Array(7)
+            items={Array(10)
               .fill(0)
               .map((_, v) => ({
                 value: v + 15,
@@ -75,7 +75,7 @@ const RaidBossStatDialog = ({
                   if (!boss) return null;
                   return {
                     value: season,
-                    label: `${season}. ` + t(`monster.${boss.b}`),
+                    label: `${season}시즌 - ${t(`monster.${boss.b}`)}`,
                   };
                 })
                 .filter((e) => e !== null) as { value: string; label: string }[]
