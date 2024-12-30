@@ -38,7 +38,7 @@ export default defineConfig({
               /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?.*)?$/,
             handler: "CacheFirst",
             options: {
-              cacheName: "workbox-asset-https://tr.triple-lab.com/",
+              cacheName: "trickcalnote-assets",
               expiration: {
                 maxEntries: 720,
                 maxAgeSeconds: 60 * 60 * 24 * 28,
@@ -56,7 +56,7 @@ export default defineConfig({
               /^https:\/\/tr\.triple-lab\.com\/.*\.(js|css)(\?.*)?$/,
             handler: "CacheFirst",
             options: {
-              cacheName: "workbox-component-https://tr.triple-lab.com/",
+              cacheName: "trickcalnote-components",
               expiration: {
                 maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 28,
@@ -71,7 +71,7 @@ export default defineConfig({
               /^https:\/\/tr\.triple-lab\.com\/.*\.(html)(\?.*)?$/,
             handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "workbox-base-https://tr.triple-lab.com/",
+              cacheName: "trickcalnote-base",
               expiration: {
                 maxEntries: 6,
                 maxAgeSeconds: 60 * 60 * 24 * 14,
@@ -85,7 +85,7 @@ export default defineConfig({
             urlPattern: /^https:\/\/tr\.triple-lab\.com\//,
             handler: "StaleWhileRevalidate",
             options: {
-              cacheName: "workbox-fallback-https://tr.triple-lab.com/",
+              cacheName: "trickcalnote-fallback",
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 60 * 24 * 7,
