@@ -46,6 +46,9 @@ export default defineConfig({
                   ignoreSearch: true,
                 },
               },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
             },
           },
           {
@@ -57,6 +60,9 @@ export default defineConfig({
               expiration: {
                 maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 28,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
               },
             },
           },
@@ -70,6 +76,9 @@ export default defineConfig({
                 maxEntries: 6,
                 maxAgeSeconds: 60 * 60 * 24 * 14,
               },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
             },
           },
           {
@@ -80,6 +89,9 @@ export default defineConfig({
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 60 * 24 * 7,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
               },
             },
           },
