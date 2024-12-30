@@ -22,20 +22,20 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\/api\//,
+            urlPattern: /^https:\/\/tr\.triple-lab\.com\/api\/.*/i,
             handler: "NetworkOnly",
           },
           {
-            urlPattern: /^https:\/\/api\.triple-lab\.com\/api\//,
+            urlPattern: /^https:\/\/api\.triple-lab\.com\/api\/.*/i,
             handler: "NetworkOnly",
           },
           {
-            urlPattern: /^https:\/\/www\.googleapis\.com\//,
+            urlPattern: /^https:\/\/www\.googleapis\.com\/.*/i,
             handler: "NetworkOnly",
           },
           {
             urlPattern:
-              /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?.*)?$/,
+              /^https:\/\/tr\.triple-lab\.com\/.*\.(png|jpg|svg|webp|ttf|otf)(\?)?.*/i,
             handler: "CacheFirst",
             options: {
               cacheName: "trickcalnote-assets",
@@ -53,7 +53,7 @@ export default defineConfig({
           },
           {
             urlPattern:
-              /^https:\/\/tr\.triple-lab\.com\/.*\.(js|css)(\?.*)?$/,
+              /^https:\/\/tr\.triple-lab\.com\/.*\.(js|css)(\?)?.*/i,
             handler: "CacheFirst",
             options: {
               cacheName: "trickcalnote-components",
@@ -68,7 +68,7 @@ export default defineConfig({
           },
           {
             urlPattern:
-              /^https:\/\/tr\.triple-lab\.com\/.*\.(html)(\?.*)?$/,
+              /^https:\/\/tr\.triple-lab\.com\/.*\.(html)(\?)?.*/i,
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "trickcalnote-base",
@@ -82,7 +82,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\//,
+            urlPattern: /^https:\/\/tr\.triple-lab\.com\/.*/i,
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "trickcalnote-fallback",
