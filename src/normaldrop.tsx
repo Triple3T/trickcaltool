@@ -30,6 +30,7 @@ import icSearch from "@/lib/initialConsonantSearch";
 import rankClassNames from "@/utils/rankClassNames";
 
 import equip from "@/data/equip";
+import stageData from "@/data/stage";
 
 const droppableEquip = (() => {
   const typeOrder = ["equip", "piece", "recipe"] as const;
@@ -325,20 +326,30 @@ const NormalDrop = () => {
               if (equips.length && !drops.some((d) => equips.includes(d)))
                 return null;
               const expectation = getStageExpectation([stage, drops]);
+              const [world, stageNum] = stage.split("-");
               return (
                 <Card key={stage} className="p-4">
-                  <div className="flex gap-2 items-baseline">
-                    <div className="text-lg text-left">{stage}</div>
-                    {equips.length > 0 && (
-                      <div className="opacity-75">
-                        {drops.filter((d) => equips.includes(d)).length}개 일치
-                        <Dot className="inline-block" />
-                        기댓값 {(expectation / 100).toFixed(2)}
+                  <div className="flex gap-3 items-center">
+                    <div className="text-xl text-left">{stage}</div>
+                    <div className="text-left">
+                      <div>{t(`stage.normal.${world}.${stageNum}`)}</div>
+                      <div className="text-xs opacity-70">
+                        권장 전투력{" "}
+                        {stageData.n[world][
+                          Number(stageNum) - 1
+                        ].toLocaleString()}
                       </div>
-                    )}
+                    </div>
                   </div>
+                  {equips.length > 0 && (
+                    <div className="opacity-80 text-left text-sm mt-1">
+                      {drops.filter((d) => equips.includes(d)).length}개 일치
+                      <Dot className="inline-block" />
+                      기댓값 {(expectation / 100).toFixed(2)}
+                    </div>
+                  )}
 
-                  <div className="flex flex-row gap-2">
+                  <div className="flex flex-row gap-2 mt-1">
                     {drops.map((drop) => {
                       const [equipType, equipPos, equipNum] = drop.split(".");
                       // const equipLocKey = idToLocKey(drop);
