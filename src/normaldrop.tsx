@@ -379,6 +379,26 @@ const NormalDrop = () => {
                       );
                     })}
                   </div>
+                  <div className="text-left text-xs mt-1">
+                    신뢰도{" "}
+                    {
+                      ["데이터 없음", "낮음", "중간", "높음", "매우 높음"][
+                        probs[stage]?.r ?? 0
+                      ]
+                    }
+                    <div
+                      className={cn(
+                        "ml-2 h-2.5 w-2.5 inline-block rounded-full align-middle",
+                        [
+                          "bg-gray-500",
+                          "bg-red-500",
+                          "bg-yellow-500",
+                          "bg-green-500",
+                          "bg-blue-500",
+                        ][probs[stage]?.r ?? 0]
+                      )}
+                    ></div>
+                  </div>
                 </Card>
               );
             })}
