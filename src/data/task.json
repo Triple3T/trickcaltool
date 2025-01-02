@@ -2,212 +2,280 @@
     "t":{
         "Arbeit1":{
             "s":[4,6,22,24],
-            "m":["MadeLow13","MadeLow7"]
+            "m":["MadeLow13","MadeLow7"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit2":{
             "s":[8,27,30],
             "m":["FoodMadeLow13","FoodMadeLow4","FoodMadeLow15"],
+            "c":{"d":["Ran"]},
             "f":83
         },
         "Arbeit3":{
             "s":[3,8,30,31],
-            "m":["MadeLow11","MadeLow6"]
+            "m":["MadeLow11","MadeLow6"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit4":{
             "s":[4,6,16,24],
-            "m":["CollectMadeLow2","MadeLow9"]
+            "m":["CollectMadeLow2","MadeLow9"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit5":{
             "s":[5,6,13,22],
-            "m":["FoodMadeLow6","FoodMadeLow18"]
+            "m":["FoodMadeLow6","FoodMadeLow18"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit6":{
             "s":[26],
-            "m":["MadeLow6","MadeLow5"]
+            "m":["MadeLow6","MadeLow5"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit7":{
             "s":[12,27],
-            "m":["MadeLow7","MadeLow3"]
+            "m":["MadeLow7","MadeLow3"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit8":{
             "s":[7,9,10,33],
             "m":["MadeLow4","MadeLow2"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit9":{
             "s":[6,16,24],
-            "m":["FoodMadeLow14","FoodMadeLow7","FoodMadeLow16"]
+            "m":["FoodMadeLow14","FoodMadeLow7","FoodMadeLow16"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit10":{
             "s":[7,9,32],
-            "m":["MadeLow3","MadeLow12"]
+            "m":["MadeLow3","MadeLow12"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit11":{
             "s":[15,18,25],
             "m":["MadeLow16","FoodMadeLow12"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit12":{
             "s":[13,28],
-            "m":["FoodMadeLow11","FoodMadeLow10"]
+            "m":["FoodMadeLow11","FoodMadeLow10"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit13":{
             "s":[14,17,28,34],
-            "m":["MadeLow1","MadeLow4"]
+            "m":["MadeLow1","MadeLow4"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit14":{
             "s":[3,12,30,32],
-            "m":["MadeLow4","MadeLow3"]
+            "m":["MadeLow4","MadeLow3"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit15":{
             "s":[10,18,21],
             "m":["MadeLow9","MadeLow14"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit16":{
             "s":[26],
-            "m":["MadeLow8","MadeLow4"]
+            "m":["MadeLow8","MadeLow4"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit17":{
             "s":[2,3,19,31],
-            "m":["FurnMadeLow2","FoodMadeLow6"]
+            "m":["FurnMadeLow2","FoodMadeLow6"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit18":{
             "s":[2,14,27],
-            "m":["MadeLow14","MadeLow2"]
+            "m":["MadeLow14","MadeLow2"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit19":{
             "s":[10,21,29],
             "m":["CollectMadeLow1","MadeLow12"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit20":{
             "s":[17,18,25],
             "m":["FoodMadeLow9","MadeLow16"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit21":{
             "s":[1,7,19],
-            "m":["MadeLow10","MadeLow2"]
+            "m":["MadeLow10","MadeLow2"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit22":{
             "s":[4,5,28,30],
-            "m":["FurnMadeLow3","MadeLow16"]
+            "m":["FurnMadeLow3","MadeLow16"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit23":{
             "s":[20,25,29],
             "m":["FoodMadeLow5","FoodMadeLow1","FoodMadeLow6"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit24":{
             "s":[9,15,9],
             "m":["FurnMadeLow1","MadeLow3"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit25":{
             "s":[11,23,32],
-            "m":["FoodMadeLow3","FoodMadeLow17"]
+            "m":["FoodMadeLow3","FoodMadeLow17"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit26":{
             "s":[12,15,16],
             "m":["MadeLow5","MadeLow9"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit27":{
             "s":[5,8,16,34],
             "m":["FoodMadeLow1","FoodMadeLow2"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit28":{
             "s":[9,22,23],
             "m":["MadeLow13","FoodMadeLow8"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit29":{
             "s":[2,3,11,23],
-            "m":["MadeHigh7","MadeLow1"]
+            "m":["MadeHigh7","MadeLow1"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit30":{
             "s":[1,17,21],
-            "m":["MadeLow2","MadeLow1"]
+            "m":["MadeLow2","MadeLow1"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit31":{
             "s":[10,13,24],
-            "m":["MadeLow15","MadeLow14"]
+            "m":["MadeLow15","MadeLow14"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit32":{
             "s":[1,17,31],
-            "m":["MadeLow1","MadeLow6"]
+            "m":["MadeLow1","MadeLow6"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit33":{
             "s":[19,29],
             "m":["MadeLow7","MadeLow13"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit34":{
             "s":[1,18,21],
-            "m":["MadeHigh1","MadeLow6"]
+            "m":["MadeHigh1","MadeLow6"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit35":{
             "s":[35],
             "m":["MadeLow17"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit36":{
             "s":[36],
-            "m":["MadeLow18"]
+            "m":["MadeLow18"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit37":{
             "s":[37],
             "m":["MadeLow19"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit38":{
             "s":[38],
-            "m":["MadeLow20"]
+            "m":["MadeLow20"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit39":{
             "s":[39],
             "m":["MadeLow21"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit40":{
             "s":[40],
-            "m":["FoodMadeLow19"]
+            "m":["FoodMadeLow19"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit41":{
             "s":[41],
-            "m":["FoodMadeLow20"]
+            "m":["FoodMadeLow20"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit42":{
             "s":[42],
-            "m":["FoodMadeLow21"]
+            "m":["FoodMadeLow21"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit43":{
             "s":[43],
-            "m":["FoodMadeLow22"]
+            "m":["FoodMadeLow22"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit44":{
             "s":[44],
-            "m":["FoodMadeLow23"]
+            "m":["FoodMadeLow23"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit45":{
             "s":[45],
             "m":["CollectMadeLow3"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit46":{
             "s":[46],
             "m":["CollectMadeLow4"],
+            "c":{"d":["Ran"]},
             "f":100
         },
         "Arbeit47":{
             "s":[47],
-            "m":["CollectMadeLow5"]
+            "m":["CollectMadeLow5"],
+            "c":{"d":["Ran"]}
         },
         "Arbeit48":{
             "s":[48],
-            "m":["CollectMadeLow6"]
+            "m":["CollectMadeLow6"],
+            "c":{"d":["Ran"]}
+        },
+        "Arbeit49":{
+            "s":[32],
+            "m":["_scheduleBox.1"],
+            "c":{"a":["Ran"]}
+        },
+        "Arbeit50":{
+            "s":[14,45,32],
+            "m":["_scheduleBox.2"],
+            "c":{"a":["Ran"]}
+        },
+        "Arbeit51":{
+            "s":[45],
+            "m":["_scheduleBox.3"],
+            "c":{"a":["Ran"]}
+        },
+        "Arbeit52":{
+            "s":[14],
+            "m":["_scheduleBox.4"],
+            "c":{"a":["Ran"]}
         },
         "Rest1":{
             "s":[20],

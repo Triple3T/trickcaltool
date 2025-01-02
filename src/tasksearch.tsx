@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import CharaWithLifeskill from "@/components/parts/chara-with-lifeskill";
 const CharaWithLifeskill = lazy(
   () => import("@/components/parts/chara-with-lifeskill")
@@ -45,7 +46,6 @@ import chara from "@/data/chara";
 import lifeskill from "@/data/lifeskill";
 import material from "@/data/material";
 import task from "@/data/task";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 interface IComboboxOuterProp {
   value: string;
@@ -502,6 +502,19 @@ const TaskSearch = () => {
                         .flat()
                     ),
                   ].map((materialId) => {
+                    if (materialId.startsWith("_scheduleBox")) {
+                      return (
+                        <ItemSlot
+                          key={materialId}
+                          rarityInfo={material.r[2]}
+                          item={`/icons/Schedule_Box${
+                            materialId.split(".")[1]
+                          }`}
+                          fullItemPath
+                          size={3}
+                        />
+                      );
+                    }
                     return (
                       <ItemSlot
                         key={materialId}
@@ -558,6 +571,19 @@ const TaskSearch = () => {
                 </div>
                 <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
                   {task.t[selectedTask].m.map((materialId, index) => {
+                    if (materialId.startsWith("_scheduleBox")) {
+                      return (
+                        <ItemSlot
+                          key={index}
+                          rarityInfo={material.r[2]}
+                          item={`/icons/Schedule_Box${
+                            materialId.split(".")[1]
+                          }`}
+                          fullItemPath
+                          size={3.5}
+                        />
+                      );
+                    }
                     const currrentMaterial = material.m[materialId];
                     return (
                       <ItemSlot
@@ -627,6 +653,21 @@ const TaskSearch = () => {
                                   </div>
                                   <div className="flex flex-row gap-1 h-8">
                                     {m.map((materialId, index) => {
+                                      if (
+                                        materialId.startsWith("_scheduleBox")
+                                      ) {
+                                        return (
+                                          <ItemSlot
+                                            key={index}
+                                            rarityInfo={material.r[2]}
+                                            item={`/icons/Schedule_Box${
+                                              materialId.split(".")[1]
+                                            }`}
+                                            fullItemPath
+                                            size={2}
+                                          />
+                                        );
+                                      }
                                       const currrentMaterial =
                                         material.m[materialId];
                                       return (
@@ -710,6 +751,11 @@ const TaskSearch = () => {
               )
             )
               return null;
+            const { c } = task.t[taskId];
+            if (c && selectedChara) {
+              if ("a" in c && !c.a.includes(selectedChara)) return null;
+              if ("d" in c && c.d.includes(selectedChara)) return null;
+            }
             return (
               <div
                 key={taskId}
@@ -770,6 +816,19 @@ const TaskSearch = () => {
                 </div>
                 <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
                   {currentTask.m.map((materialId, index) => {
+                    if (materialId.startsWith("_scheduleBox")) {
+                      return (
+                        <ItemSlot
+                          key={index}
+                          rarityInfo={material.r[2]}
+                          item={`/icons/Schedule_Box${
+                            materialId.split(".")[1]
+                          }`}
+                          fullItemPath
+                          size={3.5}
+                        />
+                      );
+                    }
                     const currrentMaterial = material.m[materialId];
                     return (
                       <ItemSlot
@@ -897,6 +956,19 @@ const TaskSearch = () => {
                       </div>
                       <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
                         {taskInfo.m.map((materialId, index) => {
+                          if (materialId.startsWith("_scheduleBox")) {
+                            return (
+                              <ItemSlot
+                                key={index}
+                                rarityInfo={material.r[2]}
+                                item={`/icons/Schedule_Box${
+                                  materialId.split(".")[1]
+                                }`}
+                                fullItemPath
+                                size={3.5}
+                              />
+                            );
+                          }
                           const currrentMaterial = material.m[materialId];
                           return (
                             <ItemSlot
@@ -918,13 +990,18 @@ const TaskSearch = () => {
       {selectedTask && (
         <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
           {Object.entries(chara)
-            .filter(
-              ([charaId, v]) =>
+            .filter(([charaId, v]) => {
+              const firstFilter =
                 v.t[1] !== "1" &&
                 task.t[selectedTask].s
                   .filter((lfs) => !bannedIndex.includes(lfs))
-                  .some((lfs) => lifeskill.c[charaId].s.includes(lfs))
-            )
+                  .some((lfs) => lifeskill.c[charaId].s.includes(lfs));
+              if (!firstFilter) return false;
+              const { c } = task.t[selectedTask];
+              if (!c) return true;
+              if ("a" in c) return c.a.includes(charaId);
+              if ("d" in c) return !c.d.includes(charaId);
+            })
             .sort(([a], [b]) => {
               return (
                 lifeskill.c[b].s.filter((lfs) =>
@@ -975,7 +1052,14 @@ const TaskSearch = () => {
             >
               {(() => {
                 const taskLineup: Array<
-                  [string, { score: number; skillset: number[] }]
+                  [
+                    string,
+                    {
+                      score: number;
+                      skillset: number[];
+                      charaLimit?: { a: string[] } | { d: string[] };
+                    },
+                  ]
                 > = Object.entries(task.t)
                   .filter(([, taskInfo]) =>
                     taskInfo.m.includes(selectedMaterial)
@@ -985,6 +1069,7 @@ const TaskSearch = () => {
                     {
                       score: [4, 2, 1][taskInfo.m.indexOf(selectedMaterial)],
                       skillset: taskInfo.s,
+                      charaLimit: taskInfo.c,
                     },
                   ]);
                 const skillLineup = [
@@ -1000,12 +1085,24 @@ const TaskSearch = () => {
                         skillLineup.includes(charaSkillEntry)
                       )
                   )
-                  .sort(([a], [b]) => {
+                  .map(([a]) => {
                     const getFinalScore = (charaId: string) => {
                       const [charaMainSkill, ...charaSubSkills] =
                         lifeskill.c[charaId].s;
                       return taskLineup
-                        .map(([, { score, skillset }]) => {
+                        .map(([, { score, skillset, charaLimit }]) => {
+                          if (charaLimit) {
+                            if (
+                              "a" in charaLimit &&
+                              !charaLimit.a.includes(charaId)
+                            )
+                              return 0;
+                            else if (
+                              "d" in charaLimit &&
+                              charaLimit.d.includes(charaId)
+                            )
+                              return 0;
+                          }
                           const [taskMainSkill, ...taskSubSkills] = skillset;
                           const bothMainSkillScore =
                             skillset[0] === charaMainSkill ? 7 : 0;
@@ -1033,12 +1130,18 @@ const TaskSearch = () => {
                         })
                         .reduce((p, c) => p + c, 0);
                     };
+                    return { charaId: a, score: getFinalScore(a) };
+                  })
+                  .filter((c) => c.score)
+                  .sort((a, b) => {
                     return (
-                      getFinalScore(b) - getFinalScore(a) ||
-                      t(`chara.${a}`).localeCompare(t(`chara.${b}`))
+                      b.score - a.score ||
+                      t(`chara.${a.charaId}`).localeCompare(
+                        t(`chara.${b.charaId}`)
+                      )
                     );
                   })
-                  .map(([charaId]) => {
+                  .map(({ charaId }) => {
                     const cls = lifeskill.c[charaId].s;
                     return (
                       <Suspense
@@ -1066,9 +1169,7 @@ const TaskSearch = () => {
               className="flex flex-wrap mt-6 gap-6 justify-center"
             >
               {Object.entries(task.t)
-                .filter(([, taskInfo]) =>
-                  taskInfo.m.includes(selectedMaterial)
-                )
+                .filter(([, taskInfo]) => taskInfo.m.includes(selectedMaterial))
                 .map(([taskId, taskInfo]) => {
                   return (
                     <div
@@ -1118,6 +1219,19 @@ const TaskSearch = () => {
                       </div>
                       <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
                         {taskInfo.m.map((materialId, index) => {
+                          if (materialId.startsWith("_scheduleBox")) {
+                            return (
+                              <ItemSlot
+                                key={index}
+                                rarityInfo={material.r[2]}
+                                item={`/icons/Schedule_Box${
+                                  materialId.split(".")[1]
+                                }`}
+                                fullItemPath
+                                size={3.5}
+                              />
+                            );
+                          }
                           const currrentMaterial = material.m[materialId];
                           return (
                             <ItemSlot

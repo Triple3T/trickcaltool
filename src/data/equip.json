@@ -1660,6 +1660,18 @@
             ["e.weapon.919","e.armor.908","e.armor.904","e.weapon.926","e.accessory.903","e.armor.914"],
             ["e.weapon.1009","e.armor.1007","e.armor.1004","e.weapon.1029","e.accessory.1003","e.armor.1013"]
         ],
+        "Ran":[
+            ["e.weapon.126","e.accessory.103","e.armor.105","e.accessory.105","e.accessory.111","e.armor.118"],
+            ["e.weapon.226","e.armor.213","e.armor.204","e.accessory.204","e.accessory.207","e.accessory.203"],
+            ["e.weapon.327","e.armor.304","e.weapon.323","e.accessory.306","e.accessory.308","e.armor.313"],
+            ["e.weapon.430","e.armor.404","e.weapon.422","e.accessory.409","e.accessory.408","e.armor.413"],
+            ["e.weapon.525","e.armor.503","e.weapon.519","e.armor.512","e.accessory.505","e.armor.514"],
+            ["e.weapon.625","e.armor.604","e.weapon.618","e.armor.619","e.accessory.605","e.armor.618"],
+            ["e.armor.703","e.armor.712","e.weapon.718","e.accessory.701","e.accessory.707","e.armor.716"],
+            ["e.weapon.828","e.armor.810","e.armor.804","e.weapon.805","e.accessory.808","e.armor.817"],
+            ["e.weapon.917","e.armor.910","e.armor.904","e.weapon.925","e.accessory.906","e.armor.914"],
+            ["e.weapon.1007","e.armor.1009","e.armor.1004","e.weapon.1029","e.accessory.1003","e.armor.1013"]
+        ],
         "RenewaAwaken":[
             ["e.weapon.112","e.armor.106","e.armor.109","e.accessory.103","e.accessory.111","e.accessory.105"],
             ["e.weapon.215","e.armor.210","e.armor.204","e.accessory.204","e.accessory.203","e.armor.219"],

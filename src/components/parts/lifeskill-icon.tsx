@@ -18,23 +18,23 @@ const CLASS_NAME_SET: Record<
   large: [
     "w-16 h-16 relative",
     "",
-    "w-16 h-16 rounded-full overflow-hidden",
-    "w-24 absolute -left-4 -top-3",
-    "w-16 absolute left-0 top-0",
+    "w-16 h-16 rounded-full overflow-hidden mx-auto",
+    "w-24 absolute left-1/2 -translate-x-1/2 -top-3",
+    "w-16 absolute left-1/2 -translate-x-1/2 top-0",
   ],
   default: [
     "w-16 h-16 relative",
     "p-3",
-    "w-10 h-10 rounded-full overflow-hidden",
-    "w-16 absolute left-0 top-0.5",
-    "w-10 absolute left-3 top-3",
+    "w-10 h-10 rounded-full overflow-hidden mx-auto",
+    "w-16 absolute left-1/2 -translate-x-1/2 top-0.5",
+    "w-10 absolute left-1/2 -translate-x-1/2 top-3",
   ],
   small: [
     "w-12 h-12 relative",
     "p-2",
-    "w-8 h-8 rounded-full overflow-hidden",
-    "w-12 absolute left-0 top-0.5",
-    "w-8 absolute left-2 top-2",
+    "w-8 h-8 rounded-full overflow-hidden mx-auto",
+    "w-12 absolute left-1/2 -translate-x-1/2 top-0.5",
+    "w-8 absolute left-1/2 -translate-x-1/2 top-2",
   ],
 };
 
