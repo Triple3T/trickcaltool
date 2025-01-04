@@ -13,8 +13,6 @@ import {
   ArrowDownUp,
   ArrowDownZA,
   ArrowUpAZ,
-  ChevronDown,
-  ChevronUp,
   Filter,
   Info,
   Minus,
@@ -1384,7 +1382,7 @@ const EquipRank = () => {
                         <div
                           className={cn(
                             bg,
-                            "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(4.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] gap-1"
+                            "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(5.5rem,_1fr))] gap-1"
                           )}
                         >
                           {rankData.user.o
@@ -1396,7 +1394,7 @@ const EquipRank = () => {
                               return (
                                 <div
                                   key={c}
-                                  className="flex flex-col items-center p-0 min-w-18 min-h-18 sm:min-w-20 sm:min-h-20 border-slate-200 dark:border-slate-800 border-2 bg-slate-200 dark:bg-slate-800 rounded shadow-sm overflow-hidden relative"
+                                  className="min-w-20 sm:min-w-22 shadow-sm relative pr-5"
                                 >
                                   <img
                                     src={
@@ -1408,70 +1406,59 @@ const EquipRank = () => {
                                       personalityBG[
                                         Number(chara[c].t[0]) as Personality
                                       ],
-                                      "aspect-square w-full"
+                                      "aspect-square w-full border-slate-200 dark:border-slate-800 border-2 overflow-hidden rounded relative z-10"
                                     )}
                                   />
-                                  <div className="w-full -mt-1 md:-mt-1.5 break-keep h-6 p-0.5 flex flex-row items-stretch justify-center gap-1 bg-slate-200 dark:bg-slate-800">
-                                    <div className="flex-1">
-                                      {enableDialog && (
-                                        // <div className="absolute right-0 top-0 p-0.5">
-                                        <div>
-                                          <Info
-                                            className="h-5 w-5 rounded-full"
-                                            // fill="#a0a0a0"
-                                            onClick={() => {
-                                              setRankDialogProp({
-                                                chara: c,
-                                                charaTypes: chara[c].t,
-                                                rank,
-                                                rankStats: eqrank.r[
-                                                  eqrank.c[c].r
-                                                ].map((rs) =>
-                                                  rs.map((r) => eqrank.s[r])
-                                                ),
-                                                sameRankBonus: Object.entries(
-                                                  eqrank.c
-                                                )
-                                                  .filter(
-                                                    ([k, v]) =>
-                                                      k !== c &&
-                                                      v.r === eqrank.c[c].r
-                                                  )
-                                                  .map(([k]) => k),
-                                                maxRank: rankData.maxRank,
-                                                changeRank,
-                                                skin: skinData[c] || 0,
-                                              });
-                                              setRankDialogOpened(true);
-                                            }}
-                                          />
-                                        </div>
-                                      )}
+                                  {enableDialog && (
+                                    <div className="absolute right-5 top-0 p-1 z-10">
+                                      <Info
+                                        className="h-4 w-4 rounded-full"
+                                        fill="#a0a0a0"
+                                        onClick={() => {
+                                          setRankDialogProp({
+                                            chara: c,
+                                            charaTypes: chara[c].t,
+                                            rank,
+                                            rankStats: eqrank.r[
+                                              eqrank.c[c].r
+                                            ].map((rs) =>
+                                              rs.map((r) => eqrank.s[r])
+                                            ),
+                                            sameRankBonus: Object.entries(
+                                              eqrank.c
+                                            )
+                                              .filter(
+                                                ([k, v]) =>
+                                                  k !== c &&
+                                                  v.r === eqrank.c[c].r
+                                              )
+                                              .map(([k]) => k),
+                                            maxRank: rankData.maxRank,
+                                            changeRank,
+                                            skin: skinData[c] || 0,
+                                          });
+                                          setRankDialogOpened(true);
+                                        }}
+                                      />
                                     </div>
-                                    <div className="flex-1">
-                                      {rank === 1 ? (
-                                        <ChevronDown className="w-5 h-5 opacity-50" />
-                                      ) : (
-                                        <ChevronDown
-                                          className="w-5 h-5"
-                                          onClick={() =>
-                                            changeRank(c, rank - 1)
-                                          }
-                                        />
-                                      )}
-                                    </div>
-                                    <div className="flex-1">
-                                      {rank === MAX_RANK ? (
-                                        <ChevronUp className="w-5 h-5 opacity-50" />
-                                      ) : (
-                                        <ChevronUp
-                                          className="w-5 h-5"
-                                          onClick={() =>
-                                            changeRank(c, rank + 1)
-                                          }
-                                        />
-                                      )}
-                                    </div>
+                                  )}
+                                  <div className="absolute right-0 bottom-0 w-8 break-keep h-max pl-3.5 pr-0.5 py-0.5 flex flex-col items-stretch justify-evenly gap-1 bg-slate-200 dark:bg-slate-800 rounded">
+                                    {rank >= rankData.maxRank ? (
+                                      <Plus className="w-4 h-4 opacity-50" />
+                                    ) : (
+                                      <Plus
+                                        className="w-4 h-4"
+                                        onClick={() => changeRank(c, rank + 1)}
+                                      />
+                                    )}
+                                    {rank <= 1 ? (
+                                      <Minus className="w-4 h-4 opacity-50" />
+                                    ) : (
+                                      <Minus
+                                        className="w-4 h-4"
+                                        onClick={() => changeRank(c, rank - 1)}
+                                      />
+                                    )}
                                   </div>
                                 </div>
                               );

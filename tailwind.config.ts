@@ -122,14 +122,17 @@ module.exports = {
         '1/8': '12.5%',
         14: "3.5rem",
         18: "4.5rem",
+        22: "5.5rem",
       },
       width: {
         14: "3.5rem",
         18: "4.5rem",
+        22: "5.5rem",
       },
       height: {
         14: "3.5rem",
         18: "4.5rem",
+        22: "5.5rem",
       },
       backgroundImage: {
         "board-special": "url('/boards/Rect_03.png')",
