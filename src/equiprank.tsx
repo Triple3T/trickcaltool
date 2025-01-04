@@ -13,6 +13,8 @@ import {
   ArrowDownUp,
   ArrowDownZA,
   ArrowUpAZ,
+  ChevronDown,
+  ChevronUp,
   Filter,
   Info,
   Minus,
@@ -1382,7 +1384,7 @@ const EquipRank = () => {
                         <div
                           className={cn(
                             bg,
-                            "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] gap-1"
+                            "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(4.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] gap-1"
                           )}
                         >
                           {rankData.user.o
@@ -1394,41 +1396,8 @@ const EquipRank = () => {
                               return (
                                 <div
                                   key={c}
-                                  className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative"
+                                  className="flex flex-col items-center p-0 min-w-18 min-h-18 sm:min-w-20 sm:min-h-20 border-slate-200 dark:border-slate-800 border-2 bg-slate-200 dark:bg-slate-800 rounded shadow-sm overflow-hidden relative"
                                 >
-                                  {enableDialog && (
-                                    <div className="absolute right-0 top-0 p-0.5">
-                                      <Info
-                                        className="h-4 w-4 rounded-full"
-                                        fill="#a0a0a0"
-                                        onClick={() => {
-                                          setRankDialogProp({
-                                            chara: c,
-                                            charaTypes: chara[c].t,
-                                            rank,
-                                            rankStats: eqrank.r[
-                                              eqrank.c[c].r
-                                            ].map((rs) =>
-                                              rs.map((r) => eqrank.s[r])
-                                            ),
-                                            sameRankBonus: Object.entries(
-                                              eqrank.c
-                                            )
-                                              .filter(
-                                                ([k, v]) =>
-                                                  k !== c &&
-                                                  v.r === eqrank.c[c].r
-                                              )
-                                              .map(([k]) => k),
-                                            maxRank: rankData.maxRank,
-                                            changeRank,
-                                            skin: skinData[c] || 0,
-                                          });
-                                          setRankDialogOpened(true);
-                                        }}
-                                      />
-                                    </div>
-                                  )}
                                   <img
                                     src={
                                       skinData[c]
@@ -1442,6 +1411,68 @@ const EquipRank = () => {
                                       "aspect-square w-full"
                                     )}
                                   />
+                                  <div className="w-full -mt-1 md:-mt-1.5 break-keep h-6 p-0.5 flex flex-row items-stretch justify-center gap-1 bg-slate-200 dark:bg-slate-800">
+                                    <div className="flex-1">
+                                      {enableDialog && (
+                                        // <div className="absolute right-0 top-0 p-0.5">
+                                        <div>
+                                          <Info
+                                            className="h-5 w-5 rounded-full"
+                                            // fill="#a0a0a0"
+                                            onClick={() => {
+                                              setRankDialogProp({
+                                                chara: c,
+                                                charaTypes: chara[c].t,
+                                                rank,
+                                                rankStats: eqrank.r[
+                                                  eqrank.c[c].r
+                                                ].map((rs) =>
+                                                  rs.map((r) => eqrank.s[r])
+                                                ),
+                                                sameRankBonus: Object.entries(
+                                                  eqrank.c
+                                                )
+                                                  .filter(
+                                                    ([k, v]) =>
+                                                      k !== c &&
+                                                      v.r === eqrank.c[c].r
+                                                  )
+                                                  .map(([k]) => k),
+                                                maxRank: rankData.maxRank,
+                                                changeRank,
+                                                skin: skinData[c] || 0,
+                                              });
+                                              setRankDialogOpened(true);
+                                            }}
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="flex-1">
+                                      {rank === 1 ? (
+                                        <ChevronDown className="w-5 h-5 opacity-50" />
+                                      ) : (
+                                        <ChevronDown
+                                          className="w-5 h-5"
+                                          onClick={() =>
+                                            changeRank(c, rank - 1)
+                                          }
+                                        />
+                                      )}
+                                    </div>
+                                    <div className="flex-1">
+                                      {rank === MAX_RANK ? (
+                                        <ChevronUp className="w-5 h-5 opacity-50" />
+                                      ) : (
+                                        <ChevronUp
+                                          className="w-5 h-5"
+                                          onClick={() =>
+                                            changeRank(c, rank + 1)
+                                          }
+                                        />
+                                      )}
+                                    </div>
+                                  </div>
                                 </div>
                               );
                             })}
