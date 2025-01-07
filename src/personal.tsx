@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ItemSlot from "@/components/parts/item-slot";
 import { personalityBG } from "@/utils/personalityBG";
@@ -16,6 +18,7 @@ import food from "@/data/food";
 import purpleboard from "@/data/purpleboard";
 import purpleposition from "@/data/purpleposition";
 import route from "@/data/route";
+import skillcoefficient from "@/data/skillcoefficient";
 import {
   Attack,
   BoardType,
@@ -25,6 +28,7 @@ import {
   PurpleBoardType,
   Race,
 } from "@/types/enums";
+import { RefreshCw } from "lucide-react";
 
 const NAMEKEY = "chara";
 // const TABKEY = "tab";
@@ -35,6 +39,9 @@ const Personal = () => {
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState<string>("Board");
+  const [lowLv, setLowLv] = useState<number>(1);
+  const [highLv, setHighLv] = useState<number>(1);
+  const [isPvP, setIsPvP] = useState<boolean>(false);
   const charaName = searchParams.get(NAMEKEY);
   if (!charaName) {
     return (
@@ -47,8 +54,7 @@ const Personal = () => {
             })
             .map(([name, meta]) => {
               const [
-                personality,
-                // initialStar,
+                personality, // initialStar,
                 ,
                 attackType,
                 position,
@@ -551,94 +557,767 @@ const Personal = () => {
             <div>연회장 정보가 존재하지 않아요!</div>
           )}
         </TabsContent>
-        <TabsContent value="Skill">
-          스킬 추가할까 말까 이거 개 노가단데
+        <TabsContent
+          value="Skill"
+          className="grid grid-rows-1 md:grid-cols-3 gap-4 pt-2"
+        >
+          <Card className="text-left p-4">
+            <div className="flex flex-row items-center gap-2">
+              <div className="aspect-square w-12 h-12 relative">
+                <img
+                  src={`/skills/Icon_AdmissionSKill_${charaName}.png`}
+                  className="w-12 h-12 rounded border-2 border-green-500 border-inset"
+                />
+                <img
+                  src="/skills/HeroSkill_Icon_SkillSp.png"
+                  className="absolute -top-1 -left-1 w-5"
+                />
+              </div>
+              <div>
+                <div className="text-sm mt-2 opacity-80">저학년 스킬</div>
+                <div className="text-xl">
+                  {t(`skill.${charaName}.low.title`)}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-row items-baseline gap-4 my-2">
+              <div className="w-8">Lv.{lowLv}</div>
+              <Slider
+                className="w-full my-1"
+                value={[lowLv]}
+                onValueChange={(v) => setLowLv(v[0])}
+                min={1}
+                max={10}
+              />
+            </div>
+            <div className="text-base break-keep">
+              {t(`skill.${charaName}.low.description`)
+                .split("\n")
+                .map((t, i) => {
+                  return (
+                    <div key={i}>
+                      {t.split("*").map((s, j) => {
+                        return (
+                          <span
+                            key={j}
+                            className={
+                              j % 2 ? "text-red-600 dark:text-red-400" : ""
+                            }
+                          >
+                            {s}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
+              {t(
+                `skill.${charaName}.low.coefficient`,
+                Object.fromEntries(
+                  skillcoefficient.c[charaName].s.l.map((v, i) => {
+                    if (typeof v === "number") return [i, v];
+                    if (Array.isArray(v)) return [i, v[lowLv - 1]];
+                    const [skillType, coefficientIndexString] = v.split(".");
+                    const coefficientIndex = Number(coefficientIndexString);
+                    if (Number.isNaN(coefficientIndex)) return [i, -1];
+                    if (!["l", "h", "p", "n", "a"].includes(skillType))
+                      return [i, -1];
+                    const targetCoefficient =
+                      skillcoefficient.c[charaName].s[
+                        skillType as "l" | "h" | "p" | "n" | "a"
+                      ]?.[coefficientIndex];
+                    if (typeof targetCoefficient === "number")
+                      return [i, targetCoefficient];
+                    if (Array.isArray(targetCoefficient))
+                      return [
+                        i,
+                        targetCoefficient[
+                          (skillType === "l" ? lowLv : highLv) - 1
+                        ],
+                      ];
+                    return [i, -1];
+                  })
+                )
+              )
+                .split("\n")
+                .map((t, i) => {
+                  return (
+                    <div key={i}>
+                      {t.split("*").map((s, j) => {
+                        return (
+                          <span
+                            key={j}
+                            className={j % 2 ? "text-emerald-500" : ""}
+                          >
+                            {s}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </div>
+          </Card>
+          <Card className="text-left p-4">
+            <div className="flex flex-row items-center gap-2">
+              <div className="aspect-square w-12 h-12 relative">
+                <img
+                  src={`/skills/Icon_GraduateSKill_${charaName}.png`}
+                  className="w-12 h-12 rounded border-2 border-green-600 border-inset"
+                />
+                <img
+                  src="/skills/HeroSkill_Icon_SkillUltimate.png"
+                  className="absolute -top-1 -left-1 w-5"
+                />
+              </div>
+              <div>
+                <div className="text-sm opacity-80">고학년 스킬</div>
+                <div className="text-xl">
+                  {isPvP && "[PVP]"}
+                  {t(`skill.${charaName}.high.title`)}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-row items-baseline gap-4 my-2">
+              <div className="w-8">Lv.{highLv}</div>
+              <Slider
+                className="w-full my-1"
+                value={[highLv]}
+                onValueChange={(v) => setHighLv(v[0])}
+                min={1}
+                max={10}
+              />
+            </div>
+            <div className="flex flex-row items-center gap-1 my-1">
+              <img
+                src="/common/ClockIcon_002.png"
+                className="w-6 h-6 -rotate-10"
+              />
+              <div className="flex-1">
+                재사용 대기시간{" "}
+                <span className={isPvP ? "text-purple-800 dark:text-purple-200" : "text-green-800 dark:text-lime-200"}>
+                  {skillcoefficient.c[charaName].c[isPvP ? "p" : "h"]}초
+                </span>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                className={cn(
+                  "px-2 py-1 text-xs h-min",
+                  isPvP
+                    ? "bg-lime-300 dark:bg-green-700 hover:bg-lime-400 dark:hover:bg-green-600"
+                    : "bg-purple-300 dark:bg-purple-700 hover:bg-purple-400 dark:hover:bg-purple-600"
+                )}
+                onClick={() => setIsPvP((v) => !v)}
+              >
+                <RefreshCw className="w-3 h-3 inline mr-1" strokeWidth={2.5} />
+                {isPvP ? "PvE" : "PvP"}
+              </Button>
+            </div>
+            <div className="text-base break-keep">
+              {t(`skill.${charaName}.high.description`)
+                .split("\n")
+                .map((t, i) => {
+                  return (
+                    <div key={i}>
+                      {t.split("*").map((s, j) => {
+                        return (
+                          <span
+                            key={j}
+                            className={
+                              j % 2 ? "text-red-600 dark:text-red-400" : ""
+                            }
+                          >
+                            {s}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
+              {t(
+                `skill.${charaName}.high.coefficient`,
+                Object.fromEntries(
+                  skillcoefficient.c[charaName].s[isPvP ? "p" : "h"].map(
+                    (v, i) => {
+                      if (typeof v === "number") return [i, v];
+                      if (Array.isArray(v)) return [i, v[highLv - 1]];
+                      const [skillType, coefficientIndexString] = v.split(".");
+                      const coefficientIndex = Number(coefficientIndexString);
+                      if (Number.isNaN(coefficientIndex)) return [i, -1];
+                      if (!["l", "h", "p", "n", "a"].includes(skillType))
+                        return [i, -1];
+                      const targetCoefficient =
+                        skillcoefficient.c[charaName].s[
+                          skillType as "l" | "h" | "p" | "n" | "a"
+                        ]?.[coefficientIndex];
+                      if (typeof targetCoefficient === "number")
+                        return [i, targetCoefficient];
+                      if (Array.isArray(targetCoefficient))
+                        return [
+                          i,
+                          targetCoefficient[
+                            (skillType === "l" ? lowLv : highLv) - 1
+                          ],
+                        ];
+                      return [i, -1];
+                    }
+                  )
+                )
+              )
+                .split("\n")
+                .map((t, i) => {
+                  return (
+                    <div key={i}>
+                      {t.split("*").map((s, j) => {
+                        return (
+                          <span
+                            key={j}
+                            className={
+                              j % 2
+                                ? isPvP
+                                  ? "text-purple-500"
+                                  : "text-emerald-500"
+                                : ""
+                            }
+                          >
+                            {s}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </div>
+          </Card>
+          <Card className="text-left p-4">
+            <div className="flex flex-row items-center gap-2">
+              <img
+                src={`/skills/${
+                  chara[charaName].t.charAt(2) === "0" ? "Magic" : "Physic"
+                }_NormalAttack.png`}
+                className="w-12 h-12 rounded border-2 border-lime-200 border-inset"
+              />
+              <div>
+                <div className="text-xl">일반 공격</div>
+              </div>
+            </div>
+            {skillcoefficient.c[charaName].s.a && (
+              <div className="text-sm my-1">
+                <span className="px-8 py-1 bg-emerald-700 text-slate-50 dark:bg-lime-300 dark:text-slate-950 rounded-full">
+                  기본
+                </span>
+              </div>
+            )}
+            <div className="text-base break-keep">
+              {t(`skill.${charaName}.normal.description`)
+                .split("\n")
+                .map((t, i) => {
+                  return (
+                    <div key={i}>
+                      {t.split("*").map((s, j) => {
+                        return (
+                          <span
+                            key={j}
+                            className={
+                              j % 2 ? "text-red-600 dark:text-red-400" : ""
+                            }
+                          >
+                            {s}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
+              {t(
+                `skill.${charaName}.normal.coefficient`,
+                Object.fromEntries(
+                  skillcoefficient.c[charaName].s.n.map((v, i) => {
+                    if (typeof v === "number") return [i, v];
+                    if (Array.isArray(v)) return [i, v[highLv - 1]];
+                    const [skillType, coefficientIndexString] = v.split(".");
+                    const coefficientIndex = Number(coefficientIndexString);
+                    if (Number.isNaN(coefficientIndex)) return [i, -1];
+                    if (!["l", "h", "p", "n", "a"].includes(skillType))
+                      return [i, -1];
+                    const targetCoefficient =
+                      skillcoefficient.c[charaName].s[
+                        skillType as "l" | "h" | "p" | "n" | "a"
+                      ]?.[coefficientIndex];
+                    if (typeof targetCoefficient === "number")
+                      return [i, targetCoefficient];
+                    if (Array.isArray(targetCoefficient))
+                      return [
+                        i,
+                        targetCoefficient[
+                          (skillType === "l" ? lowLv : highLv) - 1
+                        ],
+                      ];
+                    return [i, -1];
+                  })
+                )
+              )
+                .split("\n")
+                .map((t, i) => {
+                  return (
+                    <div key={i}>
+                      {t.split("*").map((s, j) => {
+                        return (
+                          <span
+                            key={j}
+                            className={j % 2 ? "text-emerald-500" : ""}
+                          >
+                            {s}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </div>
+            {skillcoefficient.c[charaName].s.a && (
+              <>
+                <div className="text-sm mt-2 mb-1">
+                  <span className="px-8 py-1 bg-emerald-700 text-slate-50 dark:bg-lime-300 dark:text-slate-950 rounded-full">
+                    강화
+                  </span>
+                </div>
+                <div className="text-base break-keep">
+                  {t(`skill.${charaName}.advanced.description`)
+                    .split("\n")
+                    .map((t, i) => {
+                      return (
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={
+                                  j % 2 ? "text-red-600 dark:text-red-400" : ""
+                                }
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                </div>
+                <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
+                  {t(
+                    `skill.${charaName}.advanced.coefficient`,
+                    Object.fromEntries(
+                      skillcoefficient.c[charaName].s.a.map((v, i) => {
+                        if (typeof v === "number") return [i, v];
+                        if (Array.isArray(v)) return [i, v[highLv - 1]];
+                        const [skillType, coefficientIndexString] =
+                          v.split(".");
+                        const coefficientIndex = Number(coefficientIndexString);
+                        if (Number.isNaN(coefficientIndex)) return [i, -1];
+                        if (!["l", "h", "p", "n", "a"].includes(skillType))
+                          return [i, -1];
+                        const targetCoefficient =
+                          skillcoefficient.c[charaName].s[
+                            skillType as "l" | "h" | "p" | "n" | "a"
+                          ]?.[coefficientIndex];
+                        if (typeof targetCoefficient === "number")
+                          return [i, targetCoefficient];
+                        if (Array.isArray(targetCoefficient))
+                          return [
+                            i,
+                            targetCoefficient[
+                              (skillType === "l" ? lowLv : highLv) - 1
+                            ],
+                          ];
+                        return [i, -1];
+                      })
+                    )
+                  )
+                    .split("\n")
+                    .map((t, i) => {
+                      return (
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={j % 2 ? "text-emerald-500" : ""}
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                </div>
+              </>
+            )}
+          </Card>
         </TabsContent>
         <TabsContent value="Aside">
           {chara[charaName].a ? (
-            <div>
-              <div className="text-lg">{t(`aside.${charaName}.name`)}</div>
-              <div className="text-base mt-4">
-                <div className="flex flex-row justify-center items-center">
-                  {Array(1)
-                    .fill(0)
-                    .map((_, i) => {
+            <div className="grid grid-cols-1 gap-4 relative">
+                <img
+                  src={`/asideicons/AsideIcon_${charaName}.png`}
+                  className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 absolute top-0 right-0 animate-bounce"
+                />
+              <div className="text-2xl">
+                {t(`aside.${charaName}.name`)}
+              </div>
+              <Card className="text-left p-4">
+                <div className="flex flex-row items-center gap-2">
+                  <div className="aspect-square w-12 h-12 relative">
+                    <img
+                      src={`/asideskills/Aside_Skill_${charaName}_1.png`}
+                      className="w-12 h-12 rounded"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-sm">
+                      <div className="flex flex-row justify-start items-center">
+                        {Array(1)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/HeroGrade_000${
+                                  [0, 3, 3, 4][initialStar]
+                                }.png`}
+                                alt=""
+                                className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
+                              />
+                            );
+                          })}
+                        {Array(2)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/HeroGrade_0005.png`}
+                                alt=""
+                                className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
+                              />
+                            );
+                          })}
+                      </div>
+                    </div>
+                    <div className="text-xl">
+                      {t(`aside.${charaName}.skill1.title`)}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-base">
+                  {t(`aside.${charaName}.skill1.description`)
+                    .split("\n")
+                    .map((t, i) => {
                       return (
-                        <img
-                          key={i}
-                          src={`/icons/HeroGrade_000${
-                            [0, 3, 3, 4][initialStar]
-                          }.png`}
-                          alt=""
-                          className="w-8 h-8 inline -ml-2 first-of-type:ml-0"
-                        />
-                      );
-                    })}
-                  {Array(2)
-                    .fill(0)
-                    .map((_, i) => {
-                      return (
-                        <img
-                          key={i}
-                          src={`/icons/HeroGrade_0005.png`}
-                          alt=""
-                          className="w-8 h-8 inline -ml-2 first-of-type:ml-0"
-                        />
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={
+                                  j % 2 ? "text-red-600 dark:text-red-400" : ""
+                                }
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
                       );
                     })}
                 </div>
-                <div>{t(`aside.${charaName}.skill1`)}</div>
-              </div>
-              <div className="text-base mt-4">
-                <div className="flex flex-row justify-center items-center">
-                  {Array(2)
-                    .fill(0)
-                    .map((_, i) => {
+                <div className="text-sm text-slate-600 dark:text-slate-400">
+                  {t(
+                    `aside.${charaName}.skill1.coefficient`,
+                    Object.fromEntries(
+                      skillcoefficient.c[charaName].a![1].map((v, i) => {
+                        if (typeof v === "number") return [i, v];
+                        if (Array.isArray(v)) return [i, v[lowLv - 1]];
+                        const [skillType, coefficientIndexString] =
+                          v.split(".");
+                        const coefficientIndex = Number(coefficientIndexString);
+                        if (Number.isNaN(coefficientIndex)) return [i, -1];
+                        if (!["l", "h", "p", "n", "a"].includes(skillType))
+                          return [i, -1];
+                        const targetCoefficient =
+                          skillcoefficient.c[charaName].s[
+                            skillType as "l" | "h" | "p" | "n" | "a"
+                          ]?.[coefficientIndex];
+                        if (typeof targetCoefficient === "number")
+                          return [i, targetCoefficient];
+                        if (Array.isArray(targetCoefficient))
+                          return [
+                            i,
+                            targetCoefficient[
+                              (skillType === "l" ? lowLv : highLv) - 1
+                            ],
+                          ];
+                        return [i, -1];
+                      })
+                    )
+                  )
+                    .split("\n")
+                    .map((t, i) => {
                       return (
-                        <img
-                          key={i}
-                          src={`/icons/HeroGrade_000${
-                            [0, 3, 3, 4][initialStar]
-                          }.png`}
-                          alt=""
-                          className="w-8 h-8 inline -ml-2 first-of-type:ml-0"
-                        />
-                      );
-                    })}
-                  {Array(1)
-                    .fill(0)
-                    .map((_, i) => {
-                      return (
-                        <img
-                          key={i}
-                          src={`/icons/HeroGrade_0005.png`}
-                          alt=""
-                          className="w-8 h-8 inline -ml-2 first-of-type:ml-0"
-                        />
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={j % 2 ? "text-emerald-500" : ""}
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
                       );
                     })}
                 </div>
-                <div>{t(`aside.${charaName}.skill2`)}</div>
-              </div>
-              <div className="text-base mt-4">
-                <div className="flex flex-row justify-center items-center">
-                  {Array(3)
-                    .fill(0)
-                    .map((_, i) => {
+              </Card>
+              <Card className="text-left p-4">
+                <div className="flex flex-row items-center gap-2">
+                  <div className="aspect-square w-12 h-12 relative">
+                    <img
+                      src={`/asideskills/Aside_Skill_${charaName}_2.png`}
+                      className="w-12 h-12 rounded"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-sm">
+                      <div className="flex flex-row justify-start items-center">
+                        {Array(2)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/HeroGrade_000${
+                                  [0, 3, 3, 4][initialStar]
+                                }.png`}
+                                alt=""
+                                className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
+                              />
+                            );
+                          })}
+                        {Array(1)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/HeroGrade_0005.png`}
+                                alt=""
+                                className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
+                              />
+                            );
+                          })}
+                      </div>
+                    </div>
+                    <div className="text-xl">
+                      {t(`aside.${charaName}.skill2.title`)}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-base">
+                  {t(`aside.${charaName}.skill2.description`)
+                    .split("\n")
+                    .map((t, i) => {
                       return (
-                        <img
-                          key={i}
-                          src={`/icons/HeroGrade_000${
-                            [0, 3, 3, 4][initialStar]
-                          }.png`}
-                          alt=""
-                          className="w-8 h-8 inline -ml-2 first-of-type:ml-0"
-                        />
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={
+                                  j % 2 ? "text-red-600 dark:text-red-400" : ""
+                                }
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
                       );
                     })}
                 </div>
-                <div>{t(`aside.${charaName}.skill3`)}</div>
-              </div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">
+                  {t(
+                    `aside.${charaName}.skill2.coefficient`,
+                    Object.fromEntries(
+                      skillcoefficient.c[charaName].a![2].map((v, i) => {
+                        if (typeof v === "number") return [i, v];
+                        if (Array.isArray(v)) return [i, v[lowLv - 1]];
+                        const [skillType, coefficientIndexString] =
+                          v.split(".");
+                        const coefficientIndex = Number(coefficientIndexString);
+                        if (Number.isNaN(coefficientIndex)) return [i, -1];
+                        if (!["l", "h", "p", "n", "a"].includes(skillType))
+                          return [i, -1];
+                        const targetCoefficient =
+                          skillcoefficient.c[charaName].s[
+                            skillType as "l" | "h" | "p" | "n" | "a"
+                          ]?.[coefficientIndex];
+                        if (typeof targetCoefficient === "number")
+                          return [i, targetCoefficient];
+                        if (Array.isArray(targetCoefficient))
+                          return [
+                            i,
+                            targetCoefficient[
+                              (skillType === "l" ? lowLv : highLv) - 1
+                            ],
+                          ];
+                        return [i, -1];
+                      })
+                    )
+                  )
+                    .split("\n")
+                    .map((t, i) => {
+                      return (
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={j % 2 ? "text-emerald-500" : ""}
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                </div>
+              </Card>
+              <Card className="text-left p-4">
+                <div className="flex flex-row items-center gap-2">
+                  <div className="aspect-square w-12 h-12 relative">
+                    <img
+                      src={`/asideskills/Aside_Skill_${charaName}_3.png`}
+                      className="w-12 h-12 rounded"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-sm">
+                      <div className="flex flex-row justify-start items-center">
+                        {Array(3)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/HeroGrade_000${
+                                  [0, 3, 3, 4][initialStar]
+                                }.png`}
+                                alt=""
+                                className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
+                              />
+                            );
+                          })}
+                        {Array(0)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/HeroGrade_0005.png`}
+                                alt=""
+                                className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
+                              />
+                            );
+                          })}
+                      </div>
+                    </div>
+                    <div className="text-xl">
+                      {t(`aside.${charaName}.skill3.title`)}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-base">
+                  {t(`aside.${charaName}.skill3.description`)
+                    .split("\n")
+                    .map((t, i) => {
+                      return (
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={
+                                  j % 2 ? "text-red-600 dark:text-red-400" : ""
+                                }
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                </div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">
+                  {t(
+                    `aside.${charaName}.skill3.coefficient`,
+                    Object.fromEntries(
+                      skillcoefficient.c[charaName].a![3].map((v, i) => {
+                        if (typeof v === "number") return [i, v];
+                        if (Array.isArray(v)) return [i, v[lowLv - 1]];
+                        const [skillType, coefficientIndexString] =
+                          v.split(".");
+                        const coefficientIndex = Number(coefficientIndexString);
+                        if (Number.isNaN(coefficientIndex)) return [i, -1];
+                        if (!["l", "h", "p", "n", "a"].includes(skillType))
+                          return [i, -1];
+                        const targetCoefficient =
+                          skillcoefficient.c[charaName].s[
+                            skillType as "l" | "h" | "p" | "n" | "a"
+                          ]?.[coefficientIndex];
+                        if (typeof targetCoefficient === "number")
+                          return [i, targetCoefficient];
+                        if (Array.isArray(targetCoefficient))
+                          return [
+                            i,
+                            targetCoefficient[
+                              (skillType === "l" ? lowLv : highLv) - 1
+                            ],
+                          ];
+                        return [i, -1];
+                      })
+                    )
+                  )
+                    .split("\n")
+                    .map((t, i) => {
+                      return (
+                        <div key={i}>
+                          {t.split("*").map((s, j) => {
+                            return (
+                              <span
+                                key={j}
+                                className={j % 2 ? "text-emerald-500" : ""}
+                              >
+                                {s}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                </div>
+              </Card>
             </div>
           ) : (
             <div>아직 사념이 깊지 않은 것 같다</div>
