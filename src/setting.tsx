@@ -68,7 +68,7 @@ const Setting = () => {
     try {
       const cacheKeys = await caches.keys();
       const targetKey = cacheKeys.find((k) =>
-        k.startsWith("workbox-precache-")
+        k.startsWith("trickcalnote-base")
       );
       if (targetKey) {
         const targetCache = await caches.open(targetKey);
