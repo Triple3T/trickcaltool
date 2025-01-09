@@ -74,7 +74,7 @@ const Setting = () => {
         const targetCache = await caches.open(targetKey);
         await targetCache.delete("/index.html", { ignoreSearch: true });
       }
-      caches.delete("trickcalnote-fallback");
+      await caches.delete("trickcalnote-fallback");
     } catch {
       setInstallButtonText("ui.index.versionCheck.updateFailed");
       window.location.reload();
