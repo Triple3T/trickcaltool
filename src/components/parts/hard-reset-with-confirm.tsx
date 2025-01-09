@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,16 +15,17 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function HardResetWithConfirm() {
+  const { t } = useTranslation();
   const [started, setStarted] = useState(false);
   const hardReset = useCallback(async () => {
     setStarted(true);
     const registrations = await navigator.serviceWorker.getRegistrations();
     await Promise.all(registrations.map((r) => r.unregister())).catch(() => {
-      window.location.reload();
+      toast.error(t("ui.index.versionCheck.hardResetFailed"));
     });
     const cacheKeys = await caches.keys();
     await Promise.all(cacheKeys.map((k) => caches.delete(k))).catch(() => {
-      window.location.reload();
+      toast.error(t("ui.index.versionCheck.hardResetFailed"));
     });
     navigator.serviceWorker
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
@@ -34,26 +36,30 @@ export function HardResetWithConfirm() {
             installingWorker.onstatechange = () => {
               if (installingWorker.state === "installed") {
                 if (navigator.serviceWorker.controller) {
-                  window.location.reload();
+                  toast.error(t("ui.index.versionCheck.hardResetFailed"));
                 }
               }
             };
           } else {
-            window.location.reload();
+            toast.error(t("ui.index.versionCheck.hardResetFailed"));
           }
         };
         registration
           .update()
-          .then(() => {})
+          .then(() => {
+            toast.success(t("ui.index.versionCheck.hardResetSuccess"));
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
+          })
           .catch(() => {
-            window.location.reload();
+            toast.error(t("ui.index.versionCheck.hardResetFailed"));
           });
       })
       .catch(() => {
-        window.location.reload();
+        toast.error(t("ui.index.versionCheck.hardResetFailed"));
       });
-  }, []);
-  const { t } = useTranslation();
+  }, [t]);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

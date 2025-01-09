@@ -5186,6 +5186,8 @@ i18n
                   "입력한 데이터 및 설정은 그대로 유지됩니다.",
                 hardResetCancel: "그냥 냅두죠",
                 hardResetConfirm: "그렇게 해주세요",
+                hardResetSuccess: "리셋에 성공했어요. 잠시 후 새로고침합니다...",
+                hardResetFailed: "리셋에 실패했어요. 새로고침 후 다시 시도해주세요.",
               },
               personality: "성격",
               defaultstar: "초기 성급",
