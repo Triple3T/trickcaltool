@@ -581,13 +581,15 @@ const Personal = () => {
               </div>
             </div>
             <div className="flex flex-row items-baseline gap-4 my-2">
-              <div className="w-8">Lv.{lowLv}</div>
+              <div className="w-8">
+                Lv.{Math.min(lowLv, 10 + (chara[charaName].a ?? 0))}
+              </div>
               <Slider
                 className="w-full my-1"
-                value={[lowLv]}
+                value={[Math.min(lowLv, 10 + (chara[charaName].a ?? 0))]}
                 onValueChange={(v) => setLowLv(v[0])}
                 min={1}
-                max={10}
+                max={10 + (chara[charaName].a ?? 0)}
               />
             </div>
             <div className="text-base break-keep">
@@ -681,13 +683,15 @@ const Personal = () => {
               </div>
             </div>
             <div className="flex flex-row items-baseline gap-4 my-2">
-              <div className="w-8">Lv.{highLv}</div>
+              <div className="w-8">
+                Lv.{Math.min(highLv, 10 + (chara[charaName].a ?? 0))}
+              </div>
               <Slider
                 className="w-full my-1"
-                value={[highLv]}
+                value={[Math.min(highLv, 10 + (chara[charaName].a ?? 0))]}
                 onValueChange={(v) => setHighLv(v[0])}
                 min={1}
-                max={10}
+                max={10 + (chara[charaName].a ?? 0)}
               />
             </div>
             <div className="flex flex-row items-center gap-1 my-1">
@@ -697,7 +701,13 @@ const Personal = () => {
               />
               <div className="flex-1">
                 재사용 대기시간{" "}
-                <span className={isPvP ? "text-purple-800 dark:text-purple-200" : "text-green-800 dark:text-lime-200"}>
+                <span
+                  className={
+                    isPvP
+                      ? "text-purple-800 dark:text-purple-200"
+                      : "text-green-800 dark:text-lime-200"
+                  }
+                >
                   {skillcoefficient.c[charaName].c[isPvP ? "p" : "h"]}초
                 </span>
               </div>
@@ -966,13 +976,11 @@ const Personal = () => {
         <TabsContent value="Aside">
           {chara[charaName].a ? (
             <div className="grid grid-cols-1 gap-4 relative">
-                <img
-                  src={`/asideicons/AsideIcon_${charaName}.png`}
-                  className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 absolute top-0 right-0 animate-bounce"
-                />
-              <div className="text-2xl">
-                {t(`aside.${charaName}.name`)}
-              </div>
+              <img
+                src={`/asideicons/AsideIcon_${charaName}.png`}
+                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 absolute top-0 right-0 animate-bounce"
+              />
+              <div className="text-2xl">{t(`aside.${charaName}.name`)}</div>
               <Card className="text-left p-4">
                 <div className="flex flex-row items-center gap-2">
                   <div className="aspect-square w-12 h-12 relative">
