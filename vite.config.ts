@@ -88,7 +88,7 @@ export default defineConfig({
             options: {
               cacheName: "trickcalnote-fallback",
               expiration: {
-                maxEntries: 10,
+                maxEntries: 20,
                 maxAgeSeconds: 60 * 60 * 24 * 7,
               },
               cacheableResponse: {
