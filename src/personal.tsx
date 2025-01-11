@@ -1025,7 +1025,7 @@ const Personal = () => {
                     </div>
                   </div>
                 </div>
-                <div className="text-base">
+                <div className="text-base break-keep">
                   {t(`aside.${charaName}.skill1.description`)
                     .split("\n")
                     .map((t, i) => {
@@ -1047,7 +1047,7 @@ const Personal = () => {
                       );
                     })}
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">
+                <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
                     `aside.${charaName}.skill1.coefficient`,
                     Object.fromEntries(
@@ -1140,7 +1140,7 @@ const Personal = () => {
                     </div>
                   </div>
                 </div>
-                <div className="text-base">
+                <div className="text-base break-keep">
                   {t(`aside.${charaName}.skill2.description`)
                     .split("\n")
                     .map((t, i) => {
@@ -1162,7 +1162,7 @@ const Personal = () => {
                       );
                     })}
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">
+                <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
                     `aside.${charaName}.skill2.coefficient`,
                     Object.fromEntries(
@@ -1255,7 +1255,7 @@ const Personal = () => {
                     </div>
                   </div>
                 </div>
-                <div className="text-base">
+                <div className="text-base break-keep">
                   {t(`aside.${charaName}.skill3.description`)
                     .split("\n")
                     .map((t, i) => {
@@ -1277,7 +1277,7 @@ const Personal = () => {
                       );
                     })}
                 </div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">
+                <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
                     `aside.${charaName}.skill3.coefficient`,
                     Object.fromEntries(
