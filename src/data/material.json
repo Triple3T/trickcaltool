@@ -82,6 +82,14 @@
                 "MadeLow2":2
             }
         },
+        "CollectMadeLow7":{
+            "r":1,
+            "g":true,
+            "m":{
+                "MadeLow12":6,
+                "MadeLow9":6
+            }
+        },
         "FoodMadeLow1":{"r":0,"g":true},
         "FoodMadeLow2":{"r":0,"g":true},
         "FoodMadeLow3":{"r":0,"g":true},
