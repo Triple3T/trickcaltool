@@ -90,7 +90,7 @@ const OnlineBackupListDialog = () => {
                     <Card
                       key={i}
                       className={cn(
-                        "flex w-max min-w-full space-x-2 p-2 justify-center items-stretch",
+                        "flex flex-col w-max space-x-2 p-4 justify-center items-stretch",
                         i === selectedIndex && "bg-blue-500/20"
                       )}
                       onClick={() => setSelectedIndex(i)}
