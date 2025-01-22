@@ -18,6 +18,8 @@ import board from "@/data/board";
 import pboard from "@/data/purpleboard";
 import int1BitCount from "./int1bitCount";
 
+const MAX_RANK = 10;
+
 interface ExportTextFileProps {
   fileName?: string;
   data: string;
@@ -240,8 +242,10 @@ const migrateIntoIdbFile = async () => {
       pdtp.p[charaName] ??
         pboard.c[charaName].b.map((a) => Array(a.toString(10).length).fill(0))
     );
-    userData.nthboard.n.push(ndtp.n[charaName] ?? 1);
-    userData.eqrank.r.push(rdtp.r[charaName] ?? 1);
+    userData.nthboard.n.push(ndtp.n[charaName] || 1);
+    userData.eqrank.r.push(
+      Math.min(MAX_RANK, Math.max(Number(rdtp.r[charaName]) || 1, 1))
+    );
     userData.memo.o.push([0, ""]);
     fullCharaNames.splice(fullCharaNames.indexOf(charaName), 1);
   });
@@ -362,8 +366,11 @@ export const readIntoMemory = async (
           pboard:
             data.pboard.p[i] ??
             pboard.c[c].b.map((a) => Array(a.toString(10).length).fill(0)),
-          nthboard: data.nthboard.n[i] ?? 1,
-          eqrank: data.eqrank.r[i] ?? 1,
+          nthboard: data.nthboard.n[i] || 1,
+          eqrank: Math.min(
+            MAX_RANK,
+            Math.max(Number(data.eqrank.r[i]) || 1, 1)
+          ),
           skin: data.skin[c],
           unowned: false,
           memo: data.memo.o[i] ?? [0, ""],
