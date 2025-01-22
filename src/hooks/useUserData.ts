@@ -563,8 +563,8 @@ const unownedDataImportActionHandler: Handler<UnownedDataImportAction> = (
   state,
   payload
 ) => {
-  const o = [...payload.o];
-  const u = [...payload.u];
+  const o = [...state.unowned.o];
+  const u = [...state.unowned.u];
   const newCharaInfo = Object.fromEntries(
     Object.entries(state.charaInfo).map(([name, value]) => {
       if (value.unowned && payload.o.includes(name)) {
