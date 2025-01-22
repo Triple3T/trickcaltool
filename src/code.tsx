@@ -41,6 +41,7 @@ const Code = () => {
           if (response.status === 200) {
             response.text().then((text) => {
               if (text === "OK") {
+                setAlreadyRegistered(true);
                 requestToken(
                   //callback
                   () => {
