@@ -119,6 +119,8 @@ const EquipRank = () => {
             )
             .map(([c]) => c)
         );
+      } else {
+        setDirtyRankCharas([]);
       }
     }
   }, [userData]);
@@ -227,19 +229,12 @@ const EquipRank = () => {
                     <div className="flex flex-col gap-1 px-4">
                       <div className="flex flex-row gap-2">
                         <Select
-                          value={userData.eqrank.s[0] || 1}
+                          value={Math.min(
+                            10,
+                            Math.max(userData.eqrank.s[0] || 1, 1)
+                          )}
                           setValue={(v) => {
                             userDataDispatch.rankMinRank(v);
-                            setDirtyRankCharas(
-                              Object.entries(userData.charaInfo)
-                                .filter(
-                                  ([, c]) =>
-                                    !c.unowned &&
-                                    (c.eqrank < v ||
-                                      c.eqrank > userData.eqrank.s[1])
-                                )
-                                .map(([c]) => c)
-                            );
                           }}
                           placeholder={t("ui.equiprank.rankText", {
                             0: "1",
@@ -293,19 +288,12 @@ const EquipRank = () => {
                           </SelectContent>
                         </Select> */}
                         <Select
-                          value={userData.eqrank.s[1] || 1}
+                          value={Math.min(
+                            10,
+                            Math.max(userData.eqrank.s[1] || 1, 1)
+                          )}
                           setValue={(v) => {
                             userDataDispatch.rankMaxRank(v);
-                            setDirtyRankCharas(
-                              Object.entries(userData.charaInfo)
-                                .filter(
-                                  ([, c]) =>
-                                    !c.unowned &&
-                                    (c.eqrank < userData.eqrank.s[0] ||
-                                      c.eqrank > v)
-                                )
-                                .map(([c]) => c)
-                            );
                           }}
                           placeholder={t("ui.equiprank.rankText", {
                             0: "1",

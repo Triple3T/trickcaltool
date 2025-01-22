@@ -162,7 +162,7 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
         nthboard: { n: {} },
         eqrank: {
           r: {},
-          s: [0, 0, 0],
+          s: [1, 10],
           v: [],
           f: [[0, 0, 0]],
         },

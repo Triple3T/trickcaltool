@@ -262,7 +262,10 @@ const rankDataChangeMinRankActionHandler: Handler<
   return {
     ...state,
     dirty: ((state.dirty + 1) % 32768) + 65536,
-    eqrank: { ...state.eqrank, s: [payload, state.eqrank.s[1]] },
+    eqrank: {
+      ...state.eqrank,
+      s: [payload, state.eqrank.s[1]].sort((a, b) => a - b),
+    },
     timeestamp: Date.now(),
   };
 };
@@ -277,7 +280,10 @@ const rankDataChangeMaxRankActionHandler: Handler<
   return {
     ...state,
     dirty: ((state.dirty + 1) % 32768) + 65536,
-    eqrank: { ...state.eqrank, s: [state.eqrank.s[0], payload] },
+    eqrank: {
+      ...state.eqrank,
+      s: [state.eqrank.s[0], payload].sort((a, b) => a - b),
+    },
     timeestamp: Date.now(),
   };
 };
