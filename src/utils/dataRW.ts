@@ -48,13 +48,14 @@ export const dataFileExport = async (fromIDB: boolean) => {
   console.log(fromIDB);
   const loadData = fromIDB ? idbLoadData : lsLoadData;
   if (fromIDB) await openNoteDataDB();
-  for await (const trycount of Array(5).fill(0).keys()) {
-    const loaded = await loadData();
-    console.log(loaded);
-    if (loaded.timestamp && loaded.data) {
-      return loaded;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  const loaded = await loadData();
+  if (loaded.timestamp && loaded.data) {
+    return loaded;
+  }
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const reloaded = await loadData();
+  if (reloaded.timestamp && reloaded.data) {
+    return reloaded;
   }
   throw new Error("Data read failed");
 };
@@ -86,8 +87,8 @@ interface DataReadFailed {
 }
 type DataReadResult = DataReadSuccess | DataReadFailed;
 export const dataFileImport = async (
-  data: string,
-  force?: boolean
+  data: string // ,
+  // force?: boolean
 ): Promise<DataReadResult> => {
   let isIDBAvailable = localStorage.getItem("idbAvailable");
   if (isIDBAvailable === null) {
@@ -194,7 +195,7 @@ export const dataFileRead = async (
     if (files && files.length > 0) {
       const file = files[0];
       const dProto = await file.text();
-      return dataFileImport(dProto, true);
+      return dataFileImport(dProto); //force?: true
     } else {
       return { success: false, reason: "ui.index.fileSync.noFileProvided" };
     }
