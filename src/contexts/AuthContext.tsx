@@ -341,6 +341,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
           headers: {
             ...defaultHeader,
             Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ backupindex }),
         });
