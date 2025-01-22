@@ -144,12 +144,10 @@ const AuthProvider = ({ children }: { children: Children }) => {
           const currentTimestamp = userData?.timestamp ?? 0;
           if (serverFileTimestamp > currentTimestamp || force) {
             const result = await dataFileImport(fileContent);
-            console.log(result);
             if (result.success) {
               const newData = await readIntoMemory(usingIDB);
               if (newData) {
                 userDataDispatch.restore(newData);
-                console.log("데이터 복원 완료");
                 setStatus(SyncStatus.Success);
                 setTimeout(
                   () =>
@@ -227,7 +225,6 @@ const AuthProvider = ({ children }: { children: Children }) => {
         const { data } = await dataFileExport(usingIDB);
         if (data.length < 1) {
           setStatus(SyncStatus.Errored);
-          console.log("no data exported");
           return;
         }
         const body = JSON.stringify({
@@ -350,12 +347,10 @@ const AuthProvider = ({ children }: { children: Children }) => {
         if (response.ok) {
           const fileContent = await response.text();
           const result = await dataFileImport(fileContent);
-          console.log(result);
           if (result.success) {
             const newData = await readIntoMemory(usingIDB);
             if (newData) {
               userDataDispatch.restore(newData);
-              console.log("데이터 복원 완료");
               setStatus(SyncStatus.Success);
               setTimeout(
                 () =>
@@ -437,7 +432,6 @@ const AuthProvider = ({ children }: { children: Children }) => {
       }
 
       isUploading.current = true;
-      console.log("업로드 시작");
 
       let uploadResult = false;
       try {

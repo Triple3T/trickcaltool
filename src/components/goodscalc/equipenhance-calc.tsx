@@ -282,7 +282,6 @@ const getEnhanceRequire = (
   const reqPointEnd =
     enhanceEnd > 0 ? v.enhanceRequire[rank - 1][enhanceEnd - 1] : 0;
   const reqPoint = Math.abs(reqPointStart - reqPointEnd);
-  console.log(reqPoint);
   const reqGold = reqPoint * v.enhanceCost[rank - 1];
   if (reqPoint < 250) return [reqPoint, reqGold, getStoneBefore250(reqPoint)];
   return [reqPoint, reqGold, getStoneAfter250(reqPoint)];

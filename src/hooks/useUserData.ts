@@ -793,7 +793,6 @@ export function useUserData(data?: UserDataMemory) {
   const [state, dispatch] = useReducer(memoryDataReducer, data);
 
   const restore = useCallback((data: UserDataMemory) => {
-    console.log("restore");
     dispatch({ type: "dataRestore", payload: data });
   }, []);
 

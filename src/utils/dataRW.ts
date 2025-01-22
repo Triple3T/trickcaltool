@@ -45,7 +45,6 @@ const numberIntoB64 = (num: number, length: number) => {
 };
 
 export const dataFileExport = async (fromIDB: boolean) => {
-  console.log(fromIDB);
   const loadData = fromIDB ? idbLoadData : lsLoadData;
   if (fromIDB) await openNoteDataDB();
   const loaded = await loadData();
@@ -105,7 +104,6 @@ export const dataFileImport = async (
   const readResult = sigConvert(fileData, startSignature);
   if (readResult.success) {
     const dataFile = readResult.data as UserDataFile;
-    console.log(dataFile);
     const compressed = pako.deflate(JSON.stringify(dataFile)).map((v) => v ^ 3);
     const crayonStatistic = dataFile.board.b
       .map((b) => {
@@ -332,7 +330,6 @@ export const readIntoMemory = async (
   const timestamp = loaded.timestamp;
   const dtp = loaded.data;
   const dt = sigConvert(dtp.substring(2), dtp.substring(0, 2));
-  console.log(dt);
   if (!dt.success) {
     console.error("Data read failed");
     throw Error();
@@ -438,7 +435,6 @@ export const firstReadIntoMemory = async (): Promise<
     }
   }
   const memoryData = await readIntoMemory(isIDBAvailable === "true");
-  console.log(memoryData);
   return [isIDBAvailable === "true", memoryData];
 };
 export const writeFromMemory = async (
