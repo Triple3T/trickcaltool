@@ -196,7 +196,7 @@ const nthBoardDataChangeBoardIndexActionHandler: Handler<
   if (charaInfo.unowned) return state;
   const newCharaInfo = {
     ...charaInfo,
-    nthboard: boardIndex + 1,
+    nthboard: boardIndex,
   };
   return {
     ...state,
