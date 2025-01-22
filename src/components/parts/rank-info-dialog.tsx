@@ -38,7 +38,7 @@ export interface RankInfoDialogProps {
   changeRank?: (chara: string, rank: number) => void;
   opened: boolean;
   onOpenChange: (open: boolean) => void;
-  skin: number;
+  skin?: number;
 }
 
 const RankInfoDialog = ({

@@ -1,5 +1,12 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +19,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SearchBox from "@/components/common/search-with-icon";
 import chara from "@/data/chara";
-import userdata from "@/utils/userdata";
 import { personalityBG } from "@/utils/personalityBG";
 import { Personality } from "@/types/enums";
 import { UserDataUnowned } from "@/types/types";
@@ -20,7 +26,6 @@ import { UserDataUnowned } from "@/types/types";
 interface SelectCharaProp {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  saveAndClose: (charaList: string[]) => void;
 }
 
 interface UserDataImport {
@@ -87,12 +92,10 @@ const userDataReducerMini = (
   }
 };
 
-const SelectChara = ({
-  isOpen,
-  onOpenChange,
-  saveAndClose,
-}: SelectCharaProp) => {
+const SelectChara = ({ isOpen, onOpenChange }: SelectCharaProp) => {
   const { t } = useTranslation();
+  const { userData: globalUserData, userDataDispatch } =
+    useContext(AuthContext);
   const [userData, dispatchUserData] = useReducer(
     userDataReducerMini,
     undefined
@@ -100,14 +103,16 @@ const SelectChara = ({
   const [search, setSearch] = useState("");
 
   const getFromUserData = useCallback(() => {
-    const ud = userdata.unowned.load();
-    dispatchUserData({ type: "import", data: ud });
-  }, []);
+    if (globalUserData && userDataDispatch)
+      dispatchUserData({ type: "import", data: globalUserData.unowned });
+  }, [globalUserData, userDataDispatch]);
 
-  const setToUserData = useCallback((u: UserDataUnowned | undefined) => {
-    if (!u) return;
-    userdata.unowned.save(u, false);
-  }, []);
+  const setToUserData = useCallback(
+    (u: UserDataUnowned | undefined) => {
+      if (u && userDataDispatch) userDataDispatch?.unownedImport(u.o, u.u);
+    },
+    [userDataDispatch]
+  );
 
   useEffect(() => {
     getFromUserData();
@@ -219,7 +224,7 @@ const SelectChara = ({
             onClick={() => {
               if (userData) {
                 setToUserData(userData);
-                saveAndClose(userData.u);
+                onOpenChange(false);
               }
             }}
           >

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { use, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,25 +26,24 @@ import { dataFileWrite } from "@/utils/dataRW";
 
 import { SyncStatus } from "@/types/enums";
 
-const bgClass = (s: SyncStatus) => {
-  switch (s) {
-    case SyncStatus.Uploading:
-    case SyncStatus.Downloading:
-      return "bg-orange-400 dark:bg-orange-600";
-    case SyncStatus.Success:
-      return "bg-green-400 dark:bg-green-500";
-    case SyncStatus.Errored:
-      return "bg-red-500 dark:bg-red-600";
-    default:
-      return "";
-  }
-};
-
 export function QuickSync() {
-  const { isReady, googleLinked, status, autoSave, autoLoad } =
-    useContext(AuthContext);
+  const { isReady, googleLinked, status, forceUpload, forceDownload } =
+    use(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const bgClass = useCallback((s: SyncStatus) => {
+    switch (s) {
+      case SyncStatus.Uploading:
+      case SyncStatus.Downloading:
+        return "bg-orange-400 dark:bg-orange-600";
+      case SyncStatus.Success:
+        return "bg-green-400 dark:bg-green-500";
+      case SyncStatus.Errored:
+        return "bg-red-500 dark:bg-red-600";
+      default:
+        return "";
+    }
+  }, []);
   if (!isReady || !googleLinked)
     return (
       <DropdownMenu>
@@ -138,7 +137,7 @@ export function QuickSync() {
         </DropdownMenuItem>
         <Separator className="my-1" />
         <DropdownMenuItem
-          onClick={() => autoSave?.()}
+          onClick={() => forceUpload?.()}
           disabled={[
             SyncStatus.Uploading,
             SyncStatus.Downloading,
@@ -149,7 +148,7 @@ export function QuickSync() {
           {t("ui.index.sync.upload")}
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => autoLoad?.()}
+          onClick={() => forceDownload?.()}
           disabled={[
             SyncStatus.Uploading,
             SyncStatus.Downloading,

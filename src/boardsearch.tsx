@@ -1,5 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { use, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AuthContext } from "@/contexts/AuthContext";
+import Loading from "@/components/common/loading";
 import {
   Accordion,
   AccordionItem,
@@ -16,8 +18,7 @@ import SelectChara from "@/components/parts/select-chara";
 import chara from "@/data/chara";
 import board from "@/data/board";
 import { BoardType } from "@/types/enums";
-
-import userdata from "@/utils/userdata";
+import { UserDataOwnedCharaInfo } from "@/types/types";
 
 interface IFilteredBoardProp {
   name: string;
@@ -27,8 +28,8 @@ interface IFilteredBoardProp {
 
 const BoardSearch = () => {
   const { t } = useTranslation();
+  const { userData } = use(AuthContext);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
-  const [ownedCharas, setOwnedCharas] = useState<{ [key: string]: number }>({});
   const [excludeUnowned, setExcludeUnowned] = useState<boolean>(false);
   const [filterBoardIndex, setFilterBoardIndex] = useState<number>(0);
   const [includePreviousBoardIndex, setIncludePreviousBoardIndex] =
@@ -36,27 +37,12 @@ const BoardSearch = () => {
   const [includeBoardType, setIncludeBoardType] = useState<BoardType[]>([]);
   const [includeMinimumCount, setIncludeMinimumCount] = useState<number>(1);
   const [excludeUnlocked, setExcludeUnlocked] = useState<boolean>(false);
-  const [skinData, setSkinData] = useState<Record<string, number>>({});
-  const initFromUserData = useCallback(() => {
-    const userDataUnownedProto = userdata.unowned.load();
-    const userDataNthBoardProto = userdata.nthboard.load();
-    const userDataNthBoard = Object.fromEntries(
-      Object.entries(userDataNthBoardProto.n).filter(([c]) =>
-        userDataUnownedProto.o.includes(c)
-      )
-    );
-    userdata.nthboard.save({ n: userDataNthBoard }, true);
-    setOwnedCharas(userDataNthBoard);
-    setSkinData(userdata.skin.load());
-  }, []);
-  useEffect(initFromUserData, [initFromUserData]);
-  const saveSelectChara = useCallback(() => {
-    setCharaDrawerOpen(false);
-    initFromUserData();
-  }, [initFromUserData]);
+
   const filteredBoards = useMemo(() => {
+    if (!userData) return [];
+    // exclude unowned, filter by board index
     const firstFiltered = (
-      excludeUnowned ? Object.keys(ownedCharas || {}) : Object.keys(chara)
+      excludeUnowned ? userData.unowned.o : Object.keys(chara)
     )
       .map((c) => {
         return board.c[c].b.map((b, i) => {
@@ -75,6 +61,7 @@ const BoardSearch = () => {
       })
       .flat()
       .filter((b) => b !== null) as IFilteredBoardProp[];
+    // filter by board type
     const secondFiltered = firstFiltered
       .filter((b) => {
         return (
@@ -93,12 +80,14 @@ const BoardSearch = () => {
             .split("")
             .filter((bb) => includeBoardType.includes(Number(bb))).length
       );
+    // exclude unlocked
     const thirdFiltered = secondFiltered
       .filter((b) => {
+        if (!excludeUnlocked) return true;
+        if (userData.charaInfo[b.name].unowned) return false;
         return (
-          !excludeUnlocked ||
-          !ownedCharas[b.name] ||
-          ownedCharas[b.name] < b.index
+          (userData.charaInfo[b.name] as UserDataOwnedCharaInfo).nthboard <
+          b.index
         );
       })
       .sort((a, b) => a.index - b.index);
@@ -110,8 +99,10 @@ const BoardSearch = () => {
     includeBoardType,
     includeMinimumCount,
     includePreviousBoardIndex,
-    ownedCharas,
+    userData,
   ]);
+
+  if (!userData) return <Loading />;
 
   return (
     <>
@@ -141,7 +132,6 @@ const BoardSearch = () => {
                     <SelectChara
                       isOpen={charaDrawerOpen}
                       onOpenChange={setCharaDrawerOpen}
-                      saveAndClose={saveSelectChara}
                     />
                   </div>
                 </div>
@@ -293,8 +283,14 @@ const BoardSearch = () => {
                 board={board.c[fb.name].b[fb.index - 1]}
                 blockedBy={board.c[fb.name].k[fb.index - 1]}
                 search={includeBoardType}
-                unlocked={fb.index <= ownedCharas[fb.name]}
-                skin={skinData[fb.name] || 0}
+                unlocked={
+                  userData.charaInfo[fb.name].unowned
+                    ? false
+                    : fb.index <=
+                      (userData.charaInfo[fb.name] as UserDataOwnedCharaInfo)
+                        .nthboard
+                }
+                skin={userData.charaInfo[fb.name].skin || 0}
               />
             );
           })}

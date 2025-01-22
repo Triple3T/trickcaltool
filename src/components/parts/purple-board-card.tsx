@@ -1,14 +1,18 @@
-import purpleposition from "@/data/purpleposition";
+import { Fragment } from "react";
+import { t } from "i18next";
 import { cn } from "@/lib/utils";
-import { Race, PurpleBoardType } from "@/types/enums";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { t } from "i18next";
 import { Card } from "@/components/ui/card";
 import SubtitleBar from "./subtitlebar";
+import purpleposition from "@/data/purpleposition";
+import { Race, PurpleBoardType, BoardType } from "@/types/enums";
+
+const purpleBoardDefaultLength = [4, 8, 12];
 
 interface PurpleBoardCardProps {
   name: string;
+  currentBoard: number[][];
   currentPurpleBoard: {
     b: number[];
     p: string[];
@@ -18,29 +22,26 @@ interface PurpleBoardCardProps {
   personalityClassName: string;
   skin?: number;
   openBoardIndex: number;
-  dispatchClickBoardData: (payload: {
-    charaName: string;
-    boardIndex: number;
-    ldx: number;
-    bdx: number;
-  }) => void;
-  dispatchNthBoardData: (payload: { charaName: string; index: number }) => void;
-  pboard: {
-    [key: string]: {
-      charas: {
-        name: string;
-        ldx: number;
-        bdx: number;
-        checked: boolean;
-        unowned: boolean;
-        clf: false | number;
-      }[];
-    };
-  }[];
+  dispatchClickBoardData: (
+    charaName: string,
+    boardIndex: number,
+    ldx: number,
+    bdx: number
+  ) => void;
+  dispatchClickPurpleBoardData: (
+    charaName: string,
+    boardIndex: number,
+    ldx: number,
+    bdx: number
+  ) => void;
+  dispatchNthBoardData: (charaName: string, index: number) => void;
+  board: number[][];
+  pboard: number[][];
 }
 
 const PurpleBoardCard = ({
   name,
+  currentBoard,
   currentPurpleBoard,
   // charaPersonality,
   charaRace,
@@ -48,7 +49,9 @@ const PurpleBoardCard = ({
   skin,
   openBoardIndex,
   dispatchClickBoardData,
+  dispatchClickPurpleBoardData,
   dispatchNthBoardData,
+  board,
   pboard,
 }: PurpleBoardCardProps) => {
   return (
@@ -101,7 +104,7 @@ const PurpleBoardCard = ({
                 id={`2ndboard-${name}`}
                 checked={openBoardIndex > 1}
                 onCheckedChange={(c) => {
-                  dispatchNthBoardData({ charaName: name, index: c ? 2 : 1 });
+                  dispatchNthBoardData(name, c ? 2 : 1);
                 }}
               />
               <Label htmlFor={`2ndboard-${name}`}>
@@ -113,7 +116,7 @@ const PurpleBoardCard = ({
                 id={`3rdboard-${name}`}
                 checked={openBoardIndex > 2}
                 onCheckedChange={(c) => {
-                  dispatchNthBoardData({ charaName: name, index: c ? 3 : 2 });
+                  dispatchNthBoardData(name, c ? 3 : 2);
                 }}
               />
               <Label htmlFor={`3rdboard-${name}`}>
@@ -130,6 +133,49 @@ const PurpleBoardCard = ({
               <div>{t("ui.board.board1")}</div>
             </SubtitleBar>
             <div className="flex flex-row flex-wrap py-1 px-2 w-full justify-center">
+              {currentBoard[0].map((boardLockCollection, ldx) => {
+                return (
+                  <Fragment key={ldx}>
+                    {boardLockCollection
+                      .toString(10)
+                      .split("")
+                      .map((boardString, bdx) => {
+                        const boardType = BoardType[Number(boardString)];
+                        const checked = board[0][ldx] & (1 << bdx);
+                        return (
+                          <div
+                            key={`${ldx}-${bdx}`}
+                            className="w-1/2 aspect-square p-px"
+                          >
+                            <div
+                              className={cn(
+                                "flex aspect-square bg-cover",
+                                checked
+                                  ? "bg-board-special"
+                                  : "bg-board-special-disabled"
+                              )}
+                            >
+                              <img
+                                src={`/boards/Tile_${boardType}${
+                                  checked ? "On" : "Off"
+                                }.png`}
+                                className={cn(
+                                  "w-full aspect-square bg-cover",
+                                  checked ? "" : "brightness-[.15]"
+                                )}
+                                onClick={() => {
+                                  dispatchClickBoardData(name, 0, ldx, bdx);
+                                }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </Fragment>
+                );
+              })}
+            </div>
+            <div className="flex flex-row flex-wrap py-1 px-2 w-full justify-center">
               {currentPurpleBoard.b[0]
                 .toString(10)
                 .split("")
@@ -140,14 +186,7 @@ const PurpleBoardCard = ({
                   const positionData = purpleposition.r[Race[charaRace]][0];
                   const positions = positionData.p[positionsIndex].split(".");
                   return [...positions].map((/*actualPos*/ _, posIndex) => {
-                    const target = pboard[0][
-                      PurpleBoardType[parseInt(pb, 10)]
-                    ].charas.find(
-                      (c) =>
-                        c.name === name && c.bdx === i && c.ldx === posIndex
-                    );
-                    if (!target) return null;
-                    const checked = target.checked;
+                    const checked = pboard[0][i] & (1 << posIndex);
                     return (
                       <div
                         key={`${i}-${posIndex}`}
@@ -162,17 +201,34 @@ const PurpleBoardCard = ({
                             checked ? "bg-board-high" : "bg-board-high-disabled"
                           )}
                           onClick={() => {
-                            dispatchClickBoardData({
-                              charaName: name,
-                              boardIndex: 0,
-                              bdx: i,
-                              ldx: posIndex,
-                            });
+                            dispatchClickPurpleBoardData(name, 0, posIndex, i);
                           }}
                         />
                       </div>
                     );
                   });
+                })}
+              {Array(
+                purpleBoardDefaultLength[0] -
+                  currentPurpleBoard.b[0]
+                    .toString(10)
+                    .split("")
+                    .map(
+                      (_, i) =>
+                        purpleposition.r[Race[charaRace]][0].p[
+                          Number(currentPurpleBoard.p[0].split(".")[i])
+                        ].split(".").length
+                    )
+                    .reduce((a, b) => a + b, 0)
+              )
+                .fill(0)
+                .map((_, i) => {
+                  return (
+                    <div
+                      key={`empty-${i}`}
+                      className="w-1/2 aspect-square p-px"
+                    />
+                  );
                 })}
             </div>
           </div>
@@ -187,6 +243,49 @@ const PurpleBoardCard = ({
               </div>
             </SubtitleBar>
             <div className="flex flex-row flex-wrap py-1 px-4 w-full justify-center">
+              {currentBoard[1].map((boardLockCollection, ldx) => {
+                return (
+                  <Fragment key={ldx}>
+                    {boardLockCollection
+                      .toString(10)
+                      .split("")
+                      .map((boardString, bdx) => {
+                        const boardType = BoardType[Number(boardString)];
+                        const checked = board[1][ldx] & (1 << bdx);
+                        return (
+                          <div
+                            key={`${ldx}-${bdx}`}
+                            className="w-1/4 aspect-square p-px"
+                          >
+                            <div
+                              className={cn(
+                                "flex aspect-square bg-cover",
+                                checked
+                                  ? "bg-board-special"
+                                  : "bg-board-special-disabled"
+                              )}
+                            >
+                              <img
+                                src={`/boards/Tile_${boardType}${
+                                  checked ? "On" : "Off"
+                                }.png`}
+                                className={cn(
+                                  "w-full aspect-square bg-cover",
+                                  checked ? "" : "brightness-[.15]"
+                                )}
+                                onClick={() => {
+                                  dispatchClickBoardData(name, 1, ldx, bdx);
+                                }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </Fragment>
+                );
+              })}
+            </div>
+            <div className="flex flex-row flex-wrap py-1 px-4 w-full justify-center">
               {currentPurpleBoard.b[1]
                 .toString(10)
                 .split("")
@@ -197,14 +296,7 @@ const PurpleBoardCard = ({
                   const positionData = purpleposition.r[Race[charaRace]][1];
                   const positions = positionData.p[positionsIndex].split(".");
                   return [...positions].map((/*actualPos*/ _, posIndex) => {
-                    const target = pboard[1][
-                      PurpleBoardType[parseInt(pb, 10)]
-                    ].charas.find(
-                      (c) =>
-                        c.name === name && c.bdx === i && c.ldx === posIndex
-                    );
-                    if (!target) return null;
-                    const checked = target.checked;
+                    const checked = pboard[1][i] & (1 << posIndex);
                     return (
                       <div
                         key={`${i}-${posIndex}`}
@@ -219,17 +311,34 @@ const PurpleBoardCard = ({
                             checked ? "bg-board-high" : "bg-board-high-disabled"
                           )}
                           onClick={() => {
-                            dispatchClickBoardData({
-                              charaName: name,
-                              boardIndex: 1,
-                              bdx: i,
-                              ldx: posIndex,
-                            });
+                            dispatchClickPurpleBoardData(name, 1, posIndex, i);
                           }}
                         />
                       </div>
                     );
                   });
+                })}
+              {Array(
+                purpleBoardDefaultLength[1] -
+                  currentPurpleBoard.b[1]
+                    .toString(10)
+                    .split("")
+                    .map(
+                      (_, i) =>
+                        purpleposition.r[Race[charaRace]][1].p[
+                          Number(currentPurpleBoard.p[1].split(".")[i])
+                        ].split(".").length
+                    )
+                    .reduce((a, b) => a + b, 0)
+              )
+                .fill(0)
+                .map((_, i) => {
+                  return (
+                    <div
+                      key={`empty-${i}`}
+                      className="w-1/4 aspect-square p-px"
+                    />
+                  );
                 })}
             </div>
           </div>
@@ -245,6 +354,49 @@ const PurpleBoardCard = ({
             </div>
           </SubtitleBar>
           <div className="flex flex-row flex-wrap py-1 px-3 w-full justify-center">
+              {currentBoard[2].map((boardLockCollection, ldx) => {
+                return (
+                  <Fragment key={ldx}>
+                    {boardLockCollection
+                      .toString(10)
+                      .split("")
+                      .map((boardString, bdx) => {
+                        const boardType = BoardType[Number(boardString)];
+                        const checked = board[2][ldx] & (1 << bdx);
+                        return (
+                          <div
+                            key={`${ldx}-${bdx}`}
+                            className="w-1/6 aspect-square p-px"
+                          >
+                            <div
+                              className={cn(
+                                "flex aspect-square bg-cover",
+                                checked
+                                  ? "bg-board-special"
+                                  : "bg-board-special-disabled"
+                              )}
+                            >
+                              <img
+                                src={`/boards/Tile_${boardType}${
+                                  checked ? "On" : "Off"
+                                }.png`}
+                                className={cn(
+                                  "w-full aspect-square bg-cover",
+                                  checked ? "" : "brightness-[.15]"
+                                )}
+                                onClick={() => {
+                                  dispatchClickBoardData(name, 2, ldx, bdx);
+                                }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </Fragment>
+                );
+              })}
+            </div>
+          <div className="flex flex-row flex-wrap py-1 px-3 w-full justify-center">
             {currentPurpleBoard.b[2]
               .toString(10)
               .split("")
@@ -255,13 +407,7 @@ const PurpleBoardCard = ({
                 const positionData = purpleposition.r[Race[charaRace]][2];
                 const positions = positionData.p[positionsIndex].split(".");
                 return [...positions].map((/*actualPos*/ _, posIndex) => {
-                  const target = pboard[2][
-                    PurpleBoardType[parseInt(pb, 10)]
-                  ].charas.find(
-                    (c) => c.name === name && c.bdx === i && c.ldx === posIndex
-                  );
-                  if (!target) return null;
-                  const checked = target.checked;
+                  const checked = pboard[2][i] & (1 << posIndex);
                   return (
                     <div
                       key={`${i}-${posIndex}`}
@@ -276,17 +422,34 @@ const PurpleBoardCard = ({
                           checked ? "bg-board-high" : "bg-board-high-disabled"
                         )}
                         onClick={() => {
-                          dispatchClickBoardData({
-                            charaName: name,
-                            boardIndex: 2,
-                            bdx: i,
-                            ldx: posIndex,
-                          });
+                          dispatchClickPurpleBoardData(name, 2, posIndex, i);
                         }}
                       />
                     </div>
                   );
                 });
+              })}
+            {Array(
+              purpleBoardDefaultLength[2] -
+                currentPurpleBoard.b[2]
+                  .toString(10)
+                  .split("")
+                  .map(
+                    (_, i) =>
+                      purpleposition.r[Race[charaRace]][2].p[
+                        Number(currentPurpleBoard.p[2].split(".")[i])
+                      ].split(".").length
+                  )
+                  .reduce((a, b) => a + b, 0)
+            )
+              .fill(0)
+              .map((_, i) => {
+                return (
+                  <div
+                    key={`empty-${i}`}
+                    className="w-1/6 aspect-square p-px"
+                  />
+                );
               })}
           </div>
         </div>

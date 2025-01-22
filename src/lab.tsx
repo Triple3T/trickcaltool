@@ -1,14 +1,9 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { use, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AuthContext } from "@/contexts/AuthContext";
+import Loading from "@/components/common/loading";
 import {
   Accordion,
   AccordionItem,
@@ -31,7 +26,6 @@ import collection from "@/data/collection";
 import material from "@/data/material";
 import { StatType, Race, LabEffectCategory } from "@/types/enums";
 
-import userdata from "@/utils/userdata";
 import ItemSlotWithRecipe from "./components/parts/item-slot-with-recipe";
 // import { UserDataLab } from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
@@ -78,21 +72,6 @@ interface EffectUniversal {
   v: number[]; // values
 }
 
-interface LabDataPropsCore {
-  currentLab: LabDataCurrent;
-  materialRemain: LabMaterialRemain;
-  effectTotal: (EffectByRace | EffectUniversal)[];
-  myHomeLevels: MyHomeLevels;
-  myHomeMaterialRemain: MaterialRemain;
-  collectionProducible: CollectionProducible[];
-  collectionMaterialRemain: MaterialRemain;
-  producibleFame: number;
-  producedFame: number;
-  isDirty: number;
-}
-
-type LabDataProps = LabDataPropsCore | undefined;
-
 const reduceEffectTotal = (index: LabDataCurrent) => {
   const labListDepth1 = lab.l.slice(0, index.indexDepth1).flat();
   const labListDepth2 = lab.l[index.indexDepth1].slice(
@@ -100,7 +79,7 @@ const reduceEffectTotal = (index: LabDataCurrent) => {
     index.indexDepth2 + 1
   );
   const effectTotal = [...labListDepth1, ...labListDepth2]
-    .reduce((prev: LabDataPropsCore["effectTotal"], curr) => {
+    .reduce((prev: (EffectByRace | EffectUniversal)[], curr) => {
       const currentEffect = lab.e[curr.e];
       if (currentEffect.e === 40) {
         const targetStat = currentEffect.s!;
@@ -166,7 +145,7 @@ const reduceEffectTotal = (index: LabDataCurrent) => {
   return effectTotal;
 };
 
-const reduceMaterialRemain = (index: LabDataCurrent) => {
+const labRemainMaterialReducer = (index: LabDataCurrent): LabMaterialRemain => {
   const labListDepth1 = lab.l.slice(index.indexDepth1 + 1).flat();
   const labListDepth2 = lab.l[index.indexDepth1].slice(index.indexDepth2 + 1);
   const indexDepth2 = labListDepth2.reduce(
@@ -183,7 +162,7 @@ const reduceMaterialRemain = (index: LabDataCurrent) => {
     },
     { m: {}, g: 0 }
   );
-  const indexDepth1 = labListDepth1.reduce(
+  const indexDepth1: MaterialRemain = labListDepth1.reduce(
     (prev: MaterialRemain, curr) => {
       const currentMaterial = curr.m;
       Object.entries(currentMaterial).forEach(([item, amount]) => {
@@ -200,37 +179,6 @@ const reduceMaterialRemain = (index: LabDataCurrent) => {
   return { indexDepth1, indexDepth2 };
 };
 
-interface LabDataRestoreAction {
-  type: "restore";
-  payload: LabDataPropsCore;
-}
-
-interface LabDataChangeIndexAction {
-  type: "index";
-  payload: {
-    indexDepth1: number;
-    indexDepth2: number;
-  };
-}
-
-const labDataChangeIndexActionHandler = (
-  state: NonNullable<LabDataProps>,
-  action: LabDataChangeIndexAction
-): LabDataProps => {
-  const { indexDepth1, indexDepth2 } = action.payload;
-  userdata.lab.save({ 1: indexDepth1, 2: indexDepth2 }, false);
-  const currentLab = { indexDepth1, indexDepth2 };
-  const effectTotal = reduceEffectTotal(currentLab);
-  const materialRemain = reduceMaterialRemain(currentLab);
-  return {
-    ...state,
-    currentLab,
-    effectTotal,
-    materialRemain,
-    isDirty: state ? (((state.isDirty ?? 0) + 1) % 32768) + 65536 : 0,
-  };
-};
-
 const materialObjectMerge = (
   target: Record<string, number | undefined>,
   source: Record<string, number | undefined>
@@ -242,47 +190,20 @@ const materialObjectMerge = (
   return output;
 };
 
-interface LabDataChangeMyHomeLevelAction {
-  type: "myhomelevel";
-  payload: {
-    target: keyof MyHomeLevels;
-    index: number;
-    value: number;
-  };
-}
-
-const labDataChangeMyHomeLevelActionHandler = (
-  state: NonNullable<LabDataProps>,
-  action: LabDataChangeMyHomeLevelAction
-): LabDataProps => {
-  const { target, index, value } = action.payload;
-  const targetLevel = state.myHomeLevels[target];
-  targetLevel[index] = value;
-  const myHomeLevelsAfter = {
-    ...state.myHomeLevels,
-    [target]: [...targetLevel],
-  };
-  userdata.myhome.save(
-    {
-      l: myHomeLevelsAfter.lab,
-      r: myHomeLevelsAfter.restaurant,
-      m: myHomeLevelsAfter.myhome,
-      s: myHomeLevelsAfter.schedule,
-      a: myHomeLevelsAfter.archive,
-    },
-    false
-  );
+const myHomeRemainMaterialReducer = (
+  myHomeLevels: MyHomeLevels
+): MaterialRemain => {
   const labMaterialRemain = myhomeupgrade.l
-    .slice(myHomeLevelsAfter.lab[0], myHomeLevelsAfter.lab[1])
+    .slice(myHomeLevels.lab[0], myHomeLevels.lab[1])
     .reduce(materialObjectMerge, { g: 0 });
   const restaurantMaterialRemain = myhomeupgrade.r
-    .slice(myHomeLevelsAfter.restaurant[0], myHomeLevelsAfter.restaurant[1])
+    .slice(myHomeLevels.restaurant[0], myHomeLevels.restaurant[1])
     .reduce(materialObjectMerge, { g: 0 });
   const myhomeMaterialRemain = myhomeupgrade.m
-    .slice(myHomeLevelsAfter.myhome[0], myHomeLevelsAfter.myhome[1])
+    .slice(myHomeLevels.myhome[0], myHomeLevels.myhome[1])
     .reduce(materialObjectMerge, { g: 0 });
   const scheduleMaterialRemain = myhomeupgrade.s
-    .slice(myHomeLevelsAfter.schedule[0], myHomeLevelsAfter.schedule[1])
+    .slice(myHomeLevels.schedule[0], myHomeLevels.schedule[1])
     .reduce(materialObjectMerge, { g: 0 });
   // const archiveMaterialRemain = myhomeupgrade.a
   //   .slice(myHomeLevelsAfter.archive[0], myHomeLevelsAfter.archive[1])
@@ -295,38 +216,42 @@ const labDataChangeMyHomeLevelActionHandler = (
     // archiveMaterialRemain,
   ].reduce(materialObjectMerge, { g: 0 }) as Record<string, number>;
   const { g, ...m } = myHomeMaterialRemain;
-  return {
-    ...state,
-    myHomeLevels: myHomeLevelsAfter,
-    myHomeMaterialRemain: { m, g },
-    isDirty: state ? (((state.isDirty ?? 0) + 1) % 32768) + 65536 : 0,
-  };
+  return { m, g };
 };
 
-interface LabDataChangeCollectionAction {
-  type: "collection";
-  payload: {
-    id: string;
-    collected: boolean;
-  };
+interface CollectionFilteredType {
+  m: { [key: string]: number };
+  s: number;
+  f: number;
+  r: number;
 }
 
-const labDataChangeCollectionActionHandler = (
-  state: NonNullable<LabDataProps>,
-  action: LabDataChangeCollectionAction
-): LabDataProps => {
-  const { id, collected } = action.payload;
-  const collectionProducible = state.collectionProducible.map((v) =>
-    v.id === id ? { ...v, collected } : v
-  );
-  userdata.collection.save(
-    {
-      c: collectionProducible.filter((v) => v.collected).map((v) => v.id),
-    },
-    false
-  );
+type CollectionFilteredEntry = [string, CollectionFilteredType];
+
+interface CollectionRemainReturnType {
+  collectionProducible: CollectionProducible[];
+  collectionMaterialRemain: MaterialRemain;
+  producibleFame: number;
+  producedFame: number;
+}
+
+const collectionRemainMaterialReducer = (
+  collected: string[]
+): CollectionRemainReturnType => {
+  const collectionProducible = (
+    Object.entries(collection.c).filter(
+      ([, cdata]) => "m" in cdata
+    ) as CollectionFilteredEntry[]
+  ).map(([cid, cdata]) => ({
+    id: cid,
+    material: cdata.m,
+    fame: cdata.f,
+    rarity: cdata.r,
+    collected: collected.includes(cid),
+    seconds: cdata.s,
+  }));
   const remainingCollectionProducible = collectionProducible.filter(
-    (v) => !v.collected
+    ({ collected }) => !collected
   );
   const collectionMaterialRemain = remainingCollectionProducible
     .map((v) => v.material)
@@ -340,52 +265,11 @@ const labDataChangeCollectionActionHandler = (
     .map((v) => v.fame)
     .reduce((a, b) => a + b, 0);
   return {
-    ...state,
     collectionProducible,
     collectionMaterialRemain: { m, g },
     producibleFame,
     producedFame,
-    isDirty: state ? (((state.isDirty ?? 0) + 1) % 32768) + 65536 : 0,
   };
-};
-
-interface LabDataClean {
-  type: "clean";
-}
-
-const labDataCleanActionHandler = (
-  state: NonNullable<LabDataProps>
-): LabDataProps => {
-  return { ...state, isDirty: 0 };
-};
-
-type LabDataReduceAction =
-  | LabDataRestoreAction
-  | LabDataChangeIndexAction
-  | LabDataChangeMyHomeLevelAction
-  | LabDataChangeCollectionAction
-  | LabDataClean;
-
-const labDataReducer = (
-  state: LabDataProps,
-  action: LabDataReduceAction
-): LabDataProps => {
-  if (action.type === "restore") return action.payload;
-  if (!state) return state;
-  switch (action.type) {
-    case "index":
-      return labDataChangeIndexActionHandler(state, action);
-    case "myhomelevel":
-      return labDataChangeMyHomeLevelActionHandler(state, action);
-    case "collection":
-      return labDataChangeCollectionActionHandler(state, action);
-    case "clean":
-      // return labDataCleanActionHandler(state);
-      if (state) return labDataCleanActionHandler(state);
-      break;
-    default:
-      throw new Error();
-  }
 };
 
 enum DecompMode {
@@ -432,20 +316,48 @@ const decompAll = (materials: { [key: string]: number }, mode: DecompMode) => {
   return materials;
 };
 
-type CollectionFilteredType = {
-  m: { [key: string]: number };
-  s: number;
-  f: number;
-  r: number;
-};
-
 const Lab = () => {
   const { t } = useTranslation();
-  const { googleLinked, isReady, autoLoad, autoSave } = useContext(AuthContext);
-  const [labData, dispatchLabData] = useReducer(labDataReducer, undefined);
+  const { userData, userDataDispatch } = use(AuthContext);
+  const effectTotal = useMemo(() => {
+    if (!userData) return [];
+    return reduceEffectTotal({
+      indexDepth1: userData.lab[1],
+      indexDepth2: userData.lab[2],
+    });
+  }, [userData]);
   const [materialDepth, setMaterialDepth] = useState<
     "indexDepth1" | "indexDepth2"
   >("indexDepth2");
+  const materialRemainMyHome = useMemo(() => {
+    if (!userData) return { m: {}, g: 0 };
+    const { l, r, m, s, a } = userData.myhome;
+    return myHomeRemainMaterialReducer({
+      lab: l,
+      restaurant: r,
+      myhome: m,
+      schedule: s,
+      archive: a,
+    });
+  }, [userData]);
+  const materialRemainLab = useMemo(() => {
+    if (!userData)
+      return { indexDepth1: { m: {}, g: 0 }, indexDepth2: { m: {}, g: 0 } };
+    return labRemainMaterialReducer({
+      indexDepth1: userData.lab[1],
+      indexDepth2: userData.lab[2],
+    });
+  }, [userData]);
+  const materialRemainCollection = useMemo(() => {
+    if (!userData)
+      return {
+        collectionProducible: [],
+        collectionMaterialRemain: { m: {}, g: 0 },
+        producibleFame: -1,
+        producedFame: -1,
+      };
+    return collectionRemainMaterialReducer(userData.collection.c);
+  }, [userData]);
   const [showMaterialRemainCategory, setShowMaterialRemainCategory] = useState<
     boolean[]
   >([true, true, false]);
@@ -455,121 +367,8 @@ const Lab = () => {
   const [collectionCategory, setCollectionCategory] =
     useState<string>("Figure");
   const [page, setPage] = useState(0);
-  const [repairedAlert, setRepairedAlert] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
-  const initFromUserData = useCallback(() => {
-    const { autoRepaired: ar1, ...userDataLabProto } = userdata.lab.load();
-    const { autoRepaired: ar2, ...userDataMyHomeProto } =
-      userdata.myhome.load();
-    const { autoRepaired: ar3, ...userDataCollectionProto } =
-      userdata.collection.load();
-    if (ar1 || ar2 || ar3) setRepairedAlert(true);
-    const currentLab = {
-      indexDepth1: userDataLabProto[1],
-      indexDepth2: userDataLabProto[2],
-    };
-    const collectionProducible = (
-      Object.entries(collection.c).filter(([, c]) =>
-        Object.keys(c).includes("m")
-      ) as [string, CollectionFilteredType][]
-    ).map(([id, c]) => ({
-      id,
-      material: c.m,
-      fame: c.f,
-      rarity: c.r,
-      collected: userDataCollectionProto.c.includes(id),
-      seconds: c.s,
-    }));
-    const producedCollection = collectionProducible.filter(({ id }) =>
-      userDataCollectionProto.c.includes(id)
-    );
-    const remainCollectionProducible = collectionProducible.filter(
-      ({ id }) => !userDataCollectionProto.c.includes(id)
-    );
-    dispatchLabData({
-      type: "restore",
-      payload: {
-        currentLab,
-        materialRemain: reduceMaterialRemain(currentLab),
-        effectTotal: reduceEffectTotal(currentLab),
-        myHomeLevels: {
-          lab: userDataMyHomeProto.l,
-          restaurant: userDataMyHomeProto.r,
-          myhome: userDataMyHomeProto.m,
-          schedule: userDataMyHomeProto.s,
-          archive: userDataMyHomeProto.a,
-        },
-        myHomeMaterialRemain: (() => {
-          const { g, ...m } = [
-            myhomeupgrade.l
-              .slice(userDataMyHomeProto.l[0], userDataMyHomeProto.l[1])
-              .reduce(materialObjectMerge, { g: 0 }),
-            myhomeupgrade.r
-              .slice(userDataMyHomeProto.r[0], userDataMyHomeProto.r[1])
-              .reduce(materialObjectMerge, { g: 0 }),
-            myhomeupgrade.m
-              .slice(userDataMyHomeProto.m[0], userDataMyHomeProto.m[1])
-              .reduce(materialObjectMerge, { g: 0 }),
-            myhomeupgrade.s
-              .slice(userDataMyHomeProto.s[0], userDataMyHomeProto.s[1])
-              .reduce(materialObjectMerge, { g: 0 }),
-            // myhomeupgrade.a
-            //   .slice(userDataMyHomeProto.a[0], userDataMyHomeProto.a[1])
-            //   .reduce(materialObjectMerge, { g: 0 }),
-          ].reduce(materialObjectMerge, { g: 0 }) as Record<string, number>;
-          return { m, g };
-        })(),
-        collectionProducible,
-        collectionMaterialRemain: (() => {
-          const { g, ...m } = remainCollectionProducible
-            .map(({ material }) => material)
-            .reduce(materialObjectMerge, { g: 0 });
-          return { m, g };
-        })(),
-        producibleFame: remainCollectionProducible
-          .map(({ fame }) => fame)
-          .reduce((a, b) => a + b, 0),
-        producedFame: producedCollection
-          .map(({ fame }) => fame)
-          .reduce((a, b) => a + b, 0),
-        isDirty: 0,
-      },
-    });
-    setPage(userDataLabProto[1]);
-  }, []);
-  useEffect(initFromUserData, [initFromUserData]);
-  useEffect(() => {
-    if (repairedAlert) {
-      toast.info(t("ui.index.repairedAlert"));
-      setRepairedAlert(false);
-    }
-  }, [repairedAlert, t]);
-
-  useEffect(() => {
-    (async () => {
-      if (isReady) {
-        if (googleLinked && autoLoad && !loaded) {
-          await autoLoad();
-          initFromUserData();
-          setLoaded(true);
-        }
-        if (!googleLinked) initFromUserData();
-      }
-    })();
-  }, [isReady, googleLinked, autoLoad, initFromUserData, t, loaded]);
-
-  useEffect(() => {
-    if (labData && labData.isDirty) {
-      const timer = setTimeout(() => {
-        dispatchLabData({ type: "clean" });
-        if (isReady && googleLinked && autoSave) {
-          autoSave();
-        }
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [autoSave, googleLinked, isReady, labData]);
+  if (!userData || !userDataDispatch) return <Loading />;
 
   return (
     <>
@@ -580,66 +379,36 @@ const Lab = () => {
             <AccordionTrigger>{t("ui.lab.cumulativeEffect")}</AccordionTrigger>
             <AccordionContent className="text-base">
               <div className="flex flex-col gap-1">
-                {labData &&
-                  labData.effectTotal.map((v) => {
-                    if (v.e !== 40) {
-                      return (
-                        <div
-                          key={v.e}
-                          className="flex gap-1 bg-[#e9f5cf] dark:bg-[#169a2d] p-1 rounded-xl"
-                        >
-                          <div className="w-6 h-6 p-1 inline-flex bg-greenicon rounded-full align-middle">
-                            <img
-                              className="w-full aspect-square"
-                              src={`/lab/Icon_${
-                                LabEffectCategory[Math.floor(v.e / 10)]
-                              }.png`}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            {t(
-                              `lab.effect.${v.e}`,
-                              Object.fromEntries(
-                                Object.entries(v.v as number[]).map(
-                                  ([k, v]) => [k, v.toLocaleString()]
-                                )
-                              )
-                            )}
-                          </div>
+                {effectTotal.map((v) => {
+                  if (v.e !== 40) {
+                    return (
+                      <div
+                        key={v.e}
+                        className="flex gap-1 bg-[#e9f5cf] dark:bg-[#169a2d] p-1 rounded-xl"
+                      >
+                        <div className="w-6 h-6 p-1 inline-flex bg-greenicon rounded-full align-middle">
+                          <img
+                            className="w-full aspect-square"
+                            src={`/lab/Icon_${
+                              LabEffectCategory[Math.floor(v.e / 10)]
+                            }.png`}
+                          />
                         </div>
-                      );
-                    }
-                    if (v.e === 40 && Object.keys(v.v).length === 1) {
-                      const vt = v as EffectByRace;
-                      return (
-                        <div
-                          key={`${vt.e}-${vt.s}`}
-                          className="flex gap-1 bg-[#e9f5cf] dark:bg-[#169a2d] p-1 rounded-xl"
-                        >
-                          <div className="w-6 h-6 p-1 inline-flex bg-greenicon rounded-full align-middle">
-                            <img
-                              className="w-full aspect-square"
-                              src={`/lab/Icon_${
-                                LabEffectCategory[Math.floor(vt.e / 10)]
-                              }.png`}
-                            />
-                          </div>
-                          <div className="w-6 h-6 inline-flex align-middle">
-                            <img
-                              className="w-full aspect-square"
-                              src={`/icons/Icon_${StatType[vt.s]}.png`}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            {t(`lab.effect.${vt.e}`, {
-                              0: Number(Object.keys(vt.v)[0]).toLocaleString(),
-                              1: "",
-                              2: t(`stat.${StatType[vt.s]}`),
-                            }).trim()}
-                          </div>
+                        <div className="flex-1">
+                          {t(
+                            `lab.effect.${v.e}`,
+                            Object.fromEntries(
+                              Object.entries(v.v as number[]).map(([k, v]) => [
+                                k,
+                                v.toLocaleString(),
+                              ])
+                            )
+                          )}
                         </div>
-                      );
-                    }
+                      </div>
+                    );
+                  }
+                  if (v.e === 40 && Object.keys(v.v).length === 1) {
                     const vt = v as EffectByRace;
                     return (
                       <div
@@ -661,43 +430,73 @@ const Lab = () => {
                           />
                         </div>
                         <div className="flex-1">
-                          <div>
-                            {t(`lab.effect.${vt.e}`, {
-                              0: "",
-                              1: "",
-                              2: t(`stat.${StatType[vt.s]}`),
-                            })
-                              .trim()
-                              .replace("  ", " ")}
-                          </div>
-                          <div className="flex flex-row gap-1">
-                            {Object.entries(vt.v).map(([value, races]) => {
-                              return (
-                                <div
-                                  key={value}
-                                  className="flex flex-auto flex-col gap-1"
-                                >
-                                  <div>
-                                    {races.map((race) => {
-                                      return (
-                                        <img
-                                          key={race}
-                                          className="w-6 h-6 inline-block align-middle"
-                                          src={`/album/Album_Icon_${Race[race]}.png`}
-                                          alt={t(`race.${Race[race]}`)}
-                                        />
-                                      );
-                                    })}
-                                  </div>
-                                  <div>{Number(value).toLocaleString()}</div>
-                                </div>
-                              );
-                            })}
-                          </div>
+                          {t(`lab.effect.${vt.e}`, {
+                            0: Number(Object.keys(vt.v)[0]).toLocaleString(),
+                            1: "",
+                            2: t(`stat.${StatType[vt.s]}`),
+                          }).trim()}
                         </div>
                       </div>
                     );
-                  })}
+                  }
+                  const vt = v as EffectByRace;
+                  return (
+                    <div
+                      key={`${vt.e}-${vt.s}`}
+                      className="flex gap-1 bg-[#e9f5cf] dark:bg-[#169a2d] p-1 rounded-xl"
+                    >
+                      <div className="w-6 h-6 p-1 inline-flex bg-greenicon rounded-full align-middle">
+                        <img
+                          className="w-full aspect-square"
+                          src={`/lab/Icon_${
+                            LabEffectCategory[Math.floor(vt.e / 10)]
+                          }.png`}
+                        />
+                      </div>
+                      <div className="w-6 h-6 inline-flex align-middle">
+                        <img
+                          className="w-full aspect-square"
+                          src={`/icons/Icon_${StatType[vt.s]}.png`}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <div>
+                          {t(`lab.effect.${vt.e}`, {
+                            0: "",
+                            1: "",
+                            2: t(`stat.${StatType[vt.s]}`),
+                          })
+                            .trim()
+                            .replace("  ", " ")}
+                        </div>
+                        <div className="flex flex-row gap-1">
+                          {Object.entries(vt.v).map(([value, races]) => {
+                            return (
+                              <div
+                                key={value}
+                                className="flex flex-auto flex-col gap-1"
+                              >
+                                <div>
+                                  {races.map((race) => {
+                                    return (
+                                      <img
+                                        key={race}
+                                        className="w-6 h-6 inline-block align-middle"
+                                        src={`/album/Album_Icon_${Race[race]}.png`}
+                                        alt={t(`race.${Race[race]}`)}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                                <div>{Number(value).toLocaleString()}</div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -778,70 +577,65 @@ const Lab = () => {
                   />
                 </div>
               </div>
-              {labData && (
-                <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-evenly">
-                  {Object.entries(
-                    [
-                      showMaterialRemainCategory[0]
-                        ? decompAll(
-                            labData.myHomeMaterialRemain.m,
-                            showAsSubMaterial
-                          )
-                        : {},
-                      showMaterialRemainCategory[1]
-                        ? decompAll(
-                            labData.materialRemain[materialDepth].m,
-                            showAsSubMaterial
-                          )
-                        : {},
-                      showMaterialRemainCategory[2]
-                        ? decompAll(
-                            labData.collectionMaterialRemain.m,
-                            showAsSubMaterial
-                          )
-                        : {},
-                    ].reduce(materialObjectMerge, {})
-                  ).map(([item, amount]) => {
-                    const itemObject = material.m[item];
-                    const rarityInfo = material.r[itemObject.r];
-                    return (
-                      <ItemSlotWithRecipe
-                        nameKey={`material.${item}`}
-                        rarityInfo={rarityInfo}
-                        item={item}
-                        amount={amount}
-                        key={item}
-                        recipe={
-                          itemObject.m &&
-                          Object.entries(itemObject.m).map(([v, c]) => {
-                            return {
-                              rarityInfo: material.r[material.m[v].r],
-                              item: v,
-                              amount: c,
-                            };
-                          })
-                        }
-                      />
-                    );
-                  })}
-                  {(showMaterialRemainCategory[0] ||
-                    showMaterialRemainCategory[1]) && (
-                    <ItemSlot
-                      rarityInfo={{ s: "Gold" }}
-                      item="/icons/CurrencyIcon_0008"
-                      amount={
-                        (showMaterialRemainCategory[0]
-                          ? labData.myHomeMaterialRemain.g
-                          : 0) +
-                        (showMaterialRemainCategory[1]
-                          ? labData.materialRemain[materialDepth].g
-                          : 0)
+              <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-evenly">
+                {Object.entries(
+                  [
+                    showMaterialRemainCategory[0]
+                      ? decompAll(materialRemainMyHome.m, showAsSubMaterial)
+                      : {},
+                    showMaterialRemainCategory[1]
+                      ? decompAll(
+                          materialRemainLab[materialDepth].m,
+                          showAsSubMaterial
+                        )
+                      : {},
+                    showMaterialRemainCategory[2]
+                      ? decompAll(
+                          materialRemainCollection.collectionMaterialRemain.m,
+                          showAsSubMaterial
+                        )
+                      : {},
+                  ].reduce(materialObjectMerge, {})
+                ).map(([item, amount]) => {
+                  const itemObject = material.m[item];
+                  const rarityInfo = material.r[itemObject.r];
+                  return (
+                    <ItemSlotWithRecipe
+                      nameKey={`material.${item}`}
+                      rarityInfo={rarityInfo}
+                      item={item}
+                      amount={amount}
+                      key={item}
+                      recipe={
+                        itemObject.m &&
+                        Object.entries(itemObject.m).map(([v, c]) => {
+                          return {
+                            rarityInfo: material.r[material.m[v].r],
+                            item: v,
+                            amount: c,
+                          };
+                        })
                       }
-                      fullItemPath
                     />
-                  )}
-                </div>
-              )}
+                  );
+                })}
+                {(showMaterialRemainCategory[0] ||
+                  showMaterialRemainCategory[1]) && (
+                  <ItemSlot
+                    rarityInfo={{ s: "Gold" }}
+                    item="/icons/CurrencyIcon_0008"
+                    amount={
+                      (showMaterialRemainCategory[0]
+                        ? materialRemainMyHome.g
+                        : 0) +
+                      (showMaterialRemainCategory[1]
+                        ? materialRemainLab[materialDepth].g
+                        : 0)
+                    }
+                    fullItemPath
+                  />
+                )}
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -878,115 +672,94 @@ const Lab = () => {
                 {t("myhome.lab")}
               </div>
               <div>
-                <div>{labData ? labData.myHomeLevels.lab[0] + 1 : "-"}</div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={labData.myHomeLevels.lab[0] === 0}
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "lab",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.lab[1],
-                              Math.max(labData.myHomeLevels.lab[0] - 1, 0)
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.lab[0] ===
-                          myhomeupgrade.l.length ||
-                        labData.myHomeLevels.lab[0] ===
-                          labData.myHomeLevels.lab[1]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "lab",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.lab[1],
-                              Math.min(
-                                labData.myHomeLevels.lab[0] + 1,
-                                myhomeupgrade.l.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                <div>{userData.myhome.l[0] + 1}</div>
+                <div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.l[0] === 0}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "lab",
+                        0,
+                        Math.min(
+                          userData.myhome.l[1],
+                          Math.max(userData.myhome.l[0] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.l[0] === myhomeupgrade.l.length ||
+                      userData.myhome.l[0] === userData.myhome.l[1]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "lab",
+                        0,
+                        Math.min(
+                          userData.myhome.l[1],
+                          Math.min(
+                            userData.myhome.l[0] + 1,
+                            myhomeupgrade.l.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <div>
-                <div>{labData ? labData.myHomeLevels.lab[1] + 1 : "-"}</div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.lab[1] === 0 ||
-                        labData.myHomeLevels.lab[1] ===
-                          labData.myHomeLevels.lab[0]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "lab",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.lab[0],
-                              Math.max(labData.myHomeLevels.lab[1] - 1, 0)
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.lab[1] === myhomeupgrade.l.length
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "lab",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.lab[0],
-                              Math.min(
-                                labData.myHomeLevels.lab[1] + 1,
-                                myhomeupgrade.l.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                <div>{userData.myhome.l[1] + 1}</div>
+                <div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.l[1] === 0 ||
+                      userData.myhome.l[1] === userData.myhome.l[1]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "lab",
+                        1,
+                        Math.max(
+                          userData.myhome.l[0],
+                          Math.max(userData.myhome.l[1] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.l[1] === myhomeupgrade.l.length}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "lab",
+                        1,
+                        Math.max(
+                          userData.myhome.l[0],
+                          Math.min(
+                            userData.myhome.l[1] + 1,
+                            myhomeupgrade.l.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <div className="flex flex-col">
                 <img
@@ -996,126 +769,94 @@ const Lab = () => {
                 {t("myhome.restaurant")}
               </div>
               <div>
+                <div>{userData.myhome.r[0] + 1}</div>
                 <div>
-                  {labData ? labData.myHomeLevels.restaurant[0] + 1 : "-"}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.r[0] === 0}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "restaurant",
+                        0,
+                        Math.min(
+                          userData.myhome.r[1],
+                          Math.max(userData.myhome.r[0] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.r[0] === myhomeupgrade.r.length ||
+                      userData.myhome.r[0] === userData.myhome.r[1]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "restaurant",
+                        0,
+                        Math.min(
+                          userData.myhome.r[1],
+                          Math.min(
+                            userData.myhome.r[0] + 1,
+                            myhomeupgrade.r.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={labData.myHomeLevels.restaurant[0] === 0}
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "restaurant",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.restaurant[1],
-                              Math.max(
-                                labData.myHomeLevels.restaurant[0] - 1,
-                                0
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.restaurant[0] ===
-                          myhomeupgrade.r.length ||
-                        labData.myHomeLevels.restaurant[0] ===
-                          labData.myHomeLevels.restaurant[1]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "restaurant",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.restaurant[1],
-                              Math.min(
-                                labData.myHomeLevels.restaurant[0] + 1,
-                                myhomeupgrade.r.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
               </div>
               <div>
+                <div>{userData.myhome.r[1] + 1}</div>
                 <div>
-                  {labData ? labData.myHomeLevels.restaurant[1] + 1 : "-"}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.r[1] === 0 ||
+                      userData.myhome.r[1] === userData.myhome.r[0]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "restaurant",
+                        1,
+                        Math.max(
+                          userData.myhome.r[0],
+                          Math.max(userData.myhome.r[1] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.r[1] === myhomeupgrade.r.length}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "restaurant",
+                        1,
+                        Math.max(
+                          userData.myhome.r[0],
+                          Math.min(
+                            userData.myhome.r[1] + 1,
+                            myhomeupgrade.r.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.restaurant[1] === 0 ||
-                        labData.myHomeLevels.restaurant[1] ===
-                          labData.myHomeLevels.restaurant[0]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "restaurant",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.restaurant[0],
-                              Math.max(
-                                labData.myHomeLevels.restaurant[1] - 1,
-                                0
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.restaurant[1] ===
-                        myhomeupgrade.r.length
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "restaurant",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.restaurant[0],
-                              Math.min(
-                                labData.myHomeLevels.restaurant[1] + 1,
-                                myhomeupgrade.r.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
               </div>
               <div className="flex flex-col">
                 <img
@@ -1125,116 +866,94 @@ const Lab = () => {
                 {t("myhome.myhome")}
               </div>
               <div>
-                <div>{labData ? labData.myHomeLevels.myhome[0] + 1 : "-"}</div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={labData.myHomeLevels.myhome[0] === 0}
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "myhome",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.myhome[1],
-                              Math.max(labData.myHomeLevels.myhome[0] - 1, 0)
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.myhome[0] ===
-                          myhomeupgrade.m.length ||
-                        labData.myHomeLevels.myhome[0] ===
-                          labData.myHomeLevels.myhome[1]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "myhome",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.myhome[1],
-                              Math.min(
-                                labData.myHomeLevels.myhome[0] + 1,
-                                myhomeupgrade.m.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                <div>{userData.myhome.m[0] + 1}</div>
+                <div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.m[0] === 0}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "myhome",
+                        0,
+                        Math.min(
+                          userData.myhome.m[1],
+                          Math.max(userData.myhome.m[0] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.m[0] === myhomeupgrade.m.length ||
+                      userData.myhome.m[0] === userData.myhome.m[1]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "myhome",
+                        0,
+                        Math.min(
+                          userData.myhome.m[1],
+                          Math.min(
+                            userData.myhome.m[0] + 1,
+                            myhomeupgrade.m.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <div>
-                <div>{labData ? labData.myHomeLevels.myhome[1] + 1 : "-"}</div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.myhome[1] === 0 ||
-                        labData.myHomeLevels.myhome[1] ===
-                          labData.myHomeLevels.myhome[0]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "myhome",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.myhome[0],
-                              Math.max(labData.myHomeLevels.myhome[1] - 1, 0)
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.myhome[1] ===
-                        myhomeupgrade.m.length
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "myhome",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.myhome[0],
-                              Math.min(
-                                labData.myHomeLevels.myhome[1] + 1,
-                                myhomeupgrade.m.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
+                <div>{userData.myhome.m[1] + 1}</div>
+                <div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.m[1] === 0 ||
+                      userData.myhome.m[1] === userData.myhome.m[0]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "myhome",
+                        1,
+                        Math.max(
+                          userData.myhome.m[0],
+                          Math.max(userData.myhome.m[1] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.m[1] === myhomeupgrade.m.length}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "myhome",
+                        1,
+                        Math.max(
+                          userData.myhome.m[0],
+                          Math.min(
+                            userData.myhome.m[1] + 1,
+                            myhomeupgrade.m.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
               <div className="flex flex-col">
                 <img
@@ -1244,120 +963,94 @@ const Lab = () => {
                 {t("myhome.schedule")}
               </div>
               <div>
+                <div>{userData.myhome.s[0] + 1}</div>
                 <div>
-                  {labData ? labData.myHomeLevels.schedule[0] + 1 : "-"}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.s[0] === 0}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "schedule",
+                        0,
+                        Math.min(
+                          userData.myhome.s[1],
+                          Math.max(userData.myhome.s[0] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.s[0] === myhomeupgrade.s.length ||
+                      userData.myhome.s[0] === userData.myhome.s[1]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "schedule",
+                        0,
+                        Math.min(
+                          userData.myhome.s[1],
+                          Math.min(
+                            userData.myhome.s[0] + 1,
+                            myhomeupgrade.s.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={labData.myHomeLevels.schedule[0] === 0}
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "schedule",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.schedule[1],
-                              Math.max(labData.myHomeLevels.schedule[0] - 1, 0)
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.schedule[0] ===
-                          myhomeupgrade.s.length ||
-                        labData.myHomeLevels.schedule[0] ===
-                          labData.myHomeLevels.schedule[1]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "schedule",
-                            index: 0,
-                            value: Math.min(
-                              labData.myHomeLevels.schedule[1],
-                              Math.min(
-                                labData.myHomeLevels.schedule[0] + 1,
-                                myhomeupgrade.s.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
               </div>
               <div>
+                <div>{userData.myhome.s[1] + 1}</div>
                 <div>
-                  {labData ? labData.myHomeLevels.schedule[1] + 1 : "-"}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={
+                      userData.myhome.s[1] === 0 ||
+                      userData.myhome.s[1] === userData.myhome.s[0]
+                    }
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "schedule",
+                        1,
+                        Math.max(
+                          userData.myhome.s[0],
+                          Math.max(userData.myhome.s[1] - 1, 0)
+                        )
+                      )
+                    }
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    disabled={userData.myhome.s[1] === myhomeupgrade.s.length}
+                    onClick={() =>
+                      userDataDispatch.labMyHomeLevel(
+                        "schedule",
+                        1,
+                        Math.max(
+                          userData.myhome.s[0],
+                          Math.min(
+                            userData.myhome.s[1] + 1,
+                            myhomeupgrade.s.length
+                          )
+                        )
+                      )
+                    }
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-                {labData && (
-                  <div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.schedule[1] === 0 ||
-                        labData.myHomeLevels.schedule[1] ===
-                          labData.myHomeLevels.schedule[0]
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "schedule",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.schedule[0],
-                              Math.max(labData.myHomeLevels.schedule[1] - 1, 0)
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      disabled={
-                        labData.myHomeLevels.schedule[1] ===
-                        myhomeupgrade.s.length
-                      }
-                      onClick={() =>
-                        dispatchLabData({
-                          type: "myhomelevel",
-                          payload: {
-                            target: "schedule",
-                            index: 1,
-                            value: Math.max(
-                              labData.myHomeLevels.schedule[0],
-                              Math.min(
-                                labData.myHomeLevels.schedule[1] + 1,
-                                myhomeupgrade.s.length
-                              )
-                            ),
-                          },
-                        })
-                      }
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
               </div>
               <div className="flex flex-col">
                 <img
@@ -1384,11 +1077,7 @@ const Lab = () => {
                     <ArrowLeft />
                   </Button>
                   <div className="flex flex-col items-center justify-center flex-auto min-w-max px-2 text-center">
-                    <span
-                      onClick={() =>
-                        setPage(labData?.currentLab.indexDepth1 ?? 0)
-                      }
-                    >
+                    <span onClick={() => setPage(userData.lab[1] ?? 0)}>
                       {t("ui.lab.labStep", { 0: `${page + 1}` })}
                     </span>
                   </div>
@@ -1409,8 +1098,7 @@ const Lab = () => {
                     const indexDepth1 = page;
                     const incompleted =
                       indexDepth1 * 10000 + indexDepth2 >
-                      (labData?.currentLab.indexDepth1 ?? 0) * 10000 +
-                        (labData?.currentLab.indexDepth2 ?? 0);
+                      (userData.lab[1] ?? 0) * 10000 + (userData.lab[2] ?? 0);
                     return (
                       <Card
                         key={indexDepth2}
@@ -1419,10 +1107,7 @@ const Lab = () => {
                           incompleted ? "" : "bg-[#f2f9e7] dark:bg-[#36a52d]"
                         )}
                         onClick={() =>
-                          dispatchLabData({
-                            type: "index",
-                            payload: { indexDepth1, indexDepth2 },
-                          })
+                          userDataDispatch.labIndex(indexDepth1, indexDepth2)
                         }
                       >
                         <div
@@ -1523,13 +1208,15 @@ const Lab = () => {
                         src="/myhomeicons/IconFamous_1.png"
                       />
                     </div>
-                    {labData
-                      ? `${labData.producedFame}/${
-                          labData.producedFame + labData.producibleFame
+                    {materialRemainCollection
+                      ? `${materialRemainCollection.producedFame}/${
+                          materialRemainCollection.producedFame +
+                          materialRemainCollection.producibleFame
                         } (${(
                           Math.round(
-                            (labData.producedFame * 1000) /
-                              (labData.producedFame + labData.producibleFame)
+                            (materialRemainCollection.producedFame * 1000) /
+                              (materialRemainCollection.producedFame +
+                                materialRemainCollection.producibleFame)
                           ) / 10
                         ).toFixed(1)}%)`
                       : "---"}
@@ -1559,135 +1246,127 @@ const Lab = () => {
                 </ToggleGroup>
               </div>
               <div className="grid grid-cols-[repeat(auto-fill,_minmax(16rem,_1fr))] gap-2">
-                {labData &&
-                  labData.collectionProducible
-                    .filter(({ id }) => id.startsWith(collectionCategory))
-                    .sort(({ id: xi }, { id: yi }) => {
-                      let x = 0;
-                      let y = 0;
-                      const xn = xi.substring(collectionCategory.length);
-                      const yn = yi.substring(collectionCategory.length);
-                      const sz = (s: string) => {
-                        if (s === "S") return 0;
-                        if (s === "M") return 1;
-                        if (s === "L") return 2;
-                        return 3;
-                      };
-                      x += sz(xn[0]) * 1000;
-                      y += sz(yn[0]) * 1000;
-                      x += parseInt(xn.substring(1));
-                      y += parseInt(yn.substring(1));
-                      return x - y;
-                    })
-                    .map(
-                      ({
-                        id,
-                        material: mats,
-                        rarity,
-                        seconds,
-                        fame,
-                        collected,
-                      }) => {
-                        const s =
-                          (seconds *
-                            (100 -
-                              (
-                                (labData.effectTotal.find((e) => e.e === 10)
-                                  ?.v ?? [0]) as number[]
-                              )[0])) /
-                          100;
-                        return (
-                          <Card
-                            key={id}
-                            className={cn(
-                              "p-2 flex flex-col gap-2",
-                              collected ? "bg-[#f2f9e7] dark:bg-[#36a52d]" : ""
-                            )}
-                          >
-                            <div>{t(`collection.${id}`)}</div>
-                            <div className="flex flex-row gap-4">
-                              <div
-                                className="w-20 h-20 relative flex-initial"
-                                onClick={() => {
-                                  dispatchLabData({
-                                    type: "collection",
-                                    payload: {
-                                      id,
-                                      collected: !collected,
-                                    },
-                                  });
-                                }}
-                              >
-                                <ItemSlot
-                                  rarityInfo={
-                                    material.r[rarity] ?? {
-                                      s: "Yellow",
-                                    }
+                {materialRemainCollection.collectionProducible
+                  .filter(({ id }) => id.startsWith(collectionCategory))
+                  .sort(({ id: xi }, { id: yi }) => {
+                    let x = 0;
+                    let y = 0;
+                    const xn = xi.substring(collectionCategory.length);
+                    const yn = yi.substring(collectionCategory.length);
+                    const sz = (s: string) => {
+                      if (s === "S") return 0;
+                      if (s === "M") return 1;
+                      if (s === "L") return 2;
+                      return 3;
+                    };
+                    x += sz(xn[0]) * 1000;
+                    y += sz(yn[0]) * 1000;
+                    x += parseInt(xn.substring(1));
+                    y += parseInt(yn.substring(1));
+                    return x - y;
+                  })
+                  .map(
+                    ({
+                      id,
+                      material: mats,
+                      rarity,
+                      seconds,
+                      fame,
+                      collected,
+                    }) => {
+                      const s =
+                        (seconds *
+                          (100 -
+                            (
+                              (effectTotal.find((e) => e.e === 10)?.v ?? [
+                                0,
+                              ]) as number[]
+                            )[0])) /
+                        100;
+                      return (
+                        <Card
+                          key={id}
+                          className={cn(
+                            "p-2 flex flex-col gap-2",
+                            collected ? "bg-[#f2f9e7] dark:bg-[#36a52d]" : ""
+                          )}
+                        >
+                          <div>{t(`collection.${id}`)}</div>
+                          <div className="flex flex-row gap-4">
+                            <div
+                              className="w-20 h-20 relative flex-initial"
+                              onClick={() =>
+                                userDataDispatch.labCollection(id, !collected)
+                              }
+                            >
+                              <ItemSlot
+                                rarityInfo={
+                                  material.r[rarity] ?? {
+                                    s: "Yellow",
                                   }
-                                  item={`/collections/${id}`}
-                                  fullItemPath
-                                />
-                                {collected && (
-                                  <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
+                                }
+                                item={`/collections/${id}`}
+                                fullItemPath
+                              />
+                              {collected && (
+                                <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
+                                  <img
+                                    src="/icons/Stage_RewardChack.png"
+                                    className="w-100 opacity-100"
+                                  />
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex flex-col flex-1 gap-2">
+                              <div className="flex flex-row gap-2">
+                                {Object.entries(mats).map(([mat, amount]) => {
+                                  return (
+                                    <ItemSlot
+                                      key={mat}
+                                      rarityInfo={material.r[material.m[mat].r]}
+                                      amount={amount}
+                                      item={mat}
+                                      size={3}
+                                    />
+                                  );
+                                })}
+                              </div>
+                              <div className="flex flex-row gap-2 text-sm">
+                                <div className="flex-auto rounded-full relative text-right pl-5 pr-2 bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-950">
+                                  <div className="w-7 h-full flex justify-center items-center absolute -left-2">
                                     <img
-                                      src="/icons/Stage_RewardChack.png"
-                                      className="w-100 opacity-100"
+                                      className="w-full"
+                                      src="/common/ClockIcon_002.png"
                                     />
                                   </div>
-                                )}
-                              </div>
-                              <div className="flex flex-col flex-1 gap-2">
-                                <div className="flex flex-row gap-2">
-                                  {Object.entries(mats).map(([mat, amount]) => {
-                                    return (
-                                      <ItemSlot
-                                        key={mat}
-                                        rarityInfo={
-                                          material.r[material.m[mat].r]
-                                        }
-                                        amount={amount}
-                                        item={mat}
-                                        size={3}
-                                      />
-                                    );
-                                  })}
+                                  {Math.floor(s / 3600)
+                                    .toString()
+                                    .padStart(2, "0")}
+                                  :
+                                  {Math.floor((s % 3600) / 60)
+                                    .toString()
+                                    .padStart(2, "0")}
+                                  :
+                                  {Math.floor(s % 60)
+                                    .toString()
+                                    .padStart(2, "0")}
                                 </div>
-                                <div className="flex flex-row gap-2 text-sm">
-                                  <div className="flex-auto rounded-full relative text-right pl-5 pr-2 bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-950">
-                                    <div className="w-7 h-full flex justify-center items-center absolute -left-2">
-                                      <img
-                                        className="w-full"
-                                        src="/common/ClockIcon_002.png"
-                                      />
-                                    </div>
-                                    {Math.floor(s / 3600)
-                                      .toString()
-                                      .padStart(2, "0")}
-                                    :
-                                    {Math.floor((s % 3600) / 60)
-                                      .toString()
-                                      .padStart(2, "0")}
-                                    :
-                                    {Math.floor(s % 60)
-                                      .toString()
-                                      .padStart(2, "0")}
+                                <div className="flex-auto rounded-full relative text-right pl-6 pr-2 bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-950">
+                                  <div className="w-8 h-full flex justify-center items-center absolute -left-2">
+                                    <img
+                                      className="w-full"
+                                      src="/myhomeicons/IconFamous_1.png"
+                                    />
                                   </div>
-                                  <div className="flex-auto rounded-full relative text-right pl-6 pr-2 bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-950">
-                                    <div className="w-8 h-full flex justify-center items-center absolute -left-2">
-                                      <img
-                                        className="w-full"
-                                        src="/myhomeicons/IconFamous_1.png"
-                                      />
-                                    </div>
-                                    {fame}
-                                  </div>
+                                  {fame}
                                 </div>
                               </div>
                             </div>
-                          </Card>
-                        );
-                      }
-                    )}
+                          </div>
+                        </Card>
+                      );
+                    }
+                  )}
               </div>
             </div>
           </TabsContent>

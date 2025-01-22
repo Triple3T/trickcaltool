@@ -82,20 +82,6 @@ export default defineConfig({
               },
             },
           },
-          {
-            urlPattern: /^https:\/\/tr\.triple-lab\.com\/.*/i,
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "trickcalnote-fallback",
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 7,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
         ],
       },
       manifest: {
@@ -162,11 +148,11 @@ export default defineConfig({
       process.env.CF_PAGES_COMMIT_SHA ?? "DEV0001"
     }"`,
     "process.env.HOSTNAME": `"${
-      process.env.VITE_HOSTNAME ?? "https://tr.triple-lab.com"
+      process.env.VITE_APP_HOSTNAME ?? "https://tr.triple-lab.com"
     }"`,
     "process.env.GOOGLE_CLIENT_ID": `"${
       process.env.REACT_APP_GAPI_CLIENT_ID ??
-      "637944158863-l548alrsg15njgk49kpaq13d5gnijo3j.apps.googleusercontent.com"
+      "637944158863-o29na0kl0f8g3ll2nr2br7rc6srrrigb.apps.googleusercontent.com"
     }"`,
   },
   build: {

@@ -5,11 +5,9 @@ import board from "@/data/board";
 import eqrank from "@/data/eqrank";
 import lab from "@/data/lab";
 import purpleboard from "@/data/purpleboard";
-import userdata from "@/utils/userdata";
 
-export const getTotalBoardStat = () => {
+export const getTotalBoardStat = (boardData: Record<string, number[][]>) => {
   const boardStats: { [key: string]: number } = {};
-  const boardData = userdata.board.load().b;
   Object.entries(boardData).forEach(([c, b]) => {
     const charaBoard = board.c[c].b;
     charaBoard.forEach((nthboard, i) => {
@@ -35,9 +33,8 @@ export const getTotalBoardStat = () => {
   return boardStats;
 };
 
-export const getTotalPboardStat = () => {
+export const getTotalPboardStat = (pboardData: Record<string, number[][]>) => {
   const pboardStats: { [key: string]: number } = {};
-  const pboardData = userdata.pboard.load().p;
   Object.entries(pboardData).forEach(([c, b]) => {
     const charaPboard = purpleboard.c[c].b;
     charaPboard.forEach((nthboard, i) => {
@@ -62,10 +59,9 @@ export const getTotalPboardStat = () => {
   return pboardStats;
 };
 
-export const getTotalRankStat = () => {
+export const getTotalRankStat = (rankData: Record<string, number>) => {
   const rankStats: { [key: string]: number } = {};
   const rankStatCollection = Array(eqrank.s.length).fill(0);
-  const rankData = userdata.eqrank.load().r;
   Object.entries(rankData).forEach(([c, r]) => {
     const charaRank = eqrank.r[eqrank.c[c].r];
     if (r > 1) {
@@ -84,25 +80,26 @@ export const getTotalRankStat = () => {
   return rankStats;
 };
 
-export const getTotalLabStat = () => {
+export const getTotalLabStat = (labData: { 1: number; 2: number }) => {
   const labStats: { [key: string]: { [key: string]: number } } = {};
-  const labData = userdata.lab.load();
-  lab.l.slice(0, labData[1]).forEach((effectCollection) => {
-    effectCollection.forEach((effectEntry) => {
-      const effect = lab.e[effectEntry.e];
-      if (effect.e === 40) {
-        effectEntry.t!.forEach((raceNumber) => {
-          const targetRace = Race[raceNumber];
-          effect.v.forEach((statValue, i) => {
-            const statType = StatType[effect.s![i]];
-            if (typeof labStats[targetRace] === "undefined")
-              labStats[targetRace] = {};
-            labStats[targetRace][statType] =
-              (labStats[targetRace][statType] ?? 0) + statValue;
+  [...lab.l.slice(0, labData[1]), lab.l[labData[1]].slice(0, labData[2] + 1)].forEach(
+    (effectCollection) => {
+      effectCollection.forEach((effectEntry) => {
+        const effect = lab.e[effectEntry.e];
+        if (effect.e === 40) {
+          effectEntry.t!.forEach((raceNumber) => {
+            const targetRace = Race[raceNumber];
+            effect.v.forEach((statValue, i) => {
+              const statType = StatType[effect.s![i]];
+              if (typeof labStats[targetRace] === "undefined")
+                labStats[targetRace] = {};
+              labStats[targetRace][statType] =
+                (labStats[targetRace][statType] ?? 0) + statValue;
+            });
           });
-        });
-      }
-    });
-  });
+        }
+      });
+    }
+  );
   return labStats;
 };

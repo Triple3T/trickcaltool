@@ -24,7 +24,7 @@ import chara from "@/data/chara";
 import { BoardType } from "@/types/enums";
 
 interface BoardGuideDialogProps {
-  onCloseGuide: (arg: { type: "visible"; payload: BoardType[] }) => void;
+  onCloseGuide: (payload: BoardType[]) => void;
   commonProps: BoardType[];
   criticalResistProp: BoardType;
   criticalResistDefault: boolean;
@@ -496,16 +496,13 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
               variant="default"
               className="w-max"
               onClick={() =>
-                props.onCloseGuide({
-                  type: "visible",
-                  payload: [
-                    ...props.commonProps,
-                    ...(showCriticalResist ? [props.criticalResistProp] : []),
-                    ...(showCriticalMultResist
-                      ? [props.criticalMultResistProp]
-                      : []),
-                  ],
-                })
+                props.onCloseGuide([
+                  ...props.commonProps,
+                  ...(showCriticalResist ? [props.criticalResistProp] : []),
+                  ...(showCriticalMultResist
+                    ? [props.criticalMultResistProp]
+                    : []),
+                ])
               }
             >
               {t("ui.board.closeGuide")}

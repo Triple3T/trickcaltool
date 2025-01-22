@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
+import { AuthContext } from "@/contexts/AuthContext";
+import Loading from "@/components/common/loading";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,8 +34,6 @@ import { Personality } from "@/types/enums";
 import chara from "@/data/chara";
 import food from "@/data/food";
 import material from "@/data/material";
-
-import userdata from "@/utils/userdata";
 
 interface IComboboxOuterProp {
   value: string;
@@ -372,10 +372,7 @@ const FoodCombobox = ({ value, onChange }: IComboboxOuterProp) => {
 
 const Restaurant = () => {
   const { t } = useTranslation();
-  const [skinData, setSkinData] = useState<Record<string, number>>({});
-  useEffect(() => {
-    setSkinData(userdata.skin.load());
-  }, []);
+  const { userData } = use(AuthContext);
   const [selectedChara, setSelectedChara] = useState<string>("");
   const [selectedFood, setSelectedFood] = useState<string>("");
   // const [selectedMaterial, setSelectedMaterial] = useState<string>("");
@@ -397,6 +394,8 @@ const Restaurant = () => {
   //   setSelectedFood("");
   //   setSelectedMaterial(materialId);
   // }, []);
+
+  if (!userData) return <Loading />;
 
   return (
     <>
@@ -698,8 +697,8 @@ const Restaurant = () => {
                             >
                               <img
                                 src={
-                                  skinData[c]
-                                    ? `/charas/${c}Skin${skinData[c]}.png`
+                                  userData.charaInfo[c].skin
+                                    ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
                                     : `/charas/${c}.png`
                                 }
                                 className={cn(
@@ -736,8 +735,8 @@ const Restaurant = () => {
                           >
                             <img
                               src={
-                                skinData[c]
-                                  ? `/charas/${c}Skin${skinData[c]}.png`
+                                userData.charaInfo[c].skin
+                                  ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
                                   : `/charas/${c}.png`
                               }
                               className={cn(
@@ -787,8 +786,8 @@ const Restaurant = () => {
                           >
                             <img
                               src={
-                                skinData[c]
-                                  ? `/charas/${c}Skin${skinData[c]}.png`
+                                userData.charaInfo[c].skin
+                                  ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
                                   : `/charas/${c}.png`
                               }
                               className={cn(

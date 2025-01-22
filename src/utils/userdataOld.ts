@@ -2,14 +2,14 @@ import chara from "@/data/chara";
 import deepEqual from "@/lib/deepEqual";
 import {
   UserDataDialogEnable,
-  UserDataBoard,
+  UserDataBoardMemory,
   UserDataCollection,
-  UserDataEqRank,
+  UserDataEqRankMemory,
   UserDataEventCalc,
   UserDataLab,
   UserDataMyHome,
-  UserDataNthBoard,
-  UserDataPurpleBoard,
+  UserDataNthBoardMemory,
+  UserDataPurpleBoardMemory,
   UserDataUnowned,
   UserDataSkin,
 } from "@/types/types";
@@ -53,7 +53,7 @@ const saveDialogEnableData: SaveData<UserDataDialogEnable> = (
 const loadDialogEnableData: LoadData<UserDataDialogEnable> = () => {
   const data = localStorage.getItem(DIALOG_KEY);
   if (!data) {
-    saveDialogEnableData(defaultDialogEnableData, true);
+    // saveDialogEnableData(defaultDialogEnableData, true);
     return { ...defaultDialogEnableData, autoRepaired: true };
   }
   const finalData = { ...defaultDialogEnableData, ...JSON.parse(data) };
@@ -61,24 +61,29 @@ const loadDialogEnableData: LoadData<UserDataDialogEnable> = () => {
   return { ...finalData, autoRepaired };
 };
 
-const defaultBoardData: UserDataBoard = {
+const defaultBoardData: UserDataBoardMemory = {
   b: {},
-  c: 0,
+  c: [0],
   v: [0, 2, 3, 4, 5, 6, 7, 9],
+  i: 0,
 };
-const saveBoardData: SaveData<UserDataBoard> = (data, withoutTimestamp) => {
+const saveBoardData: SaveData<UserDataBoardMemory> = (data, withoutTimestamp) => {
   localStorage.setItem(BOARD_KEY, JSON.stringify(data ?? defaultBoardData));
   if (!withoutTimestamp)
     localStorage.setItem("timestamp", new Date().getTime().toString());
 };
-const loadBoardData: LoadData<UserDataBoard> = () => {
+const loadBoardData: LoadData<UserDataBoardMemory> = () => {
   const data = localStorage.getItem(BOARD_KEY);
   if (!data) {
-    saveBoardData(defaultBoardData, true);
+    // saveBoardData(defaultBoardData, true);
     return { ...defaultBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultBoardData, ...JSON.parse(data) };
   const autoRepaired = !deepEqual(finalData, JSON.parse(data));
+  if (typeof finalData.c === "number") {
+    finalData.c = [finalData.c];
+    saveBoardData(finalData, true);
+  }
   return { ...finalData, autoRepaired };
 };
 
@@ -86,7 +91,7 @@ const defaultPurpleBoardData = {
   p: {},
   d: [],
 };
-const savePurpleBoardData: SaveData<UserDataPurpleBoard> = (
+const savePurpleBoardData: SaveData<UserDataPurpleBoardMemory> = (
   data,
   withoutTimestamp
 ) => {
@@ -97,10 +102,10 @@ const savePurpleBoardData: SaveData<UserDataPurpleBoard> = (
   if (!withoutTimestamp)
     localStorage.setItem("timestamp", new Date().getTime().toString());
 };
-const loadPurpleBoardData: LoadData<UserDataPurpleBoard> = () => {
+const loadPurpleBoardData: LoadData<UserDataPurpleBoardMemory> = () => {
   const data = localStorage.getItem(PBOARD_KEY);
   if (!data) {
-    savePurpleBoardData(defaultPurpleBoardData, true);
+    // savePurpleBoardData(defaultPurpleBoardData, true);
     return { ...defaultPurpleBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultPurpleBoardData, ...JSON.parse(data) };
@@ -111,7 +116,7 @@ const loadPurpleBoardData: LoadData<UserDataPurpleBoard> = () => {
 const defaultNthBoardData = {
   n: {},
 };
-const saveNthBoardData: SaveData<UserDataNthBoard> = (
+const saveNthBoardData: SaveData<UserDataNthBoardMemory> = (
   data,
   withoutTimestamp
 ) => {
@@ -122,10 +127,10 @@ const saveNthBoardData: SaveData<UserDataNthBoard> = (
   if (!withoutTimestamp)
     localStorage.setItem("timestamp", new Date().getTime().toString());
 };
-const loadNthBoardData: LoadData<UserDataNthBoard> = () => {
+const loadNthBoardData: LoadData<UserDataNthBoardMemory> = () => {
   const data = localStorage.getItem(NTHBOARD_KEY);
   if (!data) {
-    saveNthBoardData(defaultNthBoardData, true);
+    // saveNthBoardData(defaultNthBoardData, true);
     return { ...defaultNthBoardData, autoRepaired: true };
   }
   const finalData = { ...defaultNthBoardData, ...JSON.parse(data) };
@@ -139,15 +144,15 @@ const defaultEqRankData = {
   v: [],
   f: [[0, 0, 0]],
 };
-const saveEqRankData: SaveData<UserDataEqRank> = (data, withoutTimestamp) => {
+const saveEqRankData: SaveData<UserDataEqRankMemory> = (data, withoutTimestamp) => {
   localStorage.setItem(EQRANK_KEY, JSON.stringify(data ?? defaultEqRankData));
   if (!withoutTimestamp)
     localStorage.setItem("timestamp", new Date().getTime().toString());
 };
-const loadEqRankData: LoadData<UserDataEqRank> = () => {
+const loadEqRankData: LoadData<UserDataEqRankMemory> = () => {
   const data = localStorage.getItem(EQRANK_KEY);
   if (!data) {
-    saveEqRankData(defaultEqRankData, true);
+    // saveEqRankData(defaultEqRankData, true);
     return { ...defaultEqRankData, autoRepaired: true };
   }
   const finalData = { ...defaultEqRankData, ...JSON.parse(data) };
@@ -164,7 +169,7 @@ const saveUnownedData: SaveData<UserDataUnowned> = (data, withoutTimestamp) => {
 const loadUnownedData: LoadData<UserDataUnowned> = () => {
   const data = localStorage.getItem(UNOWNED_KEY);
   if (!data) {
-    saveUnownedData(defaultUnownedData, true);
+    // saveUnownedData(defaultUnownedData, true);
     return { ...defaultUnownedData, autoRepaired: true };
   }
   const parsed = JSON.parse(data) as UserDataUnowned;
@@ -206,7 +211,7 @@ const saveLabData: SaveData<UserDataLab> = (data, withoutTimestamp) => {
 const loadLabData: LoadData<UserDataLab> = () => {
   const data = localStorage.getItem(LAB_KEY);
   if (!data) {
-    saveLabData(defaultLabData, true);
+    // saveLabData(defaultLabData, true);
     return { ...defaultLabData, autoRepaired: true };
   }
   const finalData = { ...defaultLabData, ...JSON.parse(data) };
@@ -229,7 +234,7 @@ const saveMyHomeData: SaveData<UserDataMyHome> = (data, withoutTimestamp) => {
 const loadMyHomeData: LoadData<UserDataMyHome> = () => {
   const data = localStorage.getItem(MYHOME_KEY);
   if (!data) {
-    saveMyHomeData(defaultMyHomeData, true);
+    // saveMyHomeData(defaultMyHomeData, true);
     return { ...defaultMyHomeData, autoRepaired: true };
   }
   const finalData = { ...defaultMyHomeData, ...JSON.parse(data) };
@@ -252,7 +257,7 @@ const saveCollectionData: SaveData<UserDataCollection> = (
 const loadCollectionData: LoadData<UserDataCollection> = () => {
   const data = localStorage.getItem(COLLECTION_KEY);
   if (!data) {
-    saveCollectionData(defaultCollectionData, true);
+    // saveCollectionData(defaultCollectionData, true);
     return { ...defaultCollectionData, autoRepaired: true };
   }
   const finalData = { ...defaultCollectionData, ...JSON.parse(data) };
@@ -287,7 +292,7 @@ const saveEventCalcData: SaveData<UserDataEventCalc> = (
 const loadEventCalcData: LoadData<UserDataEventCalc> = () => {
   const data = localStorage.getItem(EVENTCALC_KEY);
   if (!data) {
-    saveEventCalcData(defaultEventCalcData, true);
+    // saveEventCalcData(defaultEventCalcData, true);
     return { ...defaultEventCalcData, autoRepaired: true };
   }
   const finalData = { ...defaultEventCalcData, ...JSON.parse(data) };
@@ -310,7 +315,7 @@ const loadSkinData: LoadDataWithoutAutoRepaired<UserDataSkin> = () => {
   return finalData;
 };
 
-const userdata = {
+const userdataOld = {
   dialog: {
     save: saveDialogEnableData,
     load: loadDialogEnableData,
@@ -357,4 +362,4 @@ const userdata = {
   },
 };
 
-export default userdata;
+export default userdataOld;

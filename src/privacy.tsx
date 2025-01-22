@@ -5,7 +5,7 @@ import Privacy1 from "@/components/privacy/v1";
 import Select from "@/components/common/combobox-select";
 
 const versions = [
-  { value: 2, label: "2025-01-20" },
+  { value: 2, label: "2025-01-22" },
   { value: 1, label: "2024-03-12" },
 ];
 

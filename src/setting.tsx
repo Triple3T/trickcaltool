@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { use, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ExternalLink,
@@ -12,25 +12,63 @@ import {
 } from "lucide-react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme-provider";
+import Loading from "@/components/common/loading";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import AccountDeleteConfirmDialog from "@/components/parts/account-delete-confirm-dialog";
 import HardResetWithConfirm from "@/components/parts/hard-reset-with-confirm";
+import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 import getServerHash from "@/utils/getServerHash";
 import googleAccessUrl from "@/utils/googleAccessUrl";
-import userdata from "@/utils/userdata";
 import chara from "@/data/chara";
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { currentSignature } from "@/utils/versionMigrate";
+
+const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
+const b64IntoNumber = (b64: string) => {
+  return b64
+    .split("")
+    .map((v) => b64t.indexOf(v))
+    .reduce((acc, v) => acc * 64 + v, 0);
+};
+
+interface IFileImportDialogProps {
+  open: boolean;
+  filename?: string;
+  timestamp: number;
+  crayon: number;
+  rank: number;
+  pcrayon: number;
+  onConfirm: () => void;
+}
 
 const Setting = () => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
-  const { autoSave, isReady, googleLinked } = useContext(AuthContext);
+  const {
+    forceUpload,
+    userData,
+    userDataDispatch,
+    readIntoUserData,
+    isReady,
+    googleLinked,
+  } = use(AuthContext);
   const fileInput = useRef<HTMLInputElement>(null);
   const [remoteHash, setRemoteHash] = useState<string>("");
   const [installButtonText, setInstallButtonText] = useState<string>(
@@ -38,7 +76,9 @@ const Setting = () => {
   );
   const [skinChangeChara, setSkinChangeChara] = useState<string>("");
   const [skinNameId, setSkinNameId] = useState<string>("");
-  const [userSkinData, setUserSkinData] = useState<Record<string, number>>({});
+  const [fileImportDialogProp, setFileImportDialogProp] = useState<
+    IFileImportDialogProps | undefined
+  >(undefined);
   useEffect(() => {
     getServerHash()
       .then((v) => {
@@ -51,13 +91,6 @@ const Setting = () => {
       })
       .catch(() => {});
   }, []);
-  useEffect(() => {
-    setUserSkinData(userdata.skin.load());
-  }, []);
-  useEffect(() => {
-    if (Object.keys(userSkinData).length)
-      userdata.skin.save(userSkinData, true);
-  }, [userSkinData]);
   const installNewVersion = useCallback(async () => {
     setInstallButtonText("ui.index.versionCheck.cleaning");
     const registrations = await navigator.serviceWorker.getRegistrations();
@@ -115,6 +148,8 @@ const Setting = () => {
         window.location.reload();
       });
   }, []);
+  if (!userData || !userDataDispatch || !readIntoUserData) return <Loading />;
+
   return (
     <>
       <Card className="font-onemobile p-4 max-w-96 mx-auto">
@@ -157,6 +192,9 @@ const Setting = () => {
                       </Button>
                     </a>
                   </div>
+                  <div className="text-right text-xs">
+                    <AccountDeleteConfirmDialog />
+                  </div>
                 </div>
               ) : (
                 <div className="p-2">
@@ -176,6 +214,14 @@ const Setting = () => {
               <div className="p-2">{t("ui.common.authLoading")}</div>
             )}
           </div>
+          {isReady && googleLinked && (
+            <div>
+              <SubtitleBar>{t("ui.common.onlineBackup")}</SubtitleBar>
+              <div className="flex flex-row justify-center gap-2 max-w-xl w-full px-4 py-2">
+                <OnlineBackupListDialog />
+              </div>
+            </div>
+          )}
           <div>
             <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
             <div className="flex flex-row gap-2 max-w-xl w-full px-4 py-2">
@@ -196,23 +242,57 @@ const Setting = () => {
                   accept=".txt"
                   className="hidden"
                   ref={fileInput}
-                  onChange={(e) =>
-                    dataFileRead(e.target.files).then((v) => {
-                      if (v.success) {
-                        if (isReady && googleLinked && autoSave) {
-                          toast.promise(autoSave, {
-                            loading: t("ui.index.fileSync.uploading"),
-                            success: t("ui.index.fileSync.uploadSuccess"),
-                            error: t("ui.index.fileSync.uploadFailed"),
-                          });
+                  onChange={(e) => {
+                    if (!e.target.files || !e.target.files[0]) {
+                      toast.error(t("ui.index.fileSync.invalidFileInput"));
+                      return;
+                    }
+                    const onConfirm = () =>
+                      dataFileRead(e.target.files).then((v) => {
+                        if (v.success) {
+                          readIntoUserData();
+                          if (isReady && googleLinked && forceUpload) {
+                            toast.promise(forceUpload, {
+                              loading: t("ui.index.fileSync.uploading"),
+                              success: t("ui.index.fileSync.uploadSuccess"),
+                              error: t("ui.index.fileSync.uploadFailed"),
+                            });
+                          } else {
+                            toast.success(t("ui.index.fileSync.success"));
+                          }
                         } else {
-                          toast.success(t("ui.index.fileSync.success"));
+                          toast.error(t(v.reason));
                         }
+                      });
+                    e.target.files[0].text().then((text) => {
+                      const metadata = text.slice(0, 22);
+                      const header = metadata.slice(0, 2);
+                      const timestamp = b64IntoNumber(metadata.slice(2, 10));
+                      const crayon = b64IntoNumber(metadata.slice(10, 14));
+                      const rank = b64IntoNumber(metadata.slice(14, 18));
+                      const pcrayon = b64IntoNumber(metadata.slice(18, 22));
+                      if (header === currentSignature) {
+                        setFileImportDialogProp({
+                          open: true,
+                          timestamp,
+                          crayon,
+                          rank,
+                          pcrayon,
+                          onConfirm,
+                        });
                       } else {
-                        toast.error(t(v.reason));
+                        setFileImportDialogProp({
+                          open: true,
+                          filename: e.target.files![0].name,
+                          timestamp: -1,
+                          crayon: -1,
+                          rank: -1,
+                          pcrayon: -1,
+                          onConfirm,
+                        });
                       }
-                    })
-                  }
+                    });
+                  }}
                 />
               </div>
             </div>
@@ -229,8 +309,8 @@ const Setting = () => {
                   <img
                     className="w-16 h-16"
                     src={
-                      userSkinData[skinChangeChara]
-                        ? `/charas/${skinChangeChara}Skin${userSkinData[skinChangeChara]}.png`
+                      userData.charaInfo[skinChangeChara].skin
+                        ? `/charas/${skinChangeChara}Skin${userData.charaInfo[skinChangeChara].skin}.png`
                         : `/charas/${skinChangeChara}.png`
                     }
                   />
@@ -247,7 +327,7 @@ const Setting = () => {
                     value={skinChangeChara}
                     onChange={(v) => {
                       setSkinChangeChara(v);
-                      const skinId = userSkinData[v];
+                      const skinId = userData.charaInfo[skinChangeChara].skin;
                       setSkinNameId(
                         skinId ? `skin.${v}.${skinId}` : "defaultSkin"
                       );
@@ -273,10 +353,7 @@ const Setting = () => {
                               alt={t(skinNameId)}
                               className="w-9 h-9"
                               onClick={() => {
-                                setUserSkinData((prev) => ({
-                                  ...prev,
-                                  [skinChangeChara]: i,
-                                }));
+                                userDataDispatch.charaSkin(skinChangeChara, i);
                                 setSkinNameId(skinNameId);
                               }}
                             />
@@ -379,6 +456,61 @@ const Setting = () => {
           <ExternalLink className="w-3 h-3 ml-0.5 inline" />
         </a>
       </div>
+      <AlertDialog open={fileImportDialogProp?.open}>
+        <AlertDialogContent className="font-onemobile">
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("ui.common.restore")}</AlertDialogTitle>
+            <AlertDialogDescription className="break-keep">
+              {t("ui.index.fileSync.dataFileImportInfo")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {fileImportDialogProp &&
+            (fileImportDialogProp.filename ? (
+              <div>{fileImportDialogProp.filename}</div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <div>
+                  {t("ui.index.fileSync.dataFileTimestamp", {
+                    0: new Date(
+                      fileImportDialogProp.timestamp ?? 0
+                    ).toLocaleString(),
+                  })}
+                </div>
+                <div className="flex flex-row gap-2">
+                  <div className="flex-1">
+                    {t("ui.index.fileSync.dataFileCrayon", {
+                      0: fileImportDialogProp.crayon ?? -1,
+                    })}
+                  </div>
+                  <div className="flex-1">
+                    {t("ui.index.fileSync.dataFileTotalRank", {
+                      0: fileImportDialogProp.rank ?? -1,
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setFileImportDialogProp(undefined);
+              }}
+            >
+              {t("ui.index.fileSync.dataFileImportCancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (fileImportDialogProp) {
+                  fileImportDialogProp.onConfirm();
+                  setFileImportDialogProp(undefined);
+                }
+              }}
+            >
+              {t("ui.index.fileSync.dataFileImportConfirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

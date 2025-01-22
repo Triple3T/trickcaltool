@@ -1,6 +1,8 @@
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
-const SCOPES = ["https://www.googleapis.com/auth/drive.appdata"];
+const SCOPES = [
+  "https://www.googleapis.com/auth/userinfo.email",
+];
 
 export default (() => {
   const accessurl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
@@ -10,5 +12,6 @@ export default (() => {
   accessurl.searchParams.set("scope", SCOPES.join(" "));
   accessurl.searchParams.set("access_type", "offline");
   accessurl.searchParams.set("prompt", "consent");
+  accessurl.searchParams.set("include_granted_scopes", "true");
   return accessurl.toString();
 })();

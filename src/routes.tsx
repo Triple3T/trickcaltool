@@ -28,7 +28,7 @@ const Restaurant = lazy(() => import("./restaurant"));
 const NormalDrop = lazy(() => import("./normaldrop"));
 const EquipViewer = lazy(() => import("./equipviewer"));
 const Personal = lazy(() => import("./personal"));
-const EventCalc = lazy(() => import("./eventcalc"));
+// const EventCalc = lazy(() => import("./eventcalc"));
 const GoodsCalc = lazy(() => import("./goodscalc"));
 const Checker = lazy(() => import("./checker"));
 
@@ -172,18 +172,18 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     ),
     errorElement: <ErrorElement />,
   },
-  {
-    path: "/eventcalc",
-    // element: <EventCalc />,
-    element: (
-      <Layout title="ui.eventcalc.title">
-        <Suspense fallback={<Loading />}>
-          <EventCalc />
-        </Suspense>
-      </Layout>
-    ),
-    errorElement: <ErrorElement />,
-  },
+  // {
+  //   path: "/eventcalc",
+  //   // element: <EventCalc />,
+  //   element: (
+  //     <Layout title="ui.eventcalc.title">
+  //       <Suspense fallback={<Loading />}>
+  //         <EventCalc />
+  //       </Suspense>
+  //     </Layout>
+  //   ),
+  //   errorElement: <ErrorElement />,
+  // },
   {
     path: "/goodscalc",
     // element: <GoodsCalc />,
