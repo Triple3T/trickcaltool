@@ -215,21 +215,6 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
     // falls through
     case oldSignatures[1]:
       dataProto = dataProto ?? fileData;
-      // fix board data
-      if (dataProto.board.b.Shoupan) {
-        dataProto.board.b.Shoupan[1] = [
-          (dataProto.board.b.Shoupan[1][0] & 1 && 1) +
-            (dataProto.board.b.Shoupan[1][0] & 8 && 2),
-          (dataProto.board.b.Shoupan[1][0] & 2 && 1) +
-            (dataProto.board.b.Shoupan[1][0] & 4 && 2),
-        ];
-      }
-      if (dataProto.board.b.Elena) {
-        dataProto.board.b.Elena[2][0] =
-          (dataProto.board.b.Elena[2][0] & 3) +
-          (dataProto.board.b.Elena[2][0] & 4) * 2 +
-          (dataProto.board.b.Elena[2][0] & 8) / 2;
-      }
       dataProto = {
         board: {
           b: dataProto.unowned.o.map((c: string) => dataProto.board.b[c]),

@@ -46,6 +46,7 @@
     "pako": "^2.1.0",
     "react": "beta",
     "react-dom": "beta",
+    "react-error-boundary": "^5.0.0",
     "react-i18next": "^14.0.0",
     "react-router-dom": "^6.21.3",
     "react-virtuoso": "^4.12.3",

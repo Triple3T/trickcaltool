@@ -2875,19 +2875,23 @@ i18n
               name: "교주의 별자리",
               skill1: {
                 title: "밤하늘의 별자리",
-                description: "착용자의 최대 HP, 물리 공격력, 치명타, 치명 피해가 증가한다.",
+                description:
+                  "착용자의 최대 HP, 물리 공격력, 치명타, 치명 피해가 증가한다.",
                 coefficient:
                   "최대 HP 증가: *{{0}}*%\n물리 공격력 증가: *{{1}}*%\n치명타 증가: *{{2}}*%\n치명 피해 증가: *{{3}}*%",
               },
               skill2: {
                 title: "아웃사이더 헤딩",
-                description: "저학년 스킬 사용 시, 슈퍼 박치기로 매섭게 달려들어 공격 횟수가 1회 증가한다.",
+                description:
+                  "저학년 스킬 사용 시, 슈퍼 박치기로 매섭게 달려들어 공격 횟수가 1회 증가한다.",
                 coefficient: "",
               },
               skill3: {
                 title: "내가 빛내줄게…",
-                description: "모든 아군이 적에게 주는 피해량을 증가시키며, 모든 아군이 적에게 받는 피해량을 감소시킨다.",
-                coefficient: "피해량 증가: *{{0}}*%\n받는 피해량 감소: *{{1}}*%",
+                description:
+                  "모든 아군이 적에게 주는 피해량을 증가시키며, 모든 아군이 적에게 받는 피해량을 감소시킨다.",
+                coefficient:
+                  "피해량 증가: *{{0}}*%\n받는 피해량 감소: *{{1}}*%",
               },
             },
             // Kommy: "코미",
@@ -3266,19 +3270,24 @@ i18n
               name: "로켓엔진 슈팡",
               skill1: {
                 title: "엘리아스 스피드스터",
-                description: "착용자의 최대 HP, 물리 방어력, 마법 방어력, 치명타 저항, 치명 피해 저항이 증가한다.",
+                description:
+                  "착용자의 최대 HP, 물리 방어력, 마법 방어력, 치명타 저항, 치명 피해 저항이 증가한다.",
                 coefficient:
                   "최대 HP 증가: *{{0}}*%\n물리 방어력 증가: *{{1}}*%\n마법 방어력 증가: *{{2}}*%\n치명타 저항 증가: *{{3}}*%\n치명 피해 저항 증가: *{{4}}*%",
               },
               skill2: {
                 title: "배달의 요정",
-                description: "강화 공격 효과를 받은 아군 주변에 받는 피해량 감소 효과가 추가된다. 웨이브 시작 시, 고학년 스킬 재사용 대기시간이 0초가 된다. 고학년 스킬로 피해를 입은 무작위 적에게 택배 상자를 놓고 온다. 택배 상자는 주변 적들에게 *호기심*을 걸고, 폭발 후 범위 마법 피해를 입히며 *기절*을 건다. 기절 및 피해는 최대 6인에게 적용된다.\n*호기심: 적에게 천천히 이동한다.*\n*기절: 행동불가 상태가 된다.*",
-                coefficient: "받는 피해량 감소: *{{0}}*%\n받는 피해량 감소 지속 시간: *{{1}}*초\n마법 피해: *{{2}}*%\n호기심 지속시간: *{{3}}*초\n기절 지속시간: *{{4}}*초",
+                description:
+                  "강화 공격 효과를 받은 아군 주변에 받는 피해량 감소 효과가 추가된다. 웨이브 시작 시, 고학년 스킬 재사용 대기시간이 0초가 된다. 고학년 스킬로 피해를 입은 무작위 적에게 택배 상자를 놓고 온다. 택배 상자는 주변 적들에게 *호기심*을 걸고, 폭발 후 범위 마법 피해를 입히며 *기절*을 건다. 기절 및 피해는 최대 6인에게 적용된다.\n*호기심: 적에게 천천히 이동한다.*\n*기절: 행동불가 상태가 된다.*",
+                coefficient:
+                  "받는 피해량 감소: *{{0}}*%\n받는 피해량 감소 지속 시간: *{{1}}*초\n마법 피해: *{{2}}*%\n호기심 지속시간: *{{3}}*초\n기절 지속시간: *{{4}}*초",
               },
               skill3: {
                 title: "슈팡의 신속 배달",
-                description: "후열 아군이 적에게 주는 피해량을 증가시키며, 후열 아군이 적에게 받는 피해량을 감소시킨다.",
-                coefficient: "피해량 증가: *{{0}}*%\n받는 피해량 감소: *{{1}}*%",
+                description:
+                  "후열 아군이 적에게 주는 피해량을 증가시키며, 후열 아군이 적에게 받는 피해량을 감소시킨다.",
+                coefficient:
+                  "피해량 증가: *{{0}}*%\n받는 피해량 감소: *{{1}}*%",
               },
             },
             // Silphir: "실피르",
@@ -5773,7 +5782,8 @@ i18n
               onlineBackup: "온라인 백업",
               onlineBackupButton: "온라인 백업 확인",
               onlineBackupDescription: "서버에 저장된 백업을 확인합니다.",
-              onlineBackupAdditionalDesc: "백업은 동기화 사용 시 자동으로 생성됩니다.",
+              onlineBackupAdditionalDesc:
+                "백업은 동기화 사용 시 자동으로 생성됩니다.",
               onlineBackupList: "온라인 백업 리스트",
               onlineBackupListFetching: "백업 리스트 요청 중...",
               onlineBackupListFetchFailed: "백업 리스트 요청에 실패했습니다.",
@@ -5790,13 +5800,16 @@ i18n
               themeDark: "다크",
               themeSystem: "시스템",
               tokenFailed: "실패!",
-              tokenFailedRateLimit: "요청 제한에 걸렸어요. 조금만 기다려주세요...",
+              tokenFailedRateLimit:
+                "요청 제한에 걸렸어요. 조금만 기다려주세요...",
               tokenFailedDescription: "다시 시도할까요?",
               tokenNotRegistered: "등록되지 않은 계정이에요.",
               tokenNotRegisteredDescription: "계정을 등록할까요?",
               tokenRegistered: "계정 등록 완료",
-              tokenRecoveryCodeDescription: "아래 복구 코드를 이용해 계정 분실 시 도움을 받을 수 있습니다.",
-              syncDescription: "데이터를 입력할 때부터 서버에 저장되기 시작합니다.",
+              tokenRecoveryCodeDescription:
+                "아래 복구 코드를 이용해 계정 분실 시 도움을 받을 수 있습니다.",
+              syncDescription:
+                "데이터를 입력할 때부터 서버에 저장되기 시작합니다.",
               tokenSuccess: "성공!",
               tokenSuccessDescription: "메인 화면으로 보내 드릴게요.",
               tokenProcessing: "토큰 받아오는 중...",
@@ -5811,9 +5824,11 @@ i18n
               count: "{{0}}개",
               accountDelete: "계정 삭제",
               accountDeleteTitle: "정말 삭제할까요?",
-              accountDeleteDescription: "계정에 연결된 서버의 모든 정보가 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+              accountDeleteDescription:
+                "계정에 연결된 서버의 모든 정보가 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
               accountDeleteAdditionalDesc: "로컬 데이터는 사용할 수 있습니다.",
-              accountDeleteRequireInput: "정말 삭제하려면, 아래 입력란에 'Delete Permanently'를 입력해 주세요.",
+              accountDeleteRequireInput:
+                "정말 삭제하려면, 아래 입력란에 'Delete Permanently'를 입력해 주세요.",
               accountDeleteSuccess: "계정 삭제가 완료되었습니다.",
               accountDeleteFailed: "계정 삭제에 실패했습니다. ({{0}})",
               accountDeleteTokenTryFailed: "계정 탈퇴 시도에 실패했습니다.",
@@ -5828,15 +5843,21 @@ i18n
               subtitle404: "페이지를 찾을 수 없습니다.",
               description:
                 "최신 버전이 아닌 경우 설정에서 업데이트를 진행하거나, 아래 자세히 버튼을 눌러 자세한 상황과 함께 제보해 주세요.",
+              descriptionContext:
+                "최신 버전이 아닌 경우 설정에서 업데이트를 진행하거나, 이미 최신 버전인 경우 자세한 상황과 함께 제보해 주세요.",
               descriptionupdate:
                 "새 버전의 파일을 불러오기 위해 설정에서 업데이트를 진행해 주세요.",
               description404:
                 "트릭컬 노트 외부에서 들어온 경우, URL이 정확한지 확인해 주세요.",
               viewstack: "자세히",
               hidestack: "간략히",
+              update: "업데이트",
+              updating: "업데이트 중...",
+              checkingUpdate: "업데이트 확인 중...",
               goto: {
                 main: "메인 화면으로",
                 update: "업데이트 확인",
+                refresh: "새로고침",
               },
             },
           },

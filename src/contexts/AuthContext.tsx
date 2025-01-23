@@ -73,6 +73,8 @@ const AuthProvider = ({ children }: { children: Children }) => {
   const [tokenTried, setTokenTried] = useState<boolean>(false);
   // const [userUsingVersion, setUserUsingVersion] = useState<string>("");
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
+  if (error) throw new Error(error);
 
   // first read into memory
   const readIntoUserData = useCallback(() => {
@@ -82,6 +84,8 @@ const AuthProvider = ({ children }: { children: Children }) => {
         userDataDispatch.restore(memoryData);
         setIsReady(true);
       }
+    }).catch((reason) => {
+      setError(reason);
     });
   }, [userDataDispatch]);
   useEffect(() => {

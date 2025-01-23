@@ -336,7 +336,7 @@ export const readIntoMemory = async (
   const dt = sigConvert(dtp.substring(2), dtp.substring(0, 2));
   if (!dt.success) {
     console.error("Data read failed");
-    throw Error();
+    throw new Error("Data read failed");
   }
   const data = dt.data as UserDataFile;
   const dataChara = [...data.unowned.o, ...data.unowned.u];
