@@ -282,6 +282,11 @@
             "m":["CollectMadeLow7"],
             "c":{"d":["Ran"]}
         },
+        "Arbeit54":{
+            "s":[50],
+            "m":["CollectMadeLow8"],
+            "c":{"d":["Ran"]}
+        },
         "Rest1":{
             "s":[20],
             "m":[]

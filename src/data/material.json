@@ -41,6 +41,13 @@
                 "CollectMadeLow5":4
             }
         },
+        "CollectMadeHigh6":{
+            "r":2,
+            "m":{
+                "CollectMadeLow8":6,
+                "MadeHigh7":4
+            }
+        },
         "CollectMadeLow1":{"r":1,"g":true},
         "CollectMadeLow2":{
             "r":1,
@@ -88,6 +95,14 @@
             "m":{
                 "MadeLow12":6,
                 "MadeLow9":6
+            }
+        },
+        "CollectMadeLow8":{
+            "r":1,
+            "g":true,
+            "m":{
+                "MadeLow9":3,
+                "MadeLow15":3
             }
         },
         "FoodMadeLow1":{"r":0,"g":true},
