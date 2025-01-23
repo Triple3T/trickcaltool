@@ -14,8 +14,8 @@ interface IFileReadDataSuccess {
 }
 type FileReadDataType = IFileReadDataFail | IFileReadDataSuccess;
 
-export const currentSignature = "3t";
-const oldSignatures = ["3l", "0v"];
+export const currentSignature = "3u";
+export const oldSignatures = ["3l", "0v", "3t"];
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 const b64IntoNumber = (b64: string) => {
@@ -125,12 +125,43 @@ const fileRead2 = (fdt: string) => {
 const fileRead = (fdt: string, sig: string): FileReadDataType => {
   if (sig === oldSignatures[0]) return fileRead0(fdt);
   else if (sig === oldSignatures[1]) return fileRead0(fdt);
+  else if (sig === oldSignatures[2]) return fileRead2(fdt);
   else if (sig === currentSignature) return fileRead2(fdt);
   else {
     return {
       success: false,
       reason: "ui.index.fileSync.notProperSignature",
     };
+  }
+};
+
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+const boardFix1 = (data: any) => {
+  const shoupanIndex = data.unowned.o.indexOf("Shoupan");
+  if (shoupanIndex >= 0) {
+    data.board.b[shoupanIndex][1] = [
+      ((data.board.b[shoupanIndex][1][0] ?? 0) & 1 && 1) +
+        ((data.board.b[shoupanIndex][1][0] ?? 0) & 8 && 2),
+      ((data.board.b[shoupanIndex][1][0] ?? 0) & 2 && 1) +
+        ((data.board.b[shoupanIndex][1][0] ?? 0) & 4 && 2),
+    ];
+    data.board.b[shoupanIndex][2] = [
+      ((data.board.b[shoupanIndex][2][0] ?? 0) & 1 && 1) +
+        ((data.board.b[shoupanIndex][2][0] ?? 0) & 2 && 8) +
+        ((data.board.b[shoupanIndex][2][1] ?? 0) & 1 && 2) +
+        ((data.board.b[shoupanIndex][2][1] ?? 0) & 2 && 4) +
+        ((data.board.b[shoupanIndex][2][0] ?? 0) & 48),
+    ];
+  }
+  const elenaIndex = data.unowned.o.indexOf("Elena");
+  if (elenaIndex >= 0) {
+    if (data.board.b.Elena) {
+      data.board.b.Elena[2][0] =
+        (data.board.b.Elena[2][0] & 3) +
+        (data.board.b.Elena[2][0] & 4) * 2 +
+        (data.board.b.Elena[2][0] & 8) / 2;
+      data.board.b.Elena = data.board.b.Elena.slice(0, 3);
+    }
   }
 };
 
@@ -184,6 +215,21 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
     // falls through
     case oldSignatures[1]:
       dataProto = dataProto ?? fileData;
+      // fix board data
+      if (dataProto.board.b.Shoupan) {
+        dataProto.board.b.Shoupan[1] = [
+          (dataProto.board.b.Shoupan[1][0] & 1 && 1) +
+            (dataProto.board.b.Shoupan[1][0] & 8 && 2),
+          (dataProto.board.b.Shoupan[1][0] & 2 && 1) +
+            (dataProto.board.b.Shoupan[1][0] & 4 && 2),
+        ];
+      }
+      if (dataProto.board.b.Elena) {
+        dataProto.board.b.Elena[2][0] =
+          (dataProto.board.b.Elena[2][0] & 3) +
+          (dataProto.board.b.Elena[2][0] & 4) * 2 +
+          (dataProto.board.b.Elena[2][0] & 8) / 2;
+      }
       dataProto = {
         board: {
           b: dataProto.unowned.o.map((c: string) => dataProto.board.b[c]),
@@ -214,21 +260,10 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
         skin: {},
         memo: { o: [], u: [] },
       };
-      // fix board data
-      if (dataProto.board.b.Shoupan) {
-        dataProto.board.b.Shoupan[1] = [
-          (dataProto.board.b.Shoupan[1][0] & 1 && 1) +
-            (dataProto.board.b.Shoupan[1][0] & 8 && 2),
-          (dataProto.board.b.Shoupan[1][0] & 2 && 1) +
-            (dataProto.board.b.Shoupan[1][0] & 4 && 2),
-        ];
-      }
-      if (dataProto.board.b.Elena) {
-        dataProto.board.b.Elena[2][0] =
-          (dataProto.board.b.Elena[2][0] & 3) +
-          (dataProto.board.b.Elena[2][0] & 4) * 2 +
-          (dataProto.board.b.Elena[2][0] & 8) / 2;
-      }
+    // falls through
+    case oldSignatures[2]:
+      dataProto = dataProto ?? fileData;
+      dataProto = boardFix1(dataProto);
     // falls through
     case currentSignature:
       dataProto = dataProto ?? fileData;

@@ -38,7 +38,7 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { currentSignature } from "@/utils/versionMigrate";
+import { currentSignature, oldSignatures } from "@/utils/versionMigrate";
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 const b64IntoNumber = (b64: string) => {
@@ -271,7 +271,10 @@ const Setting = () => {
                       const crayon = b64IntoNumber(metadata.slice(10, 14));
                       const rank = b64IntoNumber(metadata.slice(14, 18));
                       const pcrayon = b64IntoNumber(metadata.slice(18, 22));
-                      if (header === currentSignature) {
+                      if (
+                        header === currentSignature ||
+                        oldSignatures.indexOf(header) > 1
+                      ) {
                         setFileImportDialogProp({
                           open: true,
                           timestamp,
