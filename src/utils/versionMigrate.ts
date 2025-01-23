@@ -216,18 +216,18 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
       };
       // fix board data
       if (dataProto.board.b.Shoupan) {
-        dataProto.board.b.Shoupan[2] = [
-          (dataProto.board.b.Shoupan[2][0] & 1 && 1) +
-            (dataProto.board.b.Shoupan[2][0] & 8 && 2),
-          (dataProto.board.b.Shoupan[2][0] & 2 && 1) +
-            (dataProto.board.b.Shoupan[2][0] & 4 && 2),
+        dataProto.board.b.Shoupan[1] = [
+          (dataProto.board.b.Shoupan[1][0] & 1 && 1) +
+            (dataProto.board.b.Shoupan[1][0] & 8 && 2),
+          (dataProto.board.b.Shoupan[1][0] & 2 && 1) +
+            (dataProto.board.b.Shoupan[1][0] & 4 && 2),
         ];
       }
       if (dataProto.board.b.Elena) {
-        dataProto.board.b.Elena[3][0] =
-          (dataProto.board.b.Elena[3][0] & 3) +
-          (dataProto.board.b.Elena[3][0] & 4) * 2 +
-          (dataProto.board.b.Elena[3][0] & 8) / 2;
+        dataProto.board.b.Elena[2][0] =
+          (dataProto.board.b.Elena[2][0] & 3) +
+          (dataProto.board.b.Elena[2][0] & 4) * 2 +
+          (dataProto.board.b.Elena[2][0] & 8) / 2;
       }
     // falls through
     case currentSignature:

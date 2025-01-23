@@ -79,7 +79,7 @@ const boardDataClickActionHandler: Handler<BoardDataClickAction> = (
       timestamp: Date.now(),
     };
   }
-  const targetMutated = charaInfo.board[boardIndex][ldx] ^ (1 << bdx);
+  const targetMutated = (charaInfo.board[boardIndex][ldx] || 0) ^ (1 << bdx);
   const targetBoardIndexMutated = charaInfo.board[boardIndex].map((v, i) =>
     i === ldx ? targetMutated : v
   );
