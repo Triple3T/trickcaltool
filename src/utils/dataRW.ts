@@ -225,7 +225,7 @@ const migrateIntoIdbFile = async () => {
     board: { b: [] as number[][][], c: bdtp.c, v: bdtp.v, i: 1 },
     pboard: { p: [] as number[][][], d: pdtp.d },
     nthboard: { n: [] as number[] },
-    eqrank: { r: [] as number[], s: rdtp.s, v: rdtp.v, f: rdtp.f },
+    eqrank: { r: [] as number[], s: [1, MAX_RANK], v: rdtp.v, f: rdtp.f },
     unowned: udtp,
     lab: ldtp,
     myhome: mdtp,
@@ -350,7 +350,7 @@ export const readIntoMemory = async (
   const memoryData = {
     board: { c: data.board.c, v: data.board.v, i: data.board.i },
     pboard: { d: data.pboard.d },
-    eqrank: { s: data.eqrank.s, v: data.eqrank.v, f: data.eqrank.f },
+    eqrank: { s: [1, MAX_RANK], v: data.eqrank.v, f: data.eqrank.f },
     unowned: {
       o: data.unowned.o,
       u: [...data.unowned.u, ...noDataChara],
@@ -463,7 +463,7 @@ export const writeFromMemory = async (
     board: { b: [], c: data.board.c, v: data.board.v, i: data.board.i },
     pboard: { p: [], d: data.pboard.d },
     nthboard: { n: [] },
-    eqrank: { r: [], s: data.eqrank.s, v: data.eqrank.v, f: data.eqrank.f },
+    eqrank: { r: [], s: [1, MAX_RANK], v: data.eqrank.v, f: data.eqrank.f },
     unowned: { o: [], u: [] },
     lab: data.lab,
     myhome: data.myhome,
