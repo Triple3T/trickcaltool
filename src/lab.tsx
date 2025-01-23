@@ -284,6 +284,7 @@ const decompOnlyProd = (
   value: number,
   depth: number
 ): { [key: string]: number } => {
+  if (material.m[key].g) return { [key]: value };
   const smt = material.m[key].m;
   const isOnlyProd = !material.m[key].g;
   if (smt && (!depth || isOnlyProd)) {
