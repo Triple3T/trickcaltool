@@ -14,8 +14,8 @@ interface IFileReadDataSuccess {
 }
 type FileReadDataType = IFileReadDataFail | IFileReadDataSuccess;
 
-export const currentSignature = "3u";
-export const oldSignatures = ["3l", "0v", "3t"];
+export const currentSignature = "3v";
+export const oldSignatures = ["3l", "0v", "3t", "3u"];
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 const b64IntoNumber = (b64: string) => {
@@ -126,6 +126,7 @@ const fileRead = (fdt: string, sig: string): FileReadDataType => {
   if (sig === oldSignatures[0]) return fileRead0(fdt);
   else if (sig === oldSignatures[1]) return fileRead0(fdt);
   else if (sig === oldSignatures[2]) return fileRead2(fdt);
+  else if (sig === oldSignatures[3]) return fileRead2(fdt);
   else if (sig === currentSignature) return fileRead2(fdt);
   else {
     return {
@@ -138,30 +139,32 @@ const fileRead = (fdt: string, sig: string): FileReadDataType => {
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const boardFix1 = (data: any) => {
   const shoupanIndex = data.unowned.o.indexOf("Shoupan");
-  if (shoupanIndex >= 0) {
-    data.board.b[shoupanIndex][1] = [
-      ((data.board.b[shoupanIndex][1][0] ?? 0) & 1 && 1) +
-        ((data.board.b[shoupanIndex][1][0] ?? 0) & 8 && 2),
-      ((data.board.b[shoupanIndex][1][0] ?? 0) & 2 && 1) +
-        ((data.board.b[shoupanIndex][1][0] ?? 0) & 4 && 2),
-    ];
-    data.board.b[shoupanIndex][2] = [
-      ((data.board.b[shoupanIndex][2][0] ?? 0) & 1 && 1) +
-        ((data.board.b[shoupanIndex][2][0] ?? 0) & 2 && 8) +
-        ((data.board.b[shoupanIndex][2][1] ?? 0) & 1 && 2) +
-        ((data.board.b[shoupanIndex][2][1] ?? 0) & 2 && 4) +
-        ((data.board.b[shoupanIndex][2][0] ?? 0) & 48),
-    ];
+  if (shoupanIndex >= 0 && data.board.b[shoupanIndex]) {
+    if (data.board.b[shoupanIndex][1].length === 1) {
+      data.board.b[shoupanIndex][1] = [
+        ((data.board.b[shoupanIndex][1][0] ?? 0) & 1 && 1) +
+          ((data.board.b[shoupanIndex][1][0] ?? 0) & 8 && 2),
+        ((data.board.b[shoupanIndex][1][0] ?? 0) & 2 && 1) +
+          ((data.board.b[shoupanIndex][1][0] ?? 0) & 4 && 2),
+      ];
+    }
+    if (data.board.b[shoupanIndex][2].length === 2) {
+      data.board.b[shoupanIndex][2] = [
+        ((data.board.b[shoupanIndex][2][0] ?? 0) & 1 && 1) +
+          ((data.board.b[shoupanIndex][2][0] ?? 0) & 2 && 8) +
+          ((data.board.b[shoupanIndex][2][1] ?? 0) & 1 && 2) +
+          ((data.board.b[shoupanIndex][2][1] ?? 0) & 2 && 4) +
+          ((data.board.b[shoupanIndex][2][0] ?? 0) & 48),
+      ];
+    }
   }
   const elenaIndex = data.unowned.o.indexOf("Elena");
-  if (elenaIndex >= 0) {
-    if (data.board.b.Elena) {
-      data.board.b.Elena[2][0] =
-        (data.board.b.Elena[2][0] & 3) +
-        (data.board.b.Elena[2][0] & 4) * 2 +
-        (data.board.b.Elena[2][0] & 8) / 2;
-      data.board.b.Elena = data.board.b.Elena.slice(0, 3);
-    }
+  if (elenaIndex >= 0 && data.board.b[elenaIndex]) {
+    data.board.b[elenaIndex][2][0] =
+      (data.board.b[elenaIndex][2][0] & 3) +
+      (data.board.b[elenaIndex][2][0] & 4) * 2 +
+      (data.board.b[elenaIndex][2][0] & 8) / 2;
+    data.board.b[elenaIndex] = data.board.b[elenaIndex].slice(0, 3);
   }
   return data;
 };
@@ -248,6 +251,7 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
       };
     // falls through
     case oldSignatures[2]:
+    case oldSignatures[3]:
       dataProto = dataProto ?? fileData;
       dataProto = boardFix1(dataProto);
     // falls through
