@@ -9,6 +9,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
 import MainMenuCard from "@/components/parts/main-menu-card";
 import MainMenuCardSwitchable from "@/components/parts/main-menu-card-switchable";
+import GoogleSyncChangedNotice from "@/components/parts/google-sync-changed-notice";
 import UtilitySetCard from "@/components/parts/menu-card-utilityset";
 import getServerHash from "@/utils/getServerHash";
 

@@ -6,7 +6,12 @@ import cuts from "./cuts";
 import getServerHash from "@/utils/getServerHash";
 import { openNoteDataDB, loadData as idbLoadData } from "@/utils/idbRW";
 import { loadData as lsLoadData } from "@/utils/localStorageRW";
-import { dataFileRead, exportTextFile, migrateIntoIdbFile } from "@/utils/dataRW";
+import {
+  dataFileRead,
+  exportTextFile,
+  migrateIntoIdbFile,
+} from "@/utils/dataRW";
+import googleAccessUrlLegacy from "@/utils/googleAccessUrlLegacy";
 
 const ContextErrorElement = ({ error }: { error: unknown }) => {
   const { t } = useTranslation();
@@ -18,9 +23,8 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
     document.title = `${componentTitle} - ${appTitle}`;
     setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]);
   }, [t]);
-  const [importButtonText, setImportButtonText] = useState<string>(
-    "ui.common.restore"
-  );
+  const [importButtonText, setImportButtonText] =
+    useState<string>("ui.common.restore");
   const [updateButtonText, setUpdateButtonText] = useState<string>(
     "ui.error.checkingUpdate"
   );
@@ -107,6 +111,9 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
           <div className="text-xs mt-1 rounded-sm bg-slate-100 dark:bg-slate-900 p-1 max-h-[40vh]">
             {`${error}`}
           </div>
+          <div className="text-xs mt-1 opacity-90">
+            <a href={googleAccessUrlLegacy}>{t("ui.common.loadLegacy")}</a>
+          </div>
           <div className="mt-4 text-lg flex flex-wrap gap-2 justify-center">
             <a href="/">
               <Button>{t("ui.error.goto.main")}</Button>
@@ -133,18 +140,16 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
               {t("ui.error.export")}
             </Button>
             <Button
-                onClick={async () =>
-                  exportTextFile({
-                    fileName: "trickcal-note-legacymigration.txt",
-                    data: await migrateIntoIdbFile(),
-                  })
-                }
-              >
-                {t("ui.common.retryLegacyMigration")}
-              </Button>
-            <Button
-              onClick={() => fileInput.current?.click()}
+              onClick={async () =>
+                exportTextFile({
+                  fileName: "trickcal-note-legacymigration.txt",
+                  data: await migrateIntoIdbFile(),
+                })
+              }
             >
+              {t("ui.common.retryLegacyMigration")}
+            </Button>
+            <Button onClick={() => fileInput.current?.click()}>
               {t(importButtonText)}
             </Button>
             <input

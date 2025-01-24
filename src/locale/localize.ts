@@ -5258,6 +5258,7 @@ i18n
               newVersionDetected: "새 버전이 나왔어요!",
               // surveyParticipate: "설문조사에 참여해 주세요",
               // minigameHildeLinkText: "힐데 미니게임 족보",
+              syncChangedNoticeTitle: "[중요] 연동 방식 변경 안내",
               privacyPolicyChangePlan: "개인정보처리방침 변경 예정 안내",
               afterSurvey: "1주년 기념 편지",
               theme: {
@@ -5779,6 +5780,7 @@ i18n
               backUpAndRestore: "백업 및 복원",
               backUp: "파일로 백업",
               restore: "파일에서 복원",
+              loadLegacy: "이전 드라이브 연동 백업 파일 불러오기",
               retryLegacyMigration: "이전 데이터 변환 재시도",
               retryLegacyMigrationDesc:
                 "남아있는 이전 데이터로 새 데이터 생성을 다시 시도합니다. 생성 성공 시 데이터 파일이 자동 다운로드되며 이 파일로 복원을 시도할 수 있습니다. 복원 시도 시, 기존 데이터를 꼭 백업해주세요.",

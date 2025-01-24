@@ -44,6 +44,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { currentSignature, oldSignatures } from "@/utils/versionMigrate";
+import googleAccessUrlLegacy from "./utils/googleAccessUrlLegacy";
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 const b64IntoNumber = (b64: string) => {
@@ -189,7 +190,7 @@ const Setting = () => {
               googleLinked ? (
                 <div className="p-2">
                   <div>{t("ui.common.authAlreadyCompleted")}</div>
-                  <div className="text-right text-sm">
+                  <div className="text-sm flex-row flex-wrap justify-end">
                     <a href="/clear">
                       <Button variant="link">
                         <LogOut className="mr-2 h-4 w-4" />
@@ -218,6 +219,11 @@ const Setting = () => {
             ) : (
               <div className="p-2">{t("ui.common.authLoading")}</div>
             )}
+            <div className="p-2 text-xs">
+              <a href={googleAccessUrlLegacy} target="_blank" rel="noreferrer">
+                {t("ui.common.loadLegacy")}
+              </a>
+            </div>
           </div>
           {isReady && googleLinked && (
             <div>
