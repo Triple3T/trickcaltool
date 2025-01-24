@@ -38,6 +38,7 @@ interface IAuthContext {
   forceDownload?: () => Promise<void>;
   forceApplyBackup?: (index: number) => Promise<void>;
   retryReady?: () => void;
+  sync?: (retry?: boolean) => void;
   requestToken?: (
     callback?: (accessToken: string) => void,
     onError?: () => void
@@ -496,9 +497,9 @@ const AuthProvider = ({ children }: { children: Children }) => {
   ]);
 
   // first connect sync
-  const firstConnectSync = useCallback(async () => {
+  const firstConnectSync = useCallback(async (retry: boolean = false) => {
     if (!getNewToken || !storeFile) return;
-    if (!tokenTried) {
+    if (retry || !tokenTried) {
       const tok = await getNewToken();
       setTokenTried(true);
       if (!tok) return;
@@ -564,6 +565,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
       forceUpload,
       forceDownload,
       forceApplyBackup,
+      sync: firstConnectSync,
       requestToken: getNewToken,
     }),
     [
@@ -576,6 +578,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
       forceUpload,
       forceDownload,
       forceApplyBackup,
+      firstConnectSync,
       getNewToken,
     ]
   );

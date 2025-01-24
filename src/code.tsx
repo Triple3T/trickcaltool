@@ -10,7 +10,7 @@ import { exportTextFile } from "./utils/dataRW";
 const Code = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { requestToken } = useContext(AuthContext);
+  const { requestToken, sync } = useContext(AuthContext);
   const [notRegistered, setNotRegistered] = useState(false);
   const [failed, setFailed] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -46,6 +46,7 @@ const Code = () => {
                   //callback
                   () => {
                     setSuccess(true);
+                    sync?.(true);
                     setTimeout(() => navigate("/"), 3000);
                   },
                   //onerror
@@ -62,7 +63,7 @@ const Code = () => {
         setFailed(true);
       }
     }
-  }, [navigate, requestToken, searchParams]);
+  }, [navigate, requestToken, searchParams, sync]);
 
   const register = useCallback(() => {
     if (!requestToken) return;
@@ -82,6 +83,7 @@ const Code = () => {
                 setSuccess(true);
                 if (registerResult.status === "conflict") {
                   setAlreadyRegistered(true);
+                  sync?.(true);
                   setTimeout(() => navigate("/"), 3000);
                 } else {
                   setRecoveryCode(registerResult.uuid);
@@ -100,7 +102,7 @@ const Code = () => {
         setFailed(true);
       }
     );
-  }, [navigate, requestToken]);
+  }, [navigate, requestToken, sync]);
 
   const registerCancel = useCallback(() => {
     navigate("/clear");
