@@ -111,16 +111,7 @@ function App() {
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
               </a>
-              <Link to="/privacy">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-background/30 text-sm"
-                >
-                  {t("ui.index.privacyPolicyChangePlan")}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+              <GoogleSyncChangedNotice />
             </div>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-16">
               <MainMenuCardSwitchable
