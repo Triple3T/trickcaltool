@@ -444,6 +444,24 @@ const Setting = () => {
               </div>
             </div>
           </div>
+          <div>
+            <SubtitleBar>{t("ui.common.retryLegacyMigration")}</SubtitleBar>
+            <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
+              <div className="text-xs opacity-75">
+                {t("ui.common.retryLegacyMigrationDesc")}
+              </div>
+              <Button
+                onClick={async () =>
+                  exportTextFile({
+                    fileName: "trickcal-note-legacymigration.txt",
+                    data: await migrateIntoIdbFile(),
+                  })
+                }
+              >
+                {t("ui.common.retryLegacyMigration")}
+              </Button>
+            </div>
+          </div>
           <Separator className="my-2" />
           <div>
             <SubtitleBar>{t("ui.index.versionCheck.dangerZone")}</SubtitleBar>

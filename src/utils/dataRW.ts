@@ -136,7 +136,7 @@ export const dataFileImport = async (
       (acc, rank) => acc + rank,
       0
     );
-    const timestamp = setNow ? Date.now() : (readResult.timestamp ?? Date.now());
+    const timestamp = setNow ? Date.now() : readResult.timestamp ?? Date.now();
     const timestampInB64 = numberIntoB64(Number(timestamp), 8);
     const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
     const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
@@ -204,7 +204,7 @@ export const dataFileRead = async (
   }
 };
 
-const migrateIntoIdbFile = async () => {
+export const migrateIntoIdbFile = async () => {
   const timestamp = localStorage.getItem("timestamp") || "0";
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const { autoRepaired: ar01, ...bdtp } = userdataOld.board.load();
@@ -234,7 +234,34 @@ const migrateIntoIdbFile = async () => {
     memo: { o: [], u: [] },
   } as UserDataFile;
   const fullCharaNames = Object.keys(chara);
-  udtp.o.forEach((charaName) => {
+  if (
+    Object.keys(bdtp.b).includes("Shoupan") &&
+    bdtp.b.Shoupan[1] &&
+    bdtp.b.Shoupan[1].length === 1
+  ) {
+    bdtp.b.Shoupan[1] = [
+      ((bdtp.b.Shoupan[1][0] ?? 0) & 1 && 1) +
+        ((bdtp.b.Shoupan[1][0] ?? 0) & 8 && 2),
+      ((bdtp.b.Shoupan[1][0] ?? 0) & 2 && 1) +
+        ((bdtp.b.Shoupan[1][0] ?? 0) & 4 && 2),
+    ];
+  }
+  if (Object.keys(bdtp.b).includes("Elena") && bdtp.b.Elena[2]) {
+    bdtp.b.Elena[2][0] =
+      (bdtp.b.Elena[2][0] & 3) +
+      (bdtp.b.Elena[2][0] & 4) * 2 +
+      (bdtp.b.Elena[2][0] & 8) / 2;
+  }
+  const ownedCharas = [
+    ...new Set([
+      ...(udtp?.o ?? []),
+      ...(Object.keys(bdtp.b) ?? []),
+      ...(Object.keys(pdtp.p) ?? []),
+      ...(Object.keys(ndtp.n) ?? []),
+      ...(Object.keys(rdtp.r) ?? []),
+    ]),
+  ];
+  ownedCharas.forEach((charaName) => {
     userData.board.b.push(
       bdtp.b[charaName] ?? board.c[charaName].b.map((a) => a.map(() => 0))
     );
@@ -339,10 +366,9 @@ export const readIntoMemory = async (
     throw new Error("Data read failed");
   }
   const data = dt.data as UserDataFile;
-  const dataChara = [...new Set([
-    ...(data.unowned?.o ?? []),
-    ...(data.unowned?.u ?? []),
-  ])];
+  const dataChara = [
+    ...new Set([...(data.unowned?.o ?? []), ...(data.unowned?.u ?? [])]),
+  ];
   const noDataChara = Object.keys(chara);
   dataChara.forEach((c) => {
     const idx = noDataChara.indexOf(c);

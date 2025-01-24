@@ -107,7 +107,7 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
           <div className="text-xs mt-1 rounded-sm bg-slate-100 dark:bg-slate-900 p-1 max-h-[40vh]">
             {`${error}`}
           </div>
-          <div className="mt-4 text-lg flex flex-flow gap-2 justify-center">
+          <div className="mt-4 text-lg flex flex-wrap gap-2 justify-center">
             <a href="/">
               <Button>{t("ui.error.goto.main")}</Button>
             </a>
@@ -132,6 +132,16 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
             >
               {t("ui.error.export")}
             </Button>
+            <Button
+                onClick={async () =>
+                  exportTextFile({
+                    fileName: "trickcal-note-legacymigration.txt",
+                    data: await migrateIntoIdbFile(),
+                  })
+                }
+              >
+                {t("ui.common.retryLegacyMigration")}
+              </Button>
             <Button
               onClick={() => fileInput.current?.click()}
             >

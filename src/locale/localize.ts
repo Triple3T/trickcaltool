@@ -5779,6 +5779,9 @@ i18n
               backUpAndRestore: "백업 및 복원",
               backUp: "파일로 백업",
               restore: "파일에서 복원",
+              retryLegacyMigration: "이전 데이터 변환 재시도",
+              retryLegacyMigrationDesc:
+                "남아있는 이전 데이터로 새 데이터 생성을 다시 시도합니다. 생성 성공 시 데이터 파일이 자동 다운로드되며 이 파일로 복원을 시도할 수 있습니다. 복원 시도 시, 기존 데이터를 꼭 백업해주세요.",
               onlineBackup: "온라인 백업",
               onlineBackupButton: "온라인 백업 확인",
               onlineBackupDescription: "서버에 저장된 백업을 확인합니다.",
