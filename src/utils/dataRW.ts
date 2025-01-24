@@ -88,8 +88,8 @@ interface DataReadFailed {
 }
 type DataReadResult = DataReadSuccess | DataReadFailed;
 export const dataFileImport = async (
-  data: string // ,
-  // force?: boolean
+  data: string,
+  setNow: boolean = false
 ): Promise<DataReadResult> => {
   let isIDBAvailable = localStorage.getItem("idbAvailable");
   if (isIDBAvailable === null) {
@@ -136,7 +136,7 @@ export const dataFileImport = async (
       (acc, rank) => acc + rank,
       0
     );
-    const timestamp = readResult.timestamp ?? Date.now();
+    const timestamp = setNow ? Date.now() : (readResult.timestamp ?? Date.now());
     const timestampInB64 = numberIntoB64(Number(timestamp), 8);
     const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
     const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
@@ -195,7 +195,7 @@ export const dataFileRead = async (
     if (files && files.length > 0) {
       const file = files[0];
       const dProto = await file.text();
-      return dataFileImport(dProto); //force?: true
+      return dataFileImport(dProto, true);
     } else {
       return { success: false, reason: "ui.index.fileSync.noFileProvided" };
     }
@@ -219,7 +219,7 @@ const migrateIntoIdbFile = async () => {
   /* eslint-enable @typescript-eslint/no-unused-vars */
   if (!(bdtp && pdtp && ndtp && rdtp && udtp && ldtp && mdtp && cdtp && sdtp)) {
     console.error("No user data found");
-    throw Error();
+    throw Error("No user data found");
   }
   const userData = {
     board: { b: [] as number[][][], c: bdtp.c, v: bdtp.v, i: 1 },
@@ -339,7 +339,10 @@ export const readIntoMemory = async (
     throw new Error("Data read failed");
   }
   const data = dt.data as UserDataFile;
-  const dataChara = [...data.unowned.o, ...data.unowned.u];
+  const dataChara = [...new Set([
+    ...(data.unowned?.o ?? []),
+    ...(data.unowned?.u ?? []),
+  ])];
   const noDataChara = Object.keys(chara);
   dataChara.forEach((c) => {
     const idx = noDataChara.indexOf(c);
@@ -438,7 +441,7 @@ export const firstReadIntoMemory = async (): Promise<
     if (savedData.data !== idbFile) {
       localStorage.setItem("trn-migration", idbFile);
       console.error("Data migration failed");
-      throw Error();
+      throw Error("Data migration failed");
     }
   }
   const memoryData = await readIntoMemory(isIDBAvailable === "true");

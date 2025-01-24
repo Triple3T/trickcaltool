@@ -163,6 +163,7 @@ const boardFix1 = (data: any) => {
       data.board.b.Elena = data.board.b.Elena.slice(0, 3);
     }
   }
+  return data;
 };
 
 /**

@@ -5854,6 +5854,7 @@ i18n
               update: "업데이트",
               updating: "업데이트 중...",
               checkingUpdate: "업데이트 확인 중...",
+              export: "데이터 추출",
               goto: {
                 main: "메인 화면으로",
                 update: "업데이트 확인",

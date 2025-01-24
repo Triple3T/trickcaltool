@@ -1,19 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import cuts from "./cuts";
 import getServerHash from "@/utils/getServerHash";
+import { openNoteDataDB, loadData as idbLoadData } from "@/utils/idbRW";
+import { loadData as lsLoadData } from "@/utils/localStorageRW";
+import { dataFileRead, exportTextFile } from "@/utils/dataRW";
 
 const ContextErrorElement = ({ error }: { error: unknown }) => {
   const { t } = useTranslation();
   const [bgFileName, setBgFileName] = useState<string>("");
+  const fileInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const componentTitle = t("ui.error.title");
     const appTitle = t("ui.index.title");
     document.title = `${componentTitle} - ${appTitle}`;
     setBgFileName(cuts[Math.floor(Math.random() * cuts.length)]);
   }, [t]);
+  const [importButtonText, setImportButtonText] = useState<string>(
+    "ui.common.restore"
+  );
   const [updateButtonText, setUpdateButtonText] = useState<string>(
     "ui.error.checkingUpdate"
   );
@@ -85,6 +92,7 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
         window.location.reload();
       });
   }, []);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div
@@ -95,14 +103,66 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
           <div className="text-6xl">{t("ui.error.title")}</div>
           <div className="h-4" />
           <div className="text-lg">{t("ui.error.subtitle")}</div>
-          <div className="break-keep">{t("ui.error.description")}</div>
+          <div className="break-keep">{t("ui.error.descriptionContext")}</div>
           <div className="text-xs mt-1 rounded-sm bg-slate-100 dark:bg-slate-900 p-1 max-h-[40vh]">
             {`${error}`}
           </div>
-          <div className="mt-4 text-lg flex gap-2 justify-center">
+          <div className="mt-4 text-lg flex flex-flow gap-2 justify-center">
             <a href="/">
               <Button>{t("ui.error.goto.main")}</Button>
             </a>
+            <Button
+              disabled={updateButtonText === "ui.error.checkingUpdate"}
+              onClick={async () => {
+                try {
+                  await openNoteDataDB();
+                  const { timestamp, data } = await idbLoadData();
+                  exportTextFile({
+                    fileName: `trickcalboard-backup-${timestamp}.txt`,
+                    data,
+                  });
+                } catch {
+                  const { timestamp, data } = await lsLoadData();
+                  exportTextFile({
+                    fileName: `trickcalboard-backup-${timestamp}.txt`,
+                    data,
+                  });
+                }
+              }}
+            >
+              {t("ui.error.export")}
+            </Button>
+            <Button
+              onClick={() => fileInput.current?.click()}
+            >
+              {t(importButtonText)}
+            </Button>
+            <input
+              type="file"
+              accept=".txt"
+              className="hidden"
+              ref={fileInput}
+              onChange={(e) => {
+                if (!e.target.files || !e.target.files[0]) {
+                  setImportButtonText("ui.index.fileSync.invalidFileInput");
+                  setTimeout(() => {
+                    setImportButtonText("ui.common.restore");
+                  }, 2000);
+                  return;
+                }
+                dataFileRead(e.target.files).then((v) => {
+                  if (v.success) {
+                    window.location.reload();
+                  } else {
+                    setImportButtonText("ui.index.fileSync.invalidFileInput");
+                    setTimeout(() => {
+                      setImportButtonText("ui.common.restore");
+                    }, 2000);
+                    return;
+                  }
+                });
+              }}
+            />
             <Button
               disabled={updateButtonText === "ui.error.checkingUpdate"}
               onClick={() => {
