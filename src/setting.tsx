@@ -24,7 +24,12 @@ import HardResetWithConfirm from "@/components/parts/hard-reset-with-confirm";
 import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
-import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+import {
+  dataFileRead,
+  dataFileWrite,
+  exportTextFile,
+  migrateIntoIdbFile,
+} from "@/utils/dataRW";
 import getServerHash from "@/utils/getServerHash";
 import googleAccessUrl from "@/utils/googleAccessUrl";
 import chara from "@/data/chara";

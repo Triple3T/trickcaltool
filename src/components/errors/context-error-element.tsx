@@ -6,7 +6,7 @@ import cuts from "./cuts";
 import getServerHash from "@/utils/getServerHash";
 import { openNoteDataDB, loadData as idbLoadData } from "@/utils/idbRW";
 import { loadData as lsLoadData } from "@/utils/localStorageRW";
-import { dataFileRead, exportTextFile } from "@/utils/dataRW";
+import { dataFileRead, exportTextFile, migrateIntoIdbFile } from "@/utils/dataRW";
 
 const ContextErrorElement = ({ error }: { error: unknown }) => {
   const { t } = useTranslation();
