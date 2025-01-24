@@ -36,16 +36,16 @@ export function GoogleSyncChangedNotice() {
         <ScrollArea className="max-h-96">
           <div className="py-4 flex flex-col gap-1 break-keep">
             <p>안녕하세요, 트릭컬 노트 개발자 Triple입니다.</p>
-            <p>
+            <p className="mt-3">
               지난번 말씀드린 계정 연동 시의 오작동 현상에 대한 대응으로
-              말씀드린 새로운 연동 시스템을 새로운 개인정보처리방침 적용과 함께
+              말씀드린 새로운 연동 및 저장 시스템을 새로운 개인정보처리방침 적용과 함께
               구축 및 적용했습니다.
             </p>
             <p>
               다만 이렇게 적용하며 공지가 미흡했던 것과, 초기 오류 때문에
               혼란으로 다가온 것 같아 죄송스럽습니다.
             </p>
-            <p className="mt-2">
+            <p className="mt-3">
               이제 데이터 연동은 자체 DB를 활용하게 됩니다. 자세한 사항은{" "}
               <Link
                 className="underline text-blue-600 dark:text-blue-400"
