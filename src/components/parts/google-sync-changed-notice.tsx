@@ -20,9 +20,9 @@ export function GoogleSyncChangedNotice() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          variant="outline"
+          variant="destructive"
           size="sm"
-          className="bg-background/30 text-sm"
+          className="text-sm"
         >
           {t("ui.index.syncChangedNoticeTitle")}
         </Button>
