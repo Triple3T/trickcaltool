@@ -53,7 +53,7 @@ export function GoogleSyncChangedNotice() {
               이제 데이터 연동은 자체 DB를 활용하게 됩니다. 자세한 사항은{" "}
               <Link
                 className="underline text-blue-600 dark:text-blue-400"
-                to="/private"
+                to="/privacy"
               >
                 개인정보처리방침
               </Link>
@@ -65,7 +65,14 @@ export function GoogleSyncChangedNotice() {
                 업데이트 내역
               </a>
               을 참고해 주세요. 이전에 연동을 한 적이 있더라도 1회에 한해 다시
-              연동해야 합니다.
+              연동해야 합니다.{" "}
+              <Link
+                className="underline text-blue-600 dark:text-blue-400"
+                to="/setting"
+              >
+                설정
+              </Link>
+              페이지의 Google 계정 연동 섹션에서 연동이 가능합니다.
             </p>
             <p>
               데이터가 잘못 변환된 경우,{" "}
