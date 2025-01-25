@@ -843,197 +843,202 @@ const TrickcalBoard = () => {
                         </div>
                         {/* chara grid */}
                         <div className="grid grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] auto-rows-auto">
-                          {displayCharas.map((b) => {
-                            const { name, ldx, bdx, checked, unowned, clf } = b;
-                            const bgClassName = (() => {
-                              if (unowned)
-                                return personalityBGDisabled[
+                          {displayCharas
+                            .sort((a, b) =>
+                              chara[a.name].t.localeCompare(chara[b.name].t)
+                            )
+                            .map((b) => {
+                              const { name, ldx, bdx, checked, unowned, clf } =
+                                b;
+                              const bgClassName = (() => {
+                                if (unowned)
+                                  return personalityBGDisabled[
+                                    Number(chara[name].t[0]) as Personality
+                                  ];
+                                if (checked)
+                                  return personalityBGMarked[
+                                    Number(chara[name].t[0]) as Personality
+                                  ];
+                                return personalityBG[
                                   Number(chara[name].t[0]) as Personality
                                 ];
-                              if (checked)
-                                return personalityBGMarked[
-                                  Number(chara[name].t[0]) as Personality
-                                ];
-                              return personalityBG[
-                                Number(chara[name].t[0]) as Personality
-                              ];
-                            })();
-                            const imgClassName = (() => {
-                              if (unowned) return "grayscale-[90%]";
-                              if (checked) return "opacity-50";
-                              return "";
-                            })();
-                            return (
-                              <div
-                                key={`${name}${ldx}${bdx}`}
-                                className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
-                              >
+                              })();
+                              const imgClassName = (() => {
+                                if (unowned) return "grayscale-[90%]";
+                                if (checked) return "opacity-50";
+                                return "";
+                              })();
+                              return (
                                 <div
-                                  className={cn(
-                                    "min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 max-w-24 aspect-square",
-                                    bgClassName
-                                  )}
+                                  key={`${name}${ldx}${bdx}`}
+                                  className="sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 max-w-24 relative aspect-square"
                                 >
-                                  <img
-                                    src={
-                                      userData.charaInfo[name].skin
-                                        ? `/charas/${name}Skin${userData.charaInfo[name].skin}.png`
-                                        : `/charas/${name}.png`
-                                    }
+                                  <div
                                     className={cn(
-                                      "aspect-square w-full",
-                                      imgClassName
+                                      "min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 max-w-24 aspect-square",
+                                      bgClassName
                                     )}
-                                    onClick={() =>
-                                      userDataDispatch.boardClick(
-                                        name,
-                                        userData.board.i,
-                                        ldx,
-                                        bdx
-                                      )
-                                    }
-                                  />
-                                </div>
-                                {enableDialog && (
-                                  <div className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100">
-                                    <Suspense
-                                      fallback={
-                                        <Loader2
-                                          className="w-4 h-4 animate-spin absolute right-0"
-                                          strokeWidth={3}
+                                  >
+                                    <img
+                                      src={
+                                        userData.charaInfo[name].skin
+                                          ? `/charas/${name}Skin${userData.charaInfo[name].skin}.png`
+                                          : `/charas/${name}.png`
+                                      }
+                                      className={cn(
+                                        "aspect-square w-full",
+                                        imgClassName
+                                      )}
+                                      onClick={() =>
+                                        userDataDispatch.boardClick(
+                                          name,
+                                          userData.board.i,
+                                          ldx,
+                                          bdx
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                  {enableDialog && (
+                                    <div className="absolute w-full h-5 p-0.5 top-0 left-0 opacity-100">
+                                      <Suspense
+                                        fallback={
+                                          <Loader2
+                                            className="w-4 h-4 animate-spin absolute right-0"
+                                            strokeWidth={3}
+                                          />
+                                        }
+                                      >
+                                        <BoardInfoDialogTrigger
+                                          route={
+                                            route.r[
+                                              Race[Number(chara[name].t[5])]
+                                            ][userData.board.i].b[
+                                              Number(
+                                                board.c[name].r[
+                                                  userData.board.i
+                                                ][ldx].split(".")[bdx]
+                                              )
+                                            ]
+                                          }
+                                          onClick={() => {
+                                            setBoardDialogProp({
+                                              boardIndex: userData.board.i,
+                                              boardTypeString: bt,
+                                              chara: name,
+                                              charaTypes: chara[name].t,
+                                              route:
+                                                route.r[
+                                                  Race[Number(chara[name].t[5])]
+                                                ][userData.board.i].b[
+                                                  Number(
+                                                    board.c[name].r[
+                                                      userData.board.i
+                                                    ][ldx].split(".")[bdx]
+                                                  )
+                                                ],
+                                              rstart:
+                                                route.r[
+                                                  Race[Number(chara[name].t[5])]
+                                                ][userData.board.i].s,
+                                              otherBoards: board.c[name].b.map(
+                                                (b) =>
+                                                  b
+                                                    .map((v) => v.toString())
+                                                    .join("")
+                                              ),
+                                              blocked:
+                                                ldx === 0
+                                                  ? undefined
+                                                  : board.c[name].k[
+                                                      userData.board.i
+                                                    ][ldx - 1].split(".")[bdx],
+                                              checked,
+                                              unowned,
+                                              eldain: chara[name].e,
+                                              skin:
+                                                userData.charaInfo[name].skin ||
+                                                0,
+                                              unlockedBoard: userData.charaInfo[
+                                                name
+                                              ].unowned
+                                                ? 0
+                                                : userData.charaInfo[name]
+                                                    .nthboard || 0,
+                                              changeBoardIndex: unowned
+                                                ? undefined
+                                                : (i) =>
+                                                    userDataDispatch.boardIndex(
+                                                      name,
+                                                      i
+                                                    ),
+                                            });
+                                            setBoardDialogOpened(true);
+                                          }}
                                         />
+                                      </Suspense>
+                                    </div>
+                                  )}
+                                  {checked && (
+                                    <div
+                                      className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100"
+                                      onClick={() =>
+                                        userDataDispatch.boardClick(
+                                          name,
+                                          userData.board.i,
+                                          ldx,
+                                          bdx
+                                        )
                                       }
                                     >
-                                      <BoardInfoDialogTrigger
-                                        route={
-                                          route.r[
-                                            Race[Number(chara[name].t[5])]
-                                          ][userData.board.i].b[
-                                            Number(
-                                              board.c[name].r[userData.board.i][
-                                                ldx
-                                              ].split(".")[bdx]
-                                            )
-                                          ]
-                                        }
-                                        onClick={() => {
-                                          setBoardDialogProp({
-                                            boardIndex: userData.board.i,
-                                            boardTypeString: bt,
-                                            chara: name,
-                                            charaTypes: chara[name].t,
-                                            route:
-                                              route.r[
-                                                Race[Number(chara[name].t[5])]
-                                              ][userData.board.i].b[
-                                                Number(
-                                                  board.c[name].r[
-                                                    userData.board.i
-                                                  ][ldx].split(".")[bdx]
-                                                )
-                                              ],
-                                            rstart:
-                                              route.r[
-                                                Race[Number(chara[name].t[5])]
-                                              ][userData.board.i].s,
-                                            otherBoards: board.c[name].b.map(
-                                              (b) =>
-                                                b
-                                                  .map((v) => v.toString())
-                                                  .join("")
-                                            ),
-                                            blocked:
-                                              ldx === 0
-                                                ? undefined
-                                                : board.c[name].k[
-                                                    userData.board.i
-                                                  ][ldx - 1].split(".")[bdx],
-                                            checked,
-                                            unowned,
-                                            eldain: chara[name].e,
-                                            skin:
-                                              userData.charaInfo[name].skin ||
-                                              0,
-                                            unlockedBoard: userData.charaInfo[
-                                              name
-                                            ].unowned
-                                              ? 0
-                                              : userData.charaInfo[name]
-                                                  .nthboard || 0,
-                                            changeBoardIndex: unowned
-                                              ? undefined
-                                              : (i) =>
-                                                  userDataDispatch.boardIndex(
-                                                    name,
-                                                    i
-                                                  ),
-                                          });
-                                          setBoardDialogOpened(true);
-                                        }}
-                                      />
-                                    </Suspense>
-                                  </div>
-                                )}
-                                {checked && (
-                                  <div
-                                    className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100"
-                                    onClick={() =>
-                                      userDataDispatch.boardClick(
-                                        name,
-                                        userData.board.i,
-                                        ldx,
-                                        bdx
-                                      )
-                                    }
-                                  >
-                                    <img
-                                      src="/icons/Stage_RewardChack.png"
-                                      className="w-100 opacity-100"
-                                    />
-                                  </div>
-                                )}
-                                {unowned && typeof clf === "number" && (
-                                  <div
-                                    className="absolute w-2/3 bottom-0 right-0 opacity-100"
-                                    onClick={() =>
-                                      userDataDispatch.boardClick(
-                                        name,
-                                        userData.board.i,
-                                        ldx,
-                                        bdx
-                                      )
-                                    }
-                                  >
-                                    <img
-                                      src="/clonefactoryicon/GradeDungeon_Logo.png"
-                                      className="w-100 opacity-100"
-                                    />
-                                    <div className="text-xs [text-shadow:_1px_1px_2px_rgb(0_0_0_/_70%)] text-slate-50">
-                                      {clf + 1},{clf + 7},{clf + 13}
-                                    </div>
-                                  </div>
-                                )}
-                                {!userData.charaInfo[name].unowned &&
-                                  !checked &&
-                                  userData.charaInfo[name].nthboard >
-                                    userData.board.i && (
-                                    <div className="absolute right-0.5 bottom-0.5 flex flex-row p-px w-3 h-3">
-                                      <div
-                                        className={cn(
-                                          "flex-1 rounded-full aspect-square border border-slate-100 ring-1 ring-slate-900",
-                                          [
-                                            "bg-transparent",
-                                            "bg-slate-400",
-                                            "bg-emerald-500",
-                                            "bg-amber-400",
-                                          ][userData.charaInfo[name].nthboard]
-                                        )}
+                                      <img
+                                        src="/icons/Stage_RewardChack.png"
+                                        className="w-100 opacity-100"
                                       />
                                     </div>
                                   )}
-                              </div>
-                            );
-                          })}
+                                  {unowned && typeof clf === "number" && (
+                                    <div
+                                      className="absolute w-2/3 bottom-0 right-0 opacity-100"
+                                      onClick={() =>
+                                        userDataDispatch.boardClick(
+                                          name,
+                                          userData.board.i,
+                                          ldx,
+                                          bdx
+                                        )
+                                      }
+                                    >
+                                      <img
+                                        src="/clonefactoryicon/GradeDungeon_Logo.png"
+                                        className="w-100 opacity-100"
+                                      />
+                                      <div className="text-xs [text-shadow:_1px_1px_2px_rgb(0_0_0_/_70%)] text-slate-50">
+                                        {clf + 1},{clf + 7},{clf + 13}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {!userData.charaInfo[name].unowned &&
+                                    !checked &&
+                                    userData.charaInfo[name].nthboard >
+                                      userData.board.i && (
+                                      <div className="absolute right-0.5 bottom-0.5 flex flex-row p-px w-3 h-3">
+                                        <div
+                                          className={cn(
+                                            "flex-1 rounded-full aspect-square border border-slate-100 ring-1 ring-slate-900",
+                                            [
+                                              "bg-transparent",
+                                              "bg-slate-400",
+                                              "bg-emerald-500",
+                                              "bg-amber-400",
+                                            ][userData.charaInfo[name].nthboard]
+                                          )}
+                                        />
+                                      </div>
+                                    )}
+                                </div>
+                              );
+                            })}
                         </div>
                       </div>
                     );
