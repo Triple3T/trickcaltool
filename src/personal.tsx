@@ -9,7 +9,8 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CharaList from "@/components/personal/chara-list";
 import ItemSlot from "@/components/parts/item-slot";
-import { personalityBG } from "@/utils/personalityBG";
+import SubtitleBar from "@/components/parts/subtitlebar";
+// import { personalityBG } from "@/utils/personalityBG";
 import rankClassNames from "@/utils/rankClassNames";
 import board from "@/data/board";
 import chara from "@/data/chara";
@@ -100,7 +101,7 @@ const Personal = () => {
               className="w-8 h-8 inline"
             />
           </div>
-          <div className="-mt-2">
+          <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
             {t(`personality.${Personality[personality]}`)}
           </div>
         </div>
@@ -112,7 +113,9 @@ const Personal = () => {
               className="w-8 h-8 inline"
             />
           </div>
-          <div className="-mt-2">{t(`class.${Class[unitClass]}`)}</div>
+          <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
+            {t(`class.${Class[unitClass]}`)}
+          </div>
         </div>
         <div className="p-2">
           <div>
@@ -122,7 +125,9 @@ const Personal = () => {
               className="w-8 h-8 inline"
             />
           </div>
-          <div className="-mt-2">{t(`attack.${Attack[attackType]}`)}</div>
+          <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
+            {t(`attack.${Attack[attackType]}`)}
+          </div>
         </div>
         <div className="p-2">
           <div>
@@ -132,7 +137,9 @@ const Personal = () => {
               className="w-8 h-8 inline"
             />
           </div>
-          <div className="-mt-2">{t(`position.${Position[position]}`)}</div>
+          <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
+            {t(`position.${Position[position]}`)}
+          </div>
         </div>
         <div className="p-2">
           <div>
@@ -142,10 +149,12 @@ const Personal = () => {
               className="w-8 h-8 inline"
             />
           </div>
-          <div className="-mt-2">{t(`race.${Race[race]}`)}</div>
+          <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
+            {t(`race.${Race[race]}`)}
+          </div>
         </div>
         <div className="p-2">
-          <div>
+          <div className="flex flex-row justify-center">
             {Array(initialStar)
               .fill(0)
               .map((_, i) => {
@@ -154,12 +163,12 @@ const Personal = () => {
                     key={i}
                     src={`/icons/HeroGrade_000${[0, 5, 3, 4][initialStar]}.png`}
                     alt=""
-                    className="w-8 h-8 inline -ml-2 first-of-type:ml-0"
+                    className="w-8 h-8 -mx-1"
                   />
                 );
               })}
           </div>
-          <div className="-mt-2">
+          <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
             {chara[charaName].e
               ? t(`eldain.${chara[charaName].e}`)
               : `${initialStar}성`}
@@ -352,7 +361,8 @@ const Personal = () => {
             })}
         </TabsContent>
         <TabsContent value="Equip">
-          <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
+          <SubtitleBar>{t("ui.personal.requireRankEquips")}</SubtitleBar>
+          <ScrollArea className="max-w-full whitespace-nowrap rounded-md mt-2 mb-4">
             <div className="flex w-max min-w-full space-x-2 p-2 justify-center items-stretch">
               {equip.c[charaName].map((equipset, i) => {
                 const rank = i + 1;
@@ -556,6 +566,17 @@ const Personal = () => {
                     </div>
                   );
                 })}
+              {skillcoefficient.c[charaName].k.l.map((keywordId) => {
+                return (
+                  <div
+                    key={keywordId}
+                    className="text-red-600 dark:text-red-400"
+                  >
+                    {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                    {t(`skill.commonKeyword.${keywordId}.description`)}
+                  </div>
+                );
+              })}
             </div>
             <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
               {t(
@@ -690,6 +711,17 @@ const Personal = () => {
                     </div>
                   );
                 })}
+              {skillcoefficient.c[charaName].k.h.map((keywordId) => {
+                return (
+                  <div
+                    key={keywordId}
+                    className="text-red-600 dark:text-red-400"
+                  >
+                    {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                    {t(`skill.commonKeyword.${keywordId}.description`)}
+                  </div>
+                );
+              })}
             </div>
             <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
               {t(
@@ -787,6 +819,17 @@ const Personal = () => {
                     </div>
                   );
                 })}
+              {skillcoefficient.c[charaName].k.n.map((keywordId) => {
+                return (
+                  <div
+                    key={keywordId}
+                    className="text-red-600 dark:text-red-400"
+                  >
+                    {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                    {t(`skill.commonKeyword.${keywordId}.description`)}
+                  </div>
+                );
+              })}
             </div>
             <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
               {t(
@@ -863,6 +906,17 @@ const Personal = () => {
                         </div>
                       );
                     })}
+                  {skillcoefficient.c[charaName].k.a!.map((keywordId) => {
+                    return (
+                      <div
+                        key={keywordId}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                        {t(`skill.commonKeyword.${keywordId}.description`)}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
@@ -989,6 +1043,17 @@ const Personal = () => {
                         </div>
                       );
                     })}
+                  {skillcoefficient.c[charaName].k[1].map((keywordId) => {
+                    return (
+                      <div
+                        key={keywordId}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                        {t(`skill.commonKeyword.${keywordId}.description`)}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
@@ -1104,6 +1169,17 @@ const Personal = () => {
                         </div>
                       );
                     })}
+                  {skillcoefficient.c[charaName].k[2].map((keywordId) => {
+                    return (
+                      <div
+                        key={keywordId}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                        {t(`skill.commonKeyword.${keywordId}.description`)}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
@@ -1219,6 +1295,17 @@ const Personal = () => {
                         </div>
                       );
                     })}
+                  {skillcoefficient.c[charaName].k[3].map((keywordId) => {
+                    return (
+                      <div
+                        key={keywordId}
+                        className="text-red-600 dark:text-red-400"
+                      >
+                        {t(`skill.commonKeyword.${keywordId}.name`)}:{" "}
+                        {t(`skill.commonKeyword.${keywordId}.description`)}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="text-sm break-keep text-slate-600 dark:text-slate-400">
                   {t(
