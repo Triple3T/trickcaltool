@@ -17,7 +17,9 @@ import { Copy } from "lucide-react";
 export function GoogleSyncChangedNotice() {
   const { t } = useTranslation();
   return (
-    <AlertDialog>
+    <AlertDialog
+      defaultOpen={(localStorage.getItem("alert") || "").charAt(0) !== "1"}
+    >
       <AlertDialogTrigger asChild>
         <Button variant="destructive" size="sm" className="text-sm">
           {t("ui.index.syncChangedNoticeTitle")}
@@ -36,6 +38,11 @@ export function GoogleSyncChangedNotice() {
               지난번 말씀드린 계정 연동 시의 오작동 현상에 대한 대응으로
               말씀드린 새로운 연동 및 저장 시스템을 새로운 개인정보처리방침
               적용과 함께 구축 및 적용했습니다.
+            </p>
+            <p>
+              이제 사도별 정보를 한 번에 관리하고, 충돌 가능성을 낮춰 데이터가
+              더 견고하게 유지 및 관리되며, 동기화 역시 서버의 검증을 거쳐 보다
+              안전하게 동기화를 이용하실 수 있습니다.
             </p>
             <p>
               다만 이렇게 적용하며 공지가 미흡했던 것과, 초기 오류 때문에
@@ -80,6 +87,13 @@ export function GoogleSyncChangedNotice() {
               </a>
               를 눌러 다운로드를 받을 수 있습니다.
             </p>
+            <p className="mt-2">
+              이 알림 메시지는 최초 1회만 자동으로 나타나며 이후엔 메인 페이지의{" "}
+              <span className="bg-red-500/60">
+                [중요] 연동 및 저장 방식 변경 안내
+              </span>{" "}
+              버튼을 누르면 볼 수 있습니다.
+            </p>
             <p className="mt-2">즐거운 연휴 되세요.</p>
             <p className="font-onemobile">
               쿠폰 코드:{" "}
@@ -96,7 +110,17 @@ export function GoogleSyncChangedNotice() {
           </div>
         </ScrollArea>
         <AlertDialogFooter>
-          <AlertDialogAction>{t("ui.board.closeGuide")}</AlertDialogAction>
+          <AlertDialogAction
+            className="font-onemobile"
+            onClick={() =>
+              localStorage.setItem(
+                "alert",
+                "1" + (localStorage.getItem("alert") || "").slice(1)
+              )
+            }
+          >
+            {t("ui.board.closeGuide")}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
