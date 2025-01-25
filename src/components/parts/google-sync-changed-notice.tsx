@@ -23,7 +23,7 @@ export function GoogleSyncChangedNotice() {
           {t("ui.index.syncChangedNoticeTitle")}
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="font-onemobile">
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
             {t("ui.index.syncChangedNoticeTitle")}
@@ -81,7 +81,7 @@ export function GoogleSyncChangedNotice() {
               를 눌러 다운로드를 받을 수 있습니다.
             </p>
             <p className="mt-2">즐거운 연휴 되세요.</p>
-            <p>
+            <p className="font-onemobile">
               쿠폰 코드:{" "}
               <Button
                 variant="link"
