@@ -5609,6 +5609,7 @@ i18n
             },
             personal: {
               title: "사도 정보",
+              charaList: "사도 목록",
             },
             eventcalc: {
               title: "이벤트 계산기",

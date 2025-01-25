@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CharaList from "@/components/personal/chara-list";
 import ItemSlot from "@/components/parts/item-slot";
 import { personalityBG } from "@/utils/personalityBG";
 import rankClassNames from "@/utils/rankClassNames";
@@ -43,75 +44,17 @@ const Personal = () => {
   const [highLv, setHighLv] = useState<number>(1);
   const [isPvP, setIsPvP] = useState<boolean>(false);
   const charaName = searchParams.get(NAMEKEY);
+  const setTargetChara = useCallback(
+    (name: string) => {
+      setSearchParams((prev) => {
+        prev.set(NAMEKEY, name);
+        return prev;
+      });
+    },
+    [setSearchParams]
+  );
   if (!charaName) {
-    return (
-      <div className="font-onemobile">
-        <div className="text-lg">사도 목록</div>
-        <div className="grid grid-cols-[repeat(auto-fill,_minmax(6rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(7rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-1">
-          {Object.entries(chara)
-            .sort(([a], [b]) => {
-              return t(`chara.${a}`).localeCompare(t(`chara.${b}`));
-            })
-            .map(([name, meta]) => {
-              const [
-                personality, // initialStar,
-                ,
-                attackType,
-                position,
-                unitClass,
-                // race,
-              ] = meta.t.split("").map((v) => Number(v)) as CharaMetaType;
-              return (
-                <div
-                  key={name}
-                  className="flex justify-between sm:min-w-16 md:min-w-20 max-w-32 rounded overflow-hidden border-slate-200 dark:border-slate-800 border-2 bg-slate-200 dark:bg-slate-800"
-                  onClick={() =>
-                    setSearchParams((prev) => {
-                      prev.set(NAMEKEY, name);
-                      return prev;
-                    })
-                  }
-                >
-                  <div className="flex flex-col items-center p-0 sm:min-w-16 sm:min-h-16 md:min-w-20 md:min-h-20 max-w-32 relative">
-                    <img
-                      src={`/charas/${name}.png`}
-                      className={cn(
-                        "w-full aspect-square",
-                        personalityBG[Number(chara[name].t[0]) as Personality]
-                      )}
-                    />
-                    <div className="w-full -mt-7 md:-mt-8 break-keep flex-1 flex flex-col items-stretch justify-center gap-0.5">
-                      <div className="h-5 md:h-6">
-                        <div className="flex justify-center gap-0.5 p-0.5 w-max mx-auto rounded-full bg-slate-200/50 dark:bg-slate-800/50">
-                          <img
-                            src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
-                            className="w-4 h-4 md:w-5 md:h-5"
-                          />
-                          <img
-                            src={`/icons/Common_Unit${Class[unitClass]}.png`}
-                            className="w-4 h-4 md:w-5 md:h-5"
-                          />
-                          <img
-                            src={`/icons/Common_UnitAttack${Attack[attackType]}.png`}
-                            className="w-4 h-4 md:w-5 md:h-5"
-                          />
-                          <img
-                            src={`/icons/Common_Position${Position[position]}.png`}
-                            className="w-4 h-4 md:w-5 md:h-5"
-                          />
-                        </div>
-                      </div>
-                      <div className="bg-slate-200 dark:bg-slate-800 py-0.5 text-sm sm:text-base">
-                        {t(`chara.${name}`)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-    );
+    return <CharaList setTargetChara={setTargetChara} />;
   }
   if (!Object.keys(chara).includes(charaName)) {
     return (
