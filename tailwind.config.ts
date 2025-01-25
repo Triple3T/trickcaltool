@@ -119,7 +119,7 @@ module.exports = {
         10: "10deg",
       },
       spacing: {
-        '1/8': '12.5%',
+        "1/8": "12.5%",
         14: "3.5rem",
         18: "4.5rem",
         22: "5.5rem",
@@ -144,13 +144,59 @@ module.exports = {
         "board-gate": "url('/boards/Rect_04.png')",
         "task-title": "url('/schedule/Deco_Task_Colored.png')",
         "item-slot-value": "url('/itemslot/ItemSlot_ValueBase.png')",
-        "restaurant": "url('/foods/MyHomeRestaurant_background_crop.png')",
-        "dish": "url('/foods/Icon_RestaurantDish.png')",
+        restaurant: "url('/foods/MyHomeRestaurant_background_crop.png')",
+        dish: "url('/foods/Icon_RestaurantDish.png')",
       },
     },
     fontFamily: {
-      onemobile: ['ONE-Mobile-POP'],
+      onemobile: ["ONE-Mobile-POP"],
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities, theme }) {
+      const shadowSizes = [0.75, 1.25, 1.5, 1.75, 2, 2.25, 2.5];
+      const colors = theme("colors");
+
+      const newUtilities = {};
+
+      // 기본값 설정
+      newUtilities[".text-shadow-glow"] = {
+        "--tw-text-shadow-width": "1px",
+        "--tw-text-shadow-color": "hsl(var(--background))",
+        // 그림자 20개를 겹쳐서 글자 테두리 효과 구현
+        textShadow: Array(20)
+          .fill(`0 0 var(--tw-text-shadow-width) var(--tw-text-shadow-color)`)
+          .join(", "),
+      };
+
+      // 그림자 길이 조절
+      shadowSizes.forEach((size) => {
+        newUtilities[`.text-shadow-glow-${size.toString().replace(".", "\\.")}`] = {
+          "--tw-text-shadow-width": `${size}px`,
+          "--tw-text-shadow-color": "hsl(var(--background))",
+          textShadow: Array(20)
+            .fill(`0 0 var(--tw-text-shadow-width) var(--tw-text-shadow-color)`)
+            .join(", "),
+        };
+      });
+
+      // 그림자 색상 설정
+      Object.entries(colors).forEach(([colorName, colorValue]) => {
+        if (colorValue && typeof colorValue === "object") {
+          Object.entries(colorValue).forEach(([shade, hex]) => {
+            newUtilities[`.text-shadow-glow-${colorName}-${shade}`] = {
+              "--tw-text-shadow-color": hex,
+            };
+          });
+        } else {
+          newUtilities[`.text-shadow-glow-${colorName}`] = {
+            "--tw-text-shadow-color": colorValue,
+          };
+        }
+      });
+
+      addUtilities(newUtilities, ["responsive", "hover"]);
+    },
+  ],
 };
