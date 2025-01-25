@@ -725,7 +725,7 @@ const Lab = () => {
                     size="icon"
                     disabled={
                       userData.myhome.l[1] === 0 ||
-                      userData.myhome.l[1] === userData.myhome.l[1]
+                      userData.myhome.l[1] === userData.myhome.l[0]
                     }
                     onClick={() =>
                       userDataDispatch.labMyHomeLevel(
