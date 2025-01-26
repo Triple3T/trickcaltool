@@ -5691,6 +5691,7 @@ i18n
               title: "사도 정보",
               charaList: "사도 목록",
               requireRankEquips: "랭크별 착용 장비",
+              selectBoard: "표시할 보드를 선택해 주세요!",
             },
             eventcalc: {
               title: "이벤트 계산기",

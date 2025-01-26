@@ -8,6 +8,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CharaList from "@/components/personal/chara-list";
+import BoardViewer from "@/components/personal/board-viewer";
 import ItemSlot from "@/components/parts/item-slot";
 import SubtitleBar from "@/components/parts/subtitlebar";
 // import { personalityBG } from "@/utils/personalityBG";
@@ -23,11 +24,11 @@ import route from "@/data/route";
 import skillcoefficient from "@/data/skillcoefficient";
 import {
   Attack,
-  BoardType,
+  // BoardType,
   Class,
   Personality,
   Position,
-  PurpleBoardType,
+  // PurpleBoardType,
   Race,
 } from "@/types/enums";
 import { RefreshCw } from "lucide-react";
@@ -221,145 +222,16 @@ const Personal = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="Board">
-          {Array(3)
-            .fill(0)
-            .map((_, i) => {
-              const boardIndex = 2 - i;
-              const { s: startPoint, b: boardRoute } =
-                route.r[Race[race]][boardIndex];
-              const boardStats = board.c[charaName].b[boardIndex]
-                .map((statCollection) => statCollection.toString())
-                .join("");
-              const allRoutes = board.c[charaName].r[boardIndex]
-                .join(".")
-                .split(".")
-                .map((routeIndex) => boardRoute[Number(routeIndex)]);
-              const baseRoute: { boardType: number; stat: number }[] =
-                allRoutes[0]
-                  .split("")
-                  .map((c) =>
-                    c === "0"
-                      ? { boardType: -1, stat: -1 }
-                      : { boardType: 0, stat: -1 }
-                  );
-              allRoutes.forEach((r, j) => {
-                baseRoute[r.indexOf("X")] = {
-                  boardType: 2,
-                  stat: Number(boardStats.charAt(j)),
-                };
-              });
-              const purpleBoardStats = purpleboard.c[charaName].b[boardIndex];
-              const purplePositions = purpleboard.c[charaName].p[boardIndex];
-              purplePositions.split(".").forEach((p, j) => {
-                const stat = Number(purpleBoardStats.toString().charAt(j));
-                const position =
-                  purpleposition.r[Race[race]][boardIndex].p[Number(p)];
-                position.split(".").forEach((pos) => {
-                  const [posRow, posCol] = pos
-                    .split("")
-                    .map((rc) => parseInt(rc, 36));
-                  const cellIndex = posRow * 7 + posCol;
-                  baseRoute[cellIndex] = {
-                    boardType: 1,
-                    stat,
-                  };
-                });
-              });
-              const routeRows = baseRoute.length / 7;
-              return (
-                <div key={i}>
-                  {Array(routeRows)
-                    .fill(0)
-                    .map((_, rowNum) => {
-                      return (
-                        <div
-                          key={rowNum}
-                          className="flex flex-row justify-center items-center"
-                        >
-                          {Array(7)
-                            .fill(0)
-                            .map((_, colNum) => {
-                              const cellIndex = rowNum * 7 + colNum;
-                              const cell = baseRoute[cellIndex];
-                              if (cell.boardType === 0) {
-                                return (
-                                  <div
-                                    key={colNum}
-                                    className="w-6 h-6 bg-board-normal bg-cover"
-                                  />
-                                );
-                              }
-                              if (cell.boardType === 1) {
-                                return (
-                                  <div
-                                    key={colNum}
-                                    className="w-6 h-6 bg-board-high bg-cover"
-                                  >
-                                    <img
-                                      src={`/boards/Tile_${
-                                        PurpleBoardType[cell.stat]
-                                      }On.png`}
-                                      className="w-full h-full aspect-square"
-                                    />
-                                  </div>
-                                );
-                              }
-                              if (cell.boardType === 2) {
-                                return (
-                                  <div
-                                    key={colNum}
-                                    className="w-6 h-6 bg-board-special bg-cover"
-                                  >
-                                    <img
-                                      src={`/boards/Tile_${
-                                        BoardType[cell.stat]
-                                      }On.png`}
-                                      className="w-full h-full aspect-square"
-                                    />
-                                  </div>
-                                );
-                              }
-                              return <div key={colNum} className="w-6 h-6" />;
-                            })}
-                        </div>
-                      );
-                    })}
-                  <div className="flex flex-row justify-center items-center">
-                    {Array(7)
-                      .fill(0)
-                      .map((_, colNum) => {
-                        if (colNum === startPoint) {
-                          if (boardIndex === 0) {
-                            return (
-                              <div
-                                key={colNum}
-                                className="w-6 h-6 bg-board-normal bg-cover"
-                              >
-                                <img
-                                  src="/boards/Tile_Start.png"
-                                  className="w-full h-full aspect-square"
-                                />
-                              </div>
-                            );
-                          }
-                          return (
-                            <div
-                              key={colNum}
-                              className="w-6 h-6 bg-board-gate bg-cover"
-                            >
-                              <img
-                                src="/boards/Tile_Gate.png"
-                                className="w-full h-full aspect-square"
-                              />
-                            </div>
-                          );
-                        }
-                        return <div key={colNum} className="w-6 h-6" />;
-                      })}
-                  </div>
-                </div>
-              );
-            })}
+          <BoardViewer
+            charaName={charaName}
+            boardActualPosition={route.r[Race[race]]}
+            boardCollection={board.c[charaName].b}
+            routeCollection={board.c[charaName].r}
+            pboardCollection={purpleboard.c[charaName].b}
+            pbPositionIndexCollection={purpleboard.c[charaName].p}
+            pbActualPositionCollection={purpleposition.r[Race[race]]}
+            leftShift1={race === Race.Ghost && initialStar === 1}
+          />
         </TabsContent>
         <TabsContent value="Equip">
           <SubtitleBar>{t("ui.personal.requireRankEquips")}</SubtitleBar>
