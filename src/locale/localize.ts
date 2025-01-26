@@ -5883,6 +5883,8 @@ i18n
               authAlreadyCompleted: "Google 계정 연동이 완료되었습니다.",
               beforeAuthAnnounce:
                 "계정 연동 시, 입력한 데이터가 Google 계정에 동기화되어 여러 기기에서 편리하게 사용할 수 있고, 로컬 데이터가 리셋되어도 손쉽게 복원할 수 있습니다. (인게임 데이터를 불러오는 기능은 지원되지 않습니다.)",
+              cannotRegisterWithInAppBrowser:
+                "인앱 브라우저에서는 보안상의 이유로 계정 연동이 불가능합니다. 크롬(크로미움), 파이어폭스, 또는 사파리를 이용해 주세요.",
               themeTitle: "테마",
               themeLight: "라이트",
               themeDark: "다크",

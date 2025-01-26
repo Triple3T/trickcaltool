@@ -64,6 +64,10 @@ interface IFileImportDialogProps {
   onConfirm: () => void;
 }
 
+const inappReg =
+  // eslint-disable-next-line max-len
+  /KAKAOTALK|Instagram|NAVER|zumapp|FB|Snapchat|Line|everytimeApp|WhatsApp|Electron|wadiz|AliApp|FB_IAB|FB4A|FBAN|FBIOS|FBSS/i;
+
 const Setting = () => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
@@ -184,47 +188,63 @@ const Setting = () => {
               </Button>
             </div>
           </div>
-          <div>
-            <SubtitleBar>{t("ui.common.authTitle")}</SubtitleBar>
-            {isReady ? (
-              googleLinked ? (
-                <div className="p-2">
-                  <div>{t("ui.common.authAlreadyCompleted")}</div>
-                  <div className="text-sm flex-row flex-wrap justify-end">
-                    <a href="/clear">
-                      <Button variant="link">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        {t("ui.common.logout")}
-                      </Button>
-                    </a>
-                  </div>
-                  <div className="text-right text-xs">
-                    <AccountDeleteConfirmDialog />
-                  </div>
-                </div>
-              ) : (
-                <div className="p-2">
-                  <a href={googleAccessUrl} target="_self" rel="noreferrer">
-                    {t("ui.common.authButtonText")}
-                  </a>
-                  <Alert variant="default" className="mt-2">
-                    <MessageCircleWarning className="h-5 w-5" />
-                    {/* <AlertTitle>{t("ui.board.aboutBestRouteTitle")}</AlertTitle> */}
-                    <AlertDescription className="break-keep text-sm">
-                      {t("ui.common.beforeAuthAnnounce")}
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              )
-            ) : (
-              <div className="p-2">{t("ui.common.authLoading")}</div>
-            )}
-            <div className="p-2 text-xs">
-              <a href={googleAccessUrlLegacy} target="_blank" rel="noreferrer">
-                {t("ui.common.loadLegacy")}
-              </a>
+          {inappReg.test(navigator.userAgent) ? (
+            <div>
+              <SubtitleBar>{t("ui.common.authTitle")}</SubtitleBar>
+              <Alert variant="default" className="mt-2">
+                <MessageCircleWarning className="h-5 w-5" />
+                <AlertDescription className="break-keep text-sm">
+                  {t("ui.common.cannotRegisterWithInAppBrowser")}
+                </AlertDescription>
+              </Alert>
             </div>
-          </div>
+          ) : (
+            <div>
+              <SubtitleBar>{t("ui.common.authTitle")}</SubtitleBar>
+              {isReady ? (
+                googleLinked ? (
+                  <div className="p-2">
+                    <div>{t("ui.common.authAlreadyCompleted")}</div>
+                    <div className="text-sm flex-row flex-wrap justify-end">
+                      <a href="/clear">
+                        <Button variant="link">
+                          <LogOut className="mr-2 h-4 w-4" />
+                          {t("ui.common.logout")}
+                        </Button>
+                      </a>
+                    </div>
+                    <div className="text-right text-xs">
+                      <AccountDeleteConfirmDialog />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2">
+                    <a href={googleAccessUrl} target="_self" rel="noreferrer">
+                      {t("ui.common.authButtonText")}
+                    </a>
+                    <Alert variant="default" className="mt-2">
+                      <MessageCircleWarning className="h-5 w-5" />
+                      {/* <AlertTitle>{t("ui.board.aboutBestRouteTitle")}</AlertTitle> */}
+                      <AlertDescription className="break-keep text-sm">
+                        {t("ui.common.beforeAuthAnnounce")}
+                      </AlertDescription>
+                    </Alert>
+                  </div>
+                )
+              ) : (
+                <div className="p-2">{t("ui.common.authLoading")}</div>
+              )}
+              <div className="p-2 text-xs">
+                <a
+                  href={googleAccessUrlLegacy}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t("ui.common.loadLegacy")}
+                </a>
+              </div>
+            </div>
+          )}
           {isReady && googleLinked && (
             <div>
               <SubtitleBar>{t("ui.common.onlineBackup")}</SubtitleBar>
