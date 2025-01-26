@@ -187,7 +187,7 @@ const BoardViewer = ({
   leftShift1 = false,
 }: BoardViewerProps) => {
   const { t } = useTranslation();
-  const [boardOn, setBoardOn] = useState(["0", "1", "2"]);
+  const [boardOn, setBoardOn] = useState<string[]>([]);
 
   return (
     <div>
@@ -197,8 +197,6 @@ const BoardViewer = ({
         value={boardOn}
         onValueChange={(v) => {
           v.sort();
-          console.log(v);
-          console.log(v[0] === "0" && v[1] === "2");
           if (v[0] === "0" && v[1] === "2") setBoardOn(["0", "1", "2"]);
           else setBoardOn(v);
         }}
@@ -244,7 +242,7 @@ const BoardViewer = ({
         </ToggleGroupItem>
       </ToggleGroup>
       <div className="mt-4">
-        {boardOn.includes("2") && (
+        {(boardOn.includes("2") || boardOn.length < 1) && (
           <NthBoardViewer
             boardIndex={2}
             charaName={charaName}
@@ -257,7 +255,7 @@ const BoardViewer = ({
             hasBottom={boardOn.includes("2") && boardOn.includes("1")}
           />
         )}
-        {boardOn.includes("1") && (
+        {(boardOn.includes("1") || boardOn.length < 1) && (
           <NthBoardViewer
             boardIndex={1}
             charaName={charaName}
@@ -270,7 +268,7 @@ const BoardViewer = ({
             hasBottom={boardOn.includes("1") && boardOn.includes("0")}
           />
         )}
-        {boardOn.includes("0") && (
+        {(boardOn.includes("0") || boardOn.length < 1) && (
           <NthBoardViewer
             boardIndex={0}
             charaName={charaName}
@@ -283,11 +281,6 @@ const BoardViewer = ({
             hasBottom
             leftShift={leftShift1}
           />
-        )}
-        {boardOn.length === 0 && (
-          <div className="flex justify-center items-center h-32">
-            {t("ui.personal.selectBoard")}
-          </div>
         )}
       </div>
     </div>
