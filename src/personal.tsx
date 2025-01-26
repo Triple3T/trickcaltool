@@ -49,6 +49,7 @@ const Personal = () => {
     (name: string) => {
       setSearchParams((prev) => {
         prev.set(NAMEKEY, name);
+        window.scrollTo({ top: 0, left: 0 });
         return prev;
       });
     },

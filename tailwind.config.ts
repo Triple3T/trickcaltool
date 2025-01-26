@@ -172,7 +172,9 @@ module.exports = {
 
       // 그림자 길이 조절
       shadowSizes.forEach((size) => {
-        newUtilities[`.text-shadow-glow-${size.toString().replace(".", "\\.")}`] = {
+        newUtilities[
+          `.text-shadow-glow-${size.toString().replace(".", "\\.")}`
+        ] = {
           "--tw-text-shadow-width": `${size}px`,
           "--tw-text-shadow-color": "hsl(var(--background))",
           textShadow: Array(20)
