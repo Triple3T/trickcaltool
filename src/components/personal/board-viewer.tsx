@@ -20,7 +20,6 @@ interface NthBoardViewerProps {
     s: number;
     p: string[];
   };
-  hasBottom?: boolean;
   leftShift?: boolean;
 }
 
@@ -48,7 +47,6 @@ const NthBoardViewer = ({
   pboardCollection,
   pbPositionIndexCollection,
   pbActualPositionCollection,
-  hasBottom = false,
   leftShift = false,
 }: NthBoardViewerProps) => {
   const { s: startPoint, b: boardRoute } = boardActualPosition;
@@ -140,38 +138,37 @@ const NthBoardViewer = ({
             </div>
           );
         })}
-      {hasBottom && (
-        <div className="flex flex-row justify-center items-center">
-          {Array(7)
-            .fill(0)
-            .map((_, colNum) => {
-              if (colNum === startPoint - (leftShift ? 1 : 0)) {
-                if (boardIndex === 0) {
-                  return (
-                    <div
-                      key={colNum}
-                      className="w-6 h-6 bg-board-normal bg-cover"
-                    >
-                      <img
-                        src="/boards/Tile_Start.png"
-                        className="w-full h-full aspect-square"
-                      />
-                    </div>
-                  );
-                }
+
+      <div className="flex flex-row justify-center items-center">
+        {Array(7)
+          .fill(0)
+          .map((_, colNum) => {
+            if (colNum === startPoint - (leftShift ? 1 : 0)) {
+              if (boardIndex === 0) {
                 return (
-                  <div key={colNum} className="w-6 h-6 bg-board-gate bg-cover">
+                  <div
+                    key={colNum}
+                    className="w-6 h-6 bg-board-normal bg-cover"
+                  >
                     <img
-                      src="/boards/Tile_Gate.png"
+                      src="/boards/Tile_Start.png"
                       className="w-full h-full aspect-square"
                     />
                   </div>
                 );
               }
-              return <div key={colNum} className="w-6 h-6" />;
-            })}
-        </div>
-      )}
+              return (
+                <div key={colNum} className="w-6 h-6 bg-board-gate bg-cover">
+                  <img
+                    src="/boards/Tile_Gate.png"
+                    className="w-full h-full aspect-square"
+                  />
+                </div>
+              );
+            }
+            return <div key={colNum} className="w-6 h-6" />;
+          })}
+      </div>
     </div>
   );
 };
@@ -252,7 +249,6 @@ const BoardViewer = ({
             pboardCollection={pboardCollection[2]}
             pbPositionIndexCollection={pbPositionIndexCollection[2]}
             pbActualPositionCollection={pbActualPositionCollection[2]}
-            hasBottom={boardOn.includes("2") && boardOn.includes("1")}
           />
         )}
         {(boardOn.includes("1") || boardOn.length < 1) && (
@@ -265,7 +261,6 @@ const BoardViewer = ({
             pboardCollection={pboardCollection[1]}
             pbPositionIndexCollection={pbPositionIndexCollection[1]}
             pbActualPositionCollection={pbActualPositionCollection[1]}
-            hasBottom={boardOn.includes("1") && boardOn.includes("0")}
           />
         )}
         {(boardOn.includes("0") || boardOn.length < 1) && (
@@ -278,7 +273,6 @@ const BoardViewer = ({
             pboardCollection={pboardCollection[0]}
             pbPositionIndexCollection={pbPositionIndexCollection[0]}
             pbActualPositionCollection={pbActualPositionCollection[0]}
-            hasBottom
             leftShift={leftShift1}
           />
         )}
