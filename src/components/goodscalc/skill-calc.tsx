@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import Select from "@/components/common/combobox-select";
 import { Separator } from "@/components/ui/separator";
+import GoldSlot from "@/components/parts/gold-slot";
 import ItemSlot from "@/components/parts/item-slot";
 import LazyInput from "@/components/common/lazy-input";
 import level from "@/data/level";
@@ -185,15 +186,7 @@ const SkillCalc = () => {
             amount={requirement.h}
           />
         )}
-        {requirement.g > 0 && (
-          <ItemSlot
-            rarityInfo={{ s: "Gold" }}
-            item="/icons/CurrencyIcon_0008"
-            fullItemPath
-            size={4}
-            amount={requirement.g}
-          />
-        )}
+        {requirement.g > 0 && <GoldSlot size={4} amount={requirement.g} />}
       </div>
       {/* <div className="text-xs opacity-75 break-keep">
           {requirement > 0
