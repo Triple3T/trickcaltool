@@ -1,23 +1,18 @@
 import { useCallback, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CharaList from "@/components/personal/chara-list";
 import BoardViewer from "@/components/personal/board-viewer";
-import ItemSlot from "@/components/parts/item-slot";
-import SubtitleBar from "@/components/parts/subtitlebar";
-// import { personalityBG } from "@/utils/personalityBG";
-import rankClassNames from "@/utils/rankClassNames";
+import EquipViewer from "@/components/personal/equip-viewer";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import clonefactory from "@/data/clonefactory";
-import equip from "@/data/equip";
-import food from "@/data/food";
 import purpleboard from "@/data/purpleboard";
 import purpleposition from "@/data/purpleposition";
 import route from "@/data/route";
@@ -31,7 +26,7 @@ import {
   // PurpleBoardType,
   Race,
 } from "@/types/enums";
-import { RefreshCw } from "lucide-react";
+import FoodTasteViewer from "./components/personal/food-taste-viewer";
 
 const NAMEKEY = "chara";
 // const TABKEY = "tab";
@@ -62,7 +57,8 @@ const Personal = () => {
   if (!Object.keys(chara).includes(charaName)) {
     return (
       <div className="font-onemobile">
-        데이터가 없어요! <Link to=".">목록으로 가기</Link>
+        {t("ui.personal.noData")}{" "}
+        <Link to=".">{t("ui.personal.gotoList")}</Link>
       </div>
     );
   }
@@ -80,9 +76,10 @@ const Personal = () => {
             });
           }}
         >
-          목록으로
+          {t("ui.personal.gotoList")}
         </Link>
       </div>
+      <div className="h-1" />
       <div className="flex flex-row gap-2">
         <div>
           <img src={`/charas/${charaName}.png`} className="w-14 h-14" />
@@ -173,52 +170,68 @@ const Personal = () => {
           <div className="-mt-2 text-shadow-glow-1.5 text-shadow-glow-background">
             {chara[charaName].e
               ? t(`eldain.${chara[charaName].e}`)
-              : `${initialStar}성`}
+              : t("ui.personal.starCount", { 0: initialStar })}
           </div>
         </div>
       </Card>
-      <Card className="p-2 mt-2 flex items-start gap-4">
-        <img
-          src="/clonefactoryicon/GradeDungeon_Logo.png"
-          className="w-16 flex-initial"
-        />
-        <div className="flex items-center gap-4 flex-wrap flex-1">
-          {Object.entries(clonefactory.l).map(([date, lineup]) => {
-            const charaList = lineup.flat();
-            if (charaList.includes(charaName)) {
-              const [year, month, day] = date.split("-");
-              return (
-                <div key={date} className="ring rounded-md px-2 py-1">
-                  <div className="text-xs">{year}</div>
-                  <div className="text-sm">{`${month}/${day}`}</div>
-                </div>
-              );
-            }
-            return null;
-          })}
-          {!Object.values(clonefactory.l).flat().flat().includes(charaName) && (
-            <div className="flex items-center flex-1 h-full mt-2">
-              편성된 적이 없어요
-            </div>
-          )}
-        </div>
-      </Card>
+      {initialStar > 1 && (
+        <Card className="p-2 mt-2 flex items-start gap-4">
+          <img
+            src="/clonefactoryicon/GradeDungeon_Logo.png"
+            className="w-16 flex-initial"
+          />
+          <div className="flex items-center gap-4 flex-wrap flex-1">
+            {Object.entries(clonefactory.l).map(([date, lineup]) => {
+              const charaList = lineup.flat();
+              if (charaList.includes(charaName)) {
+                const [year, month, day] = date.split("-");
+                return (
+                  <div
+                    key={date}
+                    className={cn(
+                      "rounded-md px-2 py-1",
+                      date === clonefactory.f
+                        ? "bg-yellow-500 text-shadow-glow relative"
+                        : "bg-slate-400 dark:bg-slate-600 opacity-50"
+                    )}
+                  >
+                    {date === clonefactory.f && (
+                      <div className="absolute top-1/8 left-1/8 w-3/4 h-3/4 rounded-md bg-yellow-500/85 animate-ping" />
+                    )}
+                    <div className="text-xs relative z-10">{year}</div>
+                    <div className="text-sm relative z-10">{`${month}/${day}`}</div>
+                  </div>
+                );
+              }
+              return null;
+            })}
+            {!Object.values(clonefactory.l)
+              .flat()
+              .flat()
+              .includes(charaName) && (
+              <div className="flex items-center flex-1 h-full mt-2">
+                {t("ui.personal.noCloneFactoryHistory")}
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
       <Tabs className="mt-4" value={tab} onValueChange={setTab}>
         <TabsList className="flex">
           <TabsTrigger className="flex-1" value="Board">
-            보드
+            {t("ui.personal.tab.board")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Equip">
-            장비
+          {t("ui.personal.tab.equip")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Food">
-            연회장
+          {t("ui.personal.tab.food")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Skill">
-            스킬
+          {t("ui.personal.tab.skill")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Aside">
-            어사이드
+          {t("ui.personal.tab.aside")}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="Board">
@@ -234,153 +247,13 @@ const Personal = () => {
           />
         </TabsContent>
         <TabsContent value="Equip">
-          <SubtitleBar>{t("ui.personal.requireRankEquips")}</SubtitleBar>
-          <ScrollArea className="max-w-full whitespace-nowrap rounded-md mt-2 mb-4">
-            <div className="flex w-max min-w-full space-x-2 p-2 justify-center items-stretch">
-              {equip.c[charaName].map((equipset, i) => {
-                const rank = i + 1;
-                return (
-                  <div key={i} className="flex flex-col">
-                    <div
-                      className={cn(
-                        "text-lg flex-initial",
-                        rankClassNames[i][1]
-                      )}
-                    >
-                      {t("ui.equiprank.rankText", { 0: rank })}
-                    </div>
-                    <div
-                      className={cn(
-                        "grid grid-cols-2 p-2 w-48 flex-1 rounded",
-                        rankClassNames[i][0]
-                      )}
-                    >
-                      {equipset.map((e, si) => {
-                        const [iType, iPart, iNum] = e.split(".");
-                        const fileName = `/equips/Equip_${
-                          { e: "", p: "Piece_", r: "Recipe_" }[iType]
-                        }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(
-                          1
-                        )}${iNum}`;
-                        const iRank = Math.floor(Number(iNum) / 100);
-                        return (
-                          <div key={si} className="flex flex-col items-center">
-                            <ItemSlot
-                              item={fileName}
-                              size={3}
-                              fullItemPath
-                              rarityInfo={(() => {
-                                if ([9, 10].includes(iRank))
-                                  return { s: "Yellow" };
-                                if ([7, 8].includes(iRank))
-                                  return { s: "Purple", b: "#B371F5" };
-                                if ([5, 6].includes(iRank))
-                                  return { s: "Blue", b: "#65A7E9" };
-                                if ([3, 4].includes(iRank))
-                                  return { s: "Green", b: "#65DD82" };
-                                return { s: "Gray", b: "#B0B0B0" };
-                              })()}
-                            />
-                            <div className="text-sm w-full whitespace-break-spaces">
-                              {t(
-                                `equip.equip.${e.split(".")[1]}.${
-                                  e.split(".")[2]
-                                }`
-                              ) || t("ui.equip.unknownEquip")}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
+          <EquipViewer charaName={charaName} />
         </TabsContent>
         <TabsContent value="Food">
-          {Object.keys(food.c).includes(charaName) ? (
-            <div className="flex flex-row flex-wrap gap-4 justify-center">
-              <Card className="w-max p-4">
-                <div className="text-xl mb-2">좋아하는 음식</div>
-                <div className="flex flex-row flex-wrap gap-2">
-                  {food.c[charaName][5].map((fid) => {
-                    if (!food.f[fid].t) return null;
-                    return (
-                      <div key={fid} className="relative">
-                        <ItemSlot
-                          rarityInfo={food.r[food.f[fid].r]}
-                          item={`/foods/Icon_Food_${fid}`}
-                          fullItemPath
-                          size={3.5}
-                          innerSize={60}
-                        />
-                        <img
-                          src="/foods/MyHomeRestaurant_FeelingStatus_5.png"
-                          className="absolute w-5 aspect-[28/25] -top-1 -right-1"
-                        />
-                        <div className="text-sm">
-                          +{food.p[food.f[fid].r][4] + 1}~
-                          {food.p[food.f[fid].r][4] + 3}
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {food.c[charaName][1].map((fid) => {
-                    if (!food.f[fid].t) return null;
-                    return (
-                      <div key={fid} className="relative">
-                        <ItemSlot
-                          rarityInfo={food.r[food.f[fid].r]}
-                          item={`/foods/Icon_Food_${fid}`}
-                          fullItemPath
-                          size={3.5}
-                          innerSize={60}
-                        />
-                        <img
-                          src="/foods/MyHomeRestaurant_FeelingStatus_1.png"
-                          className="absolute w-5 aspect-[28/25] -top-1 -right-1"
-                        />
-                        <div className="text-sm">
-                          +{food.p[food.f[fid].r][0] + 1}~
-                          {food.p[food.f[fid].r][0] + 3}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-              <Card className="w-max p-4">
-                <div className="text-xl mb-2">싫어하는 음식</div>
-                <div className="flex flex-row flex-wrap gap-2">
-                  {food.c[charaName][3].map((fid) => {
-                    if (!food.f[fid].t) return null;
-                    return (
-                      <div key={fid} className="relative">
-                        <ItemSlot
-                          rarityInfo={food.r[food.f[fid].r]}
-                          item={`/foods/Icon_Food_${fid}`}
-                          fullItemPath
-                          size={3.5}
-                          innerSize={60}
-                        />
-                        <img
-                          src="/foods/MyHomeRestaurant_FeelingStatus_3.png"
-                          className="absolute w-5 aspect-[28/25] -top-1 -right-1"
-                        />
-                        <div className="text-sm">
-                          +{food.p[food.f[fid].r][2] + 1}~
-                          {food.p[food.f[fid].r][2] + 3}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-            </div>
+          {initialStar > 1 ? (
+            <FoodTasteViewer charaName={charaName} />
           ) : (
-            <div>연회장 정보가 존재하지 않아요!</div>
+            <div>{t("ui.personal.cannotInviteToRestaurant")}</div>
           )}
         </TabsContent>
         <TabsContent

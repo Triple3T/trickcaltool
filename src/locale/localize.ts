@@ -5331,6 +5331,9 @@ i18n
             Curburus: "크르브르스",
             CrayonKnight: "크레용사용",
           },
+          currency: {
+            gold: "골드",
+          },
           ui: {
             index: {
               title: "트릭컬 노트",
@@ -5691,7 +5694,27 @@ i18n
               title: "사도 정보",
               charaList: "사도 목록",
               requireRankEquips: "랭크별 착용 장비",
+              calcEquipRequirements: "필요 장비 재료 계산",
+              calcEquipResult: "재료 계산 결과",
+              calcEquipWrongInput: "입력값이 올바르지 않습니다.",
               selectBoard: "표시할 보드를 선택해 주세요!",
+              noRestaurantData: "아직 취향을 잘 모르겠어요...",
+              cannotInviteToRestaurant: "연회장에 초대할 수 없는 사도입니다.",
+              valueCalcTitle: "친밀도 계산",
+              valueCalcLevelBefore: "친밀 레벨 Lv.",
+              valueCalcExp: "친밀 경험치",
+              valueCalcAdditional: "선택지",
+              noData: "데이터가 없어요!",
+              gotoList: "목록으로 돌아가기",
+              starCount: "{{0}}성",
+              noCloneFactoryHistory: "클론 팩토리에 편성된 적이 없어요",
+              tab: {
+                board: "보드",
+                equip: "장비",
+                food: "연회장",
+                skill: "스킬",
+                aside: "어사이드",
+              },
             },
             eventcalc: {
               title: "이벤트 계산기",
