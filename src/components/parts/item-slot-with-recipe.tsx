@@ -51,11 +51,14 @@ const ItemSlotWithRecipe = ({
       <PopoverContent className="w-max font-onemobile">
         <div className="flex flex-col gap-2">
           <div className="flex flex-row justify-between items-end gap-2">
-            <div className="bg-accent/75 rounded px-2"
-            >
+            <div className="bg-accent/75 rounded px-2">
               <div className="-mt-2.5">{t(nameKey)}</div>
             </div>
-            <div className="text-sm">{t("ui.common.count", { 0: amount })}</div>
+            {(amount || typeof amount === "number") && (
+              <div className="text-sm">
+                {t("ui.common.count", { 0: amount })}
+              </div>
+            )}
           </div>
           <div className="flex flex-row gap-1 justify-between items-center">
             <ItemSlot
@@ -68,7 +71,7 @@ const ItemSlotWithRecipe = ({
             <div>
               <ArrowLeft className="w-4 h-4" />
             </div>
-            <div className="flex flex-row p-2 gap-2 bg-accent rounded-lg">
+            <div className="flex flex-row p-2 gap-2 bg-accent rounded-lg max-w-60">
               {!recipe || recipe.length === 0 ? (
                 <div className="flex justify-center items-center h-10 opacity-75">
                   {t("ui.common.noRecipe")}

@@ -30,6 +30,7 @@ import rankClassNames from "@/utils/rankClassNames";
 
 import chara from "@/data/chara";
 import equip from "@/data/equip";
+import EquipItemSlot from "./components/parts/equip-item-slot";
 
 const MAX_RANK = 10;
 
@@ -444,26 +445,7 @@ const EquipViewer = () => {
         {selectedEquip && (
           <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-2">
-              <ItemSlot
-                item={`/equips/Equip_Icon_${selectedEquip
-                  .split(".")[1]
-                  .charAt(0)
-                  .toUpperCase()}${selectedEquip.split(".")[1].slice(1)}${
-                  selectedEquip.split(".")[2]
-                }`}
-                size={4}
-                fullItemPath
-                rarityInfo={(() => {
-                  const er = Math.floor(
-                    Number(selectedEquip.split(".")[2]) / 100
-                  );
-                  if ([9, 10].includes(er)) return { s: "Yellow" };
-                  if ([7, 8].includes(er)) return { s: "Purple", b: "#B371F5" };
-                  if ([5, 6].includes(er)) return { s: "Blue", b: "#65A7E9" };
-                  if ([3, 4].includes(er)) return { s: "Green", b: "#65DD82" };
-                  return { s: "Gray", b: "#B0B0B0" };
-                })()}
-              />
+              <EquipItemSlot equipCode={selectedEquip} size={4} />
               <div className="text-2xl">
                 {t(
                   `equip.equip.${selectedEquip.split(".")[1]}.${
@@ -520,42 +502,13 @@ const EquipViewer = () => {
                               <div className="flex flex-row gap-1 justify-center">
                                 {Object.entries(equipInfo.i).map(
                                   ([ig, igv]) => {
-                                    const [iType, iPart, iNum] = ig.split(".");
-                                    const fileName = `/equips/Equip_${
-                                      { e: "", p: "Piece_", r: "Recipe_" }[
-                                        iType
-                                      ]
-                                    }Icon_${iPart
-                                      .charAt(0)
-                                      .toUpperCase()}${iPart.slice(1)}${iNum}`;
-                                    const iRank = Math.floor(
-                                      Number(iNum) / 100
-                                    );
                                     return (
-                                      <ItemSlot
+                                      <EquipItemSlot
                                         key={ig}
-                                        item={fileName}
-                                        amount={igv}
+                                        equipCode={ig}
                                         size={3}
-                                        fullItemPath
-                                        rarityInfo={(() => {
-                                          if ([7, 8, 9, 10].includes(iRank))
-                                            return {
-                                              s: "Purple",
-                                              b: "#B371F5",
-                                            };
-                                          if ([5, 6].includes(iRank))
-                                            return {
-                                              s: "Blue",
-                                              b: "#65A7E9",
-                                            };
-                                          if ([3, 4].includes(iRank))
-                                            return {
-                                              s: "Green",
-                                              b: "#65DD82",
-                                            };
-                                          return { s: "Gray", b: "#B0B0B0" };
-                                        })()}
+                                        amount={igv}
+                                        slot
                                       />
                                     );
                                   }
