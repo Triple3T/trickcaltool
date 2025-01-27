@@ -18,7 +18,9 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { toast } from "sonner";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import GoldSlot from "@/components/parts/gold-slot";
 import ItemSlot from "@/components/parts/item-slot";
+import ItemSlotWithRecipe from "@/components/parts/item-slot-with-recipe";
 import SubtitleBar from "@/components/parts/subtitlebar";
 import lab from "@/data/lab";
 import myhomeupgrade from "@/data/myhomeupgrade";
@@ -26,7 +28,6 @@ import collection from "@/data/collection";
 import material from "@/data/material";
 import { StatType, Race, LabEffectCategory } from "@/types/enums";
 
-import ItemSlotWithRecipe from "./components/parts/item-slot-with-recipe";
 // import { UserDataLab } from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 
@@ -622,9 +623,7 @@ const Lab = () => {
                 })}
                 {(showMaterialRemainCategory[0] ||
                   showMaterialRemainCategory[1]) && (
-                  <ItemSlot
-                    rarityInfo={{ s: "Gold" }}
-                    item="/icons/CurrencyIcon_0008"
+                  <GoldSlot
                     amount={
                       (showMaterialRemainCategory[0]
                         ? materialRemainMyHome.g
@@ -633,7 +632,6 @@ const Lab = () => {
                         ? materialRemainLab[materialDepth].g
                         : 0)
                     }
-                    fullItemPath
                   />
                 )}
               </div>
