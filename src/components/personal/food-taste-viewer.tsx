@@ -130,7 +130,7 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
       </div>
       <div>
         <SubtitleBar>{t("ui.personal.valueCalcTitle")}</SubtitleBar>
-        <div className="px-2 mt-2 max-w-96 mx-auto">
+        <div className="px-2 mt-2 w-64 sm:w-72 md:w-80 mx-auto">
           <ComboboxFood value={foodId} onChange={setFoodId} />
           {foodId && (
             <>
@@ -159,15 +159,18 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
                     })}
                 </ToggleGroup>
               </div>
-              <div className="relative mt-1 mb-4">
+              <div className="relative mt-1 mb-4 bg-restaurant bg-cover px-2 pt-4 overflow-hidden rounded-lg">
                 <img
                   src={`/charas/${charaName}.png`}
                   className="w-1/2 aspect-square mx-auto"
                 />
-                <img
-                  src={`/foods/Icon_Food_${foodId}.png`}
-                  className="w-1/4 aspect-square absolute -bottom-4 right-1/2"
-                />
+                <img src="/foods/MyHomeRestaurant_table.png" alt="" className="absolute w-[120%] left-0 -bottom-10" />
+                <div className="w-1/4 absolute -bottom-2 right-1/2 bg-dish bg-cover aspect-square flex flex-row justify-center items-end px-1.5 pb-2">
+                  <img
+                    src={`/foods/Icon_Food_${foodId}.png`}
+                    className="w-full"
+                  />
+                </div>
               </div>
               <div className="flex flex-row gap-1 items-center">
                 <div className="flex-1">
