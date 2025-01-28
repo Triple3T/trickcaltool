@@ -4,5 +4,6 @@ export default level as {
   s: number[];
   a: number[];
   k: Record<"l" | "h", { l: number; m: number; h: number; g: number }[]>;
+  f: number[];
   c: number[];
 };
