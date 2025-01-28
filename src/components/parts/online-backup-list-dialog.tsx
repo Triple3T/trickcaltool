@@ -91,7 +91,9 @@ const OnlineBackupListDialog = () => {
                       key={i}
                       className={cn(
                         "flex flex-col w-full p-4 my-1 justify-center items-stretch text-sm",
-                        i === selectedIndex && "bg-blue-500/20"
+                        "bg-gradient-to-br from-green-300/60 dark:from-green-700/60 via-transparent dark:via-transparent to-transparent dark:to-transparent via-25%",
+                        i === selectedIndex &&
+                          "bg-green-500/20 ring-2 ring-green-200 dark:ring-green-800"
                       )}
                       onClick={() => setSelectedIndex(i)}
                     >
