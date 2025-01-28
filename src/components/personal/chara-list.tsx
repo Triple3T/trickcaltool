@@ -60,7 +60,7 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
             attackType,
             position,
             unitClass,
-            // race,
+            race,
           ] = chara[name].t.split("").map((v) => Number(v)) as CharaMetaType;
           return (
             <div
@@ -75,6 +75,11 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
                     "w-full aspect-square",
                     personalityBG[Number(chara[name].t[0]) as Personality]
                   )}
+                />
+                <img
+                  src={`/album/Album_Icon_${Race[race]}.png`}
+                  alt=""
+                  className="w-4 h-4 absolute top-1 right-1"
                 />
                 <div className="w-full -mt-8 md:-mt-9 break-keep flex-1 flex flex-col items-stretch justify-center gap-0.5">
                   <div className="h-5 md:h-6">
