@@ -82,7 +82,7 @@ const OnlineBackupListDialog = () => {
         {failed ? (
           <>{t("ui.common.onlineBackupListFetchFailed")}</>
         ) : (
-          <ScrollArea className="max-w-full whitespace-nowrap rounded-md py-4">
+          <ScrollArea className="max-w-full whitespace-nowrap rounded-md h-96">
             {success ? (
               backupDatas.length > 0 ? (
                 backupDatas.map((dt, i) => {
@@ -90,7 +90,7 @@ const OnlineBackupListDialog = () => {
                     <Card
                       key={i}
                       className={cn(
-                        "flex flex-col w-max space-x-2 p-4 justify-center items-stretch",
+                        "flex flex-col w-full p-4 my-1 justify-center items-stretch text-sm",
                         i === selectedIndex && "bg-blue-500/20"
                       )}
                       onClick={() => setSelectedIndex(i)}
