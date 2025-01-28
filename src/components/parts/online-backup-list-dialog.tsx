@@ -117,8 +117,12 @@ const OnlineBackupListDialog = () => {
             )}
           </ScrollArea>
         )}
-        <div className="text-sm text-center">
-          {t("ui.common.onlineBackupApply")}
+        <div className="text-center opacity-75">
+          {t(
+            selectedIndex < 0
+              ? "ui.common.onlineBackupSelect"
+              : "ui.common.onlineBackupApply"
+          )}
         </div>
         <DialogFooter>
           <DialogClose asChild>

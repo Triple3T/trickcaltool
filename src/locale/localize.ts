@@ -5899,6 +5899,7 @@ i18n
               onlineBackupListFetching: "백업 리스트 요청 중...",
               onlineBackupListFetchFailed: "백업 리스트 요청에 실패했습니다.",
               onlineBackupListNone: "백업된 데이터가 없습니다.",
+              onlineBackupSelect: "데이터를 선택해 주세요.",
               onlineBackupApply: "이 데이터로 복원합니다.",
               authTitle: "Google 계정 연동",
               authLoading: "연동 확인 중...",
