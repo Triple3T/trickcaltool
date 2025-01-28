@@ -508,7 +508,7 @@ const EquipViewer = () => {
                                         equipCode={ig}
                                         size={3}
                                         amount={igv}
-                                        slot
+                                        slotOnly
                                       />
                                     );
                                   }
