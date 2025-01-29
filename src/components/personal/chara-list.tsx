@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VirtuosoGrid } from "react-virtuoso";
-import { FilterIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import SearchBox from "@/components/common/search-with-icon";
 import chara from "@/data/chara";
+import skillcoefficient from "@/data/skillcoefficient";
 import { personalityBG } from "@/utils/personalityBG";
 import icSearch from "@/lib/initialConsonantSearch";
 import { Personality, Attack, Position, Class, Race } from "@/types/enums";
+import CharaFilter from "./chara-filter";
+
+import {
+  FilterProperty,
+  SortProperty,
+  sortArray,
+  FILTER_COUNT,
+} from "./filtersort";
 
 type CharaMetaType = [Personality, number, Attack, Position, Class, Race];
 
@@ -16,9 +23,69 @@ interface CharaListProps {
   setTargetChara: (name: string) => void;
 }
 
+const filterSearchChara = (search: string) => {
+  return (c: string) => (c ? c.includes(search) || icSearch(c, search) : true);
+};
+const filterPropertyChara = (
+  propertyType: FilterProperty,
+  propertyFilter: number[]
+) => {
+  if (propertyFilter.length === 0) return () => true;
+  if (propertyType >= 0 && propertyType <= 5) {
+    return (c: string) =>
+      propertyFilter.includes(Number(chara[c].t.charAt(propertyType)));
+  } else if (propertyType === 6) {
+    return (c: string) =>
+      Object.values(skillcoefficient.c[c].k)
+        .flat()
+        .some((k) => propertyFilter.includes(k));
+  }
+  return () => true;
+};
+const applyAllFilter = (properties: [FilterProperty, number[]][]) => {
+  if (properties.length === 0) return () => true;
+  return (c: string) =>
+    properties.every(([propertyType, propertyFilter]) =>
+      filterPropertyChara(propertyType, propertyFilter)(c)
+    );
+};
+
+const sortPropertyChara = (sortType: SortProperty) => {
+  if (sortType === SortProperty.Name) return () => 0;
+  if (sortType >= 0 && sortType <= 5) {
+    return (a: string, b: string) => {
+      return (
+        sortArray[sortType].indexOf(Number(chara[a].t.charAt(sortType))) -
+        sortArray[sortType].indexOf(Number(chara[b].t.charAt(sortType)))
+      );
+    };
+  }
+  return () => 0;
+};
+
 const CharaList = ({ setTargetChara }: CharaListProps) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState<string>("");
+  const [filterProperties, setFilterProperties] = useState<
+    [FilterProperty, number[]][]
+  >(
+    Array(FILTER_COUNT)
+      .fill(0)
+      .map((_, i) => [i, []])
+  );
+  const [sortProperty, setSortProperty] = useState<SortProperty>(
+    SortProperty.Name
+  );
+  const [sortAsc, setSortAsc] = useState<boolean>(true);
+  const resetFilter = useCallback(
+    () =>
+      setFilterProperties(
+        Array(FILTER_COUNT)
+          .fill(0)
+          .map((_, i) => [i, []])
+      ),
+    []
+  );
   return (
     <div className="font-onemobile">
       <div className="text-2xl my-2">{t("ui.personal.charaList")}</div>
@@ -29,29 +96,29 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
           onValueChange={setSearch}
           placeholder={t("ui.charaSelect.searchByName")}
         />
-        <Button
-          size="icon"
-          variant="outline"
-          className="flex-initial w-10 h-10 p-2"
-          disabled
-        >
-          <FilterIcon className="w-6 h-6 opacity-80" />
-        </Button>
+        <CharaFilter
+          filters={filterProperties}
+          applyFilters={setFilterProperties}
+          sort={sortProperty}
+          applySort={setSortProperty}
+          asc={sortAsc}
+          applyAsc={setSortAsc}
+          resetFilter={resetFilter}
+        />
       </div>
       <VirtuosoGrid
         useWindowScroll
         className="font-onemobile mt-4"
         listClassName="grid grid-cols-[repeat(auto-fill,_minmax(6rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(7rem,_1fr))] md:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-1"
         data={Object.entries(chara)
-          .filter(([c]) =>
-            search
-              ? t(`chara.${c}`).includes(search) ||
-                icSearch(t(`chara.${c}`), search)
-              : true
+          .filter(([c]) => filterSearchChara(search)(t(`chara.${c}`)))
+          .filter(([c]) => applyAllFilter(filterProperties)(c))
+          .sort(
+            ([a], [b]) =>
+              (sortPropertyChara(sortProperty)(a, b) ||
+                t(`chara.${a}`).localeCompare(t(`chara.${b}`))) *
+              (sortAsc ? 1 : -1)
           )
-          .sort(([a], [b]) => {
-            return t(`chara.${a}`).localeCompare(t(`chara.${b}`));
-          })
           .map(([name]) => name)}
         itemContent={(_, name) => {
           const [
