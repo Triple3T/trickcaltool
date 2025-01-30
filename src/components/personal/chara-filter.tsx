@@ -183,12 +183,15 @@ export function CharaFilter({
                             variant="outline"
                             className={cn("-space-x-1.5")}
                           >
-                            {Array(starCount).fill(
-                              <img
-                                src={`/icons/HeroGrade_000${starNum}.png`}
-                                className="w-6 h-6"
-                              />
-                            )}
+                            {Array(starCount)
+                              .fill(0)
+                              .map((__, j) => (
+                                <img
+                                  key={j}
+                                  src={`/icons/HeroGrade_000${starNum}.png`}
+                                  className="w-6 h-6"
+                                />
+                              ))}
                           </ToggleGroupItem>
                         );
                       })}
@@ -365,19 +368,21 @@ export function CharaFilter({
                     }}
                     className="grid grid-cols-2 sm:grid-cols-4"
                   >
-                    {Array(KEYWORD_COUNT).fill(0).map((_, num) => {
-                      const keywordNum = num + 1
-                      return (
-                        <ToggleGroupItem
-                          key={keywordNum}
-                          value={keywordNum.toString()}
-                          variant="outline"
-                          className={cn()}
-                        >
-                          {t(`skill.commonKeyword.${keywordNum}.name`)}
-                        </ToggleGroupItem>
-                      );
-                    })}
+                    {Array(KEYWORD_COUNT)
+                      .fill(0)
+                      .map((_, num) => {
+                        const keywordNum = num + 1;
+                        return (
+                          <ToggleGroupItem
+                            key={keywordNum}
+                            value={keywordNum.toString()}
+                            variant="outline"
+                            className={cn()}
+                          >
+                            {t(`skill.commonKeyword.${keywordNum}.name`)}
+                          </ToggleGroupItem>
+                        );
+                      })}
                   </ToggleGroup>
                 </div>
               </ScrollArea>
