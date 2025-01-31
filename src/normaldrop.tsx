@@ -321,6 +321,7 @@ const NormalDrop = () => {
           </AccordionItem>
         </Accordion>
       </Card>
+      <div className="text-xs opacity-75 font-onemobile my-2">{t("ui.normaldrop.alert")}</div>
       <div className="w-full font-onemobile">
         <div className="flex flex-row gap-2 flex-wrap">
           {Object.entries(dropTable)

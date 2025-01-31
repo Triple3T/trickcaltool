@@ -3,13 +3,12 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import "./App.css";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
 import MainMenuCard from "@/components/parts/main-menu-card";
-import MainMenuCardSwitchable from "@/components/parts/main-menu-card-switchable";
-import GoogleSyncChangedNotice from "@/components/parts/google-sync-changed-notice";
+// import GoogleSyncChangedNotice from "@/components/parts/google-sync-changed-notice";
 import UtilitySetCard from "@/components/parts/menu-card-utilityset";
 import getServerHash from "@/utils/getServerHash";
 
@@ -97,7 +96,7 @@ function App() {
               </p>
             )}
             <div className="flex flex-col sm:flex-row gap-2 items-center sm:items-baseline justify-center">
-              <a
+              {/* <a
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://triple3t.notion.site/1-14cc52e157ae80618170e928ba76de74"
@@ -111,39 +110,101 @@ function App() {
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
               </a>
-              <GoogleSyncChangedNotice />
+              <GoogleSyncChangedNotice /> */}
             </div>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-16">
-              <MainMenuCardSwitchable
-                title={t("ui.board.title")}
-                description={t("ui.board.description")}
-                subDescription={t("ui.board.subDescription")}
-                icon="/icons/Item_Crayon4.png"
-                to="/board"
-                secondaryTitle={t("ui.board.pboardTitle")}
-                secondaryDescription={t("ui.board.pboardDescription")}
-                secondarySubDescription={t("ui.board.pboardSubDescription")}
-                secondaryIcon="/icons/Item_Crayon3.png"
-                secondaryTo="/pboard"
+              <MainMenuCard
+                title={t("ui.index.buttonGroup.note.title")}
+                description={t("ui.index.buttonGroup.note.description")}
+                subMenus={[
+                  {
+                    icon: "/icons/Item_Crayon4.png",
+                    title: t("ui.board.title"),
+                    to: "/board",
+                  },
+                  {
+                    icon: "/itemslot/Tab_Tree.png",
+                    title: t("ui.board.pboardTitle"),
+                    to: "/pboard",
+                    greenIcon: true,
+                  },
+                  {
+                    icon: "/growth/CommonLevelUpPopupIcon.png",
+                    title: t("ui.equiprank.title"),
+                    to: "/eqrank",
+                  },
+                  {
+                    icon: "/mainlobby/HousingButton.png",
+                    title: t("ui.lab.title"),
+                    to: "/lab",
+                  },
+                ]}
               />
               <MainMenuCard
-                title={t("ui.equiprank.title")}
-                description={t("ui.equiprank.description")}
-                subDescription={t("ui.equiprank.subDescription")}
-                icon="/itemslot/Tab_Equip_Default.png"
-                to="/eqrank"
-                greenIcon
+                title={t("ui.index.buttonGroup.trickcalpedia.title")}
+                description={t(
+                  "ui.index.buttonGroup.trickcalpedia.description"
+                )}
+                subMenus={[
+                  {
+                    icon: "/itemslot/Tab_Detail.png",
+                    title: t("ui.personal.title"),
+                    to: "/personal",
+                    greenIcon: true,
+                  },
+                  {
+                    icon: "/itemslot/Tab_Equip_Default.png",
+                    title: t("ui.equipviewer.title"),
+                    to: "/equipviewer",
+                    greenIcon: true,
+                  },
+                  {
+                    icon: "/icons/CurrencyIcon_0011.png",
+                    title: t("ui.normaldrop.title"),
+                    to: "/normaldrop",
+                  },
+                ]}
               />
               <MainMenuCard
-                title={t("ui.lab.title")}
-                description={t("ui.lab.description")}
-                subDescription={t("ui.lab.subDescription")}
-                icon="/mainlobby/HousingButton.png"
-                to="/lab"
+                title={t("ui.index.buttonGroup.search.title")}
+                description={t("ui.index.buttonGroup.search.description")}
+                subMenus={[
+                  {
+                    icon: "/myhomeicons/MyHome_Button_004.png",
+                    title: t("ui.tasksearch.title"),
+                    to: "/tasksearch",
+                  },
+                  {
+                    icon: "/icons/Common_Node_Special.png",
+                    title: t("ui.boardsearch.title"),
+                    to: "/boardsearch",
+                  },
+                  {
+                    icon: "/foods/MyHomeRestaurant_EatingInviteIcon.png",
+                    title: t("ui.restaurant.title"),
+                    to: "/restaurant",
+                  },
+                ]}
               />
-              <UtilitySetCard />
+              <MainMenuCard
+                title={t("ui.index.buttonGroup.calculator.title")}
+                description={t("ui.index.buttonGroup.calculator.description")}
+                subMenus={[
+                  {
+                    icon: "/icons/CurrencyIcon_0041.png",
+                    title: t("ui.goodscalc.title"),
+                    to: "/goodscalc",
+                  },
+                  {
+                    icon: "/common/Icon_Pow_1.png",
+                    title: t("ui.percentCheck.title"),
+                    to: "/percentcheck",
+                  },
+                ]}
+              />
             </div>
           </section>
+          <UtilitySetCard />
         </main>
         <footer className="flex flex-col sm:flex-row items-center justify-center py-4 bg-gray-500 shadow-md dark:bg-gray-800 fixed bottom-0 left-0 right-0 gap-1">
           <p className="text-[0.625rem] text-white dark:text-gray-400">
