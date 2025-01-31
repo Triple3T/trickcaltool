@@ -135,8 +135,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           aria-expanded={open}
           className="w-60 justify-between font-onemobile"
         >
-          {/* {v ? v : t("ui.restaurant.selectFood")} */}
-          {"아이템 선택..."}
+          {t("ui.normaldrop.selectItem")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -150,12 +149,10 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           }
         >
           <CommandInput
-            // placeholder={t("ui.restaurant.searchFood")}
-            placeholder={"아이템 검색..."}
+            placeholder={t("ui.normaldrop.searchItem")}
             className="h-9"
           />
-          {/* <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty> */}
-          <CommandEmpty>{"아이템을 찾을 수 없습니다."}</CommandEmpty>
+          <CommandEmpty>{t("ui.normaldrop.itemNotFound")}</CommandEmpty>
           <ScrollArea className="max-h-[70vh] [&_[data-radix-scroll-area-viewport]]:max-h-[70vh]">
             <CommandList>
               <CommandGroup>
@@ -251,7 +248,7 @@ const NormalDrop = () => {
     return (
       <div className="font-onemobile flex flex-col mt-16 justify-center items-center">
         <Loading />
-        <div className="text-xl m-4">드랍률 정보 불러오는 중...</div>
+        <div className="text-xl m-4">{t("ui.normaldrop.loadingDropData")}</div>
       </div>
     );
   }
@@ -259,9 +256,17 @@ const NormalDrop = () => {
     return (
       <div className="font-onemobile flex flex-col mt-16 justify-center items-center">
         <div className="text-2xl m-4">
-          드랍률 정보를 불러오는 도중 오류가 발생했습니다.
+          {t("ui.normaldrop.loadingDropDataError")}
         </div>
-        <Button onClick={fetchDrop}>다시 시도</Button>
+        <Button
+          onClick={() => {
+            setProbs({});
+            setErrorFlag(false);
+          }}
+        >
+          {t("ui.normaldrop.showLineupContinue")}
+        </Button>
+        <Button onClick={fetchDrop}>{t("ui.normaldrop.retryLoad")}</Button>
       </div>
     );
   }
@@ -270,7 +275,7 @@ const NormalDrop = () => {
       <Card className="p-4 object-cover max-w-xl mt-0 mb-4 gap-2 mx-auto font-onemobile">
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
-            <AccordionTrigger>설정</AccordionTrigger>
+            <AccordionTrigger>{t("ui.normaldrop.setting")}</AccordionTrigger>
             <AccordionContent className="text-base">
               <div className="flex flex-col gap-1">
                 <EquipCombobox
@@ -334,25 +339,29 @@ const NormalDrop = () => {
                     <div className="text-left">
                       <div>{t(`stage.normal.${world}.${stageNum}`)}</div>
                       <div className="text-xs opacity-70">
-                        권장 전투력{" "}
-                        {stageData.n[world][
-                          Number(stageNum) - 1
-                        ].toLocaleString()}
+                        {t("ui.normaldrop.recommendPower", {
+                          0: stageData.n[world][
+                            Number(stageNum) - 1
+                          ].toLocaleString(),
+                        })}
                       </div>
                     </div>
                   </div>
                   {equips.length > 0 && (
                     <div className="opacity-80 text-left text-sm mt-1">
-                      {drops.filter((d) => equips.includes(d)).length}개 일치
+                      {t("ui.normaldrop.hitCount", {
+                        0: drops.filter((d) => equips.includes(d)).length,
+                      })}
                       <Dot className="inline-block" />
-                      기댓값 {(expectation / 100).toFixed(2)}
+                      {t("ui.normaldrop.hitCount", {
+                        0: (expectation / 100).toFixed(2),
+                      })}
                     </div>
                   )}
 
                   <div className="flex flex-row gap-2 mt-1">
                     {drops.map((drop) => {
                       const [equipType, equipPos, equipNum] = drop.split(".");
-                      // const equipLocKey = idToLocKey(drop);
                       const fileName = `/equips/Equip_${
                         { e: "", p: "Piece_", r: "Recipe_" }[equipType]
                       }Icon_${equipPos.charAt(0).toUpperCase()}${equipPos.slice(
@@ -380,12 +389,7 @@ const NormalDrop = () => {
                     })}
                   </div>
                   <div className="text-left text-xs mt-1">
-                    신뢰도{" "}
-                    {
-                      ["데이터 없음", "낮음", "중간", "높음", "매우 높음"][
-                        probs[stage]?.r ?? 0
-                      ]
-                    }
+                  {t(`ui.normaldrop.reliability.${probs[stage]?.r ?? 0}`)}
                     <div
                       className={cn(
                         "ml-2 h-2.5 w-2.5 inline-block rounded-full align-middle",
