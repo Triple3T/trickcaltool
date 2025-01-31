@@ -2,7 +2,6 @@ import { use, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "./contexts/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import PercentChecker from "@/components/checker/percent-checker";
 import BonusChecker from "@/components/checker/bonus-checker";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
 import {
@@ -73,18 +72,12 @@ const Checker = () => {
     return null;
   return (
     <>
-      <Tabs className="font-onemobile w-full mt-4" defaultValue="percent">
+      <Tabs className="font-onemobile w-full mt-4" defaultValue="bonus">
         <TabsList className="flex mb-4">
-          <TabsTrigger className="flex-1" value="percent">
-            {t("ui.check.percent.index")}
-          </TabsTrigger>
           <TabsTrigger className="flex-1" value="bonus">
             {t("ui.check.bonus.index")}
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="percent">
-          <PercentChecker boardStat={boardStat} />
-        </TabsContent>
         <TabsContent value="bonus">
           <BonusChecker
             boardStat={boardStat}

@@ -1,6 +1,7 @@
-import { Fragment, useReducer, useState } from "react";
+import { Fragment, use, useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, Check, Dot, SquareSlash, XOctagon } from "lucide-react";
+import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -75,16 +76,16 @@ const ResultAlert = ({
           className="w-4 h-4 inline-block align-middle"
           strokeWidth={3}
         />
-        <AlertTitle>{t("ui.check.percent.resultIgnoredTitle")}</AlertTitle>
+        <AlertTitle>{t("ui.percentCheck.resultIgnoredTitle")}</AlertTitle>
         <AlertDescription className="break-keep">
-          {t("ui.check.percent.resultIgnoredDescription")}
+          {t("ui.percentCheck.resultIgnoredDescription")}
         </AlertDescription>
         <div className="text-xs">
-          {t("ui.check.percent.resultDisplayOffStat", {
+          {t("ui.percentCheck.resultDisplayOffStat", {
             0: off.toLocaleString(),
           })}
           <Dot className="w-4 h-4 inline-block align-middle" strokeWidth={3} />
-          {t("ui.check.percent.resultDisplayOnStat", {
+          {t("ui.percentCheck.resultDisplayOnStat", {
             0: on.toLocaleString(),
           })}
         </div>
@@ -98,16 +99,16 @@ const ResultAlert = ({
         className="text-left bg-green-100 dark:bg-green-800"
       >
         <Check className="w-4 h-4 inline-block align-middle" strokeWidth={3} />
-        <AlertTitle>{t("ui.check.percent.resultPassTitle")}</AlertTitle>
+        <AlertTitle>{t("ui.percentCheck.resultPassTitle")}</AlertTitle>
         <AlertDescription className="break-keep">
-          {t("ui.check.percent.resultPassDescription")}
+          {t("ui.percentCheck.resultPassDescription")}
         </AlertDescription>
         <div className="text-xs">
-          {t("ui.check.percent.resultDisplayResultPercent", {
+          {t("ui.percentCheck.resultDisplayResultPercent", {
             0: result.toLocaleString(),
           })}
           <Dot className="w-4 h-4 inline-block align-middle" strokeWidth={3} />
-          {t("ui.check.percent.resultDisplayActualPercent", {
+          {t("ui.percentCheck.resultDisplayActualPercent", {
             0: actual.toLocaleString(),
           })}
         </div>
@@ -124,17 +125,17 @@ const ResultAlert = ({
           className="w-4 h-4 inline-block align-middle"
           strokeWidth={3}
         />
-        <AlertTitle>{t("ui.check.percent.resultWarnTitle")}</AlertTitle>
+        <AlertTitle>{t("ui.percentCheck.resultWarnTitle")}</AlertTitle>
         <AlertDescription className="break-keep">
-          <div>{t("ui.check.percent.resultWarnDescription1")}</div>
-          <div>{t("ui.check.percent.resultWarnDescription2")}</div>
+          <div>{t("ui.percentCheck.resultWarnDescription1")}</div>
+          <div>{t("ui.percentCheck.resultWarnDescription2")}</div>
         </AlertDescription>
         <div className="text-xs">
-          {t("ui.check.percent.resultDisplayResultPercent", {
+          {t("ui.percentCheck.resultDisplayResultPercent", {
             0: result.toLocaleString(),
           })}
           <Dot className="w-4 h-4 inline-block align-middle" strokeWidth={3} />
-          {t("ui.check.percent.resultDisplayActualPercent", {
+          {t("ui.percentCheck.resultDisplayActualPercent", {
             0: actual.toLocaleString(),
           })}
         </div>
@@ -144,17 +145,17 @@ const ResultAlert = ({
   return (
     <Alert variant="default" className="text-left bg-red-100 dark:bg-red-800">
       <XOctagon className="w-4 h-4 inline-block align-middle" strokeWidth={3} />
-      <AlertTitle>{t("ui.check.percent.resultFailTitle")}</AlertTitle>
+      <AlertTitle>{t("ui.percentCheck.resultFailTitle")}</AlertTitle>
       <AlertDescription className="break-keep">
-        <div>{t("ui.check.percent.resultFailDescription1")}</div>
-        <div>{t("ui.check.percent.resultFailDescription2")}</div>
+        <div>{t("ui.percentCheck.resultFailDescription1")}</div>
+        <div>{t("ui.percentCheck.resultFailDescription2")}</div>
       </AlertDescription>
       <div className="text-xs">
-        {t("ui.check.percent.resultDisplayResultPercent", {
+        {t("ui.percentCheck.resultDisplayResultPercent", {
           0: result.toLocaleString(),
         })}
         <Dot className="w-4 h-4 inline-block align-middle" strokeWidth={3} />
-        {t("ui.check.percent.resultDisplayActualPercent", {
+        {t("ui.percentCheck.resultDisplayActualPercent", {
           0: actual.toLocaleString(),
         })}
       </div>
@@ -192,21 +193,27 @@ const statReducer = (
 };
 
 const cardCommonStyle = "p-2 bg-[#f5fde5] dark:bg-[#315c15]/75 w-full max-w-md";
-const PercentChecker = ({ boardStat }: IPercentStatProps) => {
+const PercentChecker = () => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<"off" | "on" | "result">("off");
   const [lovePercent, setLovePercent] = useState(8);
   const [stats, dispatchStats] = useReducer(statReducer, { off: {}, on: {} });
+  const [boardStat, setBoardStat] = useState<IPercentStatProps["boardStat"]>();
+  const { userDataDispatch } = use(AuthContext);
+  useEffect(
+    () => setBoardStat(userDataDispatch?.getStatPercents()),
+    [userDataDispatch]
+  );
+  if (!boardStat) return null;
   // const setStat = useCallback((key: keyof IStatCollectionProps, value: number) => {}, []);
 
   return (
     <div
-      className={cn(
-        "flex flex-col items-center gap-2 w-max max-w-full mx-auto"
-      )}
+      className="font-onemobile flex flex-col items-center gap-2 w-max max-w-full mx-auto mt-4"
+      
     >
       <div className="text-sm opacity-75 mb-2 break-keep">
-        {t("ui.check.percent.description")}
+        {t("ui.percentCheck.description")}
       </div>
       <ToggleGroup
         className="w-max"
@@ -216,13 +223,13 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
         size="sm"
       >
         <ToggleGroupItem value="15">
-          {t("ui.check.percent.startStar1")}
+          {t("ui.percentCheck.startStar1")}
         </ToggleGroupItem>
         <ToggleGroupItem value="10">
-          {t("ui.check.percent.startStar2")}
+          {t("ui.percentCheck.startStar2")}
         </ToggleGroupItem>
         <ToggleGroupItem value="8">
-          {t("ui.check.percent.startStar3")}
+          {t("ui.percentCheck.startStar3")}
         </ToggleGroupItem>
       </ToggleGroup>
       <ToggleGroup
@@ -236,17 +243,17 @@ const PercentChecker = ({ boardStat }: IPercentStatProps) => {
             src="/icons/LoveHeroOff.png"
             className="w-5 h-5 inline-block align-middle mr-1.5"
           />
-          {t("ui.check.percent.loveOff")}
+          {t("ui.percentCheck.loveOff")}
         </ToggleGroupItem>
         <ToggleGroupItem value="on">
           <img
             src="/icons/LoveHeroOn.png"
             className="w-5 h-5 inline-block align-middle mr-1.5"
           />
-          {t("ui.check.percent.loveOn")}
+          {t("ui.percentCheck.loveOn")}
         </ToggleGroupItem>
         <ToggleGroupItem value="result">
-          {t("ui.check.percent.result")}
+          {t("ui.percentCheck.result")}
         </ToggleGroupItem>
       </ToggleGroup>
       {tab === "result" ? (

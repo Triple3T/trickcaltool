@@ -5842,39 +5842,39 @@ i18n
               clearCount: "{{0}}회",
               itemCount: "{{0}}개",
             },
+            percentCheck: {
+              title: "전체 % 스탯 검산",
+              description:
+                "관심 사도 지정 및 해제 시의 스탯 차이를 이용해 검산합니다.",
+              startStar1: "태생 1성",
+              startStar2: "태생 2성",
+              startStar3: "태생 3성",
+              loveOff: "관심 해제",
+              loveOn: "관심 지정",
+              result: "결과",
+              resultIgnoredTitle: "계산 불가",
+              resultIgnoredDescription:
+                "값을 올바르게 입력했는지 다시 확인해 보세요.",
+              resultPassTitle: "결과 일치",
+              resultPassDescription:
+                "계산 결과가 트릭컬 노트에 입력된 값과 일치합니다.",
+              resultWarnTitle: "결과 불확실",
+              resultWarnDescription1:
+                "계산 결과가 트릭컬 노트에 입력된 값과 약간 차이가 있습니다.",
+              resultWarnDescription2: "입력한 값을 다시 확인해 보세요.",
+              resultFailTitle: "결과 불일치",
+              resultFailDescription1:
+                "계산 결과가 트릭컬 노트에 입력된 값과 다릅니다.",
+              resultFailDescription2:
+                "입력한 값 또는 트릭컬 노트에 작성한 데이터를 다시 확인해 보세요.",
+              resultDisplayOffStat: "관심 사도 해제: {{0}}",
+              resultDisplayOnStat: "관심 사도 지정: {{0}}",
+              resultDisplayResultPercent: "계산 결과: {{0}}%",
+              resultDisplayActualPercent: "트릭컬 노트: {{0}}%",
+            },
             check: {
               title: "스탯 체크",
               description: "전체 적용 스탯이 정확히 입력되었는지 확인합니다.",
-              percent: {
-                index: "전체 % 스탯",
-                description:
-                  "관심 사도 지정 및 해제 시의 스탯 차이를 이용해 검산합니다.",
-                startStar1: "태생 1성",
-                startStar2: "태생 2성",
-                startStar3: "태생 3성",
-                loveOff: "관심 해제",
-                loveOn: "관심 지정",
-                result: "결과",
-                resultIgnoredTitle: "계산 불가",
-                resultIgnoredDescription:
-                  "값을 올바르게 입력했는지 다시 확인해 보세요.",
-                resultPassTitle: "결과 일치",
-                resultPassDescription:
-                  "계산 결과가 트릭컬 노트에 입력된 값과 일치합니다.",
-                resultWarnTitle: "결과 불확실",
-                resultWarnDescription1:
-                  "계산 결과가 트릭컬 노트에 입력된 값과 약간 차이가 있습니다.",
-                resultWarnDescription2: "입력한 값을 다시 확인해 보세요.",
-                resultFailTitle: "결과 불일치",
-                resultFailDescription1:
-                  "계산 결과가 트릭컬 노트에 입력된 값과 다릅니다.",
-                resultFailDescription2:
-                  "입력한 값 또는 트릭컬 노트에 작성한 데이터를 다시 확인해 보세요.",
-                resultDisplayOffStat: "관심 사도 해제: {{0}}",
-                resultDisplayOnStat: "관심 사도 지정: {{0}}",
-                resultDisplayResultPercent: "계산 결과: {{0}}%",
-                resultDisplayActualPercent: "트릭컬 노트: {{0}}%",
-              },
               overall: {
                 index: "모든 전체 스탯",
                 description: "100레벨 이하 사도의 스탯을 입력해 확인합니다.",
