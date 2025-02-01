@@ -1,6 +1,6 @@
 import { useNavigate, matchPath } from "react-router-dom";
 import { t } from "i18next";
-import { Menu } from "lucide-react";
+import { ExternalLink, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,7 +20,7 @@ const MenuButton = () => {
           <span className="sr-only">Menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" className="font-onemobile">
         <DropdownMenuItem
           onClick={() => navigate("/board")}
           disabled={matchPath(location.pathname, "/board") ? true : false}
@@ -36,8 +36,8 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/pboard") ? true : false}
         >
           <img
-            src="/icons/Item_Crayon3.png"
-            className="w-4 h-4 inline-block mr-1"
+            src="/itemslot/Tab_Tree.png"
+            className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
           />
           {t("ui.board.pboardTitle")}
         </DropdownMenuItem>
@@ -46,7 +46,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/eqrank") ? true : false}
         >
           <img
-            src="/itemslot/Tab_Equip_Default.png"
+            src="/growth/CommonLevelUpPopupIcon.png"
             className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
           />
           {t("ui.equiprank.title")}
@@ -60,6 +60,37 @@ const MenuButton = () => {
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.lab.title")}
+        </DropdownMenuItem>
+        <Separator className="my-1" />
+        <DropdownMenuItem
+          onClick={() => navigate("/personal")}
+          disabled={matchPath(location.pathname, "/personal") ? true : false}
+        >
+          <img
+            src="/itemslot/Tab_Detail.png"
+            className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
+          />
+          {t("ui.personal.title")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/equipviewer")}
+          disabled={matchPath(location.pathname, "/equipviewer") ? true : false}
+        >
+          <img
+            src="/itemslot/Tab_Equip_Default.png"
+            className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
+          />
+          {t("ui.equipviewer.title")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/normaldrop")}
+          disabled={matchPath(location.pathname, "/normaldrop") ? true : false}
+        >
+          <img
+            src="/icons/CurrencyIcon_0011.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.normaldrop.title")}
         </DropdownMenuItem>
         <Separator className="my-1" />
         <DropdownMenuItem
@@ -92,6 +123,7 @@ const MenuButton = () => {
           />
           {t("ui.restaurant.title")}
         </DropdownMenuItem>
+        <Separator className="my-1" />
         <DropdownMenuItem
           onClick={() => navigate("/goodscalc")}
           disabled={matchPath(location.pathname, "/goodscalc") ? true : false}
@@ -102,36 +134,25 @@ const MenuButton = () => {
           />
           {t("ui.goodscalc.title")}
         </DropdownMenuItem>
-        {/* <Separator className="my-1" /> */}
-        {/* <DropdownMenuItem
-          onClick={() => navigate("/eventcalc")}
-          disabled={matchPath(location.pathname, "/eventcalc") ? true : false}
+        <DropdownMenuItem
+          onClick={() => navigate("/percentcheck")}
+          disabled={matchPath(location.pathname, "/percentcheck") ? true : false}
         >
           <img
-            src="/mainlobby/HousingButton.png"
+            src="/common/Icon_Pow_1.png"
             className="w-4 h-4 inline-block mr-1"
           />
-          {t("ui.index.testMark")}
-          {t("ui.eventcalc.title")}
-        </DropdownMenuItem> */}
-        {/* <DropdownMenuItem
-          onClick={() => navigate("/check")}
-          disabled={matchPath(location.pathname, "/check") ? true : false}
-        >
-          <img
-            src="/mainlobby/HousingButton.png"
-            className="w-4 h-4 inline-block mr-1"
-          />
-          {t("ui.index.testMark")}
-          {t("ui.check.title")}
-        </DropdownMenuItem> */}
+          {t("ui.percentCheck.title")}
+        </DropdownMenuItem>
         <Separator className="my-1" />
         <a
           href="https://triple3t.notion.site/155c52e157ae80d49106d63711dfd84c"
           target="_blank"
           rel="noreferrer"
         >
-          <DropdownMenuItem>{t("ui.index.textHelp")}</DropdownMenuItem>
+          <DropdownMenuItem>{t("ui.index.textHelp")}
+            <ExternalLink className="w-4 h-4 inline-block ml-1" />
+          </DropdownMenuItem>
         </a>
         <DropdownMenuItem
           onClick={() => navigate("/setting")}
