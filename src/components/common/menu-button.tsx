@@ -47,7 +47,7 @@ const MenuButton = () => {
         >
           <img
             src="/growth/CommonLevelUpPopupIcon.png"
-            className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
+            className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.equiprank.title")}
         </DropdownMenuItem>
