@@ -5817,6 +5817,7 @@ i18n
               gotoList: "목록으로 돌아가기",
               starCount: "{{0}}성",
               noCloneFactoryHistory: "클론 팩토리에 편성된 적이 없어요",
+              noAside: "아직 사념이 깊지 않은 것 같다",
               tab: {
                 board: "보드",
                 equip: "장비",
