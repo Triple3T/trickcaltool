@@ -1104,7 +1104,7 @@ const Personal = () => {
               </Card>
             </div>
           ) : (
-            <div>아직 사념이 깊지 않은 것 같다</div>
+            <div>{t("ui.personal.noAside")}</div>
           )}
         </TabsContent>
       </Tabs>
