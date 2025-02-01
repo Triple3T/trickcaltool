@@ -225,7 +225,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
   {
     path: "/setting",
     element: (
-      <Layout title="ui.index.setting">
+      <Layout title="ui.index.textSetting">
         <Setting />
       </Layout>
     ),
@@ -235,7 +235,7 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
     path: "/privacy",
     // element: <Privacy />,
     element: (
-      <Layout title="ui.index.privacyPolicy">
+      <Layout title="ui.index.textPrivacy">
         <Suspense fallback={<Loading />}>
           <Privacy />
         </Suspense>

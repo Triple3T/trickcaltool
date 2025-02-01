@@ -131,13 +131,13 @@ const MenuButton = () => {
           target="_blank"
           rel="noreferrer"
         >
-          <DropdownMenuItem>{t("ui.index.help")}</DropdownMenuItem>
+          <DropdownMenuItem>{t("ui.index.textHelp")}</DropdownMenuItem>
         </a>
         <DropdownMenuItem
           onClick={() => navigate("/setting")}
           disabled={matchPath(location.pathname, "/setting") ? true : false}
         >
-          {t("ui.index.setting")}
+          {t("ui.index.textSetting")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

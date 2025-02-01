@@ -5518,9 +5518,6 @@ i18n
               repairedAlert:
                 "데이터 변경이 감지되었습니다.\n데이터가 올바르게 복구되었는지 다시 확인해 주세요.",
               testMark: "[테스트]",
-              privacyPolicy: "개인정보처리방침",
-              help: "도움말",
-              setting: "설정",
               gameCopyright: "Trickcal copyrighted by EPIDGames",
               sitePoweredBy: "Trickcal Note powered by Triple",
               textPrivacy: "개인정보처리방침",
