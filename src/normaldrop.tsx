@@ -354,7 +354,7 @@ const NormalDrop = () => {
                         0: drops.filter((d) => equips.includes(d)).length,
                       })}
                       <Dot className="inline-block" />
-                      {t("ui.normaldrop.hitCount", {
+                      {t("ui.normaldrop.expectValue", {
                         0: (expectation / 100).toFixed(2),
                       })}
                     </div>
