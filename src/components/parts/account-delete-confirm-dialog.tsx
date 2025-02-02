@@ -1,7 +1,6 @@
 import { use, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AuthContext } from "@/contexts/AuthContext";
-import { UserX } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -34,8 +33,7 @@ export function AccountDeleteConfirmDialog() {
           if (response.ok) {
             toast.success(t("ui.common.accountDeleteSuccess"));
             setTimeout(window.location.reload, 3000);
-          }
-          else
+          } else
             toast.error(
               t("ui.common.accountDeleteFailed", response.statusText)
             );
@@ -48,11 +46,11 @@ export function AccountDeleteConfirmDialog() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          variant="link"
-          className="w-max font-onemobile text-red-600 dark:text-red-400"
+          variant="outline"
+          size="sm"
+          className="w-full font-onemobile text-red-600 dark:text-red-400"
           disabled={started}
         >
-          <UserX className="mr-2 h-4 w-4" />
           {t("ui.common.accountDelete")}
         </Button>
       </AlertDialogTrigger>
@@ -72,7 +70,7 @@ export function AccountDeleteConfirmDialog() {
           <Input value={value} onChange={(e) => setValue(e.target.value)} />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={started}>
+          <AlertDialogCancel onClick={() => setValue("")} disabled={started}>
             {t("ui.common.no")}
           </AlertDialogCancel>
           <AlertDialogAction

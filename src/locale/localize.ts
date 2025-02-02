@@ -6067,7 +6067,7 @@ i18n
               logoutProcessing: "로그아웃 요청 중...",
               noRecipe: "제작 불가",
               count: "{{0}}개",
-              accountDelete: "계정 삭제",
+              accountDelete: "Google 연동 계정 삭제",
               accountDeleteTitle: "정말 삭제할까요?",
               accountDeleteDescription:
                 "계정에 연결된 서버의 모든 정보가 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",

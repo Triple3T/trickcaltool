@@ -205,16 +205,13 @@ const Setting = () => {
                 googleLinked ? (
                   <div className="p-2">
                     <div>{t("ui.common.authAlreadyCompleted")}</div>
-                    <div className="text-sm flex-row flex-wrap justify-end">
+                    <div className="text-sm text-right">
                       <a href="/clear">
                         <Button variant="link">
                           <LogOut className="mr-2 h-4 w-4" />
                           {t("ui.common.logout")}
                         </Button>
                       </a>
-                    </div>
-                    <div className="text-right text-xs">
-                      <AccountDeleteConfirmDialog />
                     </div>
                   </div>
                 ) : (
@@ -498,6 +495,7 @@ const Setting = () => {
             <SubtitleBar>{t("ui.index.versionCheck.dangerZone")}</SubtitleBar>
             <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
               <HardResetWithConfirm />
+              {isReady && googleLinked && <AccountDeleteConfirmDialog />}
             </div>
           </div>
         </div>
