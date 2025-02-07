@@ -6131,7 +6131,7 @@ i18n
               tokenRecoveryCodeDescription:
                 "아래 복구 코드를 이용해 계정 분실 시 도움을 받을 수 있습니다.",
               syncDescription:
-                "데이터를 입력할 때부터 서버에 저장되기 시작합니다.",
+                "데이터를 입력할 때부터 서버에 저장되기 시작합니다. 혹시 기존 연동을 사용하고 계셨다면, 설정 페이지에서 이전 드라이브 연동 백업 파일 불러오기 버튼을 눌러 기존 파일을 받을 수 있습니다.",
               tokenSuccess: "성공!",
               tokenSuccessDescription: "메인 화면으로 보내 드릴게요.",
               tokenProcessing: "토큰 받아오는 중...",
