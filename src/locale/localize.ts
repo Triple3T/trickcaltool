@@ -6093,6 +6093,7 @@ i18n
               backUpAndRestore: "백업 및 복원",
               backUp: "파일로 백업",
               restore: "파일에서 복원",
+              loadLegacyDesc: "기존에 계정 연동을 사용하고 있으셨나요?",
               loadLegacy: "이전 드라이브 연동 백업 파일 불러오기",
               retryLegacyMigration: "이전 데이터 변환 재시도",
               retryLegacyMigrationDesc:

@@ -231,7 +231,8 @@ const Setting = () => {
               ) : (
                 <div className="p-2">{t("ui.common.authLoading")}</div>
               )}
-              <div className="p-2 text-xs">
+              <div className="p-2">{t("ui.common.loadLegacyDesc")}</div>
+              <Button className="pb-2">
                 <a
                   href={googleAccessUrlLegacy}
                   target="_blank"
@@ -239,7 +240,8 @@ const Setting = () => {
                 >
                   {t("ui.common.loadLegacy")}
                 </a>
-              </div>
+                <ExternalLink className="w-3 h-3 ml-0.5 inline" />
+              </Button>
             </div>
           )}
           {isReady && googleLinked && (
