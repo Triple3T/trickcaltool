@@ -145,6 +145,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
         });
         if (response.ok) {
           const fileContent = await response.text();
+          if (fileContent.length < 1) return false;
           const serverFileTimestamp = b64IntoNumber(fileContent.slice(2, 10));
           const currentTimestamp = userData?.timestamp ?? 0;
           if (serverFileTimestamp > currentTimestamp || force) {
@@ -479,7 +480,7 @@ const AuthProvider = ({ children }: { children: Children }) => {
           });
         }
         userDataDispatch.clean();
-      }, 3000);
+      }, 1000);
       return () => {
         if (saveTimeout.current) {
           clearTimeout(saveTimeout.current);
