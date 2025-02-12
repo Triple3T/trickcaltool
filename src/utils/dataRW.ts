@@ -377,9 +377,17 @@ export const readIntoMemory = async (
     }
   });
   const memoryData = {
-    board: { c: data.board.c, v: data.board.v, i: data.board.i },
+    board: {
+      c: data.board.c,
+      v: data.board.v.length === 0 ? [0, 2, 3, 4, 5, 6, 7, 9] : data.board.v,
+      i: data.board.i,
+    },
     pboard: { d: data.pboard.d },
-    eqrank: { s: [1, MAX_RANK], v: data.eqrank.v, f: data.eqrank.f },
+    eqrank: {
+      s: [1, MAX_RANK],
+      v: data.eqrank.v.length === 0 ? [0, 1, 9] : data.eqrank.v,
+      f: data.eqrank.f,
+    },
     unowned: {
       o: data.unowned.o,
       u: [...data.unowned.u, ...noDataChara],

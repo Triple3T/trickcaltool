@@ -124,6 +124,7 @@ interface BoardDataChangeVisibleBoardAction {
 const boardDataChangeVisibleBoardActionHandler: Handler<
   BoardDataChangeVisibleBoardAction
 > = (state, payload) => {
+  if (payload.length === 0) return state;
   return {
     ...state,
     dirty: ((state.dirty + 1) % 32768) + 65536,
@@ -244,6 +245,7 @@ interface RankDataChangeTargetStatAction {
 const rankDataChangeTargetStatActionHandler: Handler<
   RankDataChangeTargetStatAction
 > = (state, payload) => {
+  if (payload.length === 0) return state;
   return {
     ...state,
     dirty: ((state.dirty + 1) % 32768) + 65536,
