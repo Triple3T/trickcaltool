@@ -68,7 +68,7 @@ const EquipRank = () => {
   const { t } = useTranslation();
   const { userData, userDataDispatch } = use(AuthContext);
   const [viewType, setViewType] = useState<ViewType>("rankView");
-  const [enableDialog, setEnableDialog] = useState(false);
+  const [enableDialog, setEnableDialog] = useState(true);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [withBoardStat, setWithBoardStat] = useState(false);
