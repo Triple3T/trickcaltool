@@ -461,6 +461,17 @@ const unownedDataAddOwnActionHandler: Handler<UnownedDataAddOwnAction> = (
   };
 };
 
+const tutorialCharacters = [
+  "Rohne",
+  "Mayo",
+  "Mago",
+  "Allet",
+  "Maison",
+  "Yumimi",
+  "Ifrit",
+];
+const isTutorialCharacter = (name: string) => tutorialCharacters.includes(name);
+
 interface UnownedDataRemoveOwnAction {
   type: "unownedRemoveOwn";
   payload: string;
@@ -469,6 +480,7 @@ const unownedDataRemoveOwnActionHandler: Handler<UnownedDataRemoveOwnAction> = (
   state,
   payload
 ) => {
+  if (isTutorialCharacter(payload)) return state;
   const charaInfo = state.charaInfo[payload];
   if (charaInfo.unowned) return state;
   const newUnowned = [...state.unowned.u, payload];
@@ -533,6 +545,7 @@ const unownedDataOwnNoneActionHandler: Handler<UnownedDataOwnNoneAction> = (
   const newCharaInfo = Object.fromEntries(
     Object.entries(state.charaInfo).map(([name, value]) => {
       if (value.unowned) return [name, value];
+      if (isTutorialCharacter(name)) return [name, value];
       return [
         name,
         {
@@ -547,7 +560,10 @@ const unownedDataOwnNoneActionHandler: Handler<UnownedDataOwnNoneAction> = (
     ...state,
     dirty: ((state.dirty + 1) % 32768) + 65536,
     charaInfo: newCharaInfo,
-    unowned: { o: [], u: Object.keys(newCharaInfo) },
+    unowned: {
+      o: tutorialCharacters,
+      u: Object.keys(newCharaInfo).map((c) => !isTutorialCharacter(c)),
+    },
     timeestamp: Date.now(),
   };
 };
@@ -565,8 +581,13 @@ const unownedDataImportActionHandler: Handler<UnownedDataImportAction> = (
 ) => {
   const o = [...state.unowned.o];
   const u = [...state.unowned.u];
+  tutorialCharacters.forEach((c) => {
+    if (!o.includes(c)) o.push(c);
+    if (u.includes(c)) u.splice(u.indexOf(c), 1);
+  })
   const newCharaInfo = Object.fromEntries(
     Object.entries(state.charaInfo).map(([name, value]) => {
+      if (isTutorialCharacter(name)) return [name, value];
       if (value.unowned && payload.o.includes(name)) {
         o.push(name);
         u.splice(u.indexOf(name), 1);
