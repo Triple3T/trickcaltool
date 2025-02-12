@@ -418,6 +418,29 @@ export const readIntoMemory = async (
     dirty: 0,
     timestamp,
   };
+  // tutorial charas - always owned
+  ["Rohne", "Mayo", "Mago", "Allet", "Maison", "Yumimi", "Ifrit"].forEach(
+    (c) => {
+      if (memoryData.unowned.u.includes(c)) {
+        memoryData.unowned.u.splice(memoryData.unowned.u.indexOf(c), 1);
+      }
+      if (!memoryData.unowned.o.includes(c)) {
+        memoryData.unowned.o.push(c);
+      }
+      if (memoryData.charaInfo[c].unowned) {
+        memoryData.charaInfo[c] = {
+          board: board.c[c].b.map((a) => a.map(() => 0)),
+          pboard: pboard.c[c].b.map((a) =>
+            Array(a.toString(10).length).fill(0)
+          ),
+          nthboard: 1,
+          eqrank: 1,
+          unowned: false,
+          memo: [0, ""],
+        };
+      }
+    }
+  );
   return memoryData;
 };
 export const firstReadIntoMemory = async (): Promise<
