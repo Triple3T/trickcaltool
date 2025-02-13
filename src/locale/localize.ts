@@ -89,6 +89,7 @@ i18n
             Sari: "사리",
             Selline: "셀리네",
             Shady: "셰이디",
+            Shasha: "샤샤",
             Sherum: "셰럼",
             Shoupan: "슈팡",
             Silphir: "실피르",
@@ -181,6 +182,7 @@ i18n
             Sari: "리액션 장인",
             Selline: "도발의 여왕",
             Shady: "못된 장난 전문",
+            Shasha: "왕국의 특별 소방 요정",
             Sherum: "마녀 사관",
             Shoupan: "익스트림 스피드스터",
             Silphir: "자존심이 밥 먹여준다",
@@ -380,6 +382,9 @@ i18n
             },
             Belita: {
               1: "지하의 마녀왕",
+            },
+            Shasha: {
+              1: "촉촉한 여름 축제",
             },
           },
           skill: {
@@ -2149,6 +2154,31 @@ i18n
                 coefficient: "물리 피해: *{{0}}*%",
               },
             },
+            Shasha: {
+              low: {
+                title: "텀블러 투척!",
+                description:
+                  "텀블러를 적에게 떨어뜨린다. 텀블러가 떨어진 위치에 물살을 남겨 적들에게 5회 범위 마법 피해를 입히고, 일반 공격 피해량을 감소시킨다. 효과 및 피해는 최대 3인에게 적용된다.",
+                coefficient:
+                  "물살 지속시간: *{{0}}*초\n초당 마법 피해: *{{1}}*%\n일반 공격 피해량 감소: *{{2}}*%\n일반 공격 피해량 감소 지속시간: *{{3}}*초",
+              },
+              high: {
+                title: "물대포 폭격!!",
+                description:
+                  "HP가 가장 높은 적에게 텀블러의 물줄기가 쏟아져 18회 마법 피해를 입히고 *넉백*시킨다. 스킬 시전 도중 대상을 두 번 변경할 수 있다. 대상을 변경할 경우 공격하지 않은 적을 우선 공격한다.",
+                coefficient: "총 마법 피해: *{{0}}*%",
+              },
+              normal: {
+                description: "물방울을 던져 적에게 마법 피해를 입힌다.",
+                coefficient: "마법 피해: *{{0}}*%",
+              },
+              advanced: {
+                description:
+                  "네 번째 공격마다 거대 물방울을 던져 적들에게 범위 마법 피해를 입힌다.",
+                coefficient:
+                  "마법 피해: *{{0}}*%",
+              },
+            },
             Sherum: {
               low: {
                 title: "위치 아카이브",
@@ -3479,6 +3509,28 @@ i18n
                 coefficient: "피해량 증가: *{{0}}*%",
               },
             },
+            Shasha: {
+              name: "물 면역 샤샤",
+              skill1: {
+                title: "우비요정 샤샤",
+                description:
+                  "착용자의 최대 HP, 마법 공격력, 치명타, 치명 피해가 증가한다.",
+                coefficient:
+                  "최대 HP 증가: *{{0}}*%\n마법 공격력 증가: *{{1}}*%\n치명타 증가: *{{2}}*%\n치명 피해 증가: *{{3}}*%",
+              },
+              skill2: {
+                title: "대용량 텀블러",
+                description:
+                  "공격 속도가 증가한다.\n강화 공격의 피해와 범위가 증가한다. 강화 공격 후, 자신의 SP를 회복한다.",
+                coefficient:
+                  "공격 속도 증가: *{{0}}*%\n마법 피해: *{{1}}*%\nSP 회복: *{{2}}*%",
+              },
+              skill3: {
+                title: "시켜줘 아군 명예소방관",
+                description: "중열 아군이 적에게 주는 피해량을 증가시킨다.",
+                coefficient: "피해량 증가: *{{0}}*%",
+              },
+            },
             Sherum: {
               name: "엘리아스 레코드",
               skill1: {
@@ -3827,6 +3879,7 @@ i18n
             Arbeit52: "이상한 티타임 가지기",
             Arbeit53: "길거리 공연하기",
             Arbeit54: "뜬구름 잡기",
+            Arbeit55: "정령 호수 청소하기",
             Rest1: "누워서 엘플리스 보기",
             Rest2: "산책하기",
             Rest3: "펫 쓰다듬기",
@@ -3889,6 +3942,7 @@ i18n
             48: "장난기",
             49: "리듬감",
             50: "하늘거림",
+            51: "청결함",
           },
           equip: {
             unknown: "(알 수 없는 장비)",
@@ -4985,6 +5039,7 @@ i18n
             CollectMadeHigh4: "보석 단추",
             CollectMadeHigh5: "줄자",
             CollectMadeHigh6: "포근 깃털",
+            CollectMadeHigh7: "고순도 플라스틱",
             CollectMadeLow1: "혼모노의 증표",
             CollectMadeLow2: "커미션 사용권",
             CollectMadeLow3: "동글동글 단추",
@@ -4993,6 +5048,7 @@ i18n
             CollectMadeLow6: "뾰족 바늘",
             CollectMadeLow7: "악보",
             CollectMadeLow8: "듬성 깃털",
+            CollectMadeLow9: "신선한 플라스틱",
             FoodMadeLow1: "밀가루",
             FoodMadeLow2: "달걀",
             FoodMadeLow3: "새고기",
@@ -5144,6 +5200,11 @@ i18n
             DollM6: "로네 루돌프 인형",
             DollM7: "한복 실피르 인형",
             DollM8: "매우큰절 코미 인형",
+            DollM9: "꿀잠 모모 인형",
+            DollM10: "초록 괴물 입은 시스트 인형",
+            DollM11: "파닥파닥 크레페 인형",
+            DollM12: "밀.감 중인 림 인형",
+            DollM13: "꿈에서 만나요 엘레나 인형",
             DollS1: "루포 미니 인형",
             DollS2: "베니 미니 인형",
             DollS3: "라쿤아치 미니 인형",
@@ -5152,6 +5213,9 @@ i18n
             DollS6: "호박 스피키 인형",
             DollS7: "영춘이 미니 인형",
             DollS8: "골디 복주머니 인형",
+            DollS9: "지켜보는 당근 인형",
+            DollS11: "에피콘 인형",
+            DollS12: "엘레리카노 인형",
             FigureL1: "고모구지 대형 피규어",
             FigureL2: "베니 대형 피규어",
             FigureL3: "셰이디 대형 피규어",
