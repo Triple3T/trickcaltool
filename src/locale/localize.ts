@@ -5870,6 +5870,7 @@ i18n
               reqLevel: "모험회 {{0}}레벨 이상",
               expValue: "생활 경험치 {{0}}",
               stressReduction: "스트레스 -{{0}}",
+              taskRequireLifeLevel: "생활 레벨 {{0}}레벨부터 {{1}}레벨 태스크가 출현합니다.",
             },
             restaurant: {
               title: "연회장 검색기",

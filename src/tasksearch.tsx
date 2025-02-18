@@ -585,6 +585,12 @@ const TaskSearch = () => {
             t("ui.tasksearch.needToSelect")}
         </div>
       </Card>
+      <div className="font-onemobile text-xs opacity-80 py-1">
+        {t("ui.tasksearch.taskRequireLifeLevel", {
+          0: [1, 4, 7, 10, 13][taskLevel],
+          1: taskLevel + 1,
+        })}
+      </div>
       {!selectedLifeskill && !selectedTask && !selectedMaterial && (
         <div className="font-onemobile flex flex-wrap gap-6 p-4 justify-center">
           {Object.keys(task.t).map((taskId) => {
