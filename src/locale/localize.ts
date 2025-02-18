@@ -5867,6 +5867,9 @@ i18n
                 "생활 스킬을 눌러 온/오프 전환이 가능합니다.\n기본 스킬은 항상 활성화됩니다.",
               skillMatchCount: "{{0}}개 스킬 일치",
               includeThisSkill: "이 스킬 포함",
+              reqLevel: "모험회 {{0}}레벨 이상",
+              expValue: "생활 경험치 {{0}}",
+              stressReduction: "스트레스 -{{0}}",
             },
             restaurant: {
               title: "연회장 검색기",
