@@ -5,6 +5,9 @@ export default task as {
       s: number[];
       m: string[];
       c?: { a: string[] } | { d: string[] };
+      e?: number[];
+      r: number[][][];
+      l: number;
       f?: number;
     };
   };

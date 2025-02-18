@@ -1,6 +1,6 @@
 import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Check, ChevronsUpDown, Loader2, Search } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 // import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
@@ -36,6 +36,7 @@ const CharaWithLifeskill = lazy(
 import ComboboxCharacterOnestarDisabled from "@/components/parts/combobox-character-onestar-disabled";
 import ItemSlot from "@/components/parts/item-slot";
 import LifeskillIcon from "@/components/parts/lifeskill-icon";
+import TaskCard from "@/components/parts/task-card";
 
 import chara from "@/data/chara";
 import lifeskill from "@/data/lifeskill";
@@ -269,6 +270,7 @@ const TaskSearch = () => {
   const [selectedTask, setSelectedTask] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [bannedIndex, setBannedIndex] = useState<number[]>([]);
+  const [taskLevel, setTaskLevel] = useState(0);
   const searchChara = useCallback((charaId: string) => {
     setSelectedChara(charaId);
     setSelectedLifeskill("");
@@ -427,72 +429,21 @@ const TaskSearch = () => {
           )}
           {selectedTask && (
             <div className="flex flex-col md:flex-row items-center justify-center md:justify-evenly p-4 gap-4">
-              <div className="w-64 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border">
-                <div className="pl-2 mb-1">
-                  <div className="pr-2 pb-2 pt-px bg-contain bg-no-repeat bg-center bg-task-title">
-                    <div className="text-xl">{t(`task.${selectedTask}`)}</div>
-                  </div>
-                </div>
-                <div className="w-full relative aspect-[254/176]">
-                  <img
-                    className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
-                    src={`/tasks/Img_${selectedTask}_Back.png`}
-                  />
-                  {task.t[selectedTask].f && (
-                    <img
-                      className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
-                      src={`/tasks/Img_${selectedTask}_Front.png`}
-                      style={{ width: `${task.t[selectedTask].f}%` }}
-                    />
-                  )}
-                  <div className="absolute bottom-0 left-0 flex items-end">
-                    <LifeskillIcon
-                      id={task.t[selectedTask].s[0]}
-                      active={!bannedIndex.includes(task.t[selectedTask].s[0])}
-                      additionalClassName="scale-125"
-                    />
-                    {task.t[selectedTask].s
-                      .slice(1)
-                      .map((lifeskillId, index) => {
-                        return (
-                          <LifeskillIcon
-                            id={lifeskillId}
-                            active={!bannedIndex.includes(lifeskillId)}
-                            size="small"
-                            key={index}
-                            additionalClassName="-mx-1"
-                          />
-                        );
-                      })}
-                  </div>
-                </div>
-                <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
-                  {task.t[selectedTask].m.map((materialId, index) => {
-                    if (materialId.startsWith("_scheduleBox")) {
-                      return (
-                        <ItemSlot
-                          key={index}
-                          rarityInfo={material.r[2]}
-                          item={`/icons/Schedule_Box${
-                            materialId.split(".")[1]
-                          }`}
-                          fullItemPath
-                          size={3.5}
-                        />
-                      );
-                    }
-                    const currrentMaterial = material.m[materialId];
-                    return (
-                      <ItemSlot
-                        key={index}
-                        rarityInfo={material.r[currrentMaterial.r]}
-                        item={materialId}
-                        size={3.5}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
+              <TaskCard
+                taskId={selectedTask}
+                frontImgWidthPercent={task.t[selectedTask].f}
+                skillIds={task.t[selectedTask].s}
+                activeSkillIds={task.t[selectedTask].s.filter(
+                  (s) => !bannedIndex.includes(s)
+                )}
+                levelRequired={task.t[selectedTask].l}
+                acquireExp={task.t[selectedTask].e}
+                rewardMaterials={task.t[selectedTask].m}
+                rewardAmount={task.t[selectedTask].r}
+                taskLevel={taskLevel}
+                setTaskLevel={setTaskLevel}
+                small
+              />
               <Accordion type="single" collapsible className="w-64">
                 {task.t[selectedTask].s.map((lifeskillId, index) => {
                   return (
@@ -654,90 +605,26 @@ const TaskSearch = () => {
               if ("d" in c && c.d.includes(selectedChara)) return null;
             }
             return (
-              <div
+              <TaskCard
                 key={taskId}
-                className="w-72 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border"
-              >
-                <div className="pl-2 mb-1">
-                  <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
-                    <div className="text-xl">{t(`task.${taskId}`)}</div>
-                  </div>
-                </div>
-                <div className="w-full relative aspect-[254/176]">
-                  <img
-                    className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
-                    src={`/tasks/Img_${taskId}_Back.png`}
-                  />
-                  {currentTask.f && (
-                    <img
-                      className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
-                      src={`/tasks/Img_${taskId}_Front.png`}
-                      style={{ width: `${currentTask.f}%` }}
-                    />
-                  )}
-                  <div className="absolute bottom-0 left-0 flex items-end">
-                    <LifeskillIcon
-                      id={currentTask.s[0]}
-                      active={(selectedChara
-                        ? lifeskill.c[selectedChara].s.filter(
-                            (_, i) => !bannedIndex.includes(i)
-                          )
-                        : []
-                      ).includes(currentTask.s[0])}
-                      additionalClassName="scale-125"
-                    />
-                    {currentTask.s.slice(1).map((lifeskillId, index) => {
-                      return (
-                        <LifeskillIcon
-                          key={index}
-                          id={lifeskillId}
-                          active={(selectedChara
-                            ? lifeskill.c[selectedChara].s.filter(
-                                (_, i) => !bannedIndex.includes(i)
-                              )
-                            : []
-                          ).includes(lifeskillId)}
-                          size="small"
-                          additionalClassName="-mx-1"
-                        />
-                      );
-                    })}
-                  </div>
-                  <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-taskcard-border rounded-sm bg-taskcard">
-                    <Search
-                      className="w-3 h-3"
-                      strokeWidth={3}
-                      onClick={() => searchTask(taskId)}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
-                  {currentTask.m.map((materialId, index) => {
-                    if (materialId.startsWith("_scheduleBox")) {
-                      return (
-                        <ItemSlot
-                          key={index}
-                          rarityInfo={material.r[2]}
-                          item={`/icons/Schedule_Box${
-                            materialId.split(".")[1]
-                          }`}
-                          fullItemPath
-                          size={3.5}
-                        />
-                      );
-                    }
-                    const currrentMaterial = material.m[materialId];
-                    return (
-                      <ItemSlot
-                        key={index}
-                        rarityInfo={material.r[currrentMaterial.r]}
-                        item={materialId}
-                        size={3.5}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
+                taskId={taskId}
+                frontImgWidthPercent={currentTask.f}
+                skillIds={currentTask.s}
+                activeSkillIds={
+                  selectedChara
+                    ? lifeskill.c[selectedChara].s.filter(
+                        (_, i) => !bannedIndex.includes(i)
+                      )
+                    : []
+                }
+                levelRequired={currentTask.l}
+                acquireExp={currentTask.e}
+                rewardMaterials={currentTask.m}
+                rewardAmount={currentTask.r}
+                taskLevel={taskLevel}
+                setTaskLevel={setTaskLevel}
+                searchTask={searchTask}
+              />
             );
           })}
         </div>
@@ -802,82 +689,20 @@ const TaskSearch = () => {
                 )
                 .map(([taskId, taskInfo]) => {
                   return (
-                    <div
+                    <TaskCard
                       key={taskId}
-                      className="w-72 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border"
-                    >
-                      <div className="pl-2 mb-1">
-                        <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
-                          <div className="text-xl">{t(`task.${taskId}`)}</div>
-                        </div>
-                      </div>
-                      <div className="w-full relative aspect-[254/176]">
-                        <img
-                          className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
-                          src={`/tasks/Img_${taskId}_Back.png`}
-                        />
-                        {taskInfo.f && (
-                          <img
-                            className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
-                            src={`/tasks/Img_${taskId}_Front.png`}
-                            style={{ width: `${taskInfo.f}%` }}
-                          />
-                        )}
-                        <div className="absolute bottom-0 left-0 flex items-end">
-                          <LifeskillIcon
-                            id={taskInfo.s[0]}
-                            active={taskInfo.s[0] === Number(selectedLifeskill)}
-                            additionalClassName="scale-125"
-                          />
-                          {taskInfo.s.slice(1).map((lifeskillId, index) => {
-                            return (
-                              <LifeskillIcon
-                                key={index}
-                                id={lifeskillId}
-                                active={
-                                  lifeskillId === Number(selectedLifeskill)
-                                }
-                                size="small"
-                                additionalClassName="-mx-1"
-                              />
-                            );
-                          })}
-                        </div>
-                        <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-taskcard-border rounded-sm bg-taskcard">
-                          <Search
-                            className="w-3 h-3"
-                            strokeWidth={3}
-                            onClick={() => searchTask(taskId)}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
-                        {taskInfo.m.map((materialId, index) => {
-                          if (materialId.startsWith("_scheduleBox")) {
-                            return (
-                              <ItemSlot
-                                key={index}
-                                rarityInfo={material.r[2]}
-                                item={`/icons/Schedule_Box${
-                                  materialId.split(".")[1]
-                                }`}
-                                fullItemPath
-                                size={3.5}
-                              />
-                            );
-                          }
-                          const currrentMaterial = material.m[materialId];
-                          return (
-                            <ItemSlot
-                              key={index}
-                              rarityInfo={material.r[currrentMaterial.r]}
-                              item={materialId}
-                              size={3.5}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
+                      taskId={taskId}
+                      frontImgWidthPercent={taskInfo.f}
+                      skillIds={taskInfo.s}
+                      activeSkillIds={[Number(selectedLifeskill)]}
+                      levelRequired={taskInfo.l}
+                      acquireExp={taskInfo.e}
+                      rewardMaterials={taskInfo.m}
+                      rewardAmount={taskInfo.r}
+                      taskLevel={taskLevel}
+                      setTaskLevel={setTaskLevel}
+                      searchTask={searchTask}
+                    />
                   );
                 })}
             </TabsContent>
@@ -1069,78 +894,19 @@ const TaskSearch = () => {
                 .filter(([, taskInfo]) => taskInfo.m.includes(selectedMaterial))
                 .map(([taskId, taskInfo]) => {
                   return (
-                    <div
+                    <TaskCard
                       key={taskId}
-                      className="w-72 rounded-xl p-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border"
-                    >
-                      <div className="pl-2 mb-1">
-                        <div className="pr-2 pb-2.5 pt-0.5 bg-contain bg-no-repeat bg-center bg-task-title">
-                          <div className="text-xl">{t(`task.${taskId}`)}</div>
-                        </div>
-                      </div>
-                      <div className="w-full relative aspect-[254/176]">
-                        <img
-                          className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
-                          src={`/tasks/Img_${taskId}_Back.png`}
-                        />
-                        {taskInfo.f && (
-                          <img
-                            className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
-                            src={`/tasks/Img_${taskId}_Front.png`}
-                            style={{ width: `${taskInfo.f}%` }}
-                          />
-                        )}
-                        <div className="absolute bottom-0 left-0 flex items-end">
-                          <LifeskillIcon
-                            id={taskInfo.s[0]}
-                            additionalClassName="scale-125"
-                          />
-                          {taskInfo.s.slice(1).map((lifeskillId, index) => {
-                            return (
-                              <LifeskillIcon
-                                key={index}
-                                id={lifeskillId}
-                                size="small"
-                                additionalClassName="-mx-1"
-                              />
-                            );
-                          })}
-                        </div>
-                        <div className="absolute right-0 top-0 p-1 m-1.5 ring-2 ring-taskcard-border rounded-sm bg-taskcard">
-                          <Search
-                            className="w-3 h-3"
-                            strokeWidth={3}
-                            onClick={() => searchTask(taskId)}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex flex-row flex-wrap gap-2 p-2 mt-2 justify-center">
-                        {taskInfo.m.map((materialId, index) => {
-                          if (materialId.startsWith("_scheduleBox")) {
-                            return (
-                              <ItemSlot
-                                key={index}
-                                rarityInfo={material.r[2]}
-                                item={`/icons/Schedule_Box${
-                                  materialId.split(".")[1]
-                                }`}
-                                fullItemPath
-                                size={3.5}
-                              />
-                            );
-                          }
-                          const currrentMaterial = material.m[materialId];
-                          return (
-                            <ItemSlot
-                              key={index}
-                              rarityInfo={material.r[currrentMaterial.r]}
-                              item={materialId}
-                              size={3.5}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
+                      taskId={taskId}
+                      frontImgWidthPercent={taskInfo.f}
+                      skillIds={taskInfo.s}
+                      levelRequired={taskInfo.l}
+                      acquireExp={taskInfo.e}
+                      rewardMaterials={taskInfo.m}
+                      rewardAmount={taskInfo.r}
+                      taskLevel={taskLevel}
+                      setTaskLevel={setTaskLevel}
+                      searchTask={searchTask}
+                    />
                   );
                 })}
             </TabsContent>
