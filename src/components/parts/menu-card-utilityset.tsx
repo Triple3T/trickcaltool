@@ -44,6 +44,14 @@ const UtilitySetCard = () => {
           <>
             <SubtitleBar>{t("ui.utilities.experimental")}</SubtitleBar>
             <div className={itemContainerClasses}>
+              <Link to={"/dispatchcalc"}>
+                <div className={experimentalButtonClasses}>
+                  <h4 className={experimentalTextClasses}>
+                    {t("ui.index.testMark")}
+                    {t("ui.dispatchcalc.title")}
+                  </h4>
+                </div>
+              </Link>
               <Link to={"/check"}>
                 <div className={experimentalButtonClasses}>
                   <h4 className={experimentalTextClasses}>

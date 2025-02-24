@@ -31,37 +31,36 @@ const ItemSlot = ({
       }}
     >
       <div
-        className="flex justify-center items-center w-full h-full"
+        className="absolute top-0 left-0 bottom-[2.655%] right-[2.655%] overflow-hidden"
         style={{
-          padding: `${(size * (100 - innerSize)) / 200}rem`,
+          borderColor: rarityInfo.b ?? "transparent",
+          borderStyle: "solid",
+          borderRadius: "18%",
+          borderWidth: `${0.03539823 * size}rem`,
         }}
       >
-        {typeof item === "string" ? (
-          <img
-            src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
-            className="max-w-full max-h-full"
-            // style={{
-            //   maxWidth: "100%",
-            //   maxHeight: "100%",
-            //   objectFit: "contain",
-            // }}
-          />
-        ) : (
-          <div className="w-full h-full">{item}</div>
-        )}
+        <div
+          className="flex justify-center items-center w-full h-full"
+          style={{
+            padding: `${(size * (100 - innerSize)) / 200}rem`,
+          }}
+        >
+          {typeof item === "string" ? (
+            <img
+              src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
+              className="max-w-full max-h-full"
+              // style={{
+              //   maxWidth: "100%",
+              //   maxHeight: "100%",
+              //   objectFit: "contain",
+              // }}
+            />
+          ) : (
+            <div className="w-full h-full">{item}</div>
+          )}
+        </div>
       </div>
 
-      {typeof rarityInfo.b === "string" && (
-        <div
-          className="absolute top-0 left-0 bottom-[2.655%] right-[2.655%]"
-          style={{
-            borderColor: rarityInfo.b,
-            borderStyle: "solid",
-            borderRadius: "18%",
-            borderWidth: `${0.03539823 * size}rem`,
-          }}
-        />
-      )}
       {typeof amount !== "undefined" && (
         <div className="absolute bottom-[2.5%] left-[5%] right-[8%] bg-contain bg-item-slot-value aspect-[196/28]" />
       )}

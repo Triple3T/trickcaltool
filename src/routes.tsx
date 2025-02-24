@@ -17,6 +17,7 @@ import Loading from "@/components/common/loading";
 // import Personal from "./personal";
 // import EventCalc from "./eventcalc";
 // import GoodsCalc from "./goodscalc";
+// import PetSolver from "./petsolver";
 // import PercentChecker from "./checker";
 // import Checker from "./checker";
 const TrickcalBoard = lazy(() => import("./trickcalboard"));
@@ -31,6 +32,7 @@ const EquipViewer = lazy(() => import("./equipviewer"));
 const Personal = lazy(() => import("./personal"));
 // const EventCalc = lazy(() => import("./eventcalc"));
 const GoodsCalc = lazy(() => import("./goodscalc"));
+const PetSolver = lazy(() => import("./petsolver"));
 const PercentChecker = lazy(() => import("./percentchecker"));
 const Checker = lazy(() => import("./checker"));
 
@@ -197,6 +199,17 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       </Layout>
     ),
     errorElement: <ErrorElement />,
+  },
+  {
+    path: "/dispatchcalc",
+    // element: <PetSolver />,
+    element: (
+      <Layout title="ui.dispatchcalc.title">
+        <Suspense fallback={<Loading />}>
+          <PetSolver />
+        </Suspense>
+      </Layout>
+    ),
   },
   {
     path: "/percentcheck",
