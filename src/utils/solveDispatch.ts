@@ -49,7 +49,9 @@ const solveDispatch = (prop: DispatchProp) => {
   const getRewardObject = (time: number) => {
     const idx = pet.d.t.indexOf(time);
     if (idx < 0) return [-1, -1, -1, -1, -1];
-    const carrot = pet.d.c.map((e) => Math.round(e[idx] * 2000));
+    const carrot = pet.d.c.map((e) =>
+      Math.round((e[idx][0] + e[idx][1]) * 1000)
+    );
     const gold = pet.d.g.map((e) => e[idx]);
     return carrot.map((e, i) => e + gold[i]);
   };

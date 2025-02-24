@@ -122,7 +122,9 @@ const PetSolver = () => {
           t("ui.dispatchcalc.dispatchCount", { 0: includedDispatch.length })}
         {calcStatus === "running" && t("ui.dispatchcalc.calculating")}
         {calcStatus === "done" &&
-          t("ui.dispatchcalc.calculated", { 0: solveTime < 1000 ? `${solveTime}ms` : `${solveTime / 1000}s` })}
+          t("ui.dispatchcalc.calculated", {
+            0: solveTime < 10000 ? `${solveTime}ms` : `${solveTime / 1000}s`,
+          })}
         <Button
           className="absolute top-0 bottom-0 right-0 h-full"
           onClick={() => {
@@ -407,11 +409,9 @@ const PetSolver = () => {
                                 rarityInfo={{ s: "Orange" }}
                                 item="/icons/CurrencyIcon_0048"
                                 fullItemPath
-                                amount={
-                                  pet.d.c[calcResult.assignments[`e${i}`].rank][
-                                    pet.d.t.indexOf(dispatchTime)
-                                  ]
-                                }
+                                amount={pet.d.c[
+                                  calcResult.assignments[`e${i}`].rank
+                                ][pet.d.t.indexOf(dispatchTime)].join("~")}
                                 size={3}
                               />
                             </>
