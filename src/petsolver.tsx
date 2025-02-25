@@ -12,13 +12,17 @@ import { cn } from "@/lib/utils";
 import Stepper from "@/components/common/stepper";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
+import ItemSlot from "@/components/parts/item-slot";
+import GoldSlot from "@/components/parts/gold-slot";
+import SubtitleBar from "@/components/parts/subtitlebar";
 
 import pet from "@/data/pet";
 import solveDispatch from "@/utils/solveDispatch";
-import ItemSlot from "./components/parts/item-slot";
-import GoldSlot from "./components/parts/gold-slot";
-import SubtitleBar from "./components/parts/subtitlebar";
+
+const sumSquare = (n: number) => (n * (n + 1) * (2 * n + 1)) / 6;
+// const sumCube = (n: number) => Math.pow((n * (n + 1)) / 2, 2);
 
 const PetSolver = () => {
   const { t } = useTranslation();
@@ -29,6 +33,7 @@ const PetSolver = () => {
     pet.a.map((e) => e.i)
   );
   const [dispatchTime, setDispatchTime] = useState<number>(pet.d.t[3]);
+  const [borrowLimit, setBorrowLimit] = useState<number[]>([3]);
   const [calcStatus, setCalcStatus] = useState<"idle" | "running" | "done">(
     "idle"
   );
@@ -36,29 +41,148 @@ const PetSolver = () => {
     ReturnType<typeof solveDispatch> | undefined
   >();
   const [solveTime, setSolveTime] = useState<number>(0);
+  const [calcProgress, setCalcProgress] = useState<number>(0);
   const startTime = useRef<number>(0);
+  const workerRef = useRef<Worker | null>(null);
+  const progressRef = useRef<number[][]>([
+    [0, 4],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+    [0, 0],
+  ]);
+  const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (step === 3) {
+    workerRef.current = new Worker(
+      new URL("@/workers/solveDispatchWorker", import.meta.url),
+      { type: "module" }
+    );
+    // workerRef.current.onmessage = (e: MessageEvent<string>) => {
+    //   if (typeof e.data === 'number') {
+    //     setWorkingProgress(e.data);
+    //   } else if (typeof e.data === 'string') {
+    //     setResult(JSON.parse(e.data));
+    //   }
+    // };
+    return () => {
+      workerRef.current?.terminate();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (step === 3 && calcStatus === "idle") {
       setCalcStatus("running");
       setTimeout(() => {
         startTime.current = Date.now();
-        const result = solveDispatch({
-          dispatchTime,
-          ownedPets,
-          borrowablePets,
-          dispatchList: pet.a.filter((e) => includedDispatch.includes(e.i)),
-        });
-        setCalcResult(result);
+        if (workerRef.current) {
+          // worker initialized
+          workerRef.current.onmessage = (
+            e: MessageEvent<
+              | string
+              | {
+                  type: "progress";
+                  depth: number;
+                  data: number | number[];
+                }
+            >
+          ) => {
+            if (typeof e.data === "string") {
+              setCalcResult(JSON.parse(e.data));
+            } else {
+              // progress message
+              const progressMessage = e.data;
+              if (typeof progressMessage.data === "number") {
+                const prev = progressRef.current;
+                progressRef.current = prev.map(([a, b], i) => {
+                  return i === progressMessage.depth
+                    ? [progressMessage.data as number, b]
+                    : [a, b];
+                });
+              } else {
+                // array
+                const prev = progressRef.current;
+                progressRef.current = prev.map(([a, b], i) => {
+                  return i === progressMessage.depth
+                    ? (progressMessage.data as number[])
+                    : [a, b];
+                });
+              }
+            }
+          };
+          workerRef.current.postMessage({
+            dispatchTime,
+            ownedPets,
+            borrowablePets,
+            dispatchList: pet.a.filter((e) => includedDispatch.includes(e.i)),
+            borrowLimit,
+          });
+        } else {
+          // cannot find worker
+          const result = solveDispatch(
+            {
+              dispatchTime,
+              ownedPets,
+              borrowablePets,
+              dispatchList: pet.a.filter((e) => includedDispatch.includes(e.i)),
+              borrowLimit,
+            },
+            false
+          );
+          setCalcResult(result);
+        }
       }, 100);
     }
-  }, [borrowablePets, dispatchTime, includedDispatch, ownedPets, step]);
+  }, [
+    borrowLimit,
+    borrowablePets,
+    calcStatus,
+    dispatchTime,
+    includedDispatch,
+    ownedPets,
+    step,
+  ]);
   useEffect(() => {
     if (step === 3 && calcStatus === "running" && calcResult) {
       setSolveTime(Date.now() - startTime.current);
+      setCalcProgress(10000);
       setCalcStatus("done");
     }
   }, [calcResult, calcStatus, step]);
+  useEffect(() => {
+    if (workerRef.current) {
+      if (step === 3 && calcStatus === "running") {
+        if (progressTimerRef.current === null) {
+          progressTimerRef.current = setInterval(() => {
+            const [borrowProgress, ...progressArr] = progressRef.current;
+            const total = sumSquare(borrowProgress[1] + 1);
+            const value =
+              borrowProgress[0] === 0
+                ? 0
+                : (sumSquare(borrowProgress[0]) * 10000) / total;
+            const currentRange =
+              (Math.pow(borrowProgress[0] + 1, 2) * 10000) / total;
+            const progress = progressArr.reduce(
+              (acc, [a, b]) => {
+                const thisValue = b === 0 ? 0 : (acc.currentRange * a) / b;
+                const nextRange = b === 0 ? 0 : acc.currentRange / b;
+                return {
+                  value: acc.value + thisValue,
+                  currentRange: nextRange,
+                };
+              },
+              { value, currentRange }
+            );
+            setCalcProgress(Math.round(progress.value));
+          }, 128);
+        }
+      } else if (progressTimerRef.current !== null) {
+        clearInterval(progressTimerRef.current);
+        progressTimerRef.current = null;
+      }
+    }
+  }, [calcStatus, step]);
 
   return (
     <div className="font-onemobile">
@@ -96,22 +220,41 @@ const PetSolver = () => {
         </div>
       )}
       {step === 2 && (
-        <div className="flex px-1 py-2 gap-1 justify-stretch">
-          {pet.d.t.map((time) => {
-            return (
-              <Button
-                key={time}
+        <div className="flex flex-col md:flex-row px-1 pt-2 pb-1 gap-1 md:gap-4">
+          <div className="flex-1">
+            <SubtitleBar>{t("ui.dispatchcalc.setDispatchTime")}</SubtitleBar>
+            <div className="grid gap-1 grid-cols-2 sm:grid-cols-4">
+              {pet.d.t.map((time) => {
+                return (
+                  <Button
+                    key={time}
+                    className="flex-1 w-full"
+                    variant={dispatchTime === time ? "default" : "outline"}
+                    onClick={() => setDispatchTime(time)}
+                  >
+                    {t("ui.dispatchcalc.dispatchTime", { 0: time / 3600 })}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+          <div className="flex-1">
+            <SubtitleBar>{t("ui.dispatchcalc.setBorrowCount")}</SubtitleBar>
+            <div className="flex flex-row gap-2">
+              <Slider
+                min={0}
+                max={3}
+                defaultValue={[3]}
+                value={borrowLimit}
+                onValueChange={setBorrowLimit}
                 className="flex-1"
-                variant={dispatchTime === time ? "default" : "outline"}
-                onClick={() => setDispatchTime(time)}
-              >
-                {t("ui.dispatchcalc.dispatchTime", { 0: time / 3600 })}
-              </Button>
-            );
-          })}
+              />
+              <div className="w-10">{borrowLimit[0]}</div>
+            </div>
+          </div>
         </div>
       )}
-      <div className="p-1 relative">
+      <div className="pt-2 relative">
         {step === 0 &&
           t("ui.dispatchcalc.owningPetCount", { 0: ownedPets.length })}
         {step === 1 &&
@@ -120,19 +263,22 @@ const PetSolver = () => {
           })}
         {step === 2 &&
           t("ui.dispatchcalc.dispatchCount", { 0: includedDispatch.length })}
-        {calcStatus === "running" && t("ui.dispatchcalc.calculating")}
+        {calcStatus === "running" &&
+          t("ui.dispatchcalc.calculating", { 0: calcProgress / 100 })}
         {calcStatus === "done" &&
           t("ui.dispatchcalc.calculated", {
             0: solveTime < 10000 ? `${solveTime}ms` : `${solveTime / 1000}s`,
           })}
         <Button
           className="absolute top-0 bottom-0 right-0 h-full"
+          size="sm"
           onClick={() => {
             if (step === 3 && calcStatus === "done") {
               setStep(0);
               setIncludedDispatch(pet.a.map((e) => e.i));
               setCalcStatus("idle");
               setCalcResult(undefined);
+              setCalcProgress(0);
             } else setStep((s) => s + 1);
           }}
           disabled={calcStatus === "running"}
@@ -156,6 +302,13 @@ const PetSolver = () => {
           )}
         </Button>
       </div>
+      <div className="h-1 bg-muted flex flex-row items-start justify-start">
+        <div
+          className="bg-accent h-full"
+          style={{ width: `${calcProgress / 100}%` }}
+        />
+      </div>
+      <div className="h-1" />
       {step < 2 && (
         <div className="grid grid-cols-[repeat(auto-fill,_minmax(6rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-2 p-1">
           {Object.entries(pet.p)
@@ -289,12 +442,18 @@ const PetSolver = () => {
                 >
                   <div className="flex">
                     <div className="flex-initial text-center">
-                      <img
-                        src={`/pets/GuildPetDispatch_ResultTimeIcon_${i
-                          .toString()
-                          .padStart(2, "0")}.png`}
-                        className="w-24 aspect-[3/2] flex-initial"
-                      />
+                      <div
+                        style={{
+                          backgroundImage: `url(/pets/GuildPetDispatch_ResultTimeIcon_${i
+                            .toString()
+                            .padStart(2, "0")}.png)`,
+                        }}
+                        className="w-24 aspect-[3/2] flex-initial bg-cover flex justify-center items-center text-sm text-shadow-glow"
+                      >
+                        {t("ui.dispatchcalc.dispatchTime", {
+                          0: dispatchTime / 3600,
+                        })}
+                      </div>
                       <div className="flex flex-col gap-0.5 w-max justify-center items-center mx-auto">
                         <div className="text-center">
                           {t("ui.dispatchcalc.bonusSkill")}

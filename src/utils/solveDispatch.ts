@@ -26,13 +26,15 @@ interface BestResult {
   totalCount: number; // 모든 심부름에 할당된 펫 수의 합
 }
 
-interface DispatchProp {
+export interface DispatchProp {
   dispatchTime: number;
   ownedPets: string[];
   borrowablePets: string[];
   dispatchList: { i: number; b: number[] }[];
+  borrowLimit: number[];
 }
-const solveDispatch = (prop: DispatchProp) => {
+const solveDispatch = (prop: DispatchProp, messageProgress: boolean) => {
+  const overallBorrowLimit = prop.borrowLimit[0];
   // -------------------- 점수 및 보상 계산 함수 --------------------
   function getPetScore(p: Pet, dispatch: Dispatch): number {
     return (
@@ -281,7 +283,16 @@ const solveDispatch = (prop: DispatchProp) => {
       totalCount: Infinity,
     };
 
-    for (const combo of validCombos) {
+    const validComboCount = validCombos.length;
+    for (let i = 0; i < validComboCount; i++) {
+      if (messageProgress) {
+        postMessage({
+          type: "progress",
+          depth: dispatchIndex + 1,
+          data: [i, validComboCount],
+        });
+      }
+      const combo = validCombos[i];
       const reward = getDispatchReward(combo, currentDispatch, time);
       const newSum = currentSum + reward;
       const newAssignments = {
@@ -336,7 +347,14 @@ const solveDispatch = (prop: DispatchProp) => {
       totalCount: Infinity,
     };
     // 대여펫 사용 제한을 0, 1, 2, 3마리 순으로 시도
-    for (let limit = 0; limit <= 3; limit++) {
+    for (let limit = 0; limit <= overallBorrowLimit; limit++) {
+      if (messageProgress) {
+        postMessage({
+          type: "progress",
+          depth: 0,
+          data: [limit, overallBorrowLimit],
+        });
+      }
       const result = searchAssignment(
         0,
         new Set(),
