@@ -196,6 +196,11 @@ function App() {
                     to: "/goodscalc",
                   },
                   {
+                    icon: "/icons/CurrencyIcon_0048.png",
+                    title: t("ui.dispatchcalc.title"),
+                    to: "/dispatchcalc",
+                  },
+                  {
                     icon: "/common/Icon_Pow_1.png",
                     title: t("ui.percentCheck.title"),
                     to: "/percentcheck",

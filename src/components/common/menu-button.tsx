@@ -135,6 +135,16 @@ const MenuButton = () => {
           {t("ui.goodscalc.title")}
         </DropdownMenuItem>
         <DropdownMenuItem
+          onClick={() => navigate("/dispatchcalc")}
+          disabled={matchPath(location.pathname, "/dispatchcalc") ? true : false}
+        >
+          <img
+            src="/icons/CurrencyIcon_0048.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.dispatchcalc.title")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
           onClick={() => navigate("/percentcheck")}
           disabled={matchPath(location.pathname, "/percentcheck") ? true : false}
         >
