@@ -102,7 +102,6 @@ export const getTotalLabStat = (labData: { 1: number; 2: number }) => {
         });
       }
     });
-    }
-  );
+  });
   return labStats;
 };
