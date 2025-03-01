@@ -8,6 +8,7 @@ import { Square, SquareCheckBig } from "lucide-react";
 interface NthBoardViewerProps {
   charaName: string;
   boardIndex: number;
+  boardShape: string;
   boardActualPosition: {
     s: number;
     b: string[];
@@ -29,6 +30,11 @@ interface BoardViewerProps {
     s: number;
     b: string[];
   }[];
+  boardShape: {
+    s: number;
+    b: string[];
+  }[];
+  boardShapeIndex: number;
   boardCollection: number[][];
   routeCollection: string[][];
   pboardCollection: number[];
@@ -41,6 +47,7 @@ interface BoardViewerProps {
 }
 const NthBoardViewer = ({
   boardIndex,
+  boardShape,
   boardActualPosition,
   boardCollection,
   routeCollection,
@@ -53,21 +60,29 @@ const NthBoardViewer = ({
   const boardStats = boardCollection
     .map((statCollection) => statCollection.toString())
     .join("");
-  const allRoutes = routeCollection
+  const baseRoute: { boardType: number; stat: number }[] = boardShape
+    .split("")
+    .map((c) => {
+      switch (c) {
+        case "3":
+          return { boardType: 2, stat: -1 };
+        case "2":
+          return { boardType: 1, stat: -1 };
+        case "1":
+          return { boardType: 0, stat: -1 };
+        case "0":
+        default:
+          return { boardType: -1, stat: -1 };
+      }
+    });
+  routeCollection
     .join(".")
     .split(".")
-    .map((routeIndex) => boardRoute[Number(routeIndex)]);
-  const baseRoute: { boardType: number; stat: number }[] = allRoutes[0]
-    .split("")
-    .map((c) =>
-      c === "0" ? { boardType: -1, stat: -1 } : { boardType: 0, stat: -1 }
-    );
-  allRoutes.forEach((r, j) => {
-    baseRoute[r.indexOf("X")] = {
-      boardType: 2,
-      stat: Number(boardStats.charAt(j)),
-    };
-  });
+    .forEach((r, j) => {
+      baseRoute[boardRoute[Number(r)].indexOf("X")].stat = Number(
+        boardStats.charAt(j)
+      );
+    });
   pbPositionIndexCollection.split(".").forEach((p, j) => {
     const stat = Number(pboardCollection.toString().charAt(j));
     const position = pbActualPositionCollection.p[Number(p)];
@@ -176,6 +191,8 @@ const NthBoardViewer = ({
 const BoardViewer = ({
   charaName,
   boardActualPosition,
+  boardShape,
+  boardShapeIndex,
   boardCollection,
   routeCollection,
   pboardCollection,
@@ -243,6 +260,7 @@ const BoardViewer = ({
           <NthBoardViewer
             boardIndex={2}
             charaName={charaName}
+            boardShape={boardShape[2].b[boardShapeIndex]}
             boardActualPosition={boardActualPosition[2]}
             boardCollection={boardCollection[2]}
             routeCollection={routeCollection[2]}
@@ -255,6 +273,7 @@ const BoardViewer = ({
           <NthBoardViewer
             boardIndex={1}
             charaName={charaName}
+            boardShape={boardShape[1].b[boardShapeIndex]}
             boardActualPosition={boardActualPosition[1]}
             boardCollection={boardCollection[1]}
             routeCollection={routeCollection[1]}
@@ -267,6 +286,7 @@ const BoardViewer = ({
           <NthBoardViewer
             boardIndex={0}
             charaName={charaName}
+            boardShape={boardShape[0].b[boardShapeIndex]}
             boardActualPosition={boardActualPosition[0]}
             boardCollection={boardCollection[0]}
             routeCollection={routeCollection[0]}

@@ -238,6 +238,8 @@ const Personal = () => {
           <BoardViewer
             charaName={charaName}
             boardActualPosition={route.r[Race[race]]}
+            boardShape={route.s[Race[race]]}
+            boardShapeIndex={board.c[charaName].s}
             boardCollection={board.c[charaName].b}
             routeCollection={board.c[charaName].r}
             pboardCollection={purpleboard.c[charaName].b}

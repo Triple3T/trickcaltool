@@ -3,6 +3,6 @@ export default board as {
   b: number[][][];
   s: number[][];
   c: {
-    [key: string]: { b: number[][]; r: string[][]; k: string[][] };
+    [key: string]: { s: number; b: number[][]; r: string[][]; k: string[][] };
   };
 };
