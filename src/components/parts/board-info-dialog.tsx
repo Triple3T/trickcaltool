@@ -343,7 +343,7 @@ const BoardInfoDialog = ({
             </div>
           </DialogTitle>
         </DialogHeader>
-        <Tabs className="mt-4" defaultValue="Route">
+        <Tabs className="-mt-1" defaultValue="Route">
           <TabsList className="grid grid-cols-2 h-max">
             <TabsTrigger className="flex-1" value="Route">
               {t("ui.board.dialogTabRoute")}
