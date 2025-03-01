@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useState } from "react";
+import { Fragment, HTMLAttributes, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dot, Info, Pencil, Waypoints } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SubtitleBar from "./subtitlebar";
 import {
   Attack,
@@ -32,6 +33,7 @@ import {
   Position,
   Race,
 } from "@/types/enums";
+import { Checkbox } from "../ui/checkbox";
 
 const boardButtonBgCommon =
   "bg-transparent hover:bg-transparent bg-gradient-to-b from-primary hover:from-primary/90 from-85% to-85%";
@@ -47,12 +49,14 @@ interface BoardInfoDialogTriggerProps extends HTMLAttributes<HTMLDivElement> {
 
 export interface BoardInfoDialogProps {
   boardIndex: number;
+  boardShape: string;
   boardTypeString: string;
   chara: string;
   charaTypes: string;
   route: string;
   rstart: number;
   otherBoards: string[];
+  otherRoutes: string[];
   blocked?: string;
   checked?: boolean;
   unowned?: boolean;
@@ -108,12 +112,14 @@ const BoardInfoDialogTrigger = ({
 
 const BoardInfoDialog = ({
   boardIndex,
+  boardShape,
   boardTypeString,
   chara,
   charaTypes,
   route,
   rstart,
   otherBoards,
+  otherRoutes,
   blocked,
   checked,
   unowned,
@@ -129,14 +135,15 @@ const BoardInfoDialog = ({
     useState<boolean>(false);
   const [currentUnlockedIndex, setCurrentUnlockedIndex] =
     useState<number>(unlockedBoard);
+  const [noRouteOff, setNoRouteOff] = useState<boolean>(true);
   useEffect(() => {
     setCurrentUnlockedIndex(unlockedBoard);
   }, [unlockedBoard, chara]);
-  const brLength = route.length;
+  const brLength = boardShape.length;
   const brRowCount = Math.floor(brLength / 7);
   const brRows = Array(brRowCount)
     .fill(0)
-    .map((_, i) => route.slice(i * 7, (i + 1) * 7));
+    .map((_, i) => boardShape.slice(i * 7, (i + 1) * 7));
   const crayon3Count = route.split("3").length - 1;
   const crayon4Count = route.split("4").length - 1;
   const blocking = blocked
@@ -144,6 +151,12 @@ const BoardInfoDialog = ({
         .fill(0)
         .map((_, i) => blocked.slice(i * crayon4Count, (i + 1) * crayon4Count))
     : [];
+  const otherBoardInCurrent = Object.fromEntries(
+    otherBoards[boardIndex]
+      .split("")
+      .map((b, i) => [otherRoutes[i].indexOf("X"), b])
+  );
+  console.log(otherBoardInCurrent);
   return (
     <Dialog
       open={opened}
@@ -330,178 +343,219 @@ const BoardInfoDialog = ({
             </div>
           </DialogTitle>
         </DialogHeader>
-        <Alert variant="default">
-          <Waypoints className="h-4 w-4" />
-          <AlertTitle>{t("ui.board.aboutBestRouteTitle")}</AlertTitle>
-          <AlertDescription className="break-keep">
-            {t("ui.board.aboutBestRouteDescription")}
-          </AlertDescription>
-        </Alert>
-        <div className="flex gap-2 justify-evenly -mt-4">
-          <div className="flex-auto">
-            <SubtitleBar>{t("ui.board.bestRouteExample")}</SubtitleBar>
-            <div className="w-32 p-2 mx-auto">
-              {brRows.map((row, i) => {
-                return (
-                  <div key={i} className="flex flex-row items-stretch w-full">
-                    {row.split("").map((br, j) => {
-                      if (br === "0")
-                        return <div key={j} className="w-4 h-4" />;
-                      if (br === "X")
+        <Tabs className="mt-4" defaultValue="Route">
+          <TabsList className="grid grid-cols-2 h-max">
+            <TabsTrigger className="flex-1" value="Route">
+              {t("ui.board.dialogTabRoute")}
+            </TabsTrigger>
+            <TabsTrigger className="flex-1" value="Other">
+              {t("ui.board.dialogTabOther")}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="Route">
+            <Alert variant="default">
+              <Waypoints className="h-4 w-4" />
+              <AlertTitle>{t("ui.board.aboutBestRouteTitle")}</AlertTitle>
+              <AlertDescription className="break-keep">
+                {t("ui.board.aboutBestRouteDescription")}
+              </AlertDescription>
+            </Alert>
+            <div className="flex gap-2 justify-evenly flex-col sm:flex-row">
+              <div className="flex-auto">
+                <SubtitleBar>{t("ui.board.bestRouteExample")}</SubtitleBar>
+                <label className="flex gap-2 justify-center items-center mt-2">
+                  <Checkbox
+                    checked={noRouteOff}
+                    onCheckedChange={(v) => setNoRouteOff(!!v)}
+                  />
+                  <span>{t("ui.board.noRouteOff")}</span>
+                </label>
+                <div className="grid grid-cols-7 max-w-40 mx-auto mt-2">
+                  {brRows.map((row, i) => {
+                    return (
+                      <Fragment key={i}>
+                        {row.split("").map((br, j) => {
+                          const currentIndex = i * 7 + j;
+                          const boardTypeIfExists = Number(
+                            otherBoardInCurrent[currentIndex] ?? "-1"
+                          );
+                          if (br === "1")
+                            return (
+                              <div key={j} className="aspect-square w-full">
+                                <img
+                                  src="/boards/Rect_01.png"
+                                  className={cn(
+                                    "aspect-square w-full",
+                                    noRouteOff &&
+                                      route[currentIndex] === "1" &&
+                                      "opacity-25"
+                                  )}
+                                />
+                              </div>
+                            );
+                          if (br === "2")
+                            return (
+                              <div key={j} className="aspect-square w-full">
+                                <img
+                                  src="/boards/Rect_06.png"
+                                  className={cn(
+                                    "aspect-square w-full",
+                                    noRouteOff &&
+                                      route[currentIndex] === "1" &&
+                                      "opacity-25"
+                                  )}
+                                />
+                              </div>
+                            );
+                          if (br === "3")
+                            return (
+                              <div key={j} className="aspect-square w-full">
+                                <img
+                                  src={`/boards/Tile_${BoardType[boardTypeIfExists]}On.png`}
+                                  className={cn(
+                                    "aspect-square w-full bg-board-special bg-cover",
+                                    noRouteOff &&
+                                      route[currentIndex] === "1" &&
+                                      "opacity-25"
+                                  )}
+                                />
+                              </div>
+                            );
+                          return (
+                            <div key={j} className="aspect-square w-full" />
+                          );
+                        })}
+                      </Fragment>
+                    );
+                  })}
+                  {Array(7)
+                    .fill(0)
+                    .map((_, i) => {
+                      if (i === rstart)
                         return (
-                          <div key={j} className="w-4 h-4 scale-150 z-10">
+                          <div key={i} className="aspect-square w-full">
                             <img
-                              src="/boards/Rect_03.png"
-                              className="w-full h-full drop-shadow-[0px_0_3px_#dc2626] dark:drop-shadow-[0px_0_3px_#fca5a5]"
+                              src={`/boards/Tile_${
+                                boardIndex ? "Gate" : "Start"
+                              }.png`}
+                              className="aspect-square w-full scale-150"
                             />
                           </div>
                         );
-                      return (
-                        <div key={j} className="w-4 h-4">
-                          <img
-                            src={`/boards/Rect_0${
-                              [2, 1, 6, 3][Number(br) - 1]
-                            }.png`}
-                            className={cn(
-                              "w-full h-full",
-                              br === "1" ? " opacity-70" : ""
-                            )}
-                          />
-                        </div>
-                      );
+                      return <div key={i} className="aspect-square w-full" />;
                     })}
+                </div>
+              </div>
+              <div className="flex-auto flex flex-col gap-2">
+                <div>
+                  <SubtitleBar>
+                    {t("ui.board.numberOfImportantTiles")}
+                  </SubtitleBar>
+                  <div className="px-4 py-2">
+                    <div>
+                      {t("ui.board.importantBoardTilesBefore")}
+                      <img
+                        src="/icons/Common_Node_Special.png"
+                        className="w-5 h-5 inline-block"
+                      />
+                      {t("ui.board.importantBoardTilesAfter")}
+                      {t("ui.board.importantBoardTilesMultiple")}
+                      {crayon4Count}
+                    </div>
+                    <div>
+                      {t("ui.board.importantBoardTilesBefore")}
+                      <img
+                        src="/icons/Common_Node_Premium.png"
+                        className="w-5 h-5 inline-block"
+                      />
+                      {t("ui.board.importantBoardTilesAfter")}
+                      {t("ui.board.importantBoardTilesMultiple")}
+                      {crayon3Count}
+                    </div>
                   </div>
-                );
-              })}
-              <div className="flex flex-row items-stretch w-full">
-                {Array(7)
-                  .fill(0)
-                  .map((_, i) => {
-                    if (i === rstart)
-                      return (
-                        <div key={i} className="w-4 h-4">
-                          <img
-                            src={`/boards/Tile_${
-                              boardIndex ? "Gate" : "Start"
-                            }.png`}
-                            className="w-full h-full scale-150"
-                          />
-                        </div>
-                      );
-                    return <div key={i} className="w-4 h-4" />;
-                  })}
-              </div>
-            </div>
-          </div>
-          <div className="flex-auto flex flex-col gap-2">
-            <div>
-              <SubtitleBar>{t("ui.board.numberOfImportantTiles")}</SubtitleBar>
-              <div className="px-4 py-2">
-                <div>
-                  {t("ui.board.importantBoardTilesBefore")}
-                  <img
-                    src="/icons/Common_Node_Special.png"
-                    className="w-5 h-5 inline-block"
-                  />
-                  {t("ui.board.importantBoardTilesAfter")}
-                  {t("ui.board.importantBoardTilesMultiple")}
-                  {crayon4Count}
                 </div>
-                <div>
-                  {t("ui.board.importantBoardTilesBefore")}
-                  <img
-                    src="/icons/Common_Node_Premium.png"
-                    className="w-5 h-5 inline-block"
-                  />
-                  {t("ui.board.importantBoardTilesAfter")}
-                  {t("ui.board.importantBoardTilesMultiple")}
-                  {crayon3Count}
-                </div>
-              </div>
-            </div>
-            {blocked && (
-              <div>
-                <SubtitleBar>
-                  {t("ui.board.importantBoardCombination")}
-                </SubtitleBar>
-                <div className="px-12 w-full max-w-44 mx-auto py-2">
-                  <Carousel>
-                    <CarouselContent>
-                      {blocking.map((bc, i) => {
-                        return (
-                          <CarouselItem className="w-full max-w-24" key={i}>
-                            <div>
-                              <div className="flex p-2 justify-center">
-                                {bc.split("").map((b, j) => {
-                                  return (
-                                    <img
-                                      key={j}
-                                      className="bg-board-special rotate-10 w-10 -m-1 flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
-                                      src={`/boards/Tile_${
-                                        BoardType[Number(b)]
-                                      }On.png`}
-                                    />
-                                  );
-                                })}
-                              </div>
-                              <div className="text-center w-max mx-auto text-sm">
-                                {i + 1}/{blocking.length}
-                              </div>
-                            </div>
-                          </CarouselItem>
-                        );
-                      })}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                  </Carousel>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="-mt-4">
-          <SubtitleBar>
-            {t("ui.board.listInCurrentBoard", {
-              0: t(`chara.${chara}`),
-            })}
-          </SubtitleBar>
-          <div className="px-8 sm:px-16 flex flex-row justify-center -mb-2">
-            <Carousel className="w-full" opts={{ startIndex: boardIndex }}>
-              <CarouselContent className="w-[calc(100%_+_1rem)]">
-                {otherBoards.map((bs, i) => {
-                  return (
-                    <CarouselItem className="w-full" key={i}>
-                      <div className="w-full">
-                        <div className="flex p-4 -mt-1 justify-center h-20">
-                          {bs.split("").map((b, i) => {
-                            const bt = BoardType[Number(b)];
+                {blocked && (
+                  <div>
+                    <SubtitleBar>
+                      {t("ui.board.importantBoardCombination")}
+                    </SubtitleBar>
+                    <div className="px-12 w-full max-w-44 mx-auto py-2">
+                      <Carousel>
+                        <CarouselContent>
+                          {blocking.map((bc, i) => {
                             return (
-                              <div className="w-1/6 max-w-12 relative" key={i}>
-                                <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                  <img
-                                    src={`/boards/Tile_${bt}On.png`}
-                                    className="bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
-                                  />
+                              <CarouselItem className="w-full max-w-24" key={i}>
+                                <div>
+                                  <div className="flex p-2 justify-center">
+                                    {bc.split("").map((b, j) => {
+                                      return (
+                                        <img
+                                          key={j}
+                                          className="bg-board-special rotate-10 w-10 -m-1 flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
+                                          src={`/boards/Tile_${
+                                            BoardType[Number(b)]
+                                          }On.png`}
+                                        />
+                                      );
+                                    })}
+                                  </div>
+                                  <div className="text-center w-max mx-auto text-sm">
+                                    {i + 1}/{blocking.length}
+                                  </div>
                                 </div>
-                              </div>
+                              </CarouselItem>
                             );
                           })}
-                        </div>
-                        <div className="text-center w-max -mt-3 mx-auto text-sm">
-                          {t(`ui.board.board${i + 1}`)}
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                      </Carousel>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="Other">
+            <div className="">
+              <SubtitleBar>
+                {t("ui.board.listInCurrentBoard", {
+                  0: t(`chara.${chara}`),
+                })}
+              </SubtitleBar>
+              <div className="p-4 flex flex-col justify-center -mb-2">
+                {otherBoards.map((bs, i) => {
+                  return (
+                    <div className="w-full py-2" key={i}>
+                      <div className="flex flex-row justify-center items-end gap-2">
+                        <div className="bg-accent/75 rounded px-2">
+                          <div className="-mt-2.5">
+                            {t(`ui.board.board${i + 1}`)}
+                          </div>
                         </div>
                       </div>
-                    </CarouselItem>
+                      <div className="flex -mt-1 justify-center h-20">
+                        {bs.split("").map((b, i) => {
+                          const bt = BoardType[Number(b)];
+                          return (
+                            <div className="w-1/6 max-w-12 relative" key={i}>
+                              <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                <img
+                                  src={`/boards/Tile_${bt}On.png`}
+                                  className="bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   );
                 })}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-            {/* {otherBoards.split("")} */}
-          </div>
-        </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

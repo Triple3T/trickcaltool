@@ -5939,6 +5939,9 @@ i18n
               remainToMax: "MAX-{{0}}개",
               dataIncompleteStatus: "(데이터 미완성 {{0}}/{{1}})",
               notOwned: "미보유",
+              dialogTabRoute: "경로",
+              dialogTabOther: "다른 칸",
+              noRouteOff: "경로만 강조",
               bestRouteExample: "최적 경로 예시",
               aboutBestRouteTitle: "최적 경로에 대하여",
               aboutBestRouteDescription:

@@ -924,6 +924,12 @@ const TrickcalBoard = () => {
                                           onClick={() => {
                                             setBoardDialogProp({
                                               boardIndex: userData.board.i,
+                                              boardShape:
+                                                route.s[
+                                                  Race[Number(chara[name].t[5])]
+                                                ][userData.board.i].b[
+                                                  board.c[name].s
+                                                ],
                                               boardTypeString: bt,
                                               chara: name,
                                               charaTypes: chara[name].t,
@@ -947,6 +953,21 @@ const TrickcalBoard = () => {
                                                     .map((v) => v.toString())
                                                     .join("")
                                               ),
+                                              otherRoutes: board.c[name].r[
+                                                userData.board.i
+                                              ]
+                                                .join(".")
+                                                .split(".")
+                                                .map(
+                                                  (v) =>
+                                                    route.r[
+                                                      Race[
+                                                        Number(chara[name].t[5])
+                                                      ]
+                                                    ][userData.board.i].b[
+                                                      Number(v)
+                                                    ]
+                                                ),
                                               blocked:
                                                 ldx === 0
                                                   ? undefined
