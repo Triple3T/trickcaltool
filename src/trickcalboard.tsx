@@ -525,90 +525,74 @@ const TrickcalBoard = () => {
             </AccordionTrigger>
             <AccordionContent className="text-base">
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
-                {(
-                  Object.values(StatType).filter(
-                    (bt) => typeof bt === "string"
-                  ) as string[]
-                )
-                  .sort(
-                    (a, b) =>
-                      [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][
-                        StatType[a as keyof typeof StatType]
-                      ] -
-                      [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][
-                        StatType[b as keyof typeof StatType]
-                      ]
-                  )
-                  .map((stat) => {
-                    const statNum = StatType[stat as keyof typeof StatType];
-                    const includedBoards = board.s
-                      .map((s, i) => [s, i] as [number[], number])
-                      .filter(([s]) => s.includes(statNum))
-                      .map(([, i]) => i);
-                    const data = Object.fromEntries(
-                      includedBoards.map((b) => [
-                        BoardType[b],
-                        Array(3)
-                          .fill(0)
-                          .map((_, nthboard) => {
-                            return {
-                              charas: Object.entries(board.c)
-                                .filter(([, boardData]) => {
-                                  return boardData.b[nthboard]
-                                    .map((cb) => cb.toString())
-                                    .join("")
-                                    .includes(`${b}`);
-                                })
-                                .map(([charaName, boardData]) => {
-                                  return boardData.b[nthboard]
-                                    .map((cb, j) => {
-                                      const returnArray =
-                                        [] as BoardDataPropsBoard["charas"];
-                                      cb.toString(10)
-                                        .split("")
-                                        .forEach((cbi, k) => {
-                                          if (cbi === `${b}`) {
-                                            const unowned =
-                                              userData.charaInfo[charaName]
-                                                .unowned;
-                                            returnArray.push({
-                                              name: charaName,
-                                              ldx: j,
-                                              bdx: k,
-                                              checked: unowned
-                                                ? false
-                                                : (userData.charaInfo[charaName]
-                                                    .board[nthboard][j] &
-                                                    (1 << k)) >
-                                                  0,
-                                              unowned,
-                                              clf: clonefactory.l[
-                                                clonefactory.f
-                                              ]
-                                                .flat()
-                                                .includes(charaName)
-                                                ? clonefactory.l[
-                                                    clonefactory.f
-                                                  ].findIndex((a) =>
-                                                    a.includes(charaName)
-                                                  )
-                                                : false,
-                                            });
-                                          }
-                                        });
-                                      return returnArray;
-                                    })
-                                    .flat();
-                                })
-                                .flat(),
-                            };
-                          }),
-                      ])
-                    );
-                    return (
-                      <BoardStatStatistic key={stat} stat={stat} data={data} />
-                    );
-                  })}
+                {[1, 0, 7, 6, 4, 2, 5, 3, 8].map((statNum) => {
+                  const stat = StatType[statNum];
+                  const includedBoards = board.s
+                    .map((s, i) => [s, i] as [number[], number])
+                    .filter(([s]) => s.includes(statNum))
+                    .map(([, i]) => i);
+                  const data = Object.fromEntries(
+                    includedBoards.map((b) => [
+                      BoardType[b],
+                      Array(3)
+                        .fill(0)
+                        .map((_, nthboard) => {
+                          return {
+                            charas: Object.entries(board.c)
+                              .filter(([, boardData]) => {
+                                return boardData.b[nthboard]
+                                  .map((cb) => cb.toString())
+                                  .join("")
+                                  .includes(`${b}`);
+                              })
+                              .map(([charaName, boardData]) => {
+                                return boardData.b[nthboard]
+                                  .map((cb, j) => {
+                                    const returnArray =
+                                      [] as BoardDataPropsBoard["charas"];
+                                    cb.toString(10)
+                                      .split("")
+                                      .forEach((cbi, k) => {
+                                        if (cbi === `${b}`) {
+                                          const unowned =
+                                            userData.charaInfo[charaName]
+                                              .unowned;
+                                          returnArray.push({
+                                            name: charaName,
+                                            ldx: j,
+                                            bdx: k,
+                                            checked: unowned
+                                              ? false
+                                              : (userData.charaInfo[charaName]
+                                                  .board[nthboard][j] &
+                                                  (1 << k)) >
+                                                0,
+                                            unowned,
+                                            clf: clonefactory.l[clonefactory.f]
+                                              .flat()
+                                              .includes(charaName)
+                                              ? clonefactory.l[
+                                                  clonefactory.f
+                                                ].findIndex((a) =>
+                                                  a.includes(charaName)
+                                                )
+                                              : false,
+                                          });
+                                        }
+                                      });
+                                    return returnArray;
+                                  })
+                                  .flat();
+                              })
+                              .flat(),
+                          };
+                        }),
+                    ])
+                  );
+                  return (
+                    <BoardStatStatistic key={stat} stat={stat} data={data} />
+                  );
+                })}
 
                 <BoardCrayonStatistic
                   rarity={4}

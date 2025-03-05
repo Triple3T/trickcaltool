@@ -501,11 +501,8 @@ const EquipRank = () => {
                         )
                       }
                     >
-                      {(
-                        Object.values(StatType).filter(
-                          (b) => typeof b === "string"
-                        ) as string[]
-                      ).map((bt) => {
+                      {[1, 0, 7, 6, 4, 2, 5, 3, 8].map((statNum) => {
+                        const bt = StatType[statNum];
                         return (
                           <ToggleGroupItem
                             key={bt}
