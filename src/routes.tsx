@@ -45,6 +45,8 @@ import Clear from "./clear";
 const DealDesc = lazy(() => import("./dealdesc"));
 // import PickupLog from "./pickups";
 const PickupLog = lazy(() => import("./pickups"));
+// import Cards from "./card";
+const Cards = lazy(() => import("./card"));
 // import MiniGameHilde from "./minigamehilde";
 const MiniGameHilde = lazy(() => import("./minigamehilde"));
 import Error404 from "./components/errors/404";
@@ -283,6 +285,17 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout title="ui.pickuplog.title">
         <Suspense fallback={<Loading />}>
           <PickupLog />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/cards",
+    element: (
+      <Layout title="ui.cards.title">
+        <Suspense fallback={<Loading />}>
+          <Cards />
         </Suspense>
       </Layout>
     ),

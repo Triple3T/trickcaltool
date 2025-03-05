@@ -34,6 +34,7 @@ export enum StatType {
   DefenseMagic = 6,
   DefensePhysic = 7,
   Hp = 8,
+  AttackSpeed = 9,
 }
 
 export enum Personality {
