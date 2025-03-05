@@ -64,7 +64,11 @@ const Cards = () => {
               </ToggleGroup>
             </div>
             <div>
-              <SearchBox value={search} onValueChange={setSearch} />
+              <SearchBox
+                value={search}
+                onValueChange={setSearch}
+                placeholder={t("ui.cards.searchPlaceholder")}
+              />
             </div>
           </div>
         </div>
