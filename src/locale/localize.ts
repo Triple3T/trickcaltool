@@ -3844,6 +3844,7 @@ i18n
             DefenseMagic: "마법 방어력",
             DefensePhysic: "물리 방어력",
             Hp: "HP",
+            AttackSpeed: "공격 속도",
           },
           lab: {
             effect: {
