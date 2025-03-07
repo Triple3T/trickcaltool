@@ -123,9 +123,8 @@ const BoardViewer = ({
                     {currentBlockedBy.split("").map((bb, k) => {
                       const thisBlock = Number(bb);
                       return (
-                        <Fragment key={bb}>
+                        <Fragment key={`${bb}-${k}`}>
                           <img
-                            key={bb}
                             src={`/boards/Tile_${BoardType[thisBlock]}On.png`}
                             className={cn(
                               "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
@@ -174,17 +173,15 @@ const BoardViewer = ({
                       const thisBlock1 = Number(bb.charAt(0));
                       const thisBlock2 = Number(bb.charAt(1));
                       return (
-                        <Fragment key={bb}>
+                        <Fragment key={`${bb}-${k}`}>
                           <div className="flex">
                             <img
-                              key={bb}
                               src={`/boards/Tile_${BoardType[thisBlock1]}On.png`}
                               className={cn(
                                 "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                               )}
                             />
                             <img
-                              key={bb}
                               src={`/boards/Tile_${BoardType[thisBlock2]}On.png`}
                               className={cn(
                                 "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125 -ml-2"
