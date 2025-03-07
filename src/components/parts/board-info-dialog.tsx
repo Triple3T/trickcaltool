@@ -156,7 +156,6 @@ const BoardInfoDialog = ({
       .split("")
       .map((b, i) => [otherRoutes[i].indexOf("X"), b])
   );
-  console.log(otherBoardInCurrent);
   return (
     <Dialog
       open={opened}
