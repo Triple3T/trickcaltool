@@ -28,7 +28,7 @@ module.exports = {
       "imports": "always-multiline",
       "exports": "always-multiline",
       "enums": "always-multiline",
-      "tuples": "always-multiline",
+      "tuples": "only-multiline",
       "functions": "never"
     }],
     "@typescript-eslint/no-unused-vars": "warn",
