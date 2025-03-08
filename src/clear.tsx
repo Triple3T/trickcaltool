@@ -1,40 +1,44 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useSyncQuery } from "@/hooks/useSyncQuery";
 
 const Clear = () => {
   const navigate = useNavigate();
+  const { getNewToken } = useSyncQuery();
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
-  const { requestToken } = useContext(AuthContext);
   const { t } = useTranslation();
 
   const tryLogout = useCallback(() => {
     setSuccess(false);
     setFailed(false);
-    if (requestToken) {
+    if (getNewToken) {
       fetch("https://api.triple-lab.com/api/v2/tr/clear", {
         method: "POST",
         credentials: "include",
       })
         .then(() => {
-          requestToken(
-            //callback
-            () => setTimeout(() => setFailed(true), 3000),
-            //onerror
-            () => {
-              setSuccess(true);
-              navigate("/");
-            }
-          );
+          getNewToken
+            .refetch()
+            .then(
+              //callback
+              () => setTimeout(() => setFailed(true), 3000)
+            )
+            .catch(
+              //onerror
+              () => {
+                setSuccess(true);
+                navigate("/");
+              }
+            );
         })
         .catch(() => {
           setFailed(true);
         });
     }
-  }, [navigate, requestToken]);
+  }, [navigate, getNewToken]);
   useEffect(() => {
     tryLogout();
   }, [tryLogout]);
