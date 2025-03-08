@@ -1,12 +1,5 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +15,10 @@ import chara from "@/data/chara";
 import { personalityBG } from "@/utils/personalityBG";
 import { Personality } from "@/types/enums";
 import { UserDataUnowned } from "@/types/types";
+import {
+  useUserDataActions,
+  useUserDataUnowned,
+} from "@/stores/useUserDataStore";
 
 interface SelectCharaProp {
   isOpen: boolean;
@@ -94,8 +91,8 @@ const userDataReducerMini = (
 
 const SelectChara = ({ isOpen, onOpenChange }: SelectCharaProp) => {
   const { t } = useTranslation();
-  const { userData: globalUserData, userDataDispatch } =
-    useContext(AuthContext);
+  const userDataUnowned = useUserDataUnowned();
+  const { unownedImport } = useUserDataActions();
   const [userData, dispatchUserData] = useReducer(
     userDataReducerMini,
     undefined
@@ -103,15 +100,15 @@ const SelectChara = ({ isOpen, onOpenChange }: SelectCharaProp) => {
   const [search, setSearch] = useState("");
 
   const getFromUserData = useCallback(() => {
-    if (globalUserData && userDataDispatch)
-      dispatchUserData({ type: "import", data: globalUserData.unowned });
-  }, [globalUserData, userDataDispatch]);
+    if (userDataUnowned)
+      dispatchUserData({ type: "import", data: userDataUnowned });
+  }, [userDataUnowned]);
 
   const setToUserData = useCallback(
     (u: UserDataUnowned | undefined) => {
-      if (u && userDataDispatch) userDataDispatch?.unownedImport(u.o, u.u);
+      if (u) unownedImport({ o: u.o, u: u.u });
     },
-    [userDataDispatch]
+    [unownedImport]
   );
 
   useEffect(() => {
