@@ -68,8 +68,8 @@ export const useSyncQuery = () => {
   const getNewToken = useQuery({
     queryKey: ["authToken"],
     queryFn: getNewTokenFn,
-    staleTime: 1000 * 60 * 59,
-    refetchInterval: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 57,
+    refetchInterval: 1000 * 60 * 57,
     refetchOnWindowFocus: false,
     enabled: isGoogleLinked !== false,
   });
@@ -342,7 +342,7 @@ export const useSyncQuery = () => {
     queryKey: ["sync"],
     queryFn: syncFn,
     enabled: !!isGoogleLinked,
-    staleTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 30,
     refetchInterval: 1000 * 60 * 30,
   });
 
