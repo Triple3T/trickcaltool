@@ -1,6 +1,5 @@
-import { use, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "@/contexts/AuthContext";
 import Loading from "@/components/common/loading";
 import {
   Accordion,
@@ -19,6 +18,11 @@ import chara from "@/data/chara";
 import board from "@/data/board";
 import { BoardType } from "@/types/enums";
 import { UserDataOwnedCharaInfo } from "@/types/types";
+import {
+  useUserDataStatus,
+  useUserDataCharaInfo,
+  useUserDataUnowned,
+} from "@/stores/useUserDataStore";
 
 interface IFilteredBoardProp {
   name: string;
@@ -28,7 +32,9 @@ interface IFilteredBoardProp {
 
 const BoardSearch = () => {
   const { t } = useTranslation();
-  const { userData } = use(AuthContext);
+  const dataStatus = useUserDataStatus();
+  const userDataCharaInfo = useUserDataCharaInfo();
+  const userDataUnowned = useUserDataUnowned();
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [excludeUnowned, setExcludeUnowned] = useState<boolean>(false);
   const [filterBoardIndex, setFilterBoardIndex] = useState<number>(0);
@@ -39,10 +45,10 @@ const BoardSearch = () => {
   const [excludeUnlocked, setExcludeUnlocked] = useState<boolean>(false);
 
   const filteredBoards = useMemo(() => {
-    if (!userData) return [];
+    if (!userDataUnowned || !userDataCharaInfo) return [];
     // exclude unowned, filter by board index
     const firstFiltered = (
-      excludeUnowned ? userData.unowned.o : Object.keys(chara)
+      excludeUnowned ? userDataUnowned.o : Object.keys(chara)
     )
       .map((c) => {
         return board.c[c].b.map((b, i) => {
@@ -84,9 +90,9 @@ const BoardSearch = () => {
     const thirdFiltered = secondFiltered
       .filter((b) => {
         if (!excludeUnlocked) return true;
-        if (userData.charaInfo[b.name].unowned) return false;
+        if (userDataCharaInfo[b.name].unowned) return false;
         return (
-          (userData.charaInfo[b.name] as UserDataOwnedCharaInfo).nthboard <
+          (userDataCharaInfo[b.name] as UserDataOwnedCharaInfo).nthboard <
           b.index
         );
       })
@@ -99,10 +105,12 @@ const BoardSearch = () => {
     includeBoardType,
     includeMinimumCount,
     includePreviousBoardIndex,
-    userData,
+    userDataCharaInfo,
+    userDataUnowned,
   ]);
 
-  if (!userData) return <Loading />;
+  if (dataStatus !== "initialized" || !userDataCharaInfo || !userDataUnowned)
+    return <Loading />;
 
   return (
     <>
@@ -284,13 +292,13 @@ const BoardSearch = () => {
                 blockedBy={board.c[fb.name].k[fb.index - 1]}
                 search={includeBoardType}
                 unlocked={
-                  userData.charaInfo[fb.name].unowned
+                  userDataCharaInfo[fb.name].unowned
                     ? false
                     : fb.index <=
-                      (userData.charaInfo[fb.name] as UserDataOwnedCharaInfo)
+                      (userDataCharaInfo[fb.name] as UserDataOwnedCharaInfo)
                         .nthboard
                 }
-                skin={userData.charaInfo[fb.name].skin || 0}
+                skin={userDataCharaInfo[fb.name].skin || 0}
               />
             );
           })}

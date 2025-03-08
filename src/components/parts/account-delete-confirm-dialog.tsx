@@ -1,6 +1,5 @@
-import { use, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -15,33 +14,37 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSyncQuery } from "@/hooks/useSyncQuery";
+import { useUserDataActions } from "@/stores/useUserDataStore";
 
 export function AccountDeleteConfirmDialog() {
   const { t } = useTranslation();
-  const { requestToken } = use(AuthContext);
+  const { clearToken } = useUserDataActions();
+  const { getNewToken } = useSyncQuery();
   const [started, setStarted] = useState(false);
   const [value, setValue] = useState("");
   const accountDelete = useCallback(() => {
-    if (!requestToken) return;
+    if (!getNewToken) return;
     setStarted(true);
-    requestToken(
-      async (tok) => {
+    getNewToken
+      .refetch()
+      .then(async (tok) => {
         fetch("https://api.triple-lab.com/api/v2/tr/accountdelete", {
           method: "POST",
           headers: { Authorization: `Bearer ${tok}` },
         }).then((response) => {
           if (response.ok) {
             toast.success(t("ui.common.accountDeleteSuccess"));
+            clearToken();
             setTimeout(window.location.reload, 3000);
           } else
             toast.error(
               t("ui.common.accountDeleteFailed", response.statusText)
             );
         });
-      },
-      () => toast.error(t("ui.common.accountDeleteTokenTryFailed"))
-    );
-  }, [requestToken, t]);
+      })
+      .catch(() => toast.error(t("ui.common.accountDeleteTokenTryFailed")));
+  }, [clearToken, getNewToken, t]);
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

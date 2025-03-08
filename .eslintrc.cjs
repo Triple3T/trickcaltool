@@ -16,6 +16,7 @@ module.exports = {
     "@typescript-eslint",
     "@stylistic/ts",
     "eslint-plugin-react-compiler",
+    "@tanstack/eslint-plugin-query",
   ],
   rules: {
     "react-refresh/only-export-components": [

@@ -1,4 +1,4 @@
-import { use, useCallback } from "react";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,7 +11,12 @@ import {
   Upload,
   XCircle,
 } from "lucide-react";
-import { AuthContext } from "@/contexts/AuthContext";
+import { useSyncQuery } from "@/hooks/useSyncQuery";
+import {
+  useUserDataStatus,
+  useUserGoogleLinked,
+  useUserSyncStatus,
+} from "@/stores/useUserDataStore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,8 +32,10 @@ import { dataFileWrite } from "@/utils/dataRW";
 import { SyncStatus } from "@/types/enums";
 
 export function QuickSync() {
-  const { isReady, googleLinked, status, forceUpload, forceDownload } =
-    use(AuthContext);
+  const { forceUpload, forceDownload } = useSyncQuery();
+  const googleLinked = useUserGoogleLinked();
+  const dataStatus = useUserDataStatus();
+  const syncStatus = useUserSyncStatus();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const bgClass = useCallback((s: SyncStatus) => {
@@ -44,7 +51,7 @@ export function QuickSync() {
         return "";
     }
   }, []);
-  if (!isReady || !googleLinked)
+  if (dataStatus !== "initialized" || !googleLinked)
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -72,13 +79,13 @@ export function QuickSync() {
         <Button
           variant="outline"
           size="icon"
-          className={cn("transition-all relative", bgClass(status))}
+          className={cn("transition-all relative", bgClass(syncStatus))}
         >
           <RefreshCw
             className={cn(
               "h-[1.2rem] w-[1.2rem] transition-all animate-spin",
-              status === SyncStatus.Uploading ||
-                status === SyncStatus.Downloading
+              syncStatus === SyncStatus.Uploading ||
+                syncStatus === SyncStatus.Downloading
                 ? "opacity-100"
                 : "opacity-0"
             )}
@@ -86,26 +93,26 @@ export function QuickSync() {
           <Cloud
             className={cn(
               "h-[1.2rem] w-[1.2rem] transition-all absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2",
-              status === SyncStatus.Idle ? "opacity-100" : "opacity-0"
+              syncStatus === SyncStatus.Idle ? "opacity-100" : "opacity-0"
             )}
           />
           <CheckCircle
             className={cn(
               "h-[1.2rem] w-[1.2rem] transition-all absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2",
-              status === SyncStatus.Success ? "opacity-100" : "opacity-0"
+              syncStatus === SyncStatus.Success ? "opacity-100" : "opacity-0"
             )}
           />
           <XCircle
             className={cn(
               "h-[1.2rem] w-[1.2rem] transition-all absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2",
-              status === SyncStatus.Errored ? "opacity-100" : "opacity-0"
+              syncStatus === SyncStatus.Errored ? "opacity-100" : "opacity-0"
             )}
           />
           <span className="sr-only">Sync using Google account</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {status === SyncStatus.Uploading && (
+        {syncStatus === SyncStatus.Uploading && (
           <>
             <DropdownMenuItem disabled>
               {t("ui.index.sync.uploading")}
@@ -113,7 +120,7 @@ export function QuickSync() {
             <Separator className="my-1" />
           </>
         )}
-        {status === SyncStatus.Downloading && (
+        {syncStatus === SyncStatus.Downloading && (
           <>
             <DropdownMenuItem disabled>
               {t("ui.index.sync.downloading")}
@@ -121,7 +128,7 @@ export function QuickSync() {
             <Separator className="my-1" />
           </>
         )}
-        {status === SyncStatus.Errored && (
+        {syncStatus === SyncStatus.Errored && (
           <>
             <DropdownMenuItem disabled>
               {t("ui.index.sync.errored")}
@@ -137,23 +144,23 @@ export function QuickSync() {
         </DropdownMenuItem>
         <Separator className="my-1" />
         <DropdownMenuItem
-          onClick={() => forceUpload?.()}
+          onClick={() => forceUpload.mutateAsync(undefined)}
           disabled={[
             SyncStatus.Uploading,
             SyncStatus.Downloading,
             SyncStatus.Errored,
-          ].includes(status)}
+          ].includes(syncStatus)}
         >
           <Upload className="mr-2 h-4 w-4" />
           {t("ui.index.sync.upload")}
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => forceDownload?.()}
+          onClick={() => forceDownload.refetch()}
           disabled={[
             SyncStatus.Uploading,
             SyncStatus.Downloading,
             SyncStatus.Errored,
-          ].includes(status)}
+          ].includes(syncStatus)}
         >
           <Download className="mr-2 h-4 w-4" />
           {t("ui.index.sync.download")}

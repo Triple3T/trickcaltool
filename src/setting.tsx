@@ -1,4 +1,4 @@
-import { use, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ExternalLink,
@@ -10,7 +10,6 @@ import {
   Sun,
   SunMoon,
 } from "lucide-react";
-import { AuthContext } from "@/contexts/AuthContext";
 import { useTheme } from "@/components/theme-provider";
 import Loading from "@/components/common/loading";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -44,7 +43,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { currentSignature, oldSignatures } from "@/utils/versionMigrate";
-import googleAccessUrlLegacy from "./utils/googleAccessUrlLegacy";
+import googleAccessUrlLegacy from "@/utils/googleAccessUrlLegacy";
+import {
+  useUserDataActions,
+  useUserDataStatus,
+  useUserDataCharaInfo,
+  useUserGoogleLinked,
+} from "@/stores/useUserDataStore";
+import { useSyncQuery } from "@/hooks/useSyncQuery";
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 const b64IntoNumber = (b64: string) => {
@@ -71,14 +77,11 @@ const inappReg =
 const Setting = () => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
-  const {
-    forceUpload,
-    userData,
-    userDataDispatch,
-    readIntoUserData,
-    isReady,
-    googleLinked,
-  } = use(AuthContext);
+  const isReady = useUserDataStatus();
+  const { charaSkin, readIntoUserData } = useUserDataActions();
+  const userDataCharaInfo = useUserDataCharaInfo();
+  const googleLinked = useUserGoogleLinked();
+  const { forceUpload } = useSyncQuery();
   const fileInput = useRef<HTMLInputElement>(null);
   const [remoteHash, setRemoteHash] = useState<string>("");
   const [installButtonText, setInstallButtonText] = useState<string>(
@@ -158,7 +161,7 @@ const Setting = () => {
         window.location.reload();
       });
   }, []);
-  if (!userData || !userDataDispatch || !readIntoUserData) return <Loading />;
+  if (isReady !== 'initialized' || !userDataCharaInfo) return <Loading />;
 
   return (
     <>
@@ -282,7 +285,7 @@ const Setting = () => {
                         if (v.success) {
                           readIntoUserData();
                           if (isReady && googleLinked && forceUpload) {
-                            toast.promise(forceUpload, {
+                            toast.promise(forceUpload.mutateAsync(undefined), {
                               loading: t("ui.index.fileSync.uploading"),
                               success: t("ui.index.fileSync.uploadSuccess"),
                               error: t("ui.index.fileSync.uploadFailed"),
@@ -342,8 +345,8 @@ const Setting = () => {
                   <img
                     className="w-16 h-16"
                     src={
-                      userData.charaInfo[skinChangeChara].skin
-                        ? `/charas/${skinChangeChara}Skin${userData.charaInfo[skinChangeChara].skin}.png`
+                      userDataCharaInfo[skinChangeChara].skin
+                        ? `/charas/${skinChangeChara}Skin${userDataCharaInfo[skinChangeChara].skin}.png`
                         : `/charas/${skinChangeChara}.png`
                     }
                   />
@@ -360,7 +363,7 @@ const Setting = () => {
                     value={skinChangeChara}
                     onChange={(v) => {
                       setSkinChangeChara(v);
-                      const skinId = userData.charaInfo[skinChangeChara].skin;
+                      const skinId = userDataCharaInfo[skinChangeChara].skin;
                       setSkinNameId(
                         skinId ? `skin.${v}.${skinId}` : "defaultSkin"
                       );
@@ -386,7 +389,10 @@ const Setting = () => {
                               alt={t(skinNameId)}
                               className="w-9 h-9"
                               onClick={() => {
-                                userDataDispatch.charaSkin(skinChangeChara, i);
+                                charaSkin({
+                                  charaName: skinChangeChara,
+                                  skin: i,
+                                });
                                 setSkinNameId(skinNameId);
                               }}
                             />

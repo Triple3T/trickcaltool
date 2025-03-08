@@ -1,9 +1,8 @@
-import { use, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
-import { AuthContext } from "@/contexts/AuthContext";
 import Loading from "@/components/common/loading";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -34,13 +33,20 @@ import { Personality } from "@/types/enums";
 import chara from "@/data/chara";
 import food from "@/data/food";
 import material from "@/data/material";
+import {
+  useUserDataStatus,
+  useUserDataCharaInfo,
+} from "@/stores/useUserDataStore";
 
 interface IComboboxOuterProp {
   value: string;
   onChange: (value: string) => void;
 }
 
-export const CharacterComboboxFood = ({ value, onChange }: IComboboxOuterProp) => {
+export const CharacterComboboxFood = ({
+  value,
+  onChange,
+}: IComboboxOuterProp) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState<boolean>(false);
   const [v, setV] = useState<string>(value ? t(`chara.${value}`) : "");
@@ -144,7 +150,8 @@ export const CharacterComboboxFood = ({ value, onChange }: IComboboxOuterProp) =
 
 const Restaurant = () => {
   const { t } = useTranslation();
-  const { userData } = use(AuthContext);
+  const dataStatus = useUserDataStatus();
+  const userDataCharaInfo = useUserDataCharaInfo();
   const [selectedChara, setSelectedChara] = useState<string>("");
   const [selectedFood, setSelectedFood] = useState<string>("");
   // const [selectedMaterial, setSelectedMaterial] = useState<string>("");
@@ -167,7 +174,7 @@ const Restaurant = () => {
   //   setSelectedMaterial(materialId);
   // }, []);
 
-  if (!userData) return <Loading />;
+  if (dataStatus !== "initialized" || !userDataCharaInfo) return <Loading />;
 
   return (
     <>
@@ -175,7 +182,10 @@ const Restaurant = () => {
       <Card className="mx-auto w-max max-w-full p-4 font-onemobile">
         <div className="flex flex-col p-2 gap-4">
           <div className="flex flex-col sm:flex-row p-2 gap-2">
-            <CharacterComboboxFood value={selectedChara} onChange={searchChara} />
+            <CharacterComboboxFood
+              value={selectedChara}
+              onChange={searchChara}
+            />
             <ComboboxFood value={selectedFood} onChange={searchFood} />
           </div>
           <div className="flex flex-col gap-2">
@@ -459,6 +469,7 @@ const Restaurant = () => {
                           foodList[5].includes(Number(selectedFood))
                         )
                         .map(([c]) => {
+                          const { skin } = userDataCharaInfo[c];
                           return (
                             <div
                               key={c}
@@ -469,8 +480,8 @@ const Restaurant = () => {
                             >
                               <img
                                 src={
-                                  userData.charaInfo[c].skin
-                                    ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
+                                  skin
+                                    ? `/charas/${c}Skin${skin}.png`
                                     : `/charas/${c}.png`
                                 }
                                 className={cn(
@@ -497,6 +508,7 @@ const Restaurant = () => {
                         foodList[1].includes(Number(selectedFood))
                       )
                       .map(([c]) => {
+                        const { skin } = userDataCharaInfo[c];
                         return (
                           <div
                             key={c}
@@ -507,8 +519,8 @@ const Restaurant = () => {
                           >
                             <img
                               src={
-                                userData.charaInfo[c].skin
-                                  ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
+                                skin
+                                  ? `/charas/${c}Skin${skin}.png`
                                   : `/charas/${c}.png`
                               }
                               className={cn(
@@ -548,6 +560,7 @@ const Restaurant = () => {
                               !foodList[3].includes(Number(selectedFood))
                           )
                       ).map(([c]) => {
+                        const { skin } = userDataCharaInfo[c];
                         return (
                           <div
                             key={c}
@@ -558,8 +571,8 @@ const Restaurant = () => {
                           >
                             <img
                               src={
-                                userData.charaInfo[c].skin
-                                  ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
+                                skin
+                                  ? `/charas/${c}Skin${skin}.png`
                                   : `/charas/${c}.png`
                               }
                               className={cn(

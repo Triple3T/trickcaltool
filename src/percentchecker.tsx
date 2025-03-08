@@ -1,7 +1,6 @@
-import { Fragment, use, useEffect, useReducer, useState } from "react";
+import { Fragment, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, Check, Dot, SquareSlash, XOctagon } from "lucide-react";
-import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import {
   Accordion,
@@ -14,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import LazyInput from "@/components/common/lazy-input";
 import { StatType } from "@/types/enums";
+import { useUserDataStatPercents } from "@/stores/useUserDataStore";
 
 const statOrder = [8, 1, 0, 7, 6, 4, 2, 5, 3];
 
@@ -163,10 +163,6 @@ const ResultAlert = ({
   );
 };
 
-interface IPercentStatProps {
-  boardStat: { [key: string]: number };
-}
-
 type StatCollection = {
   [key in Exclude<keyof typeof StatType, number>]: number;
 };
@@ -195,23 +191,14 @@ const statReducer = (
 const cardCommonStyle = "p-2 bg-[#f5fde5] dark:bg-[#315c15]/75 w-full max-w-md";
 const PercentChecker = () => {
   const { t } = useTranslation();
+  const boardStat = useUserDataStatPercents();
   const [tab, setTab] = useState<"off" | "on" | "result">("off");
   const [lovePercent, setLovePercent] = useState(8);
   const [stats, dispatchStats] = useReducer(statReducer, { off: {}, on: {} });
-  const [boardStat, setBoardStat] = useState<IPercentStatProps["boardStat"]>();
-  const { userDataDispatch } = use(AuthContext);
-  useEffect(
-    () => setBoardStat(userDataDispatch?.getStatPercents()),
-    [userDataDispatch]
-  );
   if (!boardStat) return null;
-  // const setStat = useCallback((key: keyof IStatCollectionProps, value: number) => {}, []);
 
   return (
-    <div
-      className="font-onemobile flex flex-col items-center gap-2 w-max max-w-full mx-auto mt-4"
-      
-    >
+    <div className="font-onemobile flex flex-col items-center gap-2 w-max max-w-full mx-auto mt-4">
       <div className="text-sm opacity-75 mb-2 break-keep">
         {t("ui.percentCheck.description")}
       </div>

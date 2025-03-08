@@ -1,7 +1,6 @@
-import { use, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VirtuosoGrid } from "react-virtuoso";
-import { AuthContext } from "@/contexts/AuthContext";
 import icSearch from "@/lib/initialConsonantSearch";
 import {
   Accordion,
@@ -31,12 +30,18 @@ import {
   StatType,
 } from "@/types/enums";
 import { personalityBG } from "@/utils/personalityBG";
-
-import {
-  UserDataOwnedCharaInfo,
-} from "@/types/types";
 import { BoardCrayonStatistic, BoardStatStatistic } from "./trickcalboard";
-// import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+
+import { UserDataOwnedCharaInfo } from "@/types/types";
+import {
+  useUserDataActions,
+  useUserDataStatus,
+  useUserDataBoard,
+  useUserDataCharaInfo,
+  useUserDataPboard,
+  useUserDataUnowned,
+  useUserDataStatPercents,
+} from "@/stores/useUserDataStore";
 
 interface BoardDataCharaProps {
   name: string;
@@ -186,15 +191,40 @@ const PurpleBoardStatStatistic = ({
 
 const PurpleBoard = () => {
   const { t } = useTranslation();
-  const { userData, userDataDispatch } = use(AuthContext);
+  const dataStatus = useUserDataStatus();
+  const {
+    boardClick,
+    pboardClick,
+    boardIndex: changeBoardIndex,
+  } = useUserDataActions();
+  const userDataBoard = useUserDataBoard();
+  const userDataCharaInfo = useUserDataCharaInfo();
+  const userDataPboard = useUserDataPboard();
+  const userDataUnowned = useUserDataUnowned();
+  const boardStatPercent = useUserDataStatPercents();
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [boardStatMultiplied, setBoardStatMultiplied] = useState(false);
-  const [boardStatPercent, setBoardStatPercent] = useState<{
-    [key: string]: number;
-  }>({});
   const [newCharaAlert, setNewCharaAlert] = useState(false);
-  // const [viewMode, setViewMode] = useState<"target" | "full">("target");
+
+  const boardClickAsProp = useCallback(
+    (charaName: string, boardIndex: number, ldx: number, bdx: number) => {
+      boardClick({charaName, boardIndex, ldx, bdx});
+    },
+    [boardClick]
+  );
+  const pboardClickAsProp = useCallback(
+    (charaName: string, boardIndex: number, ldx: number, bdx: number) => {
+      pboardClick({charaName, boardIndex, ldx, bdx});
+    },
+    [pboardClick]
+  );
+  const changeBoardIndexAsProp = useCallback(
+    (charaName: string, boardIndex: number) => {
+      changeBoardIndex({charaName, boardIndex});
+    },
+    [changeBoardIndex]
+  );
 
   useEffect(() => {
     if (newCharaAlert) {
@@ -202,43 +232,8 @@ const PurpleBoard = () => {
       setNewCharaAlert(false);
     }
   }, [newCharaAlert, t]);
-  // const fileInput = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (userDataDispatch) {
-      setBoardStatPercent(userDataDispatch.getStatPercents());
-    }
-  }, [userDataDispatch]);
-  // useEffect(() => {
-  //   const boardStats: { [key: string]: number } = {};
-  //   const boardData = userdata.board.load().b;
-  //   Object.entries(boardData).forEach(([c, b]) => {
-  //     const charaBoard = board.c[c].b;
-  //     charaBoard.forEach((nthboard, i) => {
-  //       nthboard.forEach((boardList, j) => {
-  //         boardList
-  //           .toString(10)
-  //           .split("")
-  //           .forEach((targetBoardString, k) => {
-  //             const targetBoard = Number(targetBoardString);
-  //             const isChecked = b[i][j] & (1 << k);
-  //             if (isChecked) {
-  //               const statList = board.s[targetBoard];
-  //               statList.forEach((stat, statIndex) => {
-  //                 const statType = StatType[stat];
-  //                 const statValue = board.b[targetBoard][statIndex][i];
-  //                 boardStats[statType] =
-  //                   (boardStats[statType] ?? 0) + statValue;
-  //               });
-  //             }
-  //           });
-  //       });
-  //     });
-  //   });
-  //   setBoardStatPercent(boardStats);
-  // }, []);
-
-  if (!userData || !userDataDispatch) return <Loading />;
+  if (dataStatus !== 'initialized' || !userDataBoard || !userDataCharaInfo || !userDataPboard || !userDataUnowned) return <Loading />;
 
   return (
     <>
@@ -258,46 +253,6 @@ const PurpleBoard = () => {
                     />
                   </div>
                 </div>
-                {/* <div className="flex flex-col gap-2">
-                  <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
-                  <div className="flex flex-row gap-2 max-w-xl w-full px-4">
-                    <div className="flex-1">
-                      <Button
-                        className="w-full"
-                        onClick={() => dataFileWrite()}
-                      >
-                        {t("ui.common.backUp")}
-                      </Button>
-                    </div>
-                    <div className="flex-1">
-                      <Button
-                        className="w-full"
-                        onClick={() => fileInput.current?.click()}
-                      >
-                        {t("ui.common.restore")}
-                      </Button>
-                      <input
-                        type="file"
-                        accept=".txt"
-                        className="hidden"
-                        ref={fileInput}
-                        onChange={(e) =>
-                          dataFileRead(e.target.files).then((v) => {
-                            if (v.success) {
-                              toast.success(t("ui.index.fileSync.success"));
-                              initFromUserData();
-                              if (isReady && googleLinked && autoSave) {
-                                autoSave();
-                              }
-                            } else {
-                              toast.error(t(v.reason));
-                            }
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -354,14 +309,14 @@ const PurpleBoard = () => {
                               const returnArray = [] as BoardDataCharaProps[];
                               boardPositions.forEach((_, j) => {
                                 const unowned =
-                                  userData.charaInfo[charaName].unowned;
+                                  userDataCharaInfo[charaName].unowned;
                                 returnArray.push({
                                   name: charaName,
                                   ldx: j,
                                   bdx: boardIndex,
                                   checked: unowned
                                     ? false
-                                    : (userData.charaInfo[charaName].pboard[
+                                    : (userDataCharaInfo[charaName].pboard[
                                         nthboard
                                       ][boardIndex] &
                                         (1 << j)) >
@@ -395,7 +350,7 @@ const PurpleBoard = () => {
                 })}
                 <BoardCrayonStatistic
                   rarity={3}
-                  data={Object.values(userData.charaInfo).map((c) =>
+                  data={Object.values(userDataCharaInfo).map((c) =>
                     c.unowned ? [[0], [0], [0]] : c.pboard
                   )}
                   require={[3, 6, 9]}
@@ -439,7 +394,7 @@ const PurpleBoard = () => {
                                       .forEach((cbi, k) => {
                                         if (cbi === `${b}`) {
                                           const unowned =
-                                            userData.charaInfo[charaName]
+                                            userDataCharaInfo[charaName]
                                               .unowned;
                                           returnArray.push({
                                             name: charaName,
@@ -447,7 +402,7 @@ const PurpleBoard = () => {
                                             bdx: k,
                                             checked: unowned
                                               ? false
-                                              : (userData.charaInfo[charaName]
+                                              : (userDataCharaInfo[charaName]
                                                   .board[nthboard][j] &
                                                   (1 << k)) >
                                                 0,
@@ -485,7 +440,7 @@ const PurpleBoard = () => {
                 {
                   <BoardCrayonStatistic
                     rarity={4}
-                    data={Object.values(userData.charaInfo).map((c) =>
+                    data={Object.values(userDataCharaInfo).map((c) =>
                       c.unowned ? [[0], [0], [0]] : c.board
                     )}
                     require={[2, 4, 6]}
@@ -506,7 +461,7 @@ const PurpleBoard = () => {
         useWindowScroll
         className="font-onemobile mt-4"
         listClassName="gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-80 md:max-w-3xl lg:max-w-full mx-auto"
-        data={userData.unowned.o
+        data={userDataUnowned.o
           .filter((c) =>
             search
               ? t(`chara.${c}`).includes(search) ||
@@ -516,7 +471,7 @@ const PurpleBoard = () => {
           .sort((a, b) => t(`chara.${a}`).localeCompare(t(`chara.${b}`)))}
         itemContent={(_, name) => {
           // const currentBoard = board.c[name].b;
-          const currentCharaInfo = userData.charaInfo[
+          const currentCharaInfo = userDataCharaInfo[
             name
           ] as UserDataOwnedCharaInfo;
           const charaPersonality = Number(chara[name].t[0]);
@@ -535,9 +490,9 @@ const PurpleBoard = () => {
               personalityClassName={personalityClassName}
               skin={currentCharaInfo.skin}
               openBoardIndex={openBoardIndex}
-              dispatchClickBoardData={userDataDispatch.boardClick}
-              dispatchClickPurpleBoardData={userDataDispatch.pboardClick}
-              dispatchNthBoardData={userDataDispatch.boardIndex}
+              dispatchClickBoardData={boardClickAsProp}
+              dispatchClickPurpleBoardData={pboardClickAsProp}
+              dispatchNthBoardData={changeBoardIndexAsProp}
               board={currentCharaInfo.board}
               pboard={currentCharaInfo.pboard}
             />
