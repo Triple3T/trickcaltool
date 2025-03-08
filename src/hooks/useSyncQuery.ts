@@ -245,7 +245,11 @@ export const useSyncQuery = () => {
 
   const getFileContent = useQuery({
     queryKey: ["fileContent", "nonforce"],
-    queryFn: () => getFileContentFn(),
+    queryFn: () =>
+      getFileContentFn().catch(() => {
+        queryClient.invalidateQueries({ queryKey: ["fileContent"] });
+        queryClient.invalidateQueries({ queryKey: ["authToken"] });
+      }),
     enabled: false,
     retry: false,
   });
@@ -318,13 +322,16 @@ export const useSyncQuery = () => {
     } catch (error) {
       console.error(error);
       setSyncStatus(SyncStatus.Errored);
-      return undefined;
+      throw error;
     }
   };
   const applyBackup = useMutation({
     mutationFn: applyBackupFn,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fileContent"] });
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ["authToken"] });
     },
   });
 
@@ -351,11 +358,18 @@ export const useSyncQuery = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["fileContent"] });
     },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ["authToken"] });
+    },
   });
 
   const forceDownload = useQuery({
     queryKey: ["fileContent", "force"],
-    queryFn: () => getFileContentFn(true),
+    queryFn: () =>
+      getFileContentFn(true).catch(() => {
+        queryClient.invalidateQueries({ queryKey: ["fileContent"] });
+        queryClient.invalidateQueries({ queryKey: ["authToken"] });
+      }),
     enabled: false,
     retry: false,
   });
