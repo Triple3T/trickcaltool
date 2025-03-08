@@ -75,9 +75,11 @@ export const useSyncQuery = () => {
   });
 
   // sync download / unless force is true, it will not apply downloaded data if the server file is older than the current one
+  // return -1 if local file is newer, 0 if same, 1 if server file is newer
+  // return undefined if error occured
   const getFileContentFn = async (force?: boolean) => {
-    if (typeof usingIDB === "undefined") return;
-    if (!token) return;
+    if (typeof usingIDB === "undefined") return undefined;
+    if (!token) return undefined;
     const fileUrl = `${API_URL}/read`;
     try {
       setSyncStatus(SyncStatus.Downloading);
@@ -91,10 +93,15 @@ export const useSyncQuery = () => {
       });
       if (response.ok) {
         const fileContent = await response.text();
-        if (fileContent.length < 1) return false;
+        if (fileContent.length < 1) return -1;
         const serverFileTimestamp = b64IntoNumber(fileContent.slice(2, 10));
         const currentTimestamp = timestamp ?? 0;
-        if (serverFileTimestamp >= currentTimestamp || force) {
+        if (serverFileTimestamp === currentTimestamp) {
+          setSyncStatus(SyncStatus.Success);
+          setTimeout(setStatusToIdleIfSuccess, 3600);
+          return 0; // same, no need to apply
+        }
+        if (serverFileTimestamp > currentTimestamp || force) {
           const result = await dataFileImport(fileContent);
           if (result.success) {
             const newData = await readIntoMemory(usingIDB);
@@ -102,7 +109,8 @@ export const useSyncQuery = () => {
               restore(newData);
               setSyncStatus(SyncStatus.Success);
               setTimeout(setStatusToIdleIfSuccess, 3600);
-              return true;
+              // server file is newer, applied
+              return 1;
             } else {
               setSyncStatus(SyncStatus.Errored);
               throw new Error("store failed");
@@ -113,7 +121,7 @@ export const useSyncQuery = () => {
           }
         }
         // local file is newer
-        return false;
+        return -1;
       } else {
         switch (response.status) {
           case 400:
@@ -143,7 +151,7 @@ export const useSyncQuery = () => {
     } catch (error) {
       console.error(error);
       setSyncStatus(SyncStatus.Errored);
-      return undefined;
+      throw error;
     }
   };
 
@@ -323,8 +331,12 @@ export const useSyncQuery = () => {
   // first connect sync
   const syncFn = async () => {
     const result = await getFileContentFn(false);
-    if (result === false) await storeFileFn(false);
-    return true;
+    if (result === -1) await storeFileFn(false);
+    return {
+      success: true,
+      localRewrite: result === 1,
+      serverRewrite: result === -1,
+    };
   };
   const sync = useQuery({
     queryKey: ["sync"],
