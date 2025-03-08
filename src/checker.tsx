@@ -1,6 +1,5 @@
-import { use, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "./contexts/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BonusChecker from "@/components/checker/bonus-checker";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
@@ -11,21 +10,28 @@ import {
   getTotalLabStat,
 } from "@/utils/getTotalStatBonus";
 import { UserDataOwnedCharaInfo } from "@/types/types";
+import {
+  useUserDataStatus,
+  useUserDataCharaInfo,
+  useUserDataLab,
+} from "@/stores/useUserDataStore";
 
 const Checker = () => {
   const { t } = useTranslation();
-  const { userData } = use(AuthContext);
+  const dataStatus = useUserDataStatus();
+  const userDataCharaInfo = useUserDataCharaInfo();
+  const userDataLab = useUserDataLab();
   const ownedCharaInfo = useMemo<
     Record<string, UserDataOwnedCharaInfo> | undefined
   >(
     () =>
-      userData &&
+      userDataCharaInfo &&
       Object.fromEntries(
-        Object.entries(userData.charaInfo).filter(
+        Object.entries(userDataCharaInfo).filter(
           ([, v]) => !v.unowned
         ) as Array<[string, UserDataOwnedCharaInfo]>
       ),
-    [userData]
+    [userDataCharaInfo]
   );
   const boardStat = useMemo(
     () =>
@@ -58,11 +64,11 @@ const Checker = () => {
     [ownedCharaInfo]
   );
   const labStat = useMemo(
-    () => userData && getTotalLabStat(userData.lab),
-    [userData]
+    () => userDataLab && getTotalLabStat(userDataLab),
+    [userDataLab]
   );
   if (
-    !userData ||
+    dataStatus !== "initialized" ||
     !ownedCharaInfo ||
     !boardStat ||
     !pboardStat ||

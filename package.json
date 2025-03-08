@@ -32,6 +32,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
+    "@tanstack/react-query": "^5.67.1",
     "@types/pako": "^2.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -52,11 +53,13 @@
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^0.9.1"
+    "vaul": "^0.9.1",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240405.0",
     "@stylistic/eslint-plugin-ts": "^2.1.0",
+    "@tanstack/eslint-plugin-query": "^5.66.1",
     "@types/node": "^20.12.12",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

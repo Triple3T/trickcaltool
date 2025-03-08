@@ -1,7 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "@/contexts/AuthContext";
+import { useSyncQuery } from "@/hooks/useSyncQuery";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import googleAccessUrl from "@/utils/googleAccessUrl";
@@ -10,7 +10,7 @@ import { exportTextFile } from "./utils/dataRW";
 const Code = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { requestToken, sync } = useContext(AuthContext);
+  const { getNewToken, sync } = useSyncQuery();
   const [notRegistered, setNotRegistered] = useState(false);
   const [failed, setFailed] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -22,7 +22,7 @@ const Code = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (requestToken && searchParams) {
+    if (getNewToken && searchParams) {
       if (searchParams.get("code")) {
         const code = searchParams.get("code");
         fetch(`https://api.triple-lab.com/api/v2/tr/code?code=${code}`, {
@@ -42,16 +42,16 @@ const Code = () => {
             response.text().then((text) => {
               if (text === "OK") {
                 setAlreadyRegistered(true);
-                requestToken(
-                  //callback
-                  () => {
+                const resultPromise = getNewToken.refetch();
+                resultPromise.then((result) => {
+                  if (result.isSuccess) {
                     setSuccess(true);
-                    sync?.(true);
+                    sync.refetch();
                     setTimeout(() => navigate("/"), 3000);
-                  },
-                  //onerror
-                  () => setTimeout(() => setFailed(true), 3000)
-                );
+                  } else {
+                    setTimeout(() => setFailed(true), 2000);
+                  }
+                });
               } else if (text === "Not registered") {
                 setNotRegistered(true);
               }
@@ -63,12 +63,13 @@ const Code = () => {
         setFailed(true);
       }
     }
-  }, [navigate, requestToken, searchParams, sync]);
+  }, [sync, getNewToken, navigate, searchParams]);
 
   const register = useCallback(() => {
-    if (!requestToken) return;
-    requestToken(
-      (token) =>
+    if (!getNewToken) return;
+    getNewToken
+      .refetch()
+      .then((token) =>
         fetch(`https://api.triple-lab.com/api/v2/tr/register`, {
           method: "POST",
           headers: { authorization: `Bearer ${token}` },
@@ -77,32 +78,36 @@ const Code = () => {
           if (response.status === 200) {
             const registerResult = await response.json();
             setNotRegistered(false);
-            requestToken(
-              //callback
-              () => {
-                setSuccess(true);
-                if (registerResult.status === "conflict") {
-                  setAlreadyRegistered(true);
-                  sync?.(true);
-                  setTimeout(() => navigate("/"), 3000);
-                } else {
-                  setRecoveryCode(registerResult.uuid);
+            getNewToken
+              .refetch()
+              .then(
+                //callback
+                () => {
+                  setSuccess(true);
+                  if (registerResult.status === "conflict") {
+                    setAlreadyRegistered(true);
+                    sync.refetch();
+                    setTimeout(() => navigate("/"), 3000);
+                  } else {
+                    setRecoveryCode(registerResult.uuid);
+                  }
                 }
-              },
-              //onerror
-              () => setTimeout(() => setFailed(true), 3000)
-            );
+              )
+              .catch(
+                //onerror
+                () => setTimeout(() => setFailed(true), 3000)
+              );
           } else {
             setNotRegistered(false);
             setFailed(true);
           }
-        }),
-      () => {
+        })
+      )
+      .catch(() => {
         setNotRegistered(false);
         setFailed(true);
-      }
-    );
-  }, [navigate, requestToken, sync]);
+      });
+  }, [sync, getNewToken, navigate]);
 
   const registerCancel = useCallback(() => {
     navigate("/clear");

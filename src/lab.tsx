@@ -1,8 +1,7 @@
-import { use, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, ArrowRight, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AuthContext } from "@/contexts/AuthContext";
 import Loading from "@/components/common/loading";
 import {
   Accordion,
@@ -30,6 +29,13 @@ import { StatType, Race, LabEffectCategory } from "@/types/enums";
 
 // import { UserDataLab } from "@/types/types";
 // import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+import {
+  useUserDataActions,
+  useUserDataStatus,
+  useUserDataLab,
+  useUserDataMyhome,
+  useUserDataCollection,
+} from "@/stores/useUserDataStore";
 
 interface LabDataCurrent {
   indexDepth1: number;
@@ -320,20 +326,24 @@ const decompAll = (materials: { [key: string]: number }, mode: DecompMode) => {
 
 const Lab = () => {
   const { t } = useTranslation();
-  const { userData, userDataDispatch } = use(AuthContext);
+  const userDataStatus = useUserDataStatus();
+  const { labIndex, labMyHomeLevel, labCollection } = useUserDataActions();
+  const userDataLab = useUserDataLab();
+  const userDataMyhome = useUserDataMyhome();
+  const userDataCollection = useUserDataCollection();
   const effectTotal = useMemo(() => {
-    if (!userData) return [];
+    if (!userDataLab) return [];
     return reduceEffectTotal({
-      indexDepth1: userData.lab[1],
-      indexDepth2: userData.lab[2],
+      indexDepth1: userDataLab[1],
+      indexDepth2: userDataLab[2],
     });
-  }, [userData]);
+  }, [userDataLab]);
   const [materialDepth, setMaterialDepth] = useState<
     "indexDepth1" | "indexDepth2"
   >("indexDepth2");
   const materialRemainMyHome = useMemo(() => {
-    if (!userData) return { m: {}, g: 0 };
-    const { l, r, m, s, a } = userData.myhome;
+    if (!userDataMyhome) return { m: {}, g: 0 };
+    const { l, r, m, s, a } = userDataMyhome;
     return myHomeRemainMaterialReducer({
       lab: l,
       restaurant: r,
@@ -341,25 +351,25 @@ const Lab = () => {
       schedule: s,
       archive: a,
     });
-  }, [userData]);
+  }, [userDataMyhome]);
   const materialRemainLab = useMemo(() => {
-    if (!userData)
+    if (!userDataLab)
       return { indexDepth1: { m: {}, g: 0 }, indexDepth2: { m: {}, g: 0 } };
     return labRemainMaterialReducer({
-      indexDepth1: userData.lab[1],
-      indexDepth2: userData.lab[2],
+      indexDepth1: userDataLab[1],
+      indexDepth2: userDataLab[2],
     });
-  }, [userData]);
+  }, [userDataLab]);
   const materialRemainCollection = useMemo(() => {
-    if (!userData)
+    if (!userDataCollection)
       return {
         collectionProducible: [],
         collectionMaterialRemain: { m: {}, g: 0 },
         producibleFame: -1,
         producedFame: -1,
       };
-    return collectionRemainMaterialReducer(userData.collection.c);
-  }, [userData]);
+    return collectionRemainMaterialReducer(userDataCollection.c);
+  }, [userDataCollection]);
   const [showMaterialRemainCategory, setShowMaterialRemainCategory] = useState<
     boolean[]
   >([true, true, false]);
@@ -369,8 +379,25 @@ const Lab = () => {
   const [collectionCategory, setCollectionCategory] =
     useState<string>("Figure");
   const [page, setPage] = useState(0);
+  useEffect(() => {
+    if (userDataLab) setPage(userDataLab[1]);
+  }, [userDataLab]);
+  const labMyHomeLevelModify = useCallback(
+    (
+      target: Parameters<typeof labMyHomeLevel>[0]["target"],
+      index: number,
+      value: number
+    ) => labMyHomeLevel({ target, index, value }),
+    [labMyHomeLevel]
+  );
 
-  if (!userData || !userDataDispatch) return <Loading />;
+  if (
+    userDataStatus !== "initialized" ||
+    !userDataLab ||
+    !userDataMyhome ||
+    !userDataCollection
+  )
+    return <Loading />;
 
   return (
     <>
@@ -671,19 +698,19 @@ const Lab = () => {
                 {t("myhome.lab")}
               </div>
               <div>
-                <div>{userData.myhome.l[0] + 1}</div>
+                <div>{userDataMyhome.l[0] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.l[0] === 0}
+                    disabled={userDataMyhome.l[0] === 0}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "lab",
                         0,
                         Math.min(
-                          userData.myhome.l[1],
-                          Math.max(userData.myhome.l[0] - 1, 0)
+                          userDataMyhome.l[1],
+                          Math.max(userDataMyhome.l[0] - 1, 0)
                         )
                       )
                     }
@@ -694,17 +721,17 @@ const Lab = () => {
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.l[0] === myhomeupgrade.l.length ||
-                      userData.myhome.l[0] === userData.myhome.l[1]
+                      userDataMyhome.l[0] === myhomeupgrade.l.length ||
+                      userDataMyhome.l[0] === userDataMyhome.l[1]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "lab",
                         0,
                         Math.min(
-                          userData.myhome.l[1],
+                          userDataMyhome.l[1],
                           Math.min(
-                            userData.myhome.l[0] + 1,
+                            userDataMyhome.l[0] + 1,
                             myhomeupgrade.l.length
                           )
                         )
@@ -716,22 +743,22 @@ const Lab = () => {
                 </div>
               </div>
               <div>
-                <div>{userData.myhome.l[1] + 1}</div>
+                <div>{userDataMyhome.l[1] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.l[1] === 0 ||
-                      userData.myhome.l[1] === userData.myhome.l[0]
+                      userDataMyhome.l[1] === 0 ||
+                      userDataMyhome.l[1] === userDataMyhome.l[0]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "lab",
                         1,
                         Math.max(
-                          userData.myhome.l[0],
-                          Math.max(userData.myhome.l[1] - 1, 0)
+                          userDataMyhome.l[0],
+                          Math.max(userDataMyhome.l[1] - 1, 0)
                         )
                       )
                     }
@@ -741,15 +768,15 @@ const Lab = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.l[1] === myhomeupgrade.l.length}
+                    disabled={userDataMyhome.l[1] === myhomeupgrade.l.length}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "lab",
                         1,
                         Math.max(
-                          userData.myhome.l[0],
+                          userDataMyhome.l[0],
                           Math.min(
-                            userData.myhome.l[1] + 1,
+                            userDataMyhome.l[1] + 1,
                             myhomeupgrade.l.length
                           )
                         )
@@ -768,19 +795,19 @@ const Lab = () => {
                 {t("myhome.restaurant")}
               </div>
               <div>
-                <div>{userData.myhome.r[0] + 1}</div>
+                <div>{userDataMyhome.r[0] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.r[0] === 0}
+                    disabled={userDataMyhome.r[0] === 0}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "restaurant",
                         0,
                         Math.min(
-                          userData.myhome.r[1],
-                          Math.max(userData.myhome.r[0] - 1, 0)
+                          userDataMyhome.r[1],
+                          Math.max(userDataMyhome.r[0] - 1, 0)
                         )
                       )
                     }
@@ -791,17 +818,17 @@ const Lab = () => {
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.r[0] === myhomeupgrade.r.length ||
-                      userData.myhome.r[0] === userData.myhome.r[1]
+                      userDataMyhome.r[0] === myhomeupgrade.r.length ||
+                      userDataMyhome.r[0] === userDataMyhome.r[1]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "restaurant",
                         0,
                         Math.min(
-                          userData.myhome.r[1],
+                          userDataMyhome.r[1],
                           Math.min(
-                            userData.myhome.r[0] + 1,
+                            userDataMyhome.r[0] + 1,
                             myhomeupgrade.r.length
                           )
                         )
@@ -813,22 +840,22 @@ const Lab = () => {
                 </div>
               </div>
               <div>
-                <div>{userData.myhome.r[1] + 1}</div>
+                <div>{userDataMyhome.r[1] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.r[1] === 0 ||
-                      userData.myhome.r[1] === userData.myhome.r[0]
+                      userDataMyhome.r[1] === 0 ||
+                      userDataMyhome.r[1] === userDataMyhome.r[0]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "restaurant",
                         1,
                         Math.max(
-                          userData.myhome.r[0],
-                          Math.max(userData.myhome.r[1] - 1, 0)
+                          userDataMyhome.r[0],
+                          Math.max(userDataMyhome.r[1] - 1, 0)
                         )
                       )
                     }
@@ -838,15 +865,15 @@ const Lab = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.r[1] === myhomeupgrade.r.length}
+                    disabled={userDataMyhome.r[1] === myhomeupgrade.r.length}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "restaurant",
                         1,
                         Math.max(
-                          userData.myhome.r[0],
+                          userDataMyhome.r[0],
                           Math.min(
-                            userData.myhome.r[1] + 1,
+                            userDataMyhome.r[1] + 1,
                             myhomeupgrade.r.length
                           )
                         )
@@ -865,19 +892,19 @@ const Lab = () => {
                 {t("myhome.myhome")}
               </div>
               <div>
-                <div>{userData.myhome.m[0] + 1}</div>
+                <div>{userDataMyhome.m[0] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.m[0] === 0}
+                    disabled={userDataMyhome.m[0] === 0}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "myhome",
                         0,
                         Math.min(
-                          userData.myhome.m[1],
-                          Math.max(userData.myhome.m[0] - 1, 0)
+                          userDataMyhome.m[1],
+                          Math.max(userDataMyhome.m[0] - 1, 0)
                         )
                       )
                     }
@@ -888,17 +915,17 @@ const Lab = () => {
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.m[0] === myhomeupgrade.m.length ||
-                      userData.myhome.m[0] === userData.myhome.m[1]
+                      userDataMyhome.m[0] === myhomeupgrade.m.length ||
+                      userDataMyhome.m[0] === userDataMyhome.m[1]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "myhome",
                         0,
                         Math.min(
-                          userData.myhome.m[1],
+                          userDataMyhome.m[1],
                           Math.min(
-                            userData.myhome.m[0] + 1,
+                            userDataMyhome.m[0] + 1,
                             myhomeupgrade.m.length
                           )
                         )
@@ -910,22 +937,22 @@ const Lab = () => {
                 </div>
               </div>
               <div>
-                <div>{userData.myhome.m[1] + 1}</div>
+                <div>{userDataMyhome.m[1] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.m[1] === 0 ||
-                      userData.myhome.m[1] === userData.myhome.m[0]
+                      userDataMyhome.m[1] === 0 ||
+                      userDataMyhome.m[1] === userDataMyhome.m[0]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "myhome",
                         1,
                         Math.max(
-                          userData.myhome.m[0],
-                          Math.max(userData.myhome.m[1] - 1, 0)
+                          userDataMyhome.m[0],
+                          Math.max(userDataMyhome.m[1] - 1, 0)
                         )
                       )
                     }
@@ -935,15 +962,15 @@ const Lab = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.m[1] === myhomeupgrade.m.length}
+                    disabled={userDataMyhome.m[1] === myhomeupgrade.m.length}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "myhome",
                         1,
                         Math.max(
-                          userData.myhome.m[0],
+                          userDataMyhome.m[0],
                           Math.min(
-                            userData.myhome.m[1] + 1,
+                            userDataMyhome.m[1] + 1,
                             myhomeupgrade.m.length
                           )
                         )
@@ -962,19 +989,19 @@ const Lab = () => {
                 {t("myhome.schedule")}
               </div>
               <div>
-                <div>{userData.myhome.s[0] + 1}</div>
+                <div>{userDataMyhome.s[0] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.s[0] === 0}
+                    disabled={userDataMyhome.s[0] === 0}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "schedule",
                         0,
                         Math.min(
-                          userData.myhome.s[1],
-                          Math.max(userData.myhome.s[0] - 1, 0)
+                          userDataMyhome.s[1],
+                          Math.max(userDataMyhome.s[0] - 1, 0)
                         )
                       )
                     }
@@ -985,17 +1012,17 @@ const Lab = () => {
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.s[0] === myhomeupgrade.s.length ||
-                      userData.myhome.s[0] === userData.myhome.s[1]
+                      userDataMyhome.s[0] === myhomeupgrade.s.length ||
+                      userDataMyhome.s[0] === userDataMyhome.s[1]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "schedule",
                         0,
                         Math.min(
-                          userData.myhome.s[1],
+                          userDataMyhome.s[1],
                           Math.min(
-                            userData.myhome.s[0] + 1,
+                            userDataMyhome.s[0] + 1,
                             myhomeupgrade.s.length
                           )
                         )
@@ -1007,22 +1034,22 @@ const Lab = () => {
                 </div>
               </div>
               <div>
-                <div>{userData.myhome.s[1] + 1}</div>
+                <div>{userDataMyhome.s[1] + 1}</div>
                 <div>
                   <Button
                     variant="ghost"
                     size="icon"
                     disabled={
-                      userData.myhome.s[1] === 0 ||
-                      userData.myhome.s[1] === userData.myhome.s[0]
+                      userDataMyhome.s[1] === 0 ||
+                      userDataMyhome.s[1] === userDataMyhome.s[0]
                     }
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "schedule",
                         1,
                         Math.max(
-                          userData.myhome.s[0],
-                          Math.max(userData.myhome.s[1] - 1, 0)
+                          userDataMyhome.s[0],
+                          Math.max(userDataMyhome.s[1] - 1, 0)
                         )
                       )
                     }
@@ -1032,15 +1059,15 @@ const Lab = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    disabled={userData.myhome.s[1] === myhomeupgrade.s.length}
+                    disabled={userDataMyhome.s[1] === myhomeupgrade.s.length}
                     onClick={() =>
-                      userDataDispatch.labMyHomeLevel(
+                      labMyHomeLevelModify(
                         "schedule",
                         1,
                         Math.max(
-                          userData.myhome.s[0],
+                          userDataMyhome.s[0],
                           Math.min(
-                            userData.myhome.s[1] + 1,
+                            userDataMyhome.s[1] + 1,
                             myhomeupgrade.s.length
                           )
                         )
@@ -1076,7 +1103,7 @@ const Lab = () => {
                     <ArrowLeft />
                   </Button>
                   <div className="flex flex-col items-center justify-center flex-auto min-w-max px-2 text-center">
-                    <span onClick={() => setPage(userData.lab[1] ?? 0)}>
+                    <span onClick={() => setPage(userDataLab[1] ?? 0)}>
                       {t("ui.lab.labStep", { 0: `${page + 1}` })}
                     </span>
                   </div>
@@ -1097,7 +1124,7 @@ const Lab = () => {
                     const indexDepth1 = page;
                     const incompleted =
                       indexDepth1 * 10000 + indexDepth2 >
-                      (userData.lab[1] ?? 0) * 10000 + (userData.lab[2] ?? 0);
+                      (userDataLab[1] ?? 0) * 10000 + (userDataLab[2] ?? 0);
                     return (
                       <Card
                         key={indexDepth2}
@@ -1105,9 +1132,7 @@ const Lab = () => {
                           "text-center font-onemobile p-1 flex flex-row gap-2",
                           incompleted ? "" : "bg-[#f2f9e7] dark:bg-[#36a52d]"
                         )}
-                        onClick={() =>
-                          userDataDispatch.labIndex(indexDepth1, indexDepth2)
-                        }
+                        onClick={() => labIndex({ indexDepth1, indexDepth2 })}
                       >
                         <div
                           className={cn(
@@ -1295,7 +1320,7 @@ const Lab = () => {
                             <div
                               className="w-20 h-20 relative flex-initial"
                               onClick={() =>
-                                userDataDispatch.labCollection(id, !collected)
+                                labCollection({ id, collected: !collected })
                               }
                             >
                               <ItemSlot

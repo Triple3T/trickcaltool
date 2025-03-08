@@ -1,4 +1,11 @@
-import { Suspense, lazy, use, useEffect, useMemo, useState } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   ArrowDownUp,
@@ -9,7 +16,6 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { AuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import icSearch from "@/lib/initialConsonantSearch";
 import {
@@ -21,13 +27,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
 import Select from "@/components/common/combobox-select";
 import Loading from "@/components/common/loading";
 import { Switch } from "@/components/ui/switch";
@@ -36,7 +35,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
 import LazyInput from "@/components/common/lazy-input";
 import SearchBox from "@/components/common/search-with-icon";
-// import board from "@/data/board";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import {
@@ -58,7 +56,15 @@ import { personalityBG } from "@/utils/personalityBG";
 import rankClassNames from "@/utils/rankClassNames";
 
 import { UserDataOwnedCharaInfo } from "@/types/types";
-// import { dataFileRead, dataFileWrite } from "@/utils/dataRW";
+import {
+  useUserDataActions,
+  useUserDataStatus,
+  useUserDataEqrank,
+  useUserDataCharaInfo,
+  useUserDataStatPercents,
+  useUserDataUnowned,
+  useUserDataStatistics,
+} from "@/stores/useUserDataStore";
 
 const MAX_RANK = 10;
 
@@ -66,13 +72,27 @@ type ViewType = "input" | "rankView" | "targetView";
 
 const EquipRank = () => {
   const { t } = useTranslation();
-  const { userData, userDataDispatch } = use(AuthContext);
+  const dataStatus = useUserDataStatus();
+  const {
+    rankModify,
+    rankTargetStat,
+    rankMinRank,
+    rankMaxRank,
+    rankApplyMinMax,
+    rankSort,
+    rankFilter,
+  } = useUserDataActions();
+  const userDataEqrank = useUserDataEqrank();
+  const userDataCharaInfo = useUserDataCharaInfo();
+  const boardStat = useUserDataStatPercents();
+  const userDataUnowned = useUserDataUnowned();
+  const userStatistics = useUserDataStatistics();
   const [viewType, setViewType] = useState<ViewType>("rankView");
   const [enableDialog, setEnableDialog] = useState(true);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [withBoardStat, setWithBoardStat] = useState(false);
-  const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
+  // const [boardStat, setBoardStat] = useState<{ [key: string]: number }>({});
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(true);
   const [rankDirty, setRankDirty] = useState(false);
@@ -81,41 +101,28 @@ const EquipRank = () => {
   const [rankDialogProp, setRankDialogProp] =
     useState<Omit<RankInfoDialogProps, "opened" | "onOpenChange">>();
 
-  // const setDialogEnabled = useCallback((enabled: boolean) => {
-  //   setEnableDialog(enabled);
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const { autoRepaired, ...userDialogData } = userdata.dialog.load();
-  //   userdata.dialog.save({ ...userDialogData, eqrank: enabled }, true);
-  // }, []);
   useEffect(() => {
     if (newCharaAlert) {
       toast.info(t("ui.index.newCharacterAlert"));
       setNewCharaAlert(false);
     }
   }, [newCharaAlert, t]);
-  // const fileInput = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
-    if (userDataDispatch) {
-      setBoardStat(userDataDispatch.getStatPercents());
-    }
-  }, [userDataDispatch]);
-  useEffect(() => {
-    if (userData) {
-      const isRankNotDirty = Object.values(userData.charaInfo)
+    if (userDataCharaInfo && userDataEqrank) {
+      const isRankNotDirty = Object.values(userDataCharaInfo)
         .map((c) => (c.unowned ? -1 : c.eqrank))
         .filter((r) => r > 0)
-        .every((r) => r >= userData.eqrank.s[0] && r <= userData.eqrank.s[1]);
+        .every((r) => r >= userDataEqrank.s[0] && r <= userDataEqrank.s[1]);
       setRankDirty(!isRankNotDirty);
       if (!isRankNotDirty) {
         setViewType("input");
         setDirtyRankCharas(
-          Object.entries(userData.charaInfo)
+          Object.entries(userDataCharaInfo)
             .filter(
               ([, c]) =>
                 !c.unowned &&
-                (c.eqrank < userData.eqrank.s[0] ||
-                  c.eqrank > userData.eqrank.s[1])
+                (c.eqrank < userDataEqrank.s[0] ||
+                  c.eqrank > userDataEqrank.s[1])
             )
             .map(([c]) => c)
         );
@@ -123,43 +130,14 @@ const EquipRank = () => {
         setDirtyRankCharas([]);
       }
     }
-  }, [userData]);
-  // const getBoardStats = useCallback(() => {
-  //   if (Object.keys(boardStat).length !== 0) return;
-  //   const boardStats: { [key: string]: number } = {};
-  //   const boardData = userdata.board.load().b;
-  //   Object.entries(boardData).forEach(([c, b]) => {
-  //     const charaBoard = board.c[c].b;
-  //     charaBoard.forEach((nthboard, i) => {
-  //       nthboard.forEach((boardList, j) => {
-  //         boardList
-  //           .toString(10)
-  //           .split("")
-  //           .forEach((targetBoardString, k) => {
-  //             const targetBoard = Number(targetBoardString);
-  //             const isChecked = b[i][j] & (1 << k);
-  //             if (isChecked) {
-  //               const statList = board.s[targetBoard];
-  //               statList.forEach((stat, statIndex) => {
-  //                 const statType = StatType[stat];
-  //                 const statValue = board.b[targetBoard][statIndex][i];
-  //                 boardStats[statType] =
-  //                   (boardStats[statType] ?? 0) + statValue;
-  //               });
-  //             }
-  //           });
-  //       });
-  //     });
-  //   });
-  //   setBoardStat(boardStats);
-  // }, [boardStat]);
+  }, [userDataCharaInfo, userDataEqrank]);
 
   type SortFuncType = (a: string, b: string) => number;
   const sortFunc = useMemo<SortFuncType>(() => {
     const defaultFunc: SortFuncType = (a, b) =>
       t(`chara.${a}`).localeCompare(t(`chara.${b}`));
-    if (!userData) return defaultFunc;
-    const sortAndFilter = userData.eqrank.f;
+    if (!userDataEqrank) return defaultFunc;
+    const sortAndFilter = userDataEqrank.f;
     const sortedWith = sortAndFilter.find((v) => v[0] === SortOrFilter.Sort);
     if (!sortedWith) return defaultFunc;
     switch (sortedWith[1] ?? SortBy.Name) {
@@ -178,13 +156,13 @@ const EquipRank = () => {
       default:
         return defaultFunc;
     }
-  }, [t, userData]);
+  }, [t, userDataEqrank]);
 
   type FilterFuncType = (c: string) => boolean;
   const filterFunc = useMemo<FilterFuncType>(() => {
     const defaultFunc: FilterFuncType = () => true;
-    if (!userData) return defaultFunc;
-    const sortAndFilter = userData.eqrank.f;
+    if (!userDataEqrank) return defaultFunc;
+    const sortAndFilter = userDataEqrank.f;
     const filterByTypes = Object.values(FilterBy).filter(
       (f) => typeof f === "string"
     ) as (keyof typeof FilterBy)[];
@@ -197,9 +175,14 @@ const EquipRank = () => {
       return (c) => (filterWith[2] & (1 << Number(chara[c].t[filterBy]))) > 0;
     });
     return (c) => filteredWithAll.every((f) => f(c));
-  }, [userData]);
+  }, [userDataEqrank]);
 
-  if (!userData || !userDataDispatch) return <Loading />;
+  const rankModifyAsProp = useCallback(
+    (charaName: string, rank: number) => rankModify({ charaName, rank }),
+    [rankModify]
+  );
+
+  if (dataStatus !== 'initialized' || !userDataEqrank || !userDataCharaInfo || !boardStat || !userDataUnowned) return <Loading />;
 
   return (
     <>
@@ -231,11 +214,9 @@ const EquipRank = () => {
                         <Select
                           value={Math.min(
                             10,
-                            Math.max(userData.eqrank.s[0] || 1, 1)
+                            Math.max(userDataEqrank.s[0] || 1, 1)
                           )}
-                          setValue={(v) => {
-                            userDataDispatch.rankMinRank(v);
-                          }}
+                          setValue={rankMinRank}
                           placeholder={t("ui.equiprank.rankText", {
                             0: "1",
                           })}
@@ -248,53 +229,12 @@ const EquipRank = () => {
                             })
                           )}
                         />
-                        {/* <Select
-                          value={`${rankData?.minRank || 1}`}
-                          onValueChange={(v) => {
-                            dispatchRankData({
-                              type: "minrank",
-                              payload: Number(v),
-                            });
-                            if (rankData) {
-                              setDirtyRankCharas(
-                                Object.entries(rankData.charas)
-                                  .filter(
-                                    ([, c]) =>
-                                      c.rank < Number(v) ||
-                                      c.rank > rankData.maxRank
-                                  )
-                                  .map(([c]) => c)
-                              );
-                            }
-                          }}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue
-                              placeholder={t("ui.equiprank.rankText", {
-                                0: "1",
-                              })}
-                            />
-                          </SelectTrigger>
-                          <SelectContent className="font-onemobile">
-                            {Array.from(Array(MAX_RANK).keys()).map((i) => {
-                              return (
-                                <SelectItem key={i + 1} value={`${i + 1}`}>
-                                  {t("ui.equiprank.rankText", {
-                                    0: `${i + 1}`,
-                                  })}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select> */}
                         <Select
                           value={Math.min(
                             10,
-                            Math.max(userData.eqrank.s[1] || 1, 1)
+                            Math.max(userDataEqrank.s[1] || 1, 1)
                           )}
-                          setValue={(v) => {
-                            userDataDispatch.rankMaxRank(v);
-                          }}
+                          setValue={rankMaxRank}
                           placeholder={t("ui.equiprank.rankText", {
                             0: "1",
                           })}
@@ -307,50 +247,11 @@ const EquipRank = () => {
                             })
                           )}
                         />
-                        {/* <Select
-                          value={`${rankData?.maxRank || 1}`}
-                          onValueChange={(v) => {
-                            dispatchRankData({
-                              type: "maxrank",
-                              payload: Number(v),
-                            });
-                            if (rankData) {
-                              setDirtyRankCharas(
-                                Object.entries(rankData.charas)
-                                  .filter(
-                                    ([, c]) =>
-                                      c.rank < rankData.minRank ||
-                                      c.rank > Number(v)
-                                  )
-                                  .map(([c]) => c)
-                              );
-                            }
-                          }}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue
-                              placeholder={t("ui.equiprank.rankText", {
-                                0: "1",
-                              })}
-                            />
-                          </SelectTrigger>
-                          <SelectContent className="font-onemobile">
-                            {Array.from(Array(MAX_RANK).keys()).map((i) => {
-                              return (
-                                <SelectItem key={i + 1} value={`${i + 1}`}>
-                                  {t("ui.equiprank.rankText", {
-                                    0: `${i + 1}`,
-                                  })}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select> */}
                       </div>
                       <div className="text-right text-red-500 dark:text-red-400 text-sm">
                         {t("ui.equiprank.reqLevel", {
-                          0: `${userData.eqrank.s[1] || 1}`,
-                          1: `${eqrank.q[(userData.eqrank.s[1] || 1) - 1]}`,
+                          0: `${userDataEqrank.s[1] || 1}`,
+                          1: `${eqrank.q[(userDataEqrank.s[1] || 1) - 1]}`,
                         })}
                         <RankReqLevelDialog
                           reqs={eqrank.q}
@@ -376,7 +277,7 @@ const EquipRank = () => {
                           )
                             .sort((a, b) => SortBy[a] - SortBy[b])
                             .map((s) => {
-                              const sortedWith = userData.eqrank.f.find(
+                              const sortedWith = userDataEqrank.f.find(
                                 (v) => v[0] === SortOrFilter.Sort
                               );
                               const sortedByThis =
@@ -391,7 +292,7 @@ const EquipRank = () => {
                                   size="sm"
                                   variant={sortedByThis ? "default" : "outline"}
                                   onClick={() =>
-                                    userDataDispatch.rankSort(SortBy[s])
+                                    rankSort(SortBy[s])
                                   }
                                 >
                                   {sortedByThis && hasDirection ? (
@@ -418,7 +319,7 @@ const EquipRank = () => {
                             ) as (keyof typeof Personality)[]
                           ).map((p) => {
                             const filteredWithPersonality =
-                              userData.eqrank.f.find(
+                              userDataEqrank.f.find(
                                 (v) =>
                                   v[0] === SortOrFilter.Filter &&
                                   v[1] === FilterBy.Personality
@@ -434,10 +335,10 @@ const EquipRank = () => {
                                 size="icon"
                                 variant="outline"
                                 onClick={() =>
-                                  userDataDispatch.rankFilter(
-                                    FilterBy.Personality,
-                                    personalityNumber
-                                  )
+                                  rankFilter({
+                                    filterBy: FilterBy.Personality,
+                                    filter: personalityNumber,
+                                  })
                                 }
                                 className={cn(
                                   "flex-1 max-w-10 min-w-6 w-full h-auto aspect-square",
@@ -464,7 +365,7 @@ const EquipRank = () => {
                       size="sm"
                       className="flex-1"
                       onClick={() =>
-                        userDataDispatch.rankTargetStat(
+                        rankTargetStat(
                           (
                             Object.values(StatType).filter(
                               (b) => typeof b === "string"
@@ -480,7 +381,7 @@ const EquipRank = () => {
                       size="sm"
                       className="flex-1"
                       onClick={() =>
-                        userDataDispatch.rankTargetStat([
+                        rankTargetStat([
                           StatType.AttackMagic,
                           StatType.AttackPhysic,
                           StatType.Hp,
@@ -494,9 +395,9 @@ const EquipRank = () => {
                     <ToggleGroup
                       type="multiple"
                       className="flex-wrap"
-                      value={userData.eqrank.v.map((b) => StatType[b]) ?? []}
+                      value={userDataEqrank.v.map((b) => StatType[b]) ?? []}
                       onValueChange={(v) =>
-                        userDataDispatch.rankTargetStat(
+                        rankTargetStat(
                           v.map((b) => StatType[b as keyof typeof StatType])
                         )
                       }
@@ -554,46 +455,6 @@ const EquipRank = () => {
                     </Label>
                   </div>
                 </div>
-                {/* <div className="flex flex-col gap-2">
-                  <SubtitleBar>{t("ui.common.backUpAndRestore")}</SubtitleBar>
-                  <div className="flex flex-row gap-2 max-w-xl w-full px-4">
-                    <div className="flex-1">
-                      <Button
-                        className="w-full"
-                        onClick={() => dataFileWrite()}
-                      >
-                        {t("ui.common.backUp")}
-                      </Button>
-                    </div>
-                    <div className="flex-1">
-                      <Button
-                        className="w-full"
-                        onClick={() => fileInput.current?.click()}
-                      >
-                        {t("ui.common.restore")}
-                      </Button>
-                      <input
-                        type="file"
-                        accept=".txt"
-                        className="hidden"
-                        ref={fileInput}
-                        onChange={(e) =>
-                          dataFileRead(e.target.files).then((v) => {
-                            if (v.success) {
-                              toast.success(t("ui.index.fileSync.success"));
-                              initFromUserData();
-                              if (isReady && googleLinked && autoSave) {
-                                autoSave();
-                              }
-                            } else {
-                              toast.error(t(v.reason));
-                            }
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -618,7 +479,7 @@ const EquipRank = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
                 {Object.entries(
                   (
-                    Object.entries(userData.charaInfo).filter(
+                    Object.entries(userDataCharaInfo).filter(
                       ([, v]) => !v.unowned
                     ) as Array<[string, UserDataOwnedCharaInfo]>
                   )
@@ -724,7 +585,7 @@ const EquipRank = () => {
                   <div className="flex-initial text-right">
                     <Button
                       variant="destructive"
-                      onClick={userDataDispatch.rankApplyMinMax}
+                      onClick={rankApplyMinMax}
                     >
                       {t("ui.equiprank.applyMinMax")}
                     </Button>
@@ -744,7 +605,7 @@ const EquipRank = () => {
               <div
                 className={`border w-full p-3 sm:p-4 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(7rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(8rem,_1fr))] gap-3 sm:gap-4`}
               >
-                {userData.unowned.o
+                {userDataUnowned.o
                   .sort((a, b) =>
                     t(`chara.${a}`).localeCompare(t(`chara.${b}`))
                   )
@@ -759,15 +620,15 @@ const EquipRank = () => {
                   })
                   .map((c) => {
                     const currentCharaEqrank = (
-                      userData.charaInfo[c] as UserDataOwnedCharaInfo
+                      userDataCharaInfo[c] as UserDataOwnedCharaInfo
                     ).eqrank;
                     return (
                       <div key={c} className="flex flex-col gap-1">
                         <div className="min-w-28 min-h-28 sm:min-w-32 sm:min-h-32 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                           <img
                             src={
-                              userData.charaInfo[c].skin
-                                ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
+                              userDataCharaInfo[c].skin
+                                ? `/charas/${c}Skin${userDataCharaInfo[c].skin}.png`
                                 : `/charas/${c}.png`
                             }
                             className={cn(
@@ -785,19 +646,19 @@ const EquipRank = () => {
                           <Button
                             className="h-full p-0 aspect-square bg-greenicon"
                             disabled={
-                              currentCharaEqrank <= userData.eqrank.s[0]
+                              currentCharaEqrank <= userDataEqrank.s[0]
                             }
                             onClick={() =>
-                              userDataDispatch.rankModify(
-                                c,
-                                Math.max(
+                              rankModify({
+                                charaName: c,
+                                rank: Math.max(
                                   Math.min(
                                     currentCharaEqrank - 1,
-                                    userData.eqrank.s[1]
+                                    userDataEqrank.s[1]
                                   ),
-                                  userData.eqrank.s[0]
-                                )
-                              )
+                                  userDataEqrank.s[0]
+                                ),
+                              })
                             }
                           >
                             <Minus className="w-full aspect-square" />
@@ -806,8 +667,8 @@ const EquipRank = () => {
                             type="text"
                             className={cn(
                               "w-full p-1.5 text-right h-full",
-                              currentCharaEqrank > userData.eqrank.s[1] ||
-                                currentCharaEqrank < userData.eqrank.s[0]
+                              currentCharaEqrank > userDataEqrank.s[1] ||
+                                currentCharaEqrank < userDataEqrank.s[0]
                                 ? "ring-2 ring-red-400 dark:ring-red-600 bg-red-200 dark:bg-red-900"
                                 : ""
                             )}
@@ -815,36 +676,36 @@ const EquipRank = () => {
                             value={`${Math.max(
                               Math.min(
                                 currentCharaEqrank,
-                                userData.eqrank.s[1]
+                                userDataEqrank.s[1]
                               ),
-                              userData.eqrank.s[0]
+                              userDataEqrank.s[0]
                             )}`}
                             onValueChange={(v) =>
-                              userDataDispatch.rankModify(
-                                c,
-                                Math.max(
-                                  Math.min(Number(v), userData.eqrank.s[1]),
-                                  userData.eqrank.s[0]
-                                )
-                              )
+                              rankModify({
+                                charaName: c,
+                                rank: Math.max(
+                                  Math.min(Number(v), userDataEqrank.s[1]),
+                                  userDataEqrank.s[0]
+                                ),
+                              })
                             }
                           />
                           <Button
                             className="h-full p-0 aspect-square bg-greenicon"
                             disabled={
-                              currentCharaEqrank >= userData.eqrank.s[1]
+                              currentCharaEqrank >= userDataEqrank.s[1]
                             }
                             onClick={() =>
-                              userDataDispatch.rankModify(
-                                c,
-                                Math.max(
+                              rankModify({
+                                charaName: c,
+                                rank: Math.max(
                                   Math.min(
                                     currentCharaEqrank + 1,
-                                    userData.eqrank.s[1]
+                                    userDataEqrank.s[1]
                                   ),
-                                  userData.eqrank.s[0]
-                                )
-                              )
+                                  userDataEqrank.s[0]
+                                ),
+                              })
                             }
                           >
                             <Plus className="w-full aspect-square" />
@@ -864,18 +725,18 @@ const EquipRank = () => {
                     </div>
                     <div className="flex-auto text-right text-sm opacity-80">
                       {t("ui.equiprank.rankTotal", {
-                        0: userDataDispatch.getStatistics().rank,
+                        0: userStatistics.rank,
                       })}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 items-stretch w-full">
                     {/* <div></div> */}
                     <div className="w-full flex flex-row h-1">
-                      {Array.from(Array(userData.eqrank.s[1]).keys()).map(
+                      {Array.from(Array(userDataEqrank.s[1]).keys()).map(
                         (i) => {
-                          const count = userData.unowned.o.filter(
+                          const count = userDataUnowned.o.filter(
                             (c) =>
-                              (userData.charaInfo[c] as UserDataOwnedCharaInfo)
+                              (userDataCharaInfo[c] as UserDataOwnedCharaInfo)
                                 .eqrank ===
                               i + 1
                           ).length;
@@ -894,12 +755,12 @@ const EquipRank = () => {
                     </div>
                     <div className="flex gap-0.5">
                       <div className="flex gap-1 flex-wrap text-left">
-                        {Array.from(Array(userData.eqrank.s[1]).keys()).map(
+                        {Array.from(Array(userDataEqrank.s[1]).keys()).map(
                           (i) => {
-                            const count = userData.unowned.o.filter(
+                            const count = userDataUnowned.o.filter(
                               (c) =>
                                 (
-                                  userData.charaInfo[
+                                  userDataCharaInfo[
                                     c
                                   ] as UserDataOwnedCharaInfo
                                 ).eqrank ===
@@ -923,7 +784,7 @@ const EquipRank = () => {
                   </div>
                 </div>
                 {rankClassNames
-                  .slice(0, userData.eqrank.s[1])
+                  .slice(0, userDataEqrank.s[1])
                   .map((s, i) => ({ rank: i + 1, bg: s[0], txt: s[1] }))
                   .reverse()
                   .map((s) => {
@@ -939,13 +800,13 @@ const EquipRank = () => {
                             "w-full p-2 rounded-xl min-h-6 grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(5.5rem,_1fr))] gap-1"
                           )}
                         >
-                          {userData.unowned.o
+                          {userDataUnowned.o
                             .filter(filterFunc)
                             .sort(sortFunc)
                             .map((c) => {
                               if (
                                 (
-                                  userData.charaInfo[
+                                  userDataCharaInfo[
                                     c
                                   ] as UserDataOwnedCharaInfo
                                 ).eqrank !== rank
@@ -956,12 +817,12 @@ const EquipRank = () => {
                                   key={c}
                                   enableDialog={enableDialog}
                                   rank={rank}
-                                  skin={userData.charaInfo[c].skin}
-                                  maxRank={userData.eqrank.s[1]}
+                                  skin={userDataCharaInfo[c].skin}
+                                  maxRank={userDataEqrank.s[1]}
                                   charaName={c}
                                   setRankDialogProp={setRankDialogProp}
                                   setRankDialogOpened={setRankDialogOpened}
-                                  rankModify={userDataDispatch.rankModify}
+                                  rankModify={rankModifyAsProp}
                                 />
                               );
                             })}
@@ -973,22 +834,22 @@ const EquipRank = () => {
             </TabsContent>
             <TabsContent value="targetView">
               <div className="flex flex-col gap-4">
-                {userData.eqrank.v.length < 1 ? (
+                {userDataEqrank.v.length < 1 ? (
                   <div className="p-4 text-red-500 dark:text-red-400">
                     {t("ui.equiprank.shouldSetTargetStat")}
                   </div>
                 ) : (
                   rankClassNames
-                    .slice(1, userData.eqrank.s[1])
+                    .slice(1, userDataEqrank.s[1])
                     .map((s, i) => ({ rank: i + 2, bg: s[0], txt: s[1] }))
                     .reverse()
                     .map((s) => {
                       const { rank, bg, txt } = s;
                       const targets = [
                         ...new Set(
-                          userData.eqrank.v
+                          userDataEqrank.v
                             .map((stat) =>
-                              userData.unowned.o.filter((chara) =>
+                              userDataUnowned.o.filter((chara) =>
                                 eqrank.r[eqrank.c[chara].r][rank - 2]
                                   .map((s) => eqrank.s[s][0])
                                   .includes(stat)
@@ -1000,8 +861,8 @@ const EquipRank = () => {
                       const targetCount = targets.length;
                       const checkedCount = targets.filter(
                         (c) =>
-                          !userData.charaInfo[c].unowned &&
-                          userData.charaInfo[c].eqrank >= rank
+                          !userDataCharaInfo[c].unowned &&
+                          userDataCharaInfo[c].eqrank >= rank
                       ).length;
                       return (
                         <div key={bg}>
@@ -1034,19 +895,19 @@ const EquipRank = () => {
                                   !hideCompleted ||
                                   rank >
                                     (
-                                      userData.charaInfo[
+                                      userDataCharaInfo[
                                         c
                                       ] as UserDataOwnedCharaInfo
                                     ).eqrank
                               )
                               .sort((a, b) => {
                                 const aRank = (
-                                  userData.charaInfo[
+                                  userDataCharaInfo[
                                     a
                                   ] as UserDataOwnedCharaInfo
                                 ).eqrank;
                                 const bRank = (
-                                  userData.charaInfo[
+                                  userDataCharaInfo[
                                     b
                                   ] as UserDataOwnedCharaInfo
                                 ).eqrank;
@@ -1060,7 +921,7 @@ const EquipRank = () => {
                               })
                               .map((c) => {
                                 const currentCharaEqrank = (
-                                  userData.charaInfo[
+                                  userDataCharaInfo[
                                     c
                                   ] as UserDataOwnedCharaInfo
                                 ).eqrank;
@@ -1073,8 +934,8 @@ const EquipRank = () => {
                                       <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
                                         <img
                                           src={
-                                            userData.charaInfo[c].skin
-                                              ? `/charas/${c}Skin${userData.charaInfo[c].skin}.png`
+                                            userDataCharaInfo[c].skin
+                                              ? `/charas/${c}Skin${userDataCharaInfo[c].skin}.png`
                                               : `/charas/${c}.png`
                                           }
                                           className={cn(
@@ -1122,11 +983,11 @@ const EquipRank = () => {
                                                       v.r === eqrank.c[c].r
                                                   )
                                                   .map(([k]) => k),
-                                                maxRank: userData.eqrank.s[1],
+                                                maxRank: userDataEqrank.s[1],
                                                 changeRank:
-                                                  userDataDispatch.rankModify,
+                                                  rankModifyAsProp,
                                                 skin:
-                                                  userData.charaInfo[c].skin ||
+                                                  userDataCharaInfo[c].skin ||
                                                   0,
                                               });
                                               setRankDialogOpened(true);
@@ -1152,7 +1013,7 @@ const EquipRank = () => {
                                         .map((rs) => rs.map((r) => eqrank.s[r]))
                                         .at(rank - 2)!
                                         .filter(([stat]) =>
-                                          userData.eqrank.v.includes(stat)
+                                          userDataEqrank.v.includes(stat)
                                         )
                                         .map(([s, v]) => {
                                           return (
