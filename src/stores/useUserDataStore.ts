@@ -96,6 +96,7 @@ interface UserDataMemoryState extends Partial<UserDataMemory> {
   googleLinked: boolean | undefined;
   syncStatus: SyncStatus;
   error: string | undefined;
+  apiErrorLocalize: string | undefined;
   usingIDB: boolean | undefined;
   actions: {
     restore: (data: UserDataMemory) => void;
@@ -130,6 +131,8 @@ interface UserDataMemoryState extends Partial<UserDataMemory> {
     clearToken: () => void;
     setSyncStatus: (payload: SyncStatus) => void;
     setStatusToIdleIfSuccess: () => void;
+    setApiErrorLocalize: (payload: string) => void;
+    clearApiErrorLocalize: () => void;
   };
 }
 
@@ -139,6 +142,7 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
   googleLinked: undefined,
   syncStatus: SyncStatus.NotLinked,
   error: undefined,
+  apiErrorLocalize: undefined,
   usingIDB: undefined,
   actions: {
     restore: (data: UserDataMemory) => set({ ...data, status: "initialized" }),
@@ -685,6 +689,8 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           ? { syncStatus: SyncStatus.Idle }
           : {}
       ),
+    setApiErrorLocalize: (payload: string) => set({ apiErrorLocalize: payload }),
+    clearApiErrorLocalize: () => set({ apiErrorLocalize: undefined }),
   },
 }));
 
@@ -713,6 +719,8 @@ export const useUserDataCharaInfo = () =>
 export const useUserDataTimestamp = () =>
   useUserDataMemoryStore((s) => s.timestamp);
 export const useUserDataDirty = () => useUserDataMemoryStore((s) => s.dirty);
+export const useUserDataSyncApiError = () =>
+  useUserDataMemoryStore((s) => s.apiErrorLocalize);
 
 const getStatisticsCore = (s: Partial<Pick<UserDataMemory, "charaInfo">>) => {
   if (!s.charaInfo) return { crayon: -1, rank: -1, pcrayon: -1 };

@@ -16,6 +16,7 @@ import {
   useUserDataStatus,
   useUserGoogleLinked,
   useUserSyncStatus,
+  useUserDataSyncApiError,
 } from "@/stores/useUserDataStore";
 
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export function QuickSync() {
   const googleLinked = useUserGoogleLinked();
   const dataStatus = useUserDataStatus();
   const syncStatus = useUserSyncStatus();
+  const apiErrorLocalize = useUserDataSyncApiError();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const bgClass = useCallback((s: SyncStatus) => {
@@ -134,6 +136,10 @@ export function QuickSync() {
               {t("ui.index.sync.errored")}
               <br />
               {t("ui.index.sync.tryRefresh")}
+              <br />
+              {t([`ui.error.api.${apiErrorLocalize}`, "ui.error.api.unknown"], {
+                0: apiErrorLocalize,
+              })}
             </DropdownMenuItem>
             <Separator className="my-1" />
           </>

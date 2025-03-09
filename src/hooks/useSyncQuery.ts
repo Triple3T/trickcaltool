@@ -39,6 +39,8 @@ export const useSyncQuery = () => {
     clearToken,
     setSyncStatus,
     setStatusToIdleIfSuccess,
+    setApiErrorLocalize,
+    clearApiErrorLocalize,
   } = useUserDataActions();
   const queryClient = useQueryClient();
 
@@ -51,17 +53,20 @@ export const useSyncQuery = () => {
       });
       if (!f.ok) {
         clearToken();
+        clearApiErrorLocalize();
         setSyncStatus(SyncStatus.NotLinked);
         return;
       }
       const tok = await f.text();
       if (tok) {
         setToken(tok);
+        clearApiErrorLocalize();
         if (syncStatus === SyncStatus.NotLinked) setSyncStatus(SyncStatus.Idle);
         return tok;
       }
     } catch (e) {
       clearToken();
+      clearApiErrorLocalize();
       setSyncStatus(SyncStatus.Errored);
     }
   };
@@ -112,10 +117,12 @@ export const useSyncQuery = () => {
               // server file is newer, applied
               return 1;
             } else {
+              setApiErrorLocalize("storeFailed");
               setSyncStatus(SyncStatus.Errored);
               throw new Error("store failed");
             }
           } else {
+            setApiErrorLocalize(result.reason);
             setSyncStatus(SyncStatus.Errored);
             throw new Error(result.reason);
           }
@@ -126,23 +133,28 @@ export const useSyncQuery = () => {
         switch (response.status) {
           case 400:
             // invalid data
+            setApiErrorLocalize("400");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 401:
             // invalid credentials(token)
+            setApiErrorLocalize("401");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 403:
             // not registered
+            setApiErrorLocalize("403");
             clearToken();
             break;
           case 500:
             // transaction failed
+            setApiErrorLocalize("500");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 503:
           default:
             // service unavailable(unknown error occured)
+            setApiErrorLocalize("503");
             setSyncStatus(SyncStatus.Errored);
             break;
         }
@@ -197,10 +209,12 @@ export const useSyncQuery = () => {
               setTimeout(setStatusToIdleIfSuccess, 3600);
               return true;
             } else {
+              setApiErrorLocalize("storeFailed");
               setSyncStatus(SyncStatus.Errored);
               throw new Error("store failed");
             }
           } else {
+            setApiErrorLocalize(result.reason);
             setSyncStatus(SyncStatus.Errored);
             throw new Error(result.reason);
           }
@@ -214,23 +228,28 @@ export const useSyncQuery = () => {
         switch (response.status) {
           case 400:
             // invalid data
+            setApiErrorLocalize("400");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 401:
             // invalid credentials(token)
+            setApiErrorLocalize("401");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 403:
             // not registered
+            setApiErrorLocalize("403");
             clearToken();
             break;
           case 500:
             // transaction failed
+            setApiErrorLocalize("500");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 503:
           default:
             // service unavailable(unknown error occured)
+            setApiErrorLocalize("503");
             setSyncStatus(SyncStatus.Errored);
             break;
         }
@@ -286,10 +305,12 @@ export const useSyncQuery = () => {
             setTimeout(setStatusToIdleIfSuccess, 3600);
             return true;
           } else {
+            setApiErrorLocalize("storeFailed");
             setSyncStatus(SyncStatus.Errored);
             throw new Error("store failed");
           }
         } else {
+          setApiErrorLocalize(result.reason);
           setSyncStatus(SyncStatus.Errored);
           throw new Error(result.reason);
         }
@@ -297,23 +318,28 @@ export const useSyncQuery = () => {
         switch (response.status) {
           case 400:
             // invalid data
+            setApiErrorLocalize("400");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 401:
             // invalid credentials(token)
+            setApiErrorLocalize("401");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 403:
             // not registered
+            setApiErrorLocalize("403");
             clearToken();
             break;
           case 500:
             // transaction failed
+            setApiErrorLocalize("500");
             setSyncStatus(SyncStatus.Errored);
             break;
           case 503:
           default:
             // service unavailable(unknown error occured)
+            setApiErrorLocalize("503");
             setSyncStatus(SyncStatus.Errored);
             break;
         }
