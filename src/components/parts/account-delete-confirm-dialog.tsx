@@ -28,10 +28,10 @@ export function AccountDeleteConfirmDialog() {
     setStarted(true);
     getNewToken
       .refetch()
-      .then(async (tok) => {
+      .then(async ({ data }) => {
         fetch("https://api.triple-lab.com/api/v2/tr/accountdelete", {
           method: "POST",
-          headers: { Authorization: `Bearer ${tok}` },
+          headers: { Authorization: `Bearer ${data}` },
         }).then((response) => {
           if (response.ok) {
             toast.success(t("ui.common.accountDeleteSuccess"));

@@ -55,7 +55,7 @@ export const useSyncQuery = () => {
         clearToken();
         clearApiErrorLocalize();
         setSyncStatus(SyncStatus.NotLinked);
-        return;
+        throw new Error("Not linked");
       }
       const tok = await f.text();
       if (tok) {
@@ -68,6 +68,7 @@ export const useSyncQuery = () => {
       clearToken();
       clearApiErrorLocalize();
       setSyncStatus(SyncStatus.Errored);
+      throw new Error("Unknown error");
     }
   };
   const getNewToken = useQuery({
@@ -77,6 +78,7 @@ export const useSyncQuery = () => {
     refetchInterval: 1000 * 60 * 57,
     refetchOnWindowFocus: false,
     enabled: isGoogleLinked !== false,
+    retry: 2,
   });
 
   // sync download / unless force is true, it will not apply downloaded data if the server file is older than the current one
@@ -270,7 +272,8 @@ export const useSyncQuery = () => {
         queryClient.invalidateQueries({ queryKey: ["authToken"] });
       }),
     enabled: false,
-    retry: false,
+    retry: 2,
+    retryDelay: 3333,
   });
   const storeFile = useMutation({
     mutationFn: storeFileFn,

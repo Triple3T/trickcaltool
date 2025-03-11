@@ -21,7 +21,7 @@ const Clear = () => {
       })
         .then(() => {
           getNewToken
-            .refetch()
+            .refetch({ throwOnError: true })
             .then(
               //callback
               () => setTimeout(() => setFailed(true), 3000)

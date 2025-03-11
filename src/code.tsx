@@ -22,7 +22,7 @@ const Code = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (getNewToken && searchParams) {
+    if (sync && getNewToken && navigate && searchParams) {
       if (searchParams.get("code")) {
         const code = searchParams.get("code");
         fetch(`https://api.triple-lab.com/api/v2/tr/code?code=${code}`, {
@@ -66,13 +66,13 @@ const Code = () => {
   }, [sync, getNewToken, navigate, searchParams]);
 
   const register = useCallback(() => {
-    if (!getNewToken) return;
+    if (!sync || !getNewToken || !navigate) return;
     getNewToken
       .refetch()
-      .then((token) =>
+      .then(({ data }) =>
         fetch(`https://api.triple-lab.com/api/v2/tr/register`, {
           method: "POST",
-          headers: { authorization: `Bearer ${token}` },
+          headers: { authorization: `Bearer ${data}` },
           credentials: "include",
         }).then(async (response) => {
           if (response.status === 200) {
