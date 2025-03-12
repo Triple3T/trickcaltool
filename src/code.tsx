@@ -89,6 +89,7 @@ const Code = () => {
                     sync.refetch();
                     setTimeout(() => navigate("/"), 3000);
                   } else {
+                    sync.refetch();
                     setRecoveryCode(registerResult.uuid);
                   }
                 }
