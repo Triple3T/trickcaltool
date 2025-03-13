@@ -6216,6 +6216,7 @@ i18n
               Mini_Curburus: "쁘띠 크르브르스",
               Mini_Lil1li: "쁘띠 릴1리",
               Mini_MEOW: "쁘띠 먀오",
+              Mini_RagDoll: "쁘띠 재미의 왕",
               NewyearMagpie: "설까치",
               OctopusSausage: "먹물소시지",
               OmeletHamster: "햄마리",
