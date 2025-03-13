@@ -200,6 +200,12 @@ function App() {
                     title: t("ui.dispatchcalc.title"),
                     to: "/dispatchcalc",
                   },
+                  {
+                    icon: "/common/BoardRecord_Tab_Stat.png",
+                    title: t("ui.check.guide.index"),
+                    to: "/guidecheck",
+                    greenIcon: true,
+                  },
                 ]}
               />
             </div>

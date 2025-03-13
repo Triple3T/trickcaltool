@@ -144,6 +144,16 @@ const MenuButton = () => {
           />
           {t("ui.dispatchcalc.title")}
         </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => navigate("/guidecheck")}
+          disabled={matchPath(location.pathname, "/guidecheck") ? true : false}
+        >
+          <img
+            src="/common/BoardRecord_Tab_Stat.png"
+            className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
+          />
+          {t("ui.check.guide.index")}
+        </DropdownMenuItem>
         <Separator className="my-1" />
         <a
           href="https://triple3t.notion.site/155c52e157ae80d49106d63711dfd84c"

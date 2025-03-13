@@ -7017,6 +7017,14 @@ i18n
                 index: "스탯 보너스",
                 description: "적용되는 모든 스탯 보너스를 확인합니다.",
               },
+              guide: {
+                index: "인게임 가이드 체크",
+                description: "인게임 보드 가이드 기능에 표시될 목록을 확인합니다.",
+                description2: "사도 정렬을 가나다순으로 두고 대조해 보세요.",
+                sortByName: "가나다순",
+                remainStatAmountBefore: "남은 ",
+                remainStatAmountAfter: " 스탯",
+              },
             },
             goodscalc: {
               title: "미니 재화 계산기",
