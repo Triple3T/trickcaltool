@@ -41,7 +41,7 @@ const GuideChecker = () => {
       <div className="text-sm break-keep opacity-50 mb-4">
         {t("ui.check.guide.description2")}
       </div>
-      <Card className="px-1 pt-4 pb-2">
+      <Card className="px-1 pt-4 pb-2 max-w-lg mx-auto">
         <div className="flex flex-row flex-wrap-reverse justify-between items-baseline gap-x-2 gap-y-4 px-2">
           <div className="bg-accent/75 rounded px-2 max-w-80 min-w-48 w-full">
             <div className="-mt-2.5 flex flex-row justify-between">
