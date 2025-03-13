@@ -200,11 +200,6 @@ function App() {
                     title: t("ui.dispatchcalc.title"),
                     to: "/dispatchcalc",
                   },
-                  {
-                    icon: "/common/Icon_Pow_1.png",
-                    title: t("ui.percentCheck.title"),
-                    to: "/percentcheck",
-                  },
                 ]}
               />
             </div>

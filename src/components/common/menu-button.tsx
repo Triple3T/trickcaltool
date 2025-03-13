@@ -144,16 +144,6 @@ const MenuButton = () => {
           />
           {t("ui.dispatchcalc.title")}
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => navigate("/percentcheck")}
-          disabled={matchPath(location.pathname, "/percentcheck") ? true : false}
-        >
-          <img
-            src="/common/Icon_Pow_1.png"
-            className="w-4 h-4 inline-block mr-1"
-          />
-          {t("ui.percentCheck.title")}
-        </DropdownMenuItem>
         <Separator className="my-1" />
         <a
           href="https://triple3t.notion.site/155c52e157ae80d49106d63711dfd84c"
