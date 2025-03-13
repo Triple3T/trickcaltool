@@ -1420,6 +1420,18 @@
             ["e.weapon.918","e.armor.910","e.armor.904","e.weapon.925","e.accessory.904","e.armor.916"],
             ["e.weapon.1008","e.armor.1009","e.armor.1004","e.weapon.1029","e.accessory.1004","e.armor.1015"]
         ],
+        "Laika":[
+            ["e.weapon.107","e.armor.107","e.armor.111","e.armor.117","e.armor.113","e.accessory.103"],
+            ["e.weapon.205","e.armor.207","e.weapon.202","e.accessory.210","e.accessory.211","e.armor.214"],
+            ["e.weapon.310","e.armor.305","e.weapon.302","e.accessory.304","e.accessory.312","e.armor.320"],
+            ["e.weapon.407","e.armor.405","e.armor.410","e.armor.410","e.armor.417","e.armor.419"],
+            ["e.weapon.507","e.armor.501","e.armor.504","e.armor.516","e.accessory.501","e.armor.509"],
+            ["e.weapon.608","e.armor.605","e.weapon.603","e.armor.614","e.accessory.603","e.armor.601"],
+            ["e.armor.702","e.armor.712","e.weapon.708","e.accessory.701","e.accessory.707","e.armor.716"],
+            ["e.weapon.814","e.armor.810","e.armor.802","e.weapon.804","e.accessory.811","e.armor.817"],
+            ["e.weapon.902","e.armor.910","e.armor.902","e.weapon.911","e.accessory.903","e.armor.914"],
+            ["e.weapon.1002","e.armor.1009","e.armor.1002","e.weapon.1017","e.accessory.1003","e.armor.1013"]
+        ],
         "Lazy":[
             ["e.weapon.103","e.armor.111","e.armor.102","e.accessory.103","e.accessory.111","e.armor.118"],
             ["e.weapon.209","e.armor.213","e.armor.201","e.accessory.204","e.accessory.207","e.armor.221"],
