@@ -5,5 +5,12 @@ export default [
   "CG_Event10_07",
   "CG_Event13_01",
   "CG_Event18_01",
+  "CG_Event21_09",
+  "CG_Event22_04",
+  "CG_Event25_11",
+  "CG_Event26_02",
+  "CG_Event32_06",
+  "CG_Event35_04",
+  "CG_Event37_10",
   "CG_SoloEnd_04",
 ];
