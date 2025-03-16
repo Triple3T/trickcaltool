@@ -232,6 +232,7 @@ export const migrateIntoIdbFile = async () => {
     collection: cdtp,
     skin: sdtp,
     memo: { o: [], u: [] },
+    dispatchablePets: { o: [], b: {} },
   } as UserDataFile;
   const fullCharaNames = Object.keys(chara);
   if (
@@ -423,6 +424,7 @@ export const readIntoMemory = async (
       ]),
       ...noDataChara.map((c) => [c, { unowned: true, memo: [0, ""] }]),
     ]),
+    dispatchablePets: data.dispatchablePets ?? { o: [], b: {} },
     dirty: 0,
     timestamp,
   };
@@ -530,6 +532,7 @@ export const writeFromMemory = async (
     collection: data.collection,
     skin: {},
     memo: { o: [], u: [] },
+    dispatchablePets: data.dispatchablePets,
   };
   dataChara.forEach((c) => {
     if (data.charaInfo[c].unowned) {

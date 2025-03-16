@@ -87,6 +87,10 @@ export interface UserDataMemoFile {
   o: [number, string][]; // 즐겨찾기(1이 on), 메모 데이터
   u: [number, string][]; // 즐겨찾기(1이 on), 메모 데이터
 }
+export interface UserDataDispatchablePets {
+  o: string[];
+  b: Record<string, number>;
+}
 export interface UserDataFileOld {
   board: UserDataBoardMemory;
   pboard: UserDataPurpleBoardMemory;
@@ -110,6 +114,7 @@ export interface UserDataFile {
   collection: UserDataCollection;
   skin: UserDataSkin;
   memo: UserDataMemoFile;
+  dispatchablePets: UserDataDispatchablePets;
 }
 export interface UserDataOwnedCharaInfo {
   board: number[][]; // 보드 차수별 데이터 (bitmask)
@@ -138,6 +143,7 @@ export interface UserDataMemory {
   // skin: UserDataSkin;
   // memo: UserDataMemoMemory;
   charaInfo: { [key: string]: UserDataCharaInfo };
+  dispatchablePets: UserDataDispatchablePets;
   dirty: number;
   timestamp: number;
 }

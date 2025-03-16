@@ -20,15 +20,25 @@ import SubtitleBar from "@/components/parts/subtitlebar";
 
 import pet from "@/data/pet";
 import solveDispatch from "@/utils/solveDispatch";
+import {
+  useUserDataActions,
+  useUserDataDispatchablePets,
+} from "@/stores/useUserDataStore";
 
 const sumSquare = (n: number) => (n * (n + 1) * (2 * n + 1)) / 6;
 // const sumCube = (n: number) => Math.pow((n * (n + 1)) / 2, 2);
 
 const PetSolver = () => {
   const { t } = useTranslation();
+  const {
+    petOwnClick,
+    petOwnAll,
+    petOwnNone,
+    petBorrowableValueUp,
+    petBorrowableValueDown,
+  } = useUserDataActions();
+  const userDataDispatchablePets = useUserDataDispatchablePets();
   const [step, setStep] = useState<number>(0);
-  const [ownedPets, setOwnedPets] = useState<string[]>([]);
-  const [borrowablePets, setBorrowablePets] = useState<string[]>([]);
   const [includedDispatch, setIncludedDispatch] = useState<number[]>(
     pet.a.map((e) => e.i)
   );
@@ -72,6 +82,7 @@ const PetSolver = () => {
   }, []);
 
   useEffect(() => {
+    if (!userDataDispatchablePets) return;
     if (step === 3 && calcStatus === "idle") {
       setCalcStatus("running");
       setTimeout(() => {
@@ -113,8 +124,10 @@ const PetSolver = () => {
           };
           workerRef.current.postMessage({
             dispatchTime,
-            ownedPets,
-            borrowablePets,
+            ownedPets: userDataDispatchablePets.o,
+            borrowablePets: Object.entries(userDataDispatchablePets.b)
+              .map(([k, v]) => Array(v).fill(k))
+              .flat(),
             dispatchList: pet.a.filter((e) => includedDispatch.includes(e.i)),
             borrowLimit,
           });
@@ -123,8 +136,10 @@ const PetSolver = () => {
           const result = solveDispatch(
             {
               dispatchTime,
-              ownedPets,
-              borrowablePets,
+              ownedPets: userDataDispatchablePets.o,
+              borrowablePets: Object.entries(userDataDispatchablePets.b)
+                .map(([k, v]) => Array(v).fill(k))
+                .flat(),
               dispatchList: pet.a.filter((e) => includedDispatch.includes(e.i)),
               borrowLimit,
             },
@@ -136,12 +151,11 @@ const PetSolver = () => {
     }
   }, [
     borrowLimit,
-    borrowablePets,
     calcStatus,
     dispatchTime,
     includedDispatch,
-    ownedPets,
     step,
+    userDataDispatchablePets,
   ]);
   useEffect(() => {
     if (step === 3 && calcStatus === "running" && calcResult) {
@@ -184,6 +198,8 @@ const PetSolver = () => {
     }
   }, [calcStatus, step]);
 
+  if (!userDataDispatchablePets) return null;
+
   return (
     <div className="font-onemobile">
       <div className="text-lg">
@@ -203,18 +219,10 @@ const PetSolver = () => {
       />
       {step === 0 && (
         <div className="flex px-1 py-2 gap-1 justify-stretch">
-          <Button
-            className="flex-1"
-            variant="outline"
-            onClick={() => setOwnedPets(Object.keys(pet.p))}
-          >
+          <Button className="flex-1" variant="outline" onClick={petOwnAll}>
             {t("ui.dispatchcalc.checkAll")}
           </Button>
-          <Button
-            className="flex-1"
-            variant="outline"
-            onClick={() => setOwnedPets([])}
-          >
+          <Button className="flex-1" variant="outline" onClick={petOwnNone}>
             {t("ui.dispatchcalc.uncheckAll")}
           </Button>
         </div>
@@ -256,10 +264,15 @@ const PetSolver = () => {
       )}
       <div className="pt-2 relative">
         {step === 0 &&
-          t("ui.dispatchcalc.owningPetCount", { 0: ownedPets.length })}
+          t("ui.dispatchcalc.owningPetCount", {
+            0: userDataDispatchablePets.o.length,
+          })}
         {step === 1 &&
           t("ui.dispatchcalc.borrowablePetCount", {
-            0: borrowablePets.length,
+            0: Object.values(userDataDispatchablePets.b).reduce(
+              (a, b) => a + b,
+              0
+            ),
           })}
         {step === 2 &&
           t("ui.dispatchcalc.dispatchCount", { 0: includedDispatch.length })}
@@ -320,18 +333,11 @@ const PetSolver = () => {
                   className={cn(
                     "sm:min-w-24 md:min-w-28 max-w-40 relative overflow-hidden bg-accent",
                     step === 0 &&
-                      (ownedPets.includes(id)
+                      (userDataDispatchablePets.o.includes(id)
                         ? "ring-1 ring-accent"
                         : "opacity-80 grayscale-[.8]")
                   )}
-                  onClick={() =>
-                    step === 0 &&
-                    setOwnedPets((prev) =>
-                      prev.includes(id)
-                        ? prev.filter((e) => e !== id)
-                        : [...prev, id]
-                    )
-                  }
+                  onClick={() => step === 0 && petOwnClick(id)}
                 >
                   <div
                     className="flex-1 py-1 text-shadow-glow"
@@ -363,7 +369,7 @@ const PetSolver = () => {
                           );
                         })}
                     </div>
-                    {step === 0 && ownedPets.includes(id) && (
+                    {step === 0 && userDataDispatchablePets.o.includes(id) && (
                       <div className="absolute top-4 right-0.5 flex flex-col items-center">
                         <CheckCircle className="w-6 h-6" />
                         <div className="-mt-2 text-shadow-glow-0.75 text-sm">
@@ -374,7 +380,7 @@ const PetSolver = () => {
                     {step === 1 && (
                       <div className="absolute top-4 right-0.5 flex flex-col items-center">
                         <div className="text-shadow-glow-1.5 text-xl">
-                          {borrowablePets.filter((v) => v === id).length}
+                          {userDataDispatchablePets.b[id] || 0}
                         </div>
                         <div className="-mt-2 text-shadow-glow-0.75 text-sm">
                           {t("ui.dispatchcalc.specificBorrowableCount")}
@@ -395,17 +401,8 @@ const PetSolver = () => {
                     <div className="flex flex-row gap-1 p-1">
                       <Button
                         className="bg-red-500 flex-1 h-8 p-1"
-                        disabled={
-                          borrowablePets.length < 1 ||
-                          !borrowablePets.includes(id)
-                        }
-                        onClick={() =>
-                          setBorrowablePets((prev) => {
-                            const arr = [...prev];
-                            arr.splice(prev.indexOf(id), 1);
-                            return [...arr];
-                          })
-                        }
+                        disabled={(userDataDispatchablePets.b[id] || 0) < 1}
+                        onClick={() => petBorrowableValueDown(id)}
                       >
                         <Minus
                           className="h-full aspect-square"
@@ -414,10 +411,13 @@ const PetSolver = () => {
                       </Button>
                       <Button
                         className="bg-blue-500 flex-1 h-8 p-1"
-                        disabled={borrowablePets.length > 18}
-                        onClick={() =>
-                          setBorrowablePets((prev) => [...prev, id])
+                        disabled={
+                          Object.values(userDataDispatchablePets.b).reduce(
+                            (a, b) => a + b,
+                            0
+                          ) > 18
                         }
+                        onClick={() => petBorrowableValueUp(id)}
                       >
                         <Plus
                           className="h-full aspect-square"

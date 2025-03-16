@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { create } from "zustand";
 import board from "@/data/board";
 import pboard from "@/data/purpleboard";
+import pet from "@/data/pet";
 import {
   UserDataMemory,
   UserDataOwnedCharaInfo,
@@ -127,6 +128,11 @@ interface UserDataMemoryState extends Partial<UserDataMemory> {
     charaSkin: (payload: CharaSkinPayload) => void;
     charaFav: (payload: CharaFavPayload) => void;
     charaMemo: (payload: CharaMemoPayload) => void;
+    petOwnClick: (payload: string) => void;
+    petOwnAll: () => void;
+    petOwnNone: () => void;
+    petBorrowableValueUp: (payload: string) => void;
+    petBorrowableValueDown: (payload: string) => void;
     setToken: (payload: string) => void;
     clearToken: () => void;
     setSyncStatus: (payload: SyncStatus) => void;
@@ -674,6 +680,104 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           timeestamp: Date.now(),
         };
       }),
+    petOwnClick: (payload: string) =>
+      set((state) => {
+        if (
+          !state ||
+          !state.dispatchablePets ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        const newDispatchablePets = state.dispatchablePets.o.includes(payload)
+          ? state.dispatchablePets.o.filter((v) => v !== payload)
+          : [...state.dispatchablePets.o, payload];
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          dispatchablePets: {
+            ...state.dispatchablePets,
+            o: newDispatchablePets,
+          },
+          timeestamp: Date.now(),
+        };
+      }),
+    petOwnAll: () =>
+      set((state) => {
+        if (
+          !state ||
+          !state.dispatchablePets ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          dispatchablePets: {
+            ...state.dispatchablePets,
+            o: Object.keys(pet.p),
+          },
+          timeestamp: Date.now(),
+        };
+      }),
+    petOwnNone: () =>
+      set((state) => {
+        if (
+          !state ||
+          !state.dispatchablePets ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          dispatchablePets: { ...state.dispatchablePets, o: [] },
+          timeestamp: Date.now(),
+        };
+      }),
+    petBorrowableValueUp: (payload: string) =>
+      set((state) => {
+        if (
+          !state ||
+          !state.dispatchablePets ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        const prevBorrowable = state.dispatchablePets.b[payload] || 0;
+        const borrowableTotal = Object.values(state.dispatchablePets.b).reduce(
+          (a, b) => a + b,
+          0
+        );
+        if (borrowableTotal > 18) return {};
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          dispatchablePets: {
+            ...state.dispatchablePets,
+            b: { ...state.dispatchablePets.b, [payload]: prevBorrowable + 1 },
+          },
+          timeestamp: Date.now(),
+        };
+      }),
+    petBorrowableValueDown: (payload: string) =>
+      set((state) => {
+        if (
+          !state ||
+          !state.dispatchablePets ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        const prevBorrowable = state.dispatchablePets.b[payload];
+        if (prevBorrowable < 1) return {};
+        const borrowableTotal = Object.values(state.dispatchablePets.b).reduce(
+          (a, b) => a + b,
+          0
+        );
+        if (borrowableTotal < 1) return {};
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          dispatchablePets: {
+            ...state.dispatchablePets,
+            b: { ...state.dispatchablePets.b, [payload]: prevBorrowable - 1 },
+          },
+          timeestamp: Date.now(),
+        };
+      }),
     setToken: (payload: string) =>
       set({ token: payload, googleLinked: true, syncStatus: SyncStatus.Idle }),
     clearToken: () =>
@@ -689,7 +793,8 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           ? { syncStatus: SyncStatus.Idle }
           : {}
       ),
-    setApiErrorLocalize: (payload: string) => set({ apiErrorLocalize: payload }),
+    setApiErrorLocalize: (payload: string) =>
+      set({ apiErrorLocalize: payload }),
     clearApiErrorLocalize: () => set({ apiErrorLocalize: undefined }),
   },
 }));
@@ -716,6 +821,8 @@ export const useUserDataCollection = () =>
   useUserDataMemoryStore((s) => s.collection);
 export const useUserDataCharaInfo = () =>
   useUserDataMemoryStore((s) => s.charaInfo);
+export const useUserDataDispatchablePets = () =>
+  useUserDataMemoryStore((s) => s.dispatchablePets);
 export const useUserDataTimestamp = () =>
   useUserDataMemoryStore((s) => s.timestamp);
 export const useUserDataDirty = () => useUserDataMemoryStore((s) => s.dirty);
@@ -815,6 +922,7 @@ export const useSaveUserData = () => {
   const myhome = useUserDataMemoryStore((s) => s.myhome);
   const collection = useUserDataMemoryStore((s) => s.collection);
   const charaInfo = useUserDataMemoryStore((s) => s.charaInfo);
+  const dispatchablePets = useUserDataMemoryStore((s) => s.dispatchablePets);
   const usingIDB = useUserDataMemoryStore((s) => s.usingIDB);
   const clean = useUserDataMemoryStore((s) => s.actions.clean);
   const setTimestamp = useUserDataMemoryStore((s) => s.actions.setTimestamp);
@@ -829,6 +937,7 @@ export const useSaveUserData = () => {
     !myhome ||
     !collection ||
     !charaInfo ||
+    !dispatchablePets ||
     !usingIDB
   )
     return;
@@ -841,6 +950,7 @@ export const useSaveUserData = () => {
     myhome,
     collection,
     charaInfo,
+    dispatchablePets,
     dirty: 0,
     timestamp,
   };
