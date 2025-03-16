@@ -19,7 +19,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import AccountDeleteConfirmDialog from "@/components/parts/account-delete-confirm-dialog";
-import HardResetWithConfirm from "@/components/parts/hard-reset-with-confirm";
+import CacheClearWithConfirm from "@/components/parts/cache-clear-with-confirm";
 import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
@@ -502,7 +502,7 @@ const Setting = () => {
           <div>
             <SubtitleBar>{t("ui.index.versionCheck.dangerZone")}</SubtitleBar>
             <div className="flex flex-col gap-1 max-w-xl w-full px-4 py-2">
-              <HardResetWithConfirm />
+              <CacheClearWithConfirm />
               {isReady && googleLinked && <AccountDeleteConfirmDialog />}
             </div>
           </div>

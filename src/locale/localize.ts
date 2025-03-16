@@ -6565,17 +6565,17 @@ i18n
                 updateFailed: "새로고침 중...",
                 updateLog: "업데이트 내역",
                 dangerZone: "위험 구역",
-                hardReset: "앱 리셋",
-                hardResetTitle: "정말 리셋할까요?",
-                hardResetDescription:
-                  "이 동작은 트릭컬 노트의 모든 캐시를 지우고 내부적으로 재설치를 수행합니다. 데이터 사용량이 많아질 가능성이 있으며, 일정 시간이 소요됩니다.",
-                hardResetAdditionalDesc:
+                cacheClear: "캐시 클리어",
+                cacheClearTitle: "정말 실행할까요?",
+                cacheClearDescription:
+                  "이 동작은 트릭컬 노트의 모든 추가 캐시를 지웁니다. 데이터 사용량이 많아질 가능성이 있으며, 일정 시간이 소요됩니다.",
+                cacheClearAdditionalDesc:
                   "입력한 데이터 및 설정은 그대로 유지됩니다.",
-                hardResetCancel: "그냥 냅두죠",
-                hardResetConfirm: "그렇게 해주세요",
-                hardResetSuccess:
+                cacheClearCancel: "그냥 냅두죠",
+                cacheClearConfirm: "그렇게 해주세요",
+                cacheClearSuccess:
                   "리셋에 성공했어요. 잠시 후 새로고침합니다...",
-                hardResetFailed:
+                cacheClearFailed:
                   "리셋에 실패했어요. 새로고침 후 다시 시도해주세요.",
               },
               personality: "성격",
