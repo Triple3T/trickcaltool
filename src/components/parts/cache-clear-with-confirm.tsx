@@ -27,7 +27,12 @@ export function CacheClearWithConfirm() {
             continue;
           await caches.delete(key);
         }
-        deleteDB('workbox-expiration');
+        await deleteDB("workbox-expiration");
+        toast.success(t("ui.index.versionCheck.hardResetSuccess"));
+        setStarted(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch {
       toast.error(t("ui.index.versionCheck.cacheClearFailed"));
