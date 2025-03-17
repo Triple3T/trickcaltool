@@ -128,6 +128,12 @@ interface UserDataMemoryState extends Partial<UserDataMemory> {
     charaSkin: (payload: CharaSkinPayload) => void;
     charaFav: (payload: CharaFavPayload) => void;
     charaMemo: (payload: CharaMemoPayload) => void;
+    boardFinderToggleExcludeUnowned: () => void;
+    boardFinderToggleExcludeOpened: () => void;
+    boardFinderToggleIncludePrevious: () => void;
+    boardFinderSetTargetNthBoard: (payload: number) => void;
+    boardFinderRotateBoardPriority: (payload: number) => void;
+    boardFinderSetMinimumMatchCount: (payload: number) => void;
     petOwnClick: (payload: string) => void;
     petOwnAll: () => void;
     petOwnNone: () => void;
@@ -680,6 +686,114 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           timeestamp: Date.now(),
         };
       }),
+    boardFinderToggleExcludeUnowned: () =>
+      set((state) => {
+        if (
+          !state ||
+          !state.boardFindOption ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        const excludeUnowned = 1 - state.boardFindOption.x[0];
+        return {
+          boardFindOption: {
+            ...state.boardFindOption,
+            x: [excludeUnowned, state.boardFindOption.x[1]],
+          },
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          timeestamp: Date.now(),
+        };
+      }),
+    boardFinderToggleExcludeOpened: () =>
+      set((state) => {
+        if (
+          !state ||
+          !state.boardFindOption ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        const excludeOpened = 1 - state.boardFindOption.x[1];
+        return {
+          boardFindOption: {
+            ...state.boardFindOption,
+            x: [state.boardFindOption.x[0], excludeOpened],
+          },
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          timeestamp: Date.now(),
+        };
+      }),
+    boardFinderToggleIncludePrevious: () =>
+      set((state) => {
+        if (
+          !state ||
+          !state.boardFindOption ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        const includePrevious = 1 - state.boardFindOption.n[1];
+        return {
+          boardFindOption: {
+            ...state.boardFindOption,
+            n: [state.boardFindOption.n[0], includePrevious],
+          },
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          timeestamp: Date.now(),
+        };
+      }),
+    boardFinderSetTargetNthBoard: (payload: number) => set((state)=>{
+      if (
+        !state ||
+        !state.boardFindOption ||
+        typeof state.dirty === "undefined"
+      )
+        return {};
+      return {
+        boardFindOption: {
+          ...state.boardFindOption,
+          n: [payload, state.boardFindOption.n[1]],
+        },
+        dirty: ((state.dirty + 1) % 32768) + 65536,
+        timeestamp: Date.now(),
+      };
+    }),
+    boardFinderRotateBoardPriority: (payload: number) =>
+      set((state) => {
+        if (
+          !state ||
+          !state.boardFindOption ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        return {
+          boardFindOption: {
+            ...state.boardFindOption,
+            b: {
+              ...state.boardFindOption.b,
+              [payload]: (state.boardFindOption.b[payload] + 1) % 3,
+            },
+          },
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          timeestamp: Date.now(),
+        };
+      }),
+    boardFinderSetMinimumMatchCount: (payload: number) =>
+      set((state) => {
+        if (
+          !state ||
+          !state.boardFindOption ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        if (payload < 1) return {};
+        return {
+          boardFindOption: {
+            ...state.boardFindOption,
+            m: payload,
+          },
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          timeestamp: Date.now(),
+        };
+      }),
     petOwnClick: (payload: string) =>
       set((state) => {
         if (
@@ -821,6 +935,8 @@ export const useUserDataCollection = () =>
   useUserDataMemoryStore((s) => s.collection);
 export const useUserDataCharaInfo = () =>
   useUserDataMemoryStore((s) => s.charaInfo);
+export const useUserDataBoardFindOption = () =>
+  useUserDataMemoryStore((s) => s.boardFindOption);
 export const useUserDataDispatchablePets = () =>
   useUserDataMemoryStore((s) => s.dispatchablePets);
 export const useUserDataTimestamp = () =>
@@ -922,6 +1038,7 @@ export const useSaveUserData = () => {
   const myhome = useUserDataMemoryStore((s) => s.myhome);
   const collection = useUserDataMemoryStore((s) => s.collection);
   const charaInfo = useUserDataMemoryStore((s) => s.charaInfo);
+  const boardFindOption = useUserDataMemoryStore((s) => s.boardFindOption);
   const dispatchablePets = useUserDataMemoryStore((s) => s.dispatchablePets);
   const usingIDB = useUserDataMemoryStore((s) => s.usingIDB);
   const clean = useUserDataMemoryStore((s) => s.actions.clean);
@@ -937,6 +1054,7 @@ export const useSaveUserData = () => {
     !myhome ||
     !collection ||
     !charaInfo ||
+    !boardFindOption ||
     !dispatchablePets ||
     !usingIDB
   )
@@ -950,6 +1068,7 @@ export const useSaveUserData = () => {
     myhome,
     collection,
     charaInfo,
+    boardFindOption,
     dispatchablePets,
     dirty: 0,
     timestamp,

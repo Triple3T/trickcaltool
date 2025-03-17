@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 import Loading from "@/components/common/loading";
 import {
   Accordion,
@@ -7,6 +8,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -22,6 +24,8 @@ import {
   useUserDataStatus,
   useUserDataCharaInfo,
   useUserDataUnowned,
+  useUserDataBoardFindOption,
+  useUserDataActions,
 } from "@/stores/useUserDataStore";
 
 interface IFilteredBoardProp {
@@ -32,20 +36,43 @@ interface IFilteredBoardProp {
 
 const BoardSearch = () => {
   const { t } = useTranslation();
+  const {
+    boardFinderToggleExcludeUnowned,
+    boardFinderToggleExcludeOpened,
+    boardFinderToggleIncludePrevious,
+    boardFinderSetTargetNthBoard,
+    boardFinderRotateBoardPriority,
+    boardFinderSetMinimumMatchCount,
+  } = useUserDataActions();
   const dataStatus = useUserDataStatus();
   const userDataCharaInfo = useUserDataCharaInfo();
   const userDataUnowned = useUserDataUnowned();
+  const userDataBoardFindOption = useUserDataBoardFindOption();
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
-  const [excludeUnowned, setExcludeUnowned] = useState<boolean>(false);
-  const [filterBoardIndex, setFilterBoardIndex] = useState<number>(0);
-  const [includePreviousBoardIndex, setIncludePreviousBoardIndex] =
-    useState<boolean>(true);
-  const [includeBoardType, setIncludeBoardType] = useState<BoardType[]>([]);
-  const [includeMinimumCount, setIncludeMinimumCount] = useState<number>(1);
-  const [excludeUnlocked, setExcludeUnlocked] = useState<boolean>(false);
 
-  const filteredBoards = useMemo(() => {
-    if (!userDataUnowned || !userDataCharaInfo) return [];
+  if (
+    dataStatus !== "initialized" ||
+    !userDataCharaInfo ||
+    !userDataUnowned ||
+    !userDataBoardFindOption
+  )
+    return <Loading />;
+  const [excludeUnowned, excludeUnlocked] = userDataBoardFindOption.x;
+  const [filterBoardIndex, includePreviousBoardIndex] =
+    userDataBoardFindOption.n;
+  const [, includeBoardType, mustBoardType] = Object.entries(
+    userDataBoardFindOption.b
+  ).reduce(
+    (acc: number[][], [key, value]) => {
+      acc[value].push(Number(key));
+      return acc;
+    },
+    [[], [], []] as number[][]
+  );
+  const searchingFor = [...includeBoardType, ...mustBoardType];
+  const boardTypePriorities = userDataBoardFindOption.b;
+  const includeMinimumCount = userDataBoardFindOption.m;
+  const filteredBoards = (() => {
     // exclude unowned, filter by board index
     const firstFiltered = (
       excludeUnowned ? userDataUnowned.o : Object.keys(chara)
@@ -70,21 +97,23 @@ const BoardSearch = () => {
     // filter by board type
     const secondFiltered = firstFiltered
       .filter((b) => {
+        const targetBoards = b.board.split("").map((bb) => Number(bb));
+        if (
+          mustBoardType.length > 0 &&
+          !mustBoardType.every((mb) => targetBoards.includes(mb))
+        )
+          return false;
         return (
-          b.board
-            .split("")
-            .filter((bb) => includeBoardType.includes(Number(bb))).length >=
+          targetBoards.filter((bb) => searchingFor.includes(bb)).length >=
           includeMinimumCount
         );
       })
       .sort(
         (a, b) =>
-          b.board
-            .split("")
-            .filter((bb) => includeBoardType.includes(Number(bb))).length -
-          a.board
-            .split("")
-            .filter((bb) => includeBoardType.includes(Number(bb))).length
+          b.board.split("").filter((bb) => searchingFor.includes(Number(bb)))
+            .length -
+          a.board.split("").filter((bb) => searchingFor.includes(Number(bb)))
+            .length
       );
     // exclude unlocked
     const thirdFiltered = secondFiltered
@@ -98,19 +127,7 @@ const BoardSearch = () => {
       })
       .sort((a, b) => a.index - b.index);
     return thirdFiltered;
-  }, [
-    excludeUnlocked,
-    excludeUnowned,
-    filterBoardIndex,
-    includeBoardType,
-    includeMinimumCount,
-    includePreviousBoardIndex,
-    userDataCharaInfo,
-    userDataUnowned,
-  ]);
-
-  if (dataStatus !== "initialized" || !userDataCharaInfo || !userDataUnowned)
-    return <Loading />;
+  })();
 
   return (
     <>
@@ -127,10 +144,8 @@ const BoardSearch = () => {
                   <div className="w-full px-4 my-2 text-left flex items-center gap-2">
                     <Switch
                       id="exclude-unowned"
-                      checked={excludeUnowned}
-                      onCheckedChange={(c) => {
-                        setExcludeUnowned(c);
-                      }}
+                      checked={excludeUnowned === 1}
+                      onCheckedChange={boardFinderToggleExcludeUnowned}
                     />
                     <Label htmlFor="exclude-unowned">
                       {t("ui.boardsearch.excludeUnowned")}
@@ -150,10 +165,8 @@ const BoardSearch = () => {
                   <div className="w-full px-4 my-2 text-left flex items-center gap-2">
                     <Switch
                       id="include-previous"
-                      checked={includePreviousBoardIndex}
-                      onCheckedChange={(c) => {
-                        setIncludePreviousBoardIndex(c);
-                      }}
+                      checked={includePreviousBoardIndex === 1}
+                      onCheckedChange={boardFinderToggleIncludePrevious}
                     />
                     <Label htmlFor="include-previous">
                       {t("ui.boardsearch.includePrevious")}
@@ -164,9 +177,9 @@ const BoardSearch = () => {
                       type="single"
                       className="flex-wrap"
                       value={filterBoardIndex.toString()}
-                      onValueChange={(v) => {
-                        setFilterBoardIndex(Number(v));
-                      }}
+                      onValueChange={(v) =>
+                        boardFinderSetTargetNthBoard(Number(v))
+                      }
                     >
                       {["Easy", "Herd", "VeryHard"].map((bText, bIndex) => {
                         return (
@@ -190,37 +203,53 @@ const BoardSearch = () => {
                   <SubtitleBar>
                     {t("ui.boardsearch.boardTypeSetting")}
                   </SubtitleBar>
-                  <div>
-                    <ToggleGroup
-                      type="multiple"
-                      className="flex-wrap"
-                      value={includeBoardType.map((b) => BoardType[b])}
-                      onValueChange={(v) => {
-                        setIncludeBoardType(
-                          v.map((b) => BoardType[b as keyof typeof BoardType])
-                        );
-                      }}
-                    >
-                      {(
-                        Object.values(BoardType).filter(
-                          (b) => typeof b === "string"
-                        ) as string[]
-                      ).map((bt) => {
-                        return (
-                          <ToggleGroupItem
-                            key={bt}
-                            value={bt}
-                            aria-label={`Toggle ${bt}`}
-                            className="px-2"
-                          >
-                            <img
-                              src={`/boards/Tile_${bt}On.png`}
-                              className="h-8 w-8 aspect-square"
-                            />
-                          </ToggleGroupItem>
-                        );
-                      })}
-                    </ToggleGroup>
+                  <div className="flex flex-row flex-wrap px-4 my-1 justify-around text-sm rounded-sm bg-yellow-100/25 p-1">
+                    <div className="flex flex-row gap-1 items-center">
+                      <span className="inline-block w-3 h-3 rounded-full bg-background border border-foreground/30" />
+                      {t("ui.boardsearch.boardNoMatter")}
+                    </div>
+                    <div className="flex flex-row gap-1 items-center">
+                      <span className="inline-block w-3 h-3 rounded-full bg-accent border border-foreground/30" />
+                      {t("ui.boardsearch.boardInclude")}
+                    </div>
+                    <div className="flex flex-row gap-1 items-center">
+                      <span className="inline-block w-3 h-3 rounded-full bg-red-400 dark:bg-red-600 border border-foreground/30" />
+                      {t("ui.boardsearch.boardMustInclude")}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap flex-row gap-2 p-2 justify-center">
+                    {(
+                      Object.values(BoardType).filter(
+                        (b) => typeof b === "string"
+                      ) as string[]
+                    ).map((bt) => {
+                      const boardTypeText = bt as keyof typeof BoardType;
+                      const boardTypeNum = BoardType[boardTypeText];
+                      const boardPriority = boardTypePriorities[boardTypeNum];
+                      return (
+                        <Button
+                          key={bt}
+                          size="icon"
+                          aria-label={`Set priority of ${bt}`}
+                          className={cn(
+                            "px-1 w-12",
+                            [
+                              "bg-transparent hover:bg-accent/40",
+                              "bg-accent/70 hover:bg-accent/90",
+                              "bg-red-400/70 hover:bg-red-400/90 dark:bg-red-600/70 dark:hover:bg-red-600/90",
+                            ][boardPriority]
+                          )}
+                          onClick={() =>
+                            boardFinderRotateBoardPriority(boardTypeNum)
+                          }
+                        >
+                          <img
+                            src={`/boards/Tile_${bt}On.png`}
+                            className="h-8 w-8 aspect-square"
+                          />
+                        </Button>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -232,9 +261,9 @@ const BoardSearch = () => {
                       type="single"
                       className="flex"
                       value={includeMinimumCount.toString()}
-                      onValueChange={(v) => {
-                        setIncludeMinimumCount(Number(v));
-                      }}
+                      onValueChange={(v) =>
+                        boardFinderSetMinimumMatchCount(Number(v))
+                      }
                     >
                       {Array(5)
                         .fill(0)
@@ -260,10 +289,8 @@ const BoardSearch = () => {
                   <div className="w-full px-4 my-2 text-left flex items-center gap-2">
                     <Switch
                       id="exclude-unlocked"
-                      checked={excludeUnlocked}
-                      onCheckedChange={(c) => {
-                        setExcludeUnlocked(c);
-                      }}
+                      checked={excludeUnlocked === 1}
+                      onCheckedChange={boardFinderToggleExcludeOpened}
                     />
                     <Label htmlFor="exclude-unlocked">
                       {t("ui.boardsearch.excludeUnlocked")}
@@ -290,7 +317,7 @@ const BoardSearch = () => {
                 index={fb.index}
                 board={board.c[fb.name].b[fb.index - 1]}
                 blockedBy={board.c[fb.name].k[fb.index - 1]}
-                search={includeBoardType}
+                search={searchingFor}
                 unlocked={
                   userDataCharaInfo[fb.name].unowned
                     ? false

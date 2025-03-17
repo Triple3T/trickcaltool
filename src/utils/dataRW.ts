@@ -232,6 +232,12 @@ export const migrateIntoIdbFile = async () => {
     collection: cdtp,
     skin: sdtp,
     memo: { o: [], u: [] },
+    boardFindOption: {
+      x: [1, 1],
+      n: [0, 1],
+      b: Object.fromEntries([0, 2, 3, 4, 5, 6, 7, 9].map((v) => [v, 0])),
+      m: 1,
+    },
     dispatchablePets: { o: [], b: {} },
   } as UserDataFile;
   const fullCharaNames = Object.keys(chara);
@@ -424,6 +430,12 @@ export const readIntoMemory = async (
       ]),
       ...noDataChara.map((c) => [c, { unowned: true, memo: [0, ""] }]),
     ]),
+    boardFindOption: data.boardFindOption ?? {
+      x: [1, 1],
+      n: [0, 1],
+      b: Object.fromEntries([0, 2, 3, 4, 5, 6, 7, 9].map((v) => [v, 0])),
+      m: 1,
+    },
     dispatchablePets: data.dispatchablePets ?? { o: [], b: {} },
     dirty: 0,
     timestamp,
@@ -532,6 +544,7 @@ export const writeFromMemory = async (
     collection: data.collection,
     skin: {},
     memo: { o: [], u: [] },
+    boardFindOption: data.boardFindOption,
     dispatchablePets: data.dispatchablePets,
   };
   dataChara.forEach((c) => {

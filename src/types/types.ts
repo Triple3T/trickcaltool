@@ -87,6 +87,12 @@ export interface UserDataMemoFile {
   o: [number, string][]; // 즐겨찾기(1이 on), 메모 데이터
   u: [number, string][]; // 즐겨찾기(1이 on), 메모 데이터
 }
+export interface UserDataBoardFindOption {
+  x: number[]; // 0: 미보유 제외(0이 off, 1이 on), 1: 열린 보드 제외(0이 off, 1이 on)
+  n: number[]; // 0: 보드 차수(0, 1, 2), 1: 이전 차수 포함(0이 off, 1이 on)
+  b: Record<string, number>; // 보드 종류별 데이터(0=상관없음, 1=포함, 2=반드시 포함)
+  m: number; // 일치 최소 개수
+}
 export interface UserDataDispatchablePets {
   o: string[];
   b: Record<string, number>;
@@ -114,6 +120,7 @@ export interface UserDataFile {
   collection: UserDataCollection;
   skin: UserDataSkin;
   memo: UserDataMemoFile;
+  boardFindOption: UserDataBoardFindOption;
   dispatchablePets: UserDataDispatchablePets;
 }
 export interface UserDataOwnedCharaInfo {
@@ -143,6 +150,7 @@ export interface UserDataMemory {
   // skin: UserDataSkin;
   // memo: UserDataMemoMemory;
   charaInfo: { [key: string]: UserDataCharaInfo };
+  boardFindOption: UserDataBoardFindOption;
   dispatchablePets: UserDataDispatchablePets;
   dirty: number;
   timestamp: number;
