@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Dot, Mail } from "lucide-react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import cuts from "./cuts";
@@ -111,8 +112,25 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
           <div className="text-xs mt-1 rounded-sm bg-slate-100 dark:bg-slate-900 p-1 max-h-[40vh]">
             {`${error}`}
           </div>
-          <div className="text-xs mt-1 opacity-90">
+          <div className="text-sm mt-1 flex flex-col sm:flex-row justify-center items-center gap-1 p-1 my-1 text-blue-800/90 dark:text-blue-200/90 text-shadow-glow">
             <a href={googleAccessUrlLegacy}>{t("ui.common.loadLegacy")}</a>
+            <Dot className="w-3 h-3 hidden sm:inline-block" strokeWidth={3} />
+            <span
+              className="cursor-pointer"
+              onClick={async () =>
+                exportTextFile({
+                  fileName: "trickcal-note-legacymigration.txt",
+                  data: await migrateIntoIdbFile(),
+                })
+              }
+            >
+              {t("ui.common.retryLegacyMigration")}
+            </span>
+            <Dot className="w-3 h-3 hidden sm:inline-block" strokeWidth={3} />
+            <a href="mailto:trickcal-note@triple-lab.com">
+              <Mail className="w-4 h-4 mr-1 inline-block" />
+              {t("ui.error.contact")}
+            </a>
           </div>
           <div className="mt-4 text-lg flex flex-wrap gap-2 justify-center">
             <a href="/">
@@ -138,16 +156,6 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
               }}
             >
               {t("ui.error.export")}
-            </Button>
-            <Button
-              onClick={async () =>
-                exportTextFile({
-                  fileName: "trickcal-note-legacymigration.txt",
-                  data: await migrateIntoIdbFile(),
-                })
-              }
-            >
-              {t("ui.common.retryLegacyMigration")}
             </Button>
             <Button onClick={() => fileInput.current?.click()}>
               {t(importButtonText)}

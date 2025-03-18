@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Mail } from "lucide-react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -57,6 +58,12 @@ const UnknownError = ({
             >
               {viewStack ? t("ui.error.hidestack") : t("ui.error.viewstack")}
             </span>
+          </div>
+          <div className="text-sm mt-1 flex justify-center items-center p-1 my-1 text-blue-800/90 dark:text-blue-200/90 text-shadow-glow">
+            <a href="mailto:trickcal-note@triple-lab.com">
+              <Mail className="w-4 h-4 mr-1 inline-block" />
+              {t("ui.error.contact")}
+            </a>
           </div>
           <div className="mt-4 text-lg flex gap-2 justify-center">
             <Link to="/">
