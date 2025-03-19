@@ -38,6 +38,7 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
   const calcResult = useMemo(() => {
     if (level.f[prevLevel - 1] > prevExp + plusValue)
       return [prevLevel, prevExp + plusValue];
+    if (prevLevel === 29 && level.f[28] <= prevExp + plusValue) return [30, 0];
     let afterLevel = prevLevel;
     let leftExp = plusValue - (level.f[prevLevel] - prevExp);
     while (leftExp >= 0 && afterLevel < 30) {
@@ -164,7 +165,11 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
                   src={`/charas/${charaName}.png`}
                   className="w-1/2 aspect-square mx-auto"
                 />
-                <img src="/foods/MyHomeRestaurant_table.png" alt="" className="absolute w-[120%] left-0 -bottom-10" />
+                <img
+                  src="/foods/MyHomeRestaurant_table.png"
+                  alt=""
+                  className="absolute w-[120%] left-0 -bottom-10"
+                />
                 <div className="w-1/4 absolute -bottom-2 right-1/2 bg-dish bg-cover aspect-square flex flex-row justify-center items-end px-1.5 pb-2">
                   <img
                     src={`/foods/Icon_Food_${foodId}.png`}
@@ -182,7 +187,13 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
                       value={`${prevLevel}`}
                       onValueChange={(e) =>
                         setPrevLevel(
-                          Math.max(1, Math.min(30, parseInt(e || "1") || 1))
+                          Math.max(
+                            1,
+                            Math.min(
+                              30,
+                              parseInt(e.replaceAll(/\D/g, "") || "1") || 1
+                            )
+                          )
                         )
                       }
                       type="text"
@@ -204,7 +215,7 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
                               0,
                               Math.min(
                                 level.f[prevLevel - 1],
-                                parseInt(e || "1") || 1
+                                parseInt(e.replaceAll(/\D/g, "") || "1") || 1
                               )
                             )
                           )
@@ -244,7 +255,10 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
                           className="bg-amber-500 rounded-sm absolute top-px left-px h-3.5"
                           style={{
                             width: `${
-                              (calcResult[1] / level.f[calcResult[0] - 1]) * 100
+                              calcResult[0] === 30
+                                ? 100
+                                : (calcResult[1] / level.f[calcResult[0] - 1]) *
+                                  100
                             }%`,
                           }}
                         />
