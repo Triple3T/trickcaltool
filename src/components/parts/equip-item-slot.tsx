@@ -63,7 +63,7 @@ const EquipItemSlot = ({
   equipCode,
   amount,
   size,
-  innerSize,
+  innerSize = 80,
   slotOnly = false,
 }: EquipItemSlotProps) => {
   const { t } = useTranslation();
@@ -114,6 +114,7 @@ const EquipItemSlot = ({
               fullItemPath
               amount={1}
               size={3}
+              innerSize={innerSize}
             />
             {equipInfo && "i" in equipInfo ? (
               <div>
@@ -124,7 +125,7 @@ const EquipItemSlot = ({
                 <ArrowRight className="w-4 h-4" />
               </div>
             )}
-            <div className="flex flex-row p-2 gap-2 bg-accent rounded-lg">
+            <div className="flex flex-row p-2 gap-2 bg-accent rounded-lg min-w-8 min-h-14">
               {equipInfo && "i" in equipInfo ? (
                 Object.entries(equipInfo.i).map(([v, i]) => {
                   return (
