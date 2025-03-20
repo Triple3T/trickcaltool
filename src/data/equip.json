@@ -925,7 +925,31 @@
             ["e.armor.109","e.weapon.104","e.weapon.102","r.armor.1001","r.accessory.1002"],
             ["e.accessory.102","e.weapon.103","e.weapon.104","r.armor.1002","r.accessory.1001"],
             ["e.accessory.104","e.weapon.102","e.weapon.103","r.armor.1003","r.weapon.1001"],
-            ["e.accessory.105","e.weapon.101","e.weapon.105","r.accessory.1002","r.weapon.1002"]]
+            ["e.accessory.105","e.weapon.101","e.weapon.105","r.accessory.1002","r.weapon.1002"]],
+        "33":[
+            ["e.weapon.101","e.armor.101","e.accessory.103","r.accessory.1001","r.armor.1001"],
+            ["e.weapon.102","e.armor.102","e.accessory.104","r.weapon.1001","r.armor.1002"],
+            ["e.weapon.103","e.armor.103","e.accessory.105","r.weapon.1002","r.armor.1003"],
+            ["e.weapon.104","e.armor.104","e.accessory.106","r.armor.1001","r.accessory.1002"],
+            ["e.weapon.105","e.armor.105","e.accessory.107","r.armor.1002","r.accessory.1001"],
+            ["e.weapon.106","e.armor.106","e.accessory.108","r.armor.1003","r.weapon.1001"],
+            ["e.weapon.107","e.armor.107","e.accessory.109","r.accessory.1002","r.weapon.1002"],
+            ["e.weapon.108","e.armor.108","e.accessory.110","r.accessory.1001","r.armor.1001"],
+            ["e.weapon.109","e.armor.109","e.accessory.111","r.weapon.1001","r.armor.1002"],
+            ["e.weapon.110","e.armor.110","e.weapon.116","r.weapon.1002","r.armor.1003"]
+        ],
+        "34":[
+            ["e.weapon.111","e.armor.111","e.accessory.101","r.armor.1001","r.accessory.1002"],
+            ["e.weapon.112","e.armor.112","e.accessory.102","r.armor.1002","r.accessory.1001"],
+            ["e.weapon.113","e.armor.113","e.weapon.117","r.armor.1003","r.weapon.1001"],
+            ["e.weapon.114","e.armor.114","e.weapon.107","r.accessory.1002","r.weapon.1002"],
+            ["e.weapon.115","e.armor.115","e.weapon.121","r.accessory.1001","r.armor.1001"],
+            ["e.weapon.116","e.armor.116","e.weapon.122","r.weapon.1001","r.armor.1002"],
+            ["e.weapon.117","e.armor.117","e.weapon.123","r.weapon.1002","r.armor.1003"],
+            ["e.weapon.118","e.armor.118","e.weapon.124","r.armor.1001","r.accessory.1002"],
+            ["e.weapon.119","e.accessory.101","e.weapon.125","r.armor.1002","r.accessory.1001"],
+            ["e.weapon.120","e.accessory.102","e.weapon.126","r.armor.1003","r.weapon.1001"]
+        ]
     },
     "c":{
         "Alice":[
