@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 // import { cn } from "@/lib/utils";
 import ItemSlot from "./item-slot";
@@ -72,6 +72,27 @@ const EquipItemSlot = ({
     { e: "", p: "Piece_", r: "Recipe_" }[iType]
   }Icon_${iPart.charAt(0).toUpperCase()}${iPart.slice(1)}${iNum}`;
   const equipInfo = iType === "e" && equip.e[iPart as EquipPartType][iNum];
+  const dropStages = useMemo(
+    () =>
+      Object.entries(equip.d)
+        .map(([world, stageList]) => {
+          return stageList
+            .map((v, i) => ({ v, i }))
+            .filter(({ v }) => v.includes(equipCode))
+            .map(({ i }) => `${world}-${i + 1}`);
+        })
+        .flat(),
+    [equipCode]
+  );
+  const firstDropStages = useMemo(() => {
+    const stageList: string[] = [];
+    for (const [world, stages] of Object.entries(equip.f)) {
+      stages.forEach((v, i) => {
+        if (v.includes(equipCode)) stageList.push(`${world}-${i + 1}`);
+      });
+    }
+    return stageList;
+  }, [equipCode]);
   if (slotOnly)
     return (
       <ItemSlot
@@ -139,28 +160,44 @@ const EquipItemSlot = ({
                 })
               ) : (
                 <div className="flex flex-wrap gap-1 max-w-60 justify-evenly">
-                  {Object.entries(equip.d)
-                    .map(([world, stageList]) => {
-                      return stageList
-                        .map((v, i) => ({ v, i }))
-                        .filter(({ v }) => v.includes(equipCode))
-                        .map(({ i }) => `${world}-${i + 1}`);
-                    })
-                    .flat()
-                    .map((stageCode) => {
-                      return (
-                        <div
-                          key={stageCode}
-                          className="px-1.5 py-0.5 rounded ring-1 ring-foreground text-sm bg-background/75"
-                        >
-                          {stageCode}
-                        </div>
-                      );
-                    })}
+                  {dropStages && dropStages.length > 0
+                    ? dropStages.map((stageCode) => {
+                        return (
+                          <div
+                            key={stageCode}
+                            className="px-1.5 py-0.5 rounded ring-1 ring-foreground text-sm bg-background/75"
+                          >
+                            {stageCode}
+                          </div>
+                        );
+                      })
+                    : t("ui.equipviewer.noData")}
                 </div>
               )}
             </div>
           </div>
+          {firstDropStages && firstDropStages.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <div className="flex flex-row gap-2 items-center">
+                <div className="text-shadow-glow flex-initial px-1">
+                  {t("ui.equipviewer.firstDrop")}
+                </div>
+                <hr className="flex-1 border" />
+              </div>
+              <div className="flex flex-wrap gap-1 justify-evenly max-w-60">
+                {firstDropStages.map((stageCode) => {
+                  return (
+                    <div
+                      key={stageCode}
+                      className="px-1.5 py-0.5 rounded ring-1 ring-foreground text-sm bg-accent/75 text-shadow-glow"
+                    >
+                      {stageCode}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>

@@ -6917,6 +6917,7 @@ i18n
               equipPartsName: "장비의정석",
               showEquipName: "장비 이름도 보기",
               showOtherEquipName: "다른 장비 이름도 보기",
+              firstDrop: "초회 완제",
               noData: "데이터 없음",
             },
             personal: {

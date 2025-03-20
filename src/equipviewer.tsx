@@ -359,6 +359,16 @@ const EquipViewer = () => {
     setSelectedRank(rank);
   }, []);
 
+  const getFirstDropStages = useCallback((equipCode: string) => {
+    const stageList: string[] = [];
+    for (const [world, stages] of Object.entries(equip.f)) {
+      stages.forEach((v, i) => {
+        if (v.includes(equipCode)) stageList.push(`${world}-${i + 1}`);
+      });
+    }
+    return stageList;
+  }, []);
+
   return (
     <div className="font-onemobile mx-auto max-w-lg p-4">
       <div className="w-full h-4" />
@@ -550,6 +560,23 @@ const EquipViewer = () => {
                 ][selectedEquip.split(".")[2]]
               )}
             </div>
+            {getFirstDropStages(selectedEquip).length > 0 && (
+              <div className="flex flex-row gap-2 py-1">
+                <div className="text-sm">{t("ui.equipviewer.firstDrop")}</div>
+                <div className="text-sm flex flex-row flex-wrap gap-1">
+                  {getFirstDropStages(selectedEquip).map((stageCode) => {
+                    return (
+                      <div
+                        key={stageCode}
+                        className="px-1.5 py-0.5 rounded ring-1 ring-foreground text-sm bg-accent/75 text-shadow-glow"
+                      >
+                        {stageCode}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             <div>
               <div className="text-sm flex items-center gap-2">
                 <Checkbox

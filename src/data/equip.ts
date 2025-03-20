@@ -25,5 +25,6 @@ export default equip as {
   p: EquipTypeRecord<string[]>;
   r: EquipTypeRecord<string[]>;
   d: Record<string, string[][]>;
+  f: Record<string, string[][]>;
   c: Record<string, string[][]>;
 };
