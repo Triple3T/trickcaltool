@@ -16,9 +16,21 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SubtitleBar from "@/components/parts/subtitlebar";
-import { Personality, Attack, Position, Class, Race } from "@/types/enums";
+import {
+  Personality,
+  Attack,
+  Position,
+  Class,
+  Race,
+  Aside3EffectCategory,
+} from "@/types/enums";
 
-import { SortProperty, KEYWORD_COUNT, sortArray } from "./filtersort";
+import {
+  SortProperty,
+  KEYWORD_COUNT,
+  sortArray,
+  ASIDE3EFFECT_COUNT,
+} from "./filtersort";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 interface CharaFilterProps {
@@ -380,6 +392,79 @@ export function CharaFilter({
                             className={cn()}
                           >
                             {t(`skill.commonKeyword.${keywordNum}.name`)}
+                          </ToggleGroupItem>
+                        );
+                      })}
+                  </ToggleGroup>
+                </div>
+                <div>
+                  <SubtitleBar>{t(`ui.personal.charaSortAside`)}</SubtitleBar>
+                  <ToggleGroup
+                    type="single"
+                    value={filters[7]?.[1]?.[0]?.toString() ?? "3"}
+                    onValueChange={(vp) => {
+                      const v = vp || "3";
+                      const newFilterLength = Math.max(7, filters.length);
+                      applyFilters(
+                        Array(newFilterLength)
+                          .fill(0)
+                          .map((_, i) =>
+                            i === 7 ? [7, [Number(v)]] : filters[i] ?? [i, []]
+                          )
+                      );
+                    }}
+                    className="grid grid-cols-3"
+                  >
+                    {["has", "hasnt", "whetherhasornot"].map((str, num) => {
+                      const key = num + 1;
+                      return (
+                        <ToggleGroupItem
+                          key={key}
+                          value={key.toString()}
+                          variant="outline"
+                          className={cn()}
+                        >
+                          {t(`ui.personal.${str}`)}
+                        </ToggleGroupItem>
+                      );
+                    })}
+                  </ToggleGroup>
+                </div>
+                <div>
+                  <SubtitleBar>
+                    {t(`ui.personal.charaSortAside3Effect`)}
+                  </SubtitleBar>
+                  <ToggleGroup
+                    type="multiple"
+                    value={filters[8]?.[1]?.map((v) => v.toString()) ?? []}
+                    onValueChange={(v) => {
+                      const newFilterLength = Math.max(8, filters.length);
+                      applyFilters(
+                        Array(newFilterLength)
+                          .fill(0)
+                          .map((_, i) =>
+                            i === 8
+                              ? [8, v.map((s) => Number(s))]
+                              : filters[i] ?? [i, []]
+                          )
+                      );
+                    }}
+                    className="grid grid-cols-2 sm:grid-cols-3"
+                  >
+                    {Array(ASIDE3EFFECT_COUNT)
+                      .fill(0)
+                      .map((_, num) => {
+                        const keywordNum = num + 1;
+                        return (
+                          <ToggleGroupItem
+                            key={keywordNum}
+                            value={keywordNum.toString()}
+                            variant="outline"
+                            className="text-sm break-keep py-2 min-h-min h-full"
+                          >
+                            {t(
+                              `aside.aside3effect.${Aside3EffectCategory[keywordNum]}`
+                            )}
                           </ToggleGroupItem>
                         );
                       })}

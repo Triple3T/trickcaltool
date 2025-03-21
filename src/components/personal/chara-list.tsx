@@ -39,6 +39,14 @@ const filterPropertyChara = (
       Object.values(skillcoefficient.c[c].k)
         .flat()
         .some((k) => propertyFilter.includes(k));
+  } else if (propertyType === 7) {
+    if (propertyFilter.length === 1) {
+      return (c: string) => (chara[c].a ? 1 : 2) & propertyFilter[0];
+    }
+    return () => true;
+  } else if (propertyType === 8) {
+    return (c: string) =>
+      skillcoefficient.c[c].a?.e3.some((e) => propertyFilter.includes(e));
   }
   return () => true;
 };

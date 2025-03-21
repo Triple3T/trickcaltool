@@ -15,6 +15,8 @@ export enum FilterProperty {
   Class = 4,
   Race = 5,
   Keyword = 6,
+  Aside = 7,
+  Aside3Effect = 8,
 }
 export enum SortProperty {
   Name = -1,
@@ -52,5 +54,8 @@ export const sortArray: { [key: string]: number[] } = {
     Race.Witch,
   ],
 };
-export const FILTER_COUNT = Object.values(FilterProperty).filter((v) => typeof v === "number").length;
-export const KEYWORD_COUNT = 26;
+export const FILTER_COUNT = Object.values(FilterProperty).filter(
+  (v) => typeof v === "number"
+).length;
+export const KEYWORD_COUNT = 28;
+export const ASIDE3EFFECT_COUNT = 20;
