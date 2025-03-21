@@ -50,6 +50,33 @@ const EquipViewer = ({ charaName }: EquipViewerProps) => {
         <div className="flex w-max min-w-full space-x-2 p-2 justify-center items-stretch">
           {equip.c[charaName].map((equipset, i) => {
             const rank = i + 1;
+            const firstDropTarget: string[] = [...equipset];
+            const firstDrop: string[] = [];
+            let flag = 0;
+            for (const [world, stages] of Object.entries(equip.f)) {
+              stages.forEach((drops, index) => {
+                if (flag === 6) return;
+                drops.forEach((drop) => {
+                  if (flag === 6) return;
+                  if (firstDropTarget.includes(drop)) {
+                    firstDrop.push(`${world}-${index + 1}`);
+                    firstDropTarget.splice(firstDropTarget.indexOf(drop), 1);
+                    flag++;
+                  }
+                });
+              });
+              if (flag === 6) break;
+            }
+            const latestDrop =
+              flag === 6
+                ? Object.values(firstDrop).sort((b, a) => {
+                    const [aWorld, aStage] = a.split("-");
+                    const [bWorld, bStage] = b.split("-");
+                    return aWorld === bWorld
+                      ? Number(aStage) - Number(bStage)
+                      : Number(aWorld) - Number(bWorld);
+                  })[0]
+                : "";
             return (
               <div key={i} className="flex flex-col">
                 <div
@@ -76,6 +103,20 @@ const EquipViewer = ({ charaName }: EquipViewerProps) => {
                     );
                   })}
                 </div>
+                {rank > 1 && latestDrop ? (
+                  <div className={cn("flex flex-row gap-2 p-1 justify-around")}>
+                    <div className={rankClassNames[i][1]}>
+                      {t("ui.personal.firstDropEquipComplete")}
+                    </div>
+                    <div className="px-1.5 py-0.5 rounded ring-1 ring-foreground text-sm bg-accent/75 text-shadow-glow">
+                      {latestDrop}
+                    </div>
+                  </div>
+                ) : (
+                  <div className={(cn("p-1", rankClassNames[i][1]))}>
+                    {rank > 1 ? t("ui.personal.cannotFirstDropComplete") : "　"}
+                  </div>
+                )}
               </div>
             );
           })}

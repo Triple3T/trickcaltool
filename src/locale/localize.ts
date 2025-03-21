@@ -6938,6 +6938,8 @@ i18n
               charaFilterDialogApply: "확인",
               charaFilterReset: "필터 리셋",
               requireRankEquips: "랭크별 착용 장비",
+              firstDropEquipComplete: "초회 완성 지역",
+              cannotFirstDropComplete: "초회 완성 불가",
               calcEquipRequirements: "필요 장비 재료 계산",
               calcEquipResult: "재료 계산 결과",
               calcEquipWrongInput: "입력값이 올바르지 않습니다.",
