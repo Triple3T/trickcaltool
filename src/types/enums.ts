@@ -87,6 +87,30 @@ export enum LabEffectCategory {
   FarmValueUp = 10,
 }
 
+export enum Aside3EffectCategory {
+  None = 0,
+  FrontSpUp = 1,
+  MiddleSpUp = 2,
+  BackSpUp = 3,
+  FrontDamageUp = 4,
+  MiddleDamageUp = 5,
+  BackDamageUp = 6,
+  AllDamageUp = 7,
+  AllSkillDamageUp = 8,
+  FrontReceiveDamageDown = 9,
+  MiddleReceiveDamageDown = 10,
+  BackReceiveDamageDown = 11,
+  AllReceiveDamageDown = 12,
+  AllReceivePhysicDamageDown = 13,
+  AllReceiveMagicDamageDown = 14,
+  AllCritUp = 15,
+  AllCritMultUp = 16,
+  AllCritResistUp = 17,
+  AllCritMultResistUp = 18,
+  AllHpUp = 19,
+  AllAttackSpeedUp = 20,
+}
+
 export enum SortOrFilter {
   Sort = 0,
   Filter = 1,

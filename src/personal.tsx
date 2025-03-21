@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CharaList from "@/components/personal/chara-list";
 import BoardViewer from "@/components/personal/board-viewer";
 import EquipViewer from "@/components/personal/equip-viewer";
+import FoodTasteViewer from "@/components/personal/food-taste-viewer";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import clonefactory from "@/data/clonefactory";
@@ -26,7 +27,6 @@ import {
   // PurpleBoardType,
   Race,
 } from "@/types/enums";
-import FoodTasteViewer from "./components/personal/food-taste-viewer";
 
 const NAMEKEY = "chara";
 // const TABKEY = "tab";
@@ -807,30 +807,7 @@ const Personal = () => {
                   {t(
                     `aside.${charaName}.skill1.coefficient`,
                     Object.fromEntries(
-                      skillcoefficient.c[charaName].a![1].map((v, i) => {
-                        if (typeof v === "number") return [i, v];
-                        if (Array.isArray(v)) return [i, v[lowLv - 1]];
-                        const [skillType, coefficientIndexString] =
-                          v.split(".");
-                        const coefficientIndex = Number(coefficientIndexString);
-                        if (Number.isNaN(coefficientIndex)) return [i, -1];
-                        if (!["l", "h", "p", "n", "a"].includes(skillType))
-                          return [i, -1];
-                        const targetCoefficient =
-                          skillcoefficient.c[charaName].s[
-                            skillType as "l" | "h" | "p" | "n" | "a"
-                          ]?.[coefficientIndex];
-                        if (typeof targetCoefficient === "number")
-                          return [i, targetCoefficient];
-                        if (Array.isArray(targetCoefficient))
-                          return [
-                            i,
-                            targetCoefficient[
-                              (skillType === "l" ? lowLv : highLv) - 1
-                            ],
-                          ];
-                        return [i, -1];
-                      })
+                      skillcoefficient.c[charaName].a![1].map((v, i) => [i, v])
                     )
                   )
                     .split("\n")
@@ -1059,30 +1036,7 @@ const Personal = () => {
                   {t(
                     `aside.${charaName}.skill3.coefficient`,
                     Object.fromEntries(
-                      skillcoefficient.c[charaName].a![3].map((v, i) => {
-                        if (typeof v === "number") return [i, v];
-                        if (Array.isArray(v)) return [i, v[lowLv - 1]];
-                        const [skillType, coefficientIndexString] =
-                          v.split(".");
-                        const coefficientIndex = Number(coefficientIndexString);
-                        if (Number.isNaN(coefficientIndex)) return [i, -1];
-                        if (!["l", "h", "p", "n", "a"].includes(skillType))
-                          return [i, -1];
-                        const targetCoefficient =
-                          skillcoefficient.c[charaName].s[
-                            skillType as "l" | "h" | "p" | "n" | "a"
-                          ]?.[coefficientIndex];
-                        if (typeof targetCoefficient === "number")
-                          return [i, targetCoefficient];
-                        if (Array.isArray(targetCoefficient))
-                          return [
-                            i,
-                            targetCoefficient[
-                              (skillType === "l" ? lowLv : highLv) - 1
-                            ],
-                          ];
-                        return [i, -1];
-                      })
+                      skillcoefficient.c[charaName].a![3].map((v, i) => [i, v])
                     )
                   )
                     .split("\n")
