@@ -523,8 +523,7 @@ const TeamBuilder = () => {
                         <span
                           className={cn(
                             "rounded-full w-2.5 h-2.5",
-                            index === 0 &&
-                              "bg-foreground/90"
+                            index === 0 && "bg-foreground/90"
                           )}
                           style={
                             index > 0
