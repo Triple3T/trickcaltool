@@ -23,3 +23,11 @@ export const personalityBGMarked = {
   [Personality.Mad]: "bg-personality-Mad-marked",
   [Personality.Naive]: "bg-personality-Naive-marked",
 };
+
+export const personalityBGTranslucent = {
+  [Personality.Cool]: "bg-personality-Cool/50",
+  [Personality.Gloomy]: "bg-personality-Gloomy/50",
+  [Personality.Jolly]: "bg-personality-Jolly/50",
+  [Personality.Mad]: "bg-personality-Mad/50",
+  [Personality.Naive]: "bg-personality-Naive/50",
+};

@@ -9,6 +9,7 @@ export default card as {
         p: number | number[];
         s: number[];
         c: (number | number[] | "p")[];
+        l: number;
         a?: {t: string; l: number[]; c: number[][]};
       };
     };
@@ -21,6 +22,7 @@ export default card as {
         p: number | number[];
         s: number[];
         c: (number | number[] | "p")[];
+        l: number;
       };
     };
   };

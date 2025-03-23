@@ -49,6 +49,8 @@ const PickupLog = lazy(() => import("./pickups"));
 const Cards = lazy(() => import("./card"));
 // import MiniGameHilde from "./minigamehilde";
 const MiniGameHilde = lazy(() => import("./minigamehilde"));
+// import TeamBuilder from "./teambuilder";
+const TeamBuilder = lazy(() => import("./teambuilder"));
 import Error404 from "./components/errors/404";
 
 const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
@@ -307,6 +309,17 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
       <Layout>
         <Suspense fallback={<Loading />}>
           <MiniGameHilde />
+        </Suspense>
+      </Layout>
+    ),
+    errorElement: <ErrorElement />,
+  },
+  {
+    path: "/teambuilder",
+    element: (
+      <Layout title="ui.teambuilder.title">
+        <Suspense fallback={<Loading />}>
+          <TeamBuilder />
         </Suspense>
       </Layout>
     ),
