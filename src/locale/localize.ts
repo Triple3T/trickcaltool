@@ -6351,6 +6351,7 @@ i18n
               Kiwibird: "뚜따키위",
               MatchaJellyCat: "말냥젤리",
               Mini_Curburus: "쁘띠 크르브르스",
+              Mini_LeafSnowRabbit: "잎눈토끼",
               Mini_Lil1li: "쁘띠 릴1리",
               Mini_MEOW: "쁘띠 먀오",
               Mini_RagDoll: "쁘띠 재미의 왕",
