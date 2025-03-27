@@ -197,6 +197,20 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
             nthboard: 1,
             eqrank: 1,
           };
+          const oldUnowned = state.unowned;
+          if (oldUnowned) {
+            const newUnowned = oldUnowned.u.filter((v) => v !== charaName);
+            const newOwned = [...oldUnowned.o, charaName];
+            return {
+              dirty: ((state.dirty + 1) % 32768) + 65536,
+              charaInfo: {
+                ...state.charaInfo,
+                [charaName]: newCharaInfo,
+              },
+              unowned: { o: newOwned, u: newUnowned },
+              timeestamp: Date.now(),
+            };
+          }
           return {
             ...state,
             dirty: ((state.dirty + 1) % 32768) + 65536,
