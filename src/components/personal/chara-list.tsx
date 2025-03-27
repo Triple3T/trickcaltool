@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VirtuosoGrid } from "react-virtuoso";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import SearchBox from "@/components/common/search-with-icon";
 import chara from "@/data/chara";
 import skillcoefficient from "@/data/skillcoefficient";
@@ -129,6 +130,7 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
           )
           .map(([name]) => name)}
         itemContent={(_, name) => {
+          const charaInfo = chara[name];
           const [
             personality,
             initialStar,
@@ -136,7 +138,7 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
             position,
             unitClass,
             race,
-          ] = chara[name].t.split("").map((v) => Number(v)) as CharaMetaType;
+          ] = charaInfo.t.split("").map((v) => Number(v)) as CharaMetaType;
           return (
             <div
               key={name}
@@ -148,9 +150,14 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
                   src={`/charas/${name}.png`}
                   className={cn(
                     "w-full aspect-square",
-                    personalityBG[Number(chara[name].t[0]) as Personality]
+                    personalityBG[personality]
                   )}
                 />
+                {charaInfo.e && charaInfo.e > 0 && (
+                  <Badge className="text-[0.625rem] sm:text-xs font-normal h-4 px-1 sm:px-1.5 absolute top-1 right-6 bg-background/50 text-shadow-glow-0.75 text-shadow-glow-foreground flex justify-center items-center whitespace-nowrap">
+                    {t(`eldain.${charaInfo.e}`)}
+                  </Badge>
+                )}
                 <img
                   src={`/album/Album_Icon_${Race[race]}.png`}
                   alt=""
