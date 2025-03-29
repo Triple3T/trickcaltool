@@ -460,6 +460,7 @@ const PurpleBoard = () => {
       <VirtuosoGrid
         useWindowScroll
         className="font-onemobile mt-4"
+        overscan={600}
         listClassName="gap-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-80 md:max-w-3xl lg:max-w-full mx-auto"
         data={userDataUnowned.o
           .filter((c) =>
