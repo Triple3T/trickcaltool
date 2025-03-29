@@ -6713,6 +6713,7 @@ i18n
                 uploadFailed: "데이터 저장에 실패했습니다.",
                 notProperSignature: "파일 형식이 올바르지 않습니다.",
                 incorrectPadding: "파일 패딩이 올바르지 않습니다.",
+                unknownError: "파일을 읽는 중 오류가 발생했습니다.",
                 noFileProvided: "파일이 제공되지 않았습니다.",
                 invalidFileInput: "파일이 올바르지 않습니다.",
                 oldDataImported: "이전 데이터를 가져왔습니다.",
