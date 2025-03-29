@@ -155,3 +155,8 @@ export interface UserDataMemory {
   dirty: number;
   timestamp: number;
 }
+
+export interface CharaWithArtifact {
+  charaName: string;
+  artifacts: number[];
+}

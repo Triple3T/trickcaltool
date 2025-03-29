@@ -25,3 +25,9 @@ export const saveData = async (data: INoteDataIO): Promise<void> => {
   localStorage.setItem("timestamp", data.timestamp.toString());
   localStorage.setItem("trn-migration", data.data);
 };
+export const loadTeamData = async (): Promise<string> => {
+  return localStorage.getItem("builderteam") ?? "";
+}
+export const saveTeamData = async (data: string): Promise<void> => {
+  localStorage.setItem("builderteam", data);
+}

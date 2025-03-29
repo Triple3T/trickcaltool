@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import {
@@ -7,19 +7,34 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Select from "@/components/common/combobox-select";
 import ArtifactPicker from "@/components/teambuilder/artifact-picker";
 import CharaPicker from "@/components/teambuilder/chara-picker";
 import chara from "@/data/chara";
 import card from "@/data/card";
+import skillcoefficient from "@/data/skillcoefficient";
 import { Aside3EffectCategory, Personality, Position } from "@/types/enums";
-import { personalityBG, personalityBGTranslucent } from "./utils/personalityBG";
-import { Button } from "./components/ui/button";
-import skillcoefficient from "./data/skillcoefficient";
-import { Switch } from "./components/ui/switch";
-import { Label } from "./components/ui/label";
+import { CharaWithArtifact } from "@/types/types";
+import { personalityBG, personalityBGTranslucent } from "@/utils/personalityBG";
+import { useUserDataUsingIDB } from "@/stores/useUserDataStore";
+import {
+  saveTeamData as saveTeamDataIdb,
+  loadTeamData as loadTeamDataIdb,
+} from "@/utils/idbRW";
+import {
+  saveTeamData as saveTeamDataLS,
+  loadTeamData as loadTeamDataLS,
+} from "@/utils/localStorageRW";
+import {
+  compressXorB64,
+  decompressXorB64,
+  numberIntoB64,
+} from "@/utils/pakoB64Pack";
 
 const FRONT_COLOR = "#e35a5b";
 const MID_COLOR = "#57bc3f";
@@ -81,13 +96,9 @@ Object.entries(chara).forEach(([key, value]) => {
   }
 });
 
-interface CharaWithArtifact {
-  charaName: string;
-  artifacts: number[];
-}
-
 const TeamBuilder = () => {
   const { t } = useTranslation();
+  const isUsingIdb = useUserDataUsingIDB();
   const [currentTeam, setCurrentTeam] = useState<CharaWithArtifact[]>([]);
   const [teamSpec, setTeamSpec] = useState<Record<string, number>>({});
   const [restrictType, setRestrictType] = useState<number>(0);
@@ -184,6 +195,59 @@ const TeamBuilder = () => {
       });
     return aside3Values;
   }, [teamSpec]);
+
+  const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    const restrictTypeB64 = numberIntoB64(restrictType, 4);
+    const teamData = compressXorB64(
+      JSON.stringify({ restrictType, currentTeam, teamSpec })
+    );
+    const dataToSave = `b0${restrictTypeB64}${teamData}`;
+    if (saveTimeout.current) {
+      clearTimeout(saveTimeout.current);
+    }
+    saveTimeout.current = setTimeout(() => {
+      if (typeof isUsingIdb === "boolean") {
+        if (isUsingIdb) {
+          saveTeamDataIdb(dataToSave);
+        } else {
+          saveTeamDataLS(dataToSave);
+        }
+      }
+    }, 1000);
+    return () => {
+      if (saveTimeout.current) {
+        clearTimeout(saveTimeout.current);
+      }
+    };
+  }, [currentTeam, isUsingIdb, restrictType, teamSpec]);
+  useEffect(() => {
+    if (typeof isUsingIdb === "boolean") {
+      if (isUsingIdb) {
+        loadTeamDataIdb().then((data) => {
+          if (!data) return;
+          if (!data.startsWith("b0")) return;
+          const { restrictType, currentTeam, teamSpec } = JSON.parse(
+            decompressXorB64(data.substring(6))
+          );
+          setRestrictType(restrictType);
+          setCurrentTeam(currentTeam);
+          setTeamSpec(teamSpec);
+        });
+      } else {
+        loadTeamDataLS().then((data) => {
+          if (!data) return;
+          if (!data.startsWith("b0")) return;
+          const { restrictType, currentTeam, teamSpec } = JSON.parse(
+            decompressXorB64(data.substring(6))
+          );
+          setRestrictType(restrictType);
+          setCurrentTeam(currentTeam);
+          setTeamSpec(teamSpec);
+        });
+      }
+    }
+  }, [isUsingIdb]);
 
   return (
     <div className="font-onemobile max-w-xl mx-auto">
