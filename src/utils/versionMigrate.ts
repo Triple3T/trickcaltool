@@ -1,4 +1,4 @@
-import pako from "pako";
+import { b64IntoNumber, decompressXorB64 } from "./pakoB64Pack";
 
 interface IFileReadDataFail {
   success: false;
@@ -18,12 +18,6 @@ export const currentSignature = "3v";
 export const oldSignatures = ["3l", "0v", "3t", "3u"];
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
-const b64IntoNumber = (b64: string) => {
-  return b64
-    .split("")
-    .map((v) => b64t.indexOf(v))
-    .reduce((acc, v) => acc * 64 + v, 0);
-};
 
 const fileRead0 = (rdt: string) => {
   const lrmd = rdt.length % 4;
@@ -78,48 +72,27 @@ const fileRead2 = (fdt: string) => {
   const crayonB64 = fdt.substring(8, 12);
   const rankB64 = fdt.substring(12, 16);
   const pcrayonB64 = fdt.substring(16, 20);
-  const rdt = fdt.substring(20);
-  const lrmd = rdt.length % 4;
-  if (lrmd === 1) {
+  try {
+    const data = JSON.parse(decompressXorB64(fdt.substring(20)));
     return {
+      success: true,
+      data,
+      timestamp: b64IntoNumber(timeStampB64),
+      crayon: b64IntoNumber(crayonB64),
+      rank: b64IntoNumber(rankB64),
+      pcrayon: b64IntoNumber(pcrayonB64),
+    } as IFileReadDataSuccess;
+  } catch (e) {
+    if (e instanceof Error)
+      return {
+        success: false,
+        reason: e.message,
+      } as IFileReadDataFail;
+    else return {
       success: false,
-      reason: "ui.index.fileSync.incorrectPadding",
+      reason: "ui.index.fileSync.unknownError",
     } as IFileReadDataFail;
   }
-  const dth = Array(Math.floor(rdt.length / 4))
-    .fill(0)
-    .map((_, i) => {
-      const sdt = rdt
-        .substring(i * 4, (i + 1) * 4)
-        .split("")
-        .map((v) => b64t.indexOf(v).toString(2).padStart(6, "0"))
-        .join("");
-      return Array(3)
-        .fill(0)
-        .map((_, j) => parseInt(sdt.substring(j * 8, (j + 1) * 8), 2) ^ 3);
-    })
-    .flat();
-  const dtt = (() => {
-    if (lrmd === 0) return [];
-    const sdt = rdt
-      .substring(rdt.length - lrmd)
-      .split("")
-      .map((v) => b64t.indexOf(v).toString(2).padStart(6, "0"))
-      .join("");
-    return Array(lrmd - 1)
-      .fill(0)
-      .map((_, j) => parseInt(sdt.substring(j * 8, (j + 1) * 8), 2) ^ 3);
-  })();
-  const compressedBuffer = new Uint8Array([...dth, ...dtt]);
-  const data = JSON.parse(pako.inflate(compressedBuffer, { to: "string" }));
-  return {
-    success: true,
-    data,
-    timestamp: b64IntoNumber(timeStampB64),
-    crayon: b64IntoNumber(crayonB64),
-    rank: b64IntoNumber(rankB64),
-    pcrayon: b64IntoNumber(pcrayonB64),
-  } as IFileReadDataSuccess;
 };
 
 const fileRead = (fdt: string, sig: string): FileReadDataType => {

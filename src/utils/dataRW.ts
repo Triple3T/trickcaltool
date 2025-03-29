@@ -1,4 +1,3 @@
-import pako from "pako";
 import sigConvert, { currentSignature } from "@/utils/versionMigrate";
 import userdataOld from "@/utils/userdataOld";
 import { UserDataFile, UserDataMemory } from "@/types/types";
@@ -17,6 +16,7 @@ import chara from "@/data/chara";
 import board from "@/data/board";
 import pboard from "@/data/purpleboard";
 import int1BitCount from "./int1bitCount";
+import { compressXorB64, numberIntoB64 } from "./pakoB64Pack";
 
 const MAX_RANK = 10;
 
@@ -33,17 +33,6 @@ export const exportTextFile = ({ fileName, data }: ExportTextFileProps) => {
   element.download = fileName || "file.txt";
   document.body.appendChild(element);
   element.click();
-};
-const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
-const numberIntoB64 = (num: number, length: number) => {
-  return Array(length)
-    .fill(0)
-    .map((_, i) => {
-      return b64t.charAt(
-        Math.floor(num / Math.pow(2, (length - i - 1) * 6)) & 0x3f
-      );
-    })
-    .join("");
 };
 
 export const dataFileExport = async (fromIDB: boolean) => {
@@ -106,7 +95,6 @@ export const dataFileImport = async (
   const readResult = sigConvert(fileData, startSignature);
   if (readResult.success) {
     const dataFile = readResult.data as UserDataFile;
-    const compressed = pako.deflate(JSON.stringify(dataFile)).map((v) => v ^ 3);
     const crayonStatistic = dataFile.board.b
       .map((b) => {
         return b
@@ -141,44 +129,7 @@ export const dataFileImport = async (
     const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
     const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
     const totalRankStatisticInB64 = numberIntoB64(totalRankStatistic, 4);
-    const compressedInB64 = Array(Math.ceil(compressed.length / 3))
-      .fill(0)
-      .map((_, i) => {
-        const sdt = [...compressed.slice(i * 3, (i + 1) * 3)]
-          .map((v) => v.toString(2).padStart(8, "0"))
-          .join("");
-        switch (sdt.length) {
-          case 8:
-            return Array(2)
-              .fill(0)
-              .map((_, j) => {
-                return b64t.charAt(
-                  parseInt(`${sdt}0000`.substring(j * 6, (j + 1) * 6), 2)
-                );
-              })
-              .join("");
-          case 16:
-            return Array(3)
-              .fill(0)
-              .map((_, j) => {
-                return b64t.charAt(
-                  parseInt(`${sdt}00`.substring(j * 6, (j + 1) * 6), 2)
-                );
-              })
-              .join("");
-          case 24:
-          default:
-            return Array(4)
-              .fill(0)
-              .map((_, j) => {
-                return b64t.charAt(
-                  parseInt(sdt.substring(j * 6, (j + 1) * 6), 2)
-                );
-              })
-              .join("");
-        }
-      })
-      .join("");
+    const compressedInB64 = compressXorB64(JSON.stringify(dataFile));
     await saveData({
       timestamp,
       data: `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${purpleCrayonStatisticInB64}${compressedInB64}`,
@@ -285,7 +236,6 @@ export const migrateIntoIdbFile = async () => {
   });
   userData.unowned.u = fullCharaNames;
   userData.memo.u = fullCharaNames.map(() => [0, ""]);
-  const compressed = pako.deflate(JSON.stringify(userData)).map((v) => v ^ 3);
   const crayonStatistic = Object.values(bdtp.b)
     .map((b) => {
       return b
@@ -318,44 +268,7 @@ export const migrateIntoIdbFile = async () => {
   const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
   const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
   const totalRankStatisticInB64 = numberIntoB64(totalRankStatistic, 4);
-  const compressedInB64 = Array(Math.ceil(compressed.length / 3))
-    .fill(0)
-    .map((_, i) => {
-      const sdt = [...compressed.slice(i * 3, (i + 1) * 3)]
-        .map((v) => v.toString(2).padStart(8, "0"))
-        .join("");
-      switch (sdt.length) {
-        case 8:
-          return Array(2)
-            .fill(0)
-            .map((_, j) => {
-              return b64t.charAt(
-                parseInt(`${sdt}0000`.substring(j * 6, (j + 1) * 6), 2)
-              );
-            })
-            .join("");
-        case 16:
-          return Array(3)
-            .fill(0)
-            .map((_, j) => {
-              return b64t.charAt(
-                parseInt(`${sdt}00`.substring(j * 6, (j + 1) * 6), 2)
-              );
-            })
-            .join("");
-        case 24:
-        default:
-          return Array(4)
-            .fill(0)
-            .map((_, j) => {
-              return b64t.charAt(
-                parseInt(sdt.substring(j * 6, (j + 1) * 6), 2)
-              );
-            })
-            .join("");
-      }
-    })
-    .join("");
+  const compressedInB64 = compressXorB64(JSON.stringify(userData));
   const data = `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${purpleCrayonStatisticInB64}${compressedInB64}`;
   return data;
 };
@@ -562,7 +475,6 @@ export const writeFromMemory = async (
       dataFile.memo.o.push(data.charaInfo[c].memo);
     }
   });
-  const compressed = pako.deflate(JSON.stringify(dataFile)).map((v) => v ^ 3);
   const crayonStatistic = dataFile.board.b
     .map((b) => {
       return b
@@ -595,44 +507,7 @@ export const writeFromMemory = async (
   const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
   const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
   const totalRankStatisticInB64 = numberIntoB64(totalRankStatistic, 4);
-  const compressedInB64 = Array(Math.ceil(compressed.length / 3))
-    .fill(0)
-    .map((_, i) => {
-      const sdt = [...compressed.slice(i * 3, (i + 1) * 3)]
-        .map((v) => v.toString(2).padStart(8, "0"))
-        .join("");
-      switch (sdt.length) {
-        case 8:
-          return Array(2)
-            .fill(0)
-            .map((_, j) => {
-              return b64t.charAt(
-                parseInt(`${sdt}0000`.substring(j * 6, (j + 1) * 6), 2)
-              );
-            })
-            .join("");
-        case 16:
-          return Array(3)
-            .fill(0)
-            .map((_, j) => {
-              return b64t.charAt(
-                parseInt(`${sdt}00`.substring(j * 6, (j + 1) * 6), 2)
-              );
-            })
-            .join("");
-        case 24:
-        default:
-          return Array(4)
-            .fill(0)
-            .map((_, j) => {
-              return b64t.charAt(
-                parseInt(sdt.substring(j * 6, (j + 1) * 6), 2)
-              );
-            })
-            .join("");
-      }
-    })
-    .join("");
+  const compressedInB64 = compressXorB64(JSON.stringify(dataFile));
   await saveData({
     timestamp,
     data: `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${purpleCrayonStatisticInB64}${compressedInB64}`,

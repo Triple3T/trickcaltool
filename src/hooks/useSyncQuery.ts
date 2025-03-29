@@ -9,6 +9,7 @@ import {
 } from "@/stores/useUserDataStore";
 import { dataFileExport, dataFileImport, readIntoMemory } from "@/utils/dataRW";
 import { SyncStatus } from "@/types/enums";
+import { b64IntoNumber } from "@/utils/pakoB64Pack";
 
 const API_URL = "https://api.triple-lab.com/api/v2/tr";
 const TOKEN_URL = "https://api.triple-lab.com/api/v2/tr/token";
@@ -17,14 +18,6 @@ const defaultHeader = {
   "Cache-Control": "no-cache",
   Pragma: "no-cache",
   Expires: "0",
-};
-
-const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
-const b64IntoNumber = (b64: string) => {
-  return b64
-    .split("")
-    .map((v) => b64t.indexOf(v))
-    .reduce((acc, v) => acc * 64 + v, 0);
 };
 
 export const useSyncQuery = () => {

@@ -51,14 +51,7 @@ import {
   useUserGoogleLinked,
 } from "@/stores/useUserDataStore";
 import { useSyncQuery } from "@/hooks/useSyncQuery";
-
-const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
-const b64IntoNumber = (b64: string) => {
-  return b64
-    .split("")
-    .map((v) => b64t.indexOf(v))
-    .reduce((acc, v) => acc * 64 + v, 0);
-};
+import { b64IntoNumber } from "./utils/pakoB64Pack";
 
 interface IFileImportDialogProps {
   open: boolean;
