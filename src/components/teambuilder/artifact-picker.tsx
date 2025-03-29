@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import card from "@/data/card";
 import { StatType } from "@/types/enums";
 
-interface CharaPickerProps {
+interface ArtifactPickerProps {
   currentArtifact: number;
   targetChara: string;
   onChange: (artifact: number) => void;
@@ -31,7 +31,7 @@ const ArtifactPicker = ({
   onReset,
   disableAll,
   disableList,
-}: CharaPickerProps) => {
+}: ArtifactPickerProps) => {
   const { t } = useTranslation();
   const [selectedArtifact, setSelectedArtifact] = useState<number>(0);
   const [statFilter, setStatFilter] = useState<StatType[]>([]);
