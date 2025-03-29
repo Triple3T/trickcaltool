@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import card from "@/data/card";
+import { StatType } from "@/types/enums";
 
 interface CharaPickerProps {
   currentArtifact: number;
@@ -33,6 +34,25 @@ const ArtifactPicker = ({
 }: CharaPickerProps) => {
   const { t } = useTranslation();
   const [selectedArtifact, setSelectedArtifact] = useState<number>(0);
+  const [statFilter, setStatFilter] = useState<StatType[]>([]);
+  
+    const filterResetHandler = useCallback(() => {
+      setStatFilter([]);
+    }, []);
+    const cancelHandler = useCallback(() => {
+      setSelectedArtifact(0);
+      filterResetHandler();
+    }, [filterResetHandler]);
+    const resetHandler = useCallback(() => {
+      setSelectedArtifact(0);
+      onReset();
+      filterResetHandler();
+    }, [filterResetHandler, onReset]);
+    const confirmHandler = useCallback(() => {
+      setSelectedArtifact(0);
+      onChange(selectedArtifact);
+      filterResetHandler();
+    }, [filterResetHandler, onChange, selectedArtifact]);
 
   if (!targetChara)
     return (
@@ -81,28 +101,76 @@ const ArtifactPicker = ({
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="font-normal">
             {t(`chara.${targetChara}`)}{" "}
             {t("ui.teambuilder.selectArtifactTitle")}
           </DialogTitle>
         </DialogHeader>
+        <div className="flex flex-row gap-0.5 max-h-10">
+          {[
+            StatType.Hp,
+            StatType.AttackPhysic,
+            StatType.AttackMagic,
+            StatType.DefensePhysic,
+            StatType.DefenseMagic,
+            StatType.CriticalRate,
+            StatType.CriticalMult,
+            StatType.CriticalResist,
+            StatType.CriticalMultResist,
+            StatType.AttackSpeed,
+          ].map((stat) => {
+            const statString = StatType[stat];
+            return (
+              <div
+                key={stat}
+                className={cn(
+                  "rounded aspect-square cursor-pointer p-1 flex-auto max-h-10",
+                  statFilter.includes(stat) && "bg-accent"
+                )}
+                onClick={() => {
+                  setStatFilter((prev) => {
+                    if (prev.includes(stat)) {
+                      return prev.filter((s) => s !== stat);
+                    } else {
+                      return [...prev, stat];
+                    }
+                  });
+                }}
+              >
+                <img
+                  src={`/icons/Icon_${statString}.png`}
+                  className="w-full aspect-square"
+                />
+              </div>
+            );
+          })}
+        </div>
         <ScrollArea className="bg-accent/50 rounded-lg max-h-[300px]">
-          <div className="grid p-2 gap-2 grid-cols-[repeat(auto-fill,_minmax(3rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(3.5rem,_1fr))] auto-rows-auto">
+          <div className="grid p-2 gap-2 grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4.5rem,_1fr))] auto-rows-auto">
             {card.a.o.map((artifactId) => {
+              const artifactInfo = card.a.l[artifactId];
               const disabled = disableAll || disableList?.includes(artifactId);
-              const artifactRarity = card.a.l[artifactId].r;
-              const isSignature = card.a.l[artifactId].a?.t === targetChara;
+              const artifactRarity = artifactInfo.r;
+              const isSignature = artifactInfo.a?.t === targetChara;
+              const filterTrue =
+                statFilter.length > 0
+                  ? artifactInfo.s.some((s) => statFilter.includes(s))
+                  : true;
+              if (!filterTrue) return null;
               return (
                 <div
                   key={artifactId}
                   className={cn(
-                    "aspect-square rounded cursor-pointer min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 max-w-24 max-h-24 relative overflow-hidden",
+                    "aspect-square rounded cursor-pointer min-w-16 min-h-16 sm:min-w-18 sm:min-h-18 max-w-24 max-h-24 relative overflow-hidden",
                     isSignature
                       ? "border-2 border-accent"
                       : "border-2 border-transparent",
                     disabled
                       ? "opacity-50 brightness-75 cursor-not-allowed"
-                      : "cursor-pointer"
+                      : "cursor-pointer",
+                    {
+                      "ring-2 ring-primary": selectedArtifact === artifactId,
+                    }
                   )}
                   style={{
                     backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${
@@ -135,7 +203,8 @@ const ArtifactPicker = ({
             <Button
               type="reset"
               variant="outline"
-              onClick={() => setSelectedArtifact(0)}
+              size="sm"
+              onClick={cancelHandler}
             >
               {t("ui.common.no")}
             </Button>
@@ -144,7 +213,8 @@ const ArtifactPicker = ({
             <Button
               type="reset"
               variant="destructive"
-              onClick={onReset}
+              size="sm"
+              onClick={resetHandler}
               disabled={!currentArtifact}
             >
               {t("ui.teambuilder.emptyThisSlot")}
@@ -153,7 +223,8 @@ const ArtifactPicker = ({
           <DialogClose asChild>
             <Button
               type="submit"
-              onClick={() => onChange(selectedArtifact)}
+              size="sm"
+              onClick={confirmHandler}
               disabled={!selectedArtifact}
             >
               {t("ui.common.yes")}
