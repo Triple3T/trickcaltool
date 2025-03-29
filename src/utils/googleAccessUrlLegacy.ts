@@ -1,10 +1,11 @@
-const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-
 const SCOPES = ["https://www.googleapis.com/auth/drive.appdata"];
 
 export default (() => {
   const accessurl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-  accessurl.searchParams.set("client_id", CLIENT_ID!);
+  accessurl.searchParams.set(
+    "client_id",
+    "637944158863-l548alrsg15njgk49kpaq13d5gnijo3j.apps.googleusercontent.com"
+  );
   accessurl.searchParams.set(
     "redirect_uri",
     "https://api.triple-lab.com/api/v2/tr/legacy"
