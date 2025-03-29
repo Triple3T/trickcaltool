@@ -201,6 +201,11 @@ function App() {
                     to: "/dispatchcalc",
                   },
                   {
+                    icon: "/scenes/DeckButton.png",
+                    title: t("ui.teambuilder.title"),
+                    to: "/teambuilder",
+                  },
+                  {
                     icon: "/common/BoardRecord_Tab_Stat.png",
                     title: t("ui.check.guide.index"),
                     to: "/guidecheck",

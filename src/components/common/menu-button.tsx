@@ -145,6 +145,16 @@ const MenuButton = () => {
           {t("ui.dispatchcalc.title")}
         </DropdownMenuItem>
         <DropdownMenuItem
+          onClick={() => navigate("/teambuilder")}
+          disabled={matchPath(location.pathname, "/teambuilder") ? true : false}
+        >
+          <img
+            src="/scenes/DeckButton.png"
+            className="w-4 h-4 inline-block mr-1"
+          />
+          {t("ui.teambuilder.title")}
+        </DropdownMenuItem>
+        <DropdownMenuItem
           onClick={() => navigate("/guidecheck")}
           disabled={matchPath(location.pathname, "/guidecheck") ? true : false}
         >
