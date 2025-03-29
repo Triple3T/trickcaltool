@@ -7295,7 +7295,7 @@ i18n
                 "아티팩트 개수에 제한을 두고 편성합니다.",
               soloEndRestrictDescription:
                 "아티팩트별 사용 상한을 두고 편성합니다.",
-              raidStep: "{{0}}단계",
+              raidStep: "3배수 {{0}}단계",
               raidExtraSlotNone: "대충돌 추가 아티팩트 없음",
               raidExtraSlot: "연구 대충돌 아티팩트 {{0}}개 추가",
               soloRaidArtifactCount: "아티팩트 선택 가능 횟수 ",

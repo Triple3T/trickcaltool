@@ -231,12 +231,14 @@ const TeamBuilder = () => {
                     <Select
                       value={soloRaidStep}
                       setValue={setSoloRaidStep}
-                      placeholder={t("ui.teambuilder.raidStep", { 0: 1 })}
-                      items={Array(24)
+                      placeholder={t("ui.teambuilder.raidStep", { 0: "+1" })}
+                      items={Array(3)
                         .fill(0)
                         .map((_, step) => ({
                           value: step + 1,
-                          label: t("ui.teambuilder.raidStep", { 0: step + 1 }),
+                          label: t("ui.teambuilder.raidStep", {
+                            0: step + 1 === 3 ? "" : `+${step + 1}`,
+                          }),
                         }))}
                     />
                     <Select
