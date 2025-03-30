@@ -357,12 +357,13 @@ const TeamBuilder = () => {
                         return (
                           <div key={v} className="w-20 p-2 mx-auto">
                             <div
-                              className="w-16 h-16 bg-cover p-2 rounded-lg"
+                              className="w-16 h-16 bg-cover p-2 rounded-lg border-2 ring-foreground ring-2"
                               style={{
                                 backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${
                                   card.r[targetArtifact.r].s
                                 }.png)`,
                                 backgroundColor: card.r[targetArtifact.r].b,
+                                borderColor: card.r[targetArtifact.r].b,
                               }}
                             >
                               <img
@@ -371,7 +372,7 @@ const TeamBuilder = () => {
                                 className="max-w-full max-h-full mx-auto"
                               />
                             </div>
-                            <div>
+                            <div className={cn("mt-1", count > limit && "text-red-700 dark:text-red-400")}>
                               {count}/{limit}
                             </div>
                           </div>
