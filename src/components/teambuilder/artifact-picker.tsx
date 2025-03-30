@@ -183,11 +183,11 @@ const ArtifactPicker = ({
                     if (!disabled) setSelectedArtifact(artifactId);
                   }}
                 >
-                  <div className="w-full h-full px-3 py-1">
+                  <div className="w-full h-full px-3 py-2">
                     <img
                       src={`/artifacts/ArtifactIcon_${artifactId}.png`}
                       alt={t(`card.artifact.${artifactId}.title`)}
-                      className="w-full aspect-square object-cover"
+                      className="max-w-full max-h-full mx-auto"
                     />
                   </div>
                   <div className="h-8 pb-px absolute bottom-0 w-full left-0 right-0 text-shadow-glow flex justify-center items-end leading-none break-keep text-xs text-center">
