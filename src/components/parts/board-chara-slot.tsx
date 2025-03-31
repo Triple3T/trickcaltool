@@ -5,6 +5,10 @@ import { BoardInfoDialogTrigger } from "./board-info-dialog";
 import type { BoardInfoDialogProps } from "./board-info-dialog";
 import { Race } from "@/types/enums";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 interface BoardCharaSlotProps {
   name: string;
   charaTypes: string;
@@ -67,6 +71,7 @@ const BoardCharaSlot = ({
   getFromBoardMap,
   clf,
 }: BoardCharaSlotProps) => {
+  const isAF = useIsAFActive();
   const boardClickArg = useMemo(
     () => ({
       charaName: name,
@@ -163,13 +168,13 @@ const BoardCharaSlot = ({
     >
       <div
         className={cn(
-          "min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 max-w-24 aspect-square",
+          "min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 max-w-24 aspect-square overflow-hidden",
           bgClassName
         )}
       >
         <img
-          src={skin ? `/charas/${name}Skin${skin}.png` : `/charas/${name}.png`}
-          className={cn("aspect-square w-full", imgClassName)}
+          src={getCharaImageUrl(skin ? `${name}Skin${skin}` : `${name}`,isAF&&'af')}
+          className={cn("aspect-square w-full", imgClassName, isAF&&'scale-125')}
           onClick={boardClickAction}
         />
       </div>

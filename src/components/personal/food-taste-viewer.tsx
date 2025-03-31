@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import LazyInput from "@/components/common/lazy-input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import ComboboxFood from "@/components/parts/combobox-food";
@@ -9,14 +10,20 @@ import SubtitleBar from "@/components/parts/subtitlebar";
 import food from "@/data/food";
 import level from "@/data/level";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 interface EquipViewerProps {
   charaName: string;
+  skin?: number;
 }
 
 const getValuePlusRangeString = (value: number) => `+${value + 1}~${value + 3}`;
 
-const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
+const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
   const [prevLevel, setPrevLevel] = useState<number>(1);
   const [prevExp, setPrevExp] = useState<number>(0);
   const [plusValue, setPlusValue] = useState<number>(5);
@@ -161,10 +168,15 @@ const FoodTasteViewer = ({ charaName }: EquipViewerProps) => {
                 </ToggleGroup>
               </div>
               <div className="relative mt-1 mb-4 bg-restaurant bg-cover px-2 pt-4 overflow-hidden rounded-lg">
-                <img
-                  src={`/charas/${charaName}.png`}
-                  className="w-1/2 aspect-square mx-auto"
-                />
+                <div className="w-1/2 aspect-square mx-auto overflow-hidden">
+                  <img
+                    src={getCharaImageUrl(
+                      skin ? `${charaName}Skin${skin}` : `${charaName}`,
+                      isAF && "af"
+                    )}
+                    className={cn("w-full aspect-square", isAF && "scale-125")}
+                  />
+                </div>
                 <img
                   src="/foods/MyHomeRestaurant_table.png"
                   alt=""

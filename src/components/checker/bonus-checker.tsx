@@ -27,6 +27,11 @@ import RaidBossStatDialog from "@/components/parts/raid-boss-stat-dialog";
 import chara from "@/data/chara";
 import { personalityBG, personalityBGMarked } from "@/utils/personalityBG";
 import { Personality, Race, StatType } from "@/types/enums";
+import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 const inputClassName =
   "h-min px-2 py-1 bg-transparent text-right mx-1 rounded-none ring-0 border-x-0 border-t-0 border-b-2 focus-visible:border-b-greenicon focus-visible:ring-0 focus-visible:bg-greenicon/25 transition-colors";
@@ -41,6 +46,8 @@ interface IComboboxOuterProp {
 
 const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [open, setOpen] = useState(false);
   const [v, setV] = useState(value ? t(`chara.${value}`) : "");
   useEffect(() => {
@@ -108,8 +115,16 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                           )}
                         >
                           <img
-                            src={`/charas/${charaId}.png`}
-                            className="w-full aspect-square"
+                            src={getCharaImageUrl(
+                              userCharaInfo?.[charaId].skin
+                                ? `${charaId}Skin${userCharaInfo[charaId].skin}`
+                                : `${charaId}`,
+                              isAF && "af-i"
+                            )}
+                            className={cn(
+                              "w-full aspect-square",
+                              isAF && "scale-125"
+                            )}
                           />
                           <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">
                             {t(`chara.${charaId}`)}

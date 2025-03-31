@@ -21,7 +21,10 @@ import skillcoefficient from "@/data/skillcoefficient";
 import { Aside3EffectCategory, Personality, Position } from "@/types/enums";
 import { CharaWithArtifact } from "@/types/types";
 import { personalityBG, personalityBGTranslucent } from "@/utils/personalityBG";
-import { useUserDataUsingIDB } from "@/stores/useUserDataStore";
+import {
+  useUserDataCharaInfo,
+  useUserDataUsingIDB,
+} from "@/stores/useUserDataStore";
 import {
   saveTeamData as saveTeamDataIdb,
   loadTeamData as loadTeamDataIdb,
@@ -35,6 +38,10 @@ import {
   decompressXorB64,
   numberIntoB64,
 } from "@/utils/pakoB64Pack";
+
+// af
+// import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 const FRONT_COLOR = "#e35a5b";
 const MID_COLOR = "#57bc3f";
@@ -98,6 +105,7 @@ Object.entries(chara).forEach(([key, value]) => {
 
 const TeamBuilder = () => {
   const { t } = useTranslation();
+  const userCharaInfo = useUserDataCharaInfo();
   const isUsingIdb = useUserDataUsingIDB();
   const [currentTeam, setCurrentTeam] = useState<CharaWithArtifact[]>([]);
   const [teamSpec, setTeamSpec] = useState<Record<string, number>>({});
@@ -372,7 +380,13 @@ const TeamBuilder = () => {
                                 className="max-w-full max-h-full mx-auto"
                               />
                             </div>
-                            <div className={cn("mt-1", count > limit && "text-red-700 dark:text-red-400")}>
+                            <div
+                              className={cn(
+                                "mt-1",
+                                count > limit &&
+                                  "text-red-700 dark:text-red-400"
+                              )}
+                            >
                               {count}/{limit}
                             </div>
                           </div>
@@ -405,10 +419,18 @@ const TeamBuilder = () => {
                         className="flex flex-row gap-1 justify-between items-center"
                       >
                         <div className="flex flex-row gap-0.5 items-center">
-                          <img
-                            src={`/charas/${charaName}.png`}
+                          <div
                             className={cn("w-7 aspect-square rounded-sm", bg)}
-                          />
+                          >
+                            <img
+                              src={getCharaImageUrl(
+                                userCharaInfo?.[charaName].skin
+                                  ? `${charaName}Skin${userCharaInfo[charaName].skin}`
+                                  : `${charaName}`
+                              )}
+                              className={cn("w-full aspect-square")}
+                            />
+                          </div>
                           {t(`chara.${charaName}`)}
                         </div>
                         <div className="flex flex-row gap-1">

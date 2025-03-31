@@ -13,25 +13,6 @@ import {
 import { useTheme } from "@/components/theme-provider";
 import Loading from "@/components/common/loading";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-import AccountDeleteConfirmDialog from "@/components/parts/account-delete-confirm-dialog";
-import CacheClearWithConfirm from "@/components/parts/cache-clear-with-confirm";
-import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
-import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
-import SubtitleBar from "@/components/parts/subtitlebar";
-import {
-  dataFileRead,
-  dataFileWrite,
-  exportTextFile,
-  migrateIntoIdbFile,
-} from "@/utils/dataRW";
-import getServerHash from "@/utils/getServerHash";
-import googleAccessUrl from "@/utils/googleAccessUrl";
-import chara from "@/data/chara";
 import {
   AlertDialogHeader,
   AlertDialogFooter,
@@ -42,16 +23,43 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { currentSignature, oldSignatures } from "@/utils/versionMigrate";
-import googleAccessUrlLegacy from "@/utils/googleAccessUrlLegacy";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import AccountDeleteConfirmDialog from "@/components/parts/account-delete-confirm-dialog";
+import CacheClearWithConfirm from "@/components/parts/cache-clear-with-confirm";
+import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
+import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
+import SubtitleBar from "@/components/parts/subtitlebar";
+import chara from "@/data/chara";
 import {
   useUserDataActions,
   useUserDataStatus,
   useUserDataCharaInfo,
   useUserGoogleLinked,
 } from "@/stores/useUserDataStore";
+import {
+  useAFOverlaySettingActive,
+  useAFOverlayToggle,
+  useAFSettingActive,
+  useAFToggle,
+  useIsToday,
+} from "@/stores/useAFDataStore";
 import { useSyncQuery } from "@/hooks/useSyncQuery";
-import { b64IntoNumber } from "./utils/pakoB64Pack";
+import {
+  dataFileRead,
+  dataFileWrite,
+  exportTextFile,
+  migrateIntoIdbFile,
+} from "@/utils/dataRW";
+import getServerHash from "@/utils/getServerHash";
+import googleAccessUrl from "@/utils/googleAccessUrl";
+import googleAccessUrlLegacy from "@/utils/googleAccessUrlLegacy";
+import { b64IntoNumber } from "@/utils/pakoB64Pack";
+import { currentSignature, oldSignatures } from "@/utils/versionMigrate";
 
 interface IFileImportDialogProps {
   open: boolean;
@@ -70,6 +78,11 @@ const inappReg =
 const Setting = () => {
   const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
+  const isAFSettingActive = useAFSettingActive();
+  const isAFOverlaySettingActive = useAFOverlaySettingActive();
+  const isAFToday = useIsToday();
+  const afToggle = useAFToggle();
+  const afOverlayToggle = useAFOverlayToggle();
   const isReady = useUserDataStatus();
   const { charaSkin, readIntoUserData } = useUserDataActions();
   const userDataCharaInfo = useUserDataCharaInfo();
@@ -154,7 +167,7 @@ const Setting = () => {
         window.location.reload();
       });
   }, []);
-  if (isReady !== 'initialized' || !userDataCharaInfo) return <Loading />;
+  if (isReady !== "initialized" || !userDataCharaInfo) return <Loading />;
 
   return (
     <>
@@ -184,6 +197,29 @@ const Setting = () => {
               </Button>
             </div>
           </div>
+          {isAFToday && (
+            <div>
+              <SubtitleBar>{t("ui.common.afOff")}</SubtitleBar>
+              <div className="p-2 flex gap-2 justify-between">
+                <div>{t("ui.common.afOverlay")}</div>
+                <div>
+                  <Switch
+                    checked={isAFOverlaySettingActive}
+                    onCheckedChange={afOverlayToggle}
+                  />
+                </div>
+              </div>
+              <div className="p-2 -mt-2 flex gap-2 justify-between">
+                <div>{t("ui.common.afChara")}</div>
+                <div>
+                  <Switch
+                    checked={isAFSettingActive}
+                    onCheckedChange={afToggle}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
           {inappReg.test(navigator.userAgent) ? (
             <div>
               <SubtitleBar>{t("ui.common.authTitle")}</SubtitleBar>

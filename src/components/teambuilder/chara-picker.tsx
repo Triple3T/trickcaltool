@@ -16,6 +16,11 @@ import { Separator } from "@/components/ui/separator";
 import chara from "@/data/chara";
 import { personalityBG } from "@/utils/personalityBG";
 import { Personality, Position } from "@/types/enums";
+import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 interface CharaPickerProps {
   currentChara: string;
@@ -42,9 +47,12 @@ const CharaPicker = ({
   position,
 }: CharaPickerProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const charaPersonality: Personality = currentChara
     ? Number(chara[currentChara].t.charAt(0))
     : -1;
+  const currentCharaSkin = userCharaInfo?.[currentChara]?.skin ?? 0;
   const [selectedChara, setSelectedChara] = useState<string>("");
   const [personalityFilter, setPersonalityFilter] = useState<Personality[]>([]);
   const [starFilter, setStarFilter] = useState<number[]>([]);
@@ -71,23 +79,32 @@ const CharaPicker = ({
   return (
     <Dialog>
       <DialogTrigger>
-        <img
-          src={
-            currentChara
-              ? `/charas/${currentChara}.png`
-              : "/ingameui/Ingame_Artifact_HeroEmpty.png"
-          }
-          alt={t(
-            currentChara
-              ? `chara.${currentChara}`
-              : "ui.teambuilder.emptyCharaSlot"
-          )}
+        <div
           className={cn(
-            "w-full sm:w-7/8 md:w-3/4 sm:mx-auto aspect-square rounded-[27.5%]",
+            "w-full sm:w-7/8 md:w-3/4 sm:mx-auto aspect-square rounded-[27.5%] overflow-hidden",
             currentChara ? personalityBG[charaPersonality] : "",
             currentChara ? "ring-4 ring-background/25 ring-inset" : ""
           )}
-        />
+        >
+          <img
+            src={
+              currentChara
+                ? getCharaImageUrl(
+                    currentCharaSkin
+                      ? `${currentChara}Skin${currentCharaSkin}`
+                      : `${currentChara}`,
+                    isAF && "af"
+                  )
+                : "/ingameui/Ingame_Artifact_HeroEmpty.png"
+            }
+            alt={t(
+              currentChara
+                ? `chara.${currentChara}`
+                : "ui.teambuilder.emptyCharaSlot"
+            )}
+            className={cn("w-full aspect-square", isAF && "scale-125")}
+          />
+        </div>
       </DialogTrigger>
       <DialogContent
         className="font-onemobile"
@@ -195,11 +212,21 @@ const CharaPicker = ({
                     )}
                     onClick={() => setSelectedChara(charaName)}
                   >
-                    <img
-                      src={`/charas/${charaName}.png`}
-                      alt={t(`chara.${charaName}`)}
-                      className="w-full h-full aspect-square object-cover"
-                    />
+                    <div className="w-full h-full aspect-square object-cover overflow-hidden">
+                      <img
+                        src={getCharaImageUrl(
+                          currentCharaSkin
+                            ? `${charaName}Skin${currentCharaSkin}`
+                            : `${charaName}`,
+                          isAF && "af"
+                        )}
+                        alt={t(`chara.${charaName}`)}
+                        className={cn(
+                          "w-full aspect-square",
+                          isAF && "scale-125"
+                        )}
+                      />
+                    </div>
                     <div className="h-8 pb-px absolute bottom-0 w-full left-0 right-0 text-shadow-glow flex justify-center items-end leading-none break-keep text-xs text-center">
                       {t(`chara.${charaName}`)}
                     </div>

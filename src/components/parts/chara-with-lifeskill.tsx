@@ -1,9 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { Search } from "lucide-react";
+import { cn } from "@/lib/utils";
 import LifeskillIcon from "./lifeskill-icon";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 interface CharaWithLifeskillProps {
   charaId: string;
+  skin?: number;
   lifeskills: number[];
   selectedLifeskills: number[];
   searchChara?: (charaId: string) => void;
@@ -11,18 +17,25 @@ interface CharaWithLifeskillProps {
 
 const CharaWithLifeskill = ({
   charaId,
+  skin,
   lifeskills,
   selectedLifeskills,
   searchChara,
 }: CharaWithLifeskillProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
   return (
     <div className="w-72 rounded-xl px-2 py-4 ring-4 bg-taskcard text-taskcard-foreground ring-taskcard-border">
       <div className="flex flex-row gap-2.5 items-center">
-        <img
-          className="w-12 h-12 aspect-square"
-          src={`/charas/${charaId}.png`}
-        />
+        <div className="w-12 h-12 overflow-hidden">
+          <img
+            src={getCharaImageUrl(
+              skin ? `${charaId}Skin${skin}` : `${charaId}`,
+              isAF && "af"
+            )}
+            className={cn("w-full aspect-square", isAF && "scale-125")}
+          />
+        </div>
         <div>
           <div className="text-left text-2xl flex items-center">
             {t(`chara.${charaId}`)}

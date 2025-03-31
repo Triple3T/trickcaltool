@@ -11,12 +11,18 @@ import icSearch from "@/lib/initialConsonantSearch";
 import { Personality, Attack, Position, Class, Race } from "@/types/enums";
 import CharaFilter from "./chara-filter";
 
+import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
+
 import {
   FilterProperty,
   SortProperty,
   sortArray,
   FILTER_COUNT,
 } from "./filtersort";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 type CharaMetaType = [Personality, number, Attack, Position, Class, Race];
 
@@ -74,6 +80,8 @@ const sortPropertyChara = (sortType: SortProperty) => {
 
 const CharaList = ({ setTargetChara }: CharaListProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [search, setSearch] = useState<string>("");
   const [filterProperties, setFilterProperties] = useState<
     [FilterProperty, number[]][]
@@ -145,12 +153,18 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
               className="flex justify-between sm:min-w-16 md:min-w-20 max-w-32 rounded overflow-hidden border-slate-200 dark:border-slate-800 border-2 bg-slate-200 dark:bg-slate-800"
               onClick={() => setTargetChara(name)}
             >
-              <div className="flex flex-col items-center p-0 sm:min-w-16 sm:min-h-16 md:min-w-20 md:min-h-20 max-w-32 w-full relative">
+              <div className="flex flex-col items-center p-0 sm:min-w-16 sm:min-h-16 md:min-w-20 md:min-h-20 max-w-32 w-full relative overflow-hidden">
                 <img
-                  src={`/charas/${name}.png`}
+                  src={getCharaImageUrl(
+                    userCharaInfo?.[name].skin
+                      ? `${name}Skin${userCharaInfo[name].skin}`
+                      : `${name}`,
+                    isAF && "af"
+                  )}
                   className={cn(
                     "w-full aspect-square",
-                    personalityBG[personality]
+                    personalityBG[personality],
+                    isAF && "scale-125"
                   )}
                 />
                 {charaInfo.e && charaInfo.e > 0 && (
@@ -163,7 +177,7 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
                   alt=""
                   className="w-4 h-4 absolute top-1 right-1"
                 />
-                <div className="w-full -mt-8 md:-mt-9 break-keep flex-1 flex flex-col items-stretch justify-center gap-0.5">
+                <div className="w-full -mt-8 md:-mt-9 break-keep flex-1 flex flex-col items-stretch justify-center gap-0.5 z-10">
                   <div className="h-5 md:h-6">
                     <div className="flex justify-center gap-0.5 p-0.5 w-max mx-auto rounded-full bg-slate-200/65 dark:bg-slate-800/65">
                       <img

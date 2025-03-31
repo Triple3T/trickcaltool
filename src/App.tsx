@@ -12,6 +12,10 @@ import MainMenuCard from "@/components/parts/main-menu-card";
 import UtilitySetCard from "@/components/parts/menu-card-utilityset";
 import getServerHash from "@/utils/getServerHash";
 
+// af
+import { useIsAFOverlayActive } from "./stores/useAFDataStore";
+import AFOverlay from "./components/afoverlay";
+
 const imageNames = [
   "butter",
   "Epica",
@@ -30,6 +34,7 @@ const imageNames = [
 
 function App() {
   const { t } = useTranslation();
+  const isAFActive = useIsAFOverlayActive();
   const randomImageName = useRef<string>(
     imageNames[Math.floor(Math.random() * imageNames.length)]
   );
@@ -64,6 +69,7 @@ function App() {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      {isAFActive && <AFOverlay />}
       <div
         className="bg-center bg-cover bg-no-repeat h-screen w-screen fixed top-0 left-0 bottom-0 right-0 opacity-25 dark:brightness-80 dark:contrast-125"
         style={{ backgroundImage }}

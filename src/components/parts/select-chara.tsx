@@ -17,8 +17,13 @@ import { Personality } from "@/types/enums";
 import { UserDataUnowned } from "@/types/types";
 import {
   useUserDataActions,
+  useUserDataCharaInfo,
   useUserDataUnowned,
 } from "@/stores/useUserDataStore";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 interface SelectCharaProp {
   isOpen: boolean;
@@ -91,6 +96,8 @@ const userDataReducerMini = (
 
 const SelectChara = ({ isOpen, onOpenChange }: SelectCharaProp) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const userDataUnowned = useUserDataUnowned();
   const { unownedImport } = useUserDataActions();
   const [userData, dispatchUserData] = useReducer(
@@ -146,10 +153,16 @@ const SelectChara = ({ isOpen, onOpenChange }: SelectCharaProp) => {
                         className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden"
                       >
                         <img
-                          src={`/charas/${c}.png`}
+                          src={getCharaImageUrl(
+                            userCharaInfo?.[c].skin
+                              ? `${c}Skin${userCharaInfo[c].skin}`
+                              : `${c}`,
+                            isAF && "af-s"
+                          )}
                           className={cn(
                             "w-full aspect-square",
-                            personalityBG[Number(chara[c].t[0]) as Personality]
+                            personalityBG[Number(chara[c].t[0]) as Personality],
+                            isAF && "scale-125"
                           )}
                           onClick={() => {
                             dispatchUserData({ type: "unown", chara: c });
@@ -189,10 +202,16 @@ const SelectChara = ({ isOpen, onOpenChange }: SelectCharaProp) => {
                         className="min-w-12 min-h-12 sm:min-w-14 sm:min-h-14 md:min-w-16 md:min-h-16 relative aspect-square rounded overflow-hidden"
                       >
                         <img
-                          src={`/charas/${c}.png`}
+                          src={getCharaImageUrl(
+                            userCharaInfo?.[c].skin
+                              ? `${c}Skin${userCharaInfo[c].skin}`
+                              : `${c}`,
+                            isAF && "af-s"
+                          )}
                           className={cn(
                             "w-full aspect-square",
-                            personalityBG[Number(chara[c].t[0]) as Personality]
+                            personalityBG[Number(chara[c].t[0]) as Personality],
+                            isAF && "scale-125"
                           )}
                           onClick={() => {
                             dispatchUserData({ type: "own", chara: c });

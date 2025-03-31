@@ -37,11 +37,16 @@ import ComboboxCharacterOnestarDisabled from "@/components/parts/combobox-charac
 import ItemSlot from "@/components/parts/item-slot";
 import LifeskillIcon from "@/components/parts/lifeskill-icon";
 import TaskCard from "@/components/parts/task-card";
+import { useUserDataCharaInfo } from "./stores/useUserDataStore";
 
 import chara from "@/data/chara";
 import lifeskill from "@/data/lifeskill";
 import material from "@/data/material";
 import task from "@/data/task";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 interface IComboboxOuterProp {
   value: string;
@@ -265,6 +270,8 @@ const MaterialCombobox = ({ value, onChange }: IComboboxOuterProp) => {
 
 const TaskSearch = () => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [selectedChara, setSelectedChara] = useState("");
   const [selectedLifeskill, setSelectedLifeskill] = useState("");
   const [selectedTask, setSelectedTask] = useState("");
@@ -325,9 +332,14 @@ const TaskSearch = () => {
               <div className="sm:w-32 flex-initial flex flex-row gap-4">
                 <div className="w-24 sm:w-full aspect-square">
                   <img
-                    src={`/charas/${selectedChara}.png`}
+                    src={getCharaImageUrl(
+                      userCharaInfo?.[selectedChara].skin
+                        ? `${selectedChara}Skin${userCharaInfo[selectedChara].skin}`
+                        : `${selectedChara}`,
+                      isAF && "af-s"
+                    )}
                     alt=""
-                    className="w-full aspect-square"
+                    className={cn("w-full aspect-square", isAF && 'scale-125')}
                   />
                 </div>
                 <div className="text-left text-2xl sm:hidden min-w-max">
@@ -677,6 +689,7 @@ const TaskSearch = () => {
                     >
                       <CharaWithLifeskill
                         charaId={charaId}
+                        skin={userCharaInfo?.[charaId].skin}
                         lifeskills={cls}
                         selectedLifeskills={[Number(selectedLifeskill)]}
                         searchChara={searchChara}
@@ -754,6 +767,7 @@ const TaskSearch = () => {
                 >
                   <CharaWithLifeskill
                     charaId={charaId}
+                    skin={userCharaInfo?.[charaId].skin}
                     lifeskills={cls}
                     selectedLifeskills={task.t[selectedTask].s}
                     searchChara={searchChara}
@@ -786,7 +800,7 @@ const TaskSearch = () => {
                       score: number;
                       skillset: number[];
                       charaLimit?: { a: string[] } | { d: string[] };
-                    },
+                    }
                   ]
                 > = Object.entries(task.t)
                   .filter(([, taskInfo]) =>
@@ -883,6 +897,7 @@ const TaskSearch = () => {
                       >
                         <CharaWithLifeskill
                           charaId={charaId}
+                          skin={userCharaInfo?.[charaId].skin}
                           lifeskills={cls}
                           selectedLifeskills={skillLineup}
                           searchChara={searchChara}

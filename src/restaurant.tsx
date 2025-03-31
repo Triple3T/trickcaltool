@@ -38,6 +38,10 @@ import {
   useUserDataCharaInfo,
 } from "@/stores/useUserDataStore";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 interface IComboboxOuterProp {
   value: string;
   onChange: (value: string) => void;
@@ -48,6 +52,8 @@ export const CharacterComboboxFood = ({
   onChange,
 }: IComboboxOuterProp) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [open, setOpen] = useState<boolean>(false);
   const [v, setV] = useState<string>(value ? t(`chara.${value}`) : "");
   useEffect(() => {
@@ -124,8 +130,16 @@ export const CharacterComboboxFood = ({
                           )}
                         >
                           <img
-                            src={`/charas/${charaId}.png`}
-                            className="w-full aspect-square"
+                            src={getCharaImageUrl(
+                              userCharaInfo?.[charaId].skin
+                                ? `${charaId}Skin${userCharaInfo[charaId].skin}`
+                                : `${charaId}`,
+                              isAF && "af-i"
+                            )}
+                            className={cn(
+                              "w-full aspect-square",
+                              isAF && "scale-125"
+                            )}
                           />
                           <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">
                             {t(`chara.${charaId}`)}
@@ -152,6 +166,7 @@ const Restaurant = () => {
   const { t } = useTranslation();
   const dataStatus = useUserDataStatus();
   const userDataCharaInfo = useUserDataCharaInfo();
+  const isAF = useIsAFActive();
   const [selectedChara, setSelectedChara] = useState<string>("");
   const [selectedFood, setSelectedFood] = useState<string>("");
   // const [selectedMaterial, setSelectedMaterial] = useState<string>("");
@@ -238,7 +253,12 @@ const Restaurant = () => {
             <div className="flex flex-row justify-center items-start">
               <div className="w-max p-1.5 bg-foodcard-frame relative">
                 <img
-                  src={`/charas/${selectedChara}.png`}
+                  src={getCharaImageUrl(
+                    userDataCharaInfo?.[selectedChara].skin
+                      ? `${selectedChara}Skin${userDataCharaInfo[selectedChara].skin}`
+                      : `${selectedChara}`,
+                    isAF && "af-i"
+                  )}
                   className="w-48 h-48 bg-restaurant bg-cover bg-no-repeat"
                 />
                 <div className="relative -mt-8 pt-1.5 z-10 bg-foodcard-frame">
@@ -473,22 +493,24 @@ const Restaurant = () => {
                           return (
                             <div
                               key={c}
-                              className="relative"
+                              className={cn(
+                                "relative rounded w-16 h-16",
+                                personalityBG[
+                                  Number(chara[c].t[0]) as Personality
+                                ]
+                              )}
                               onClick={() => {
                                 searchChara(c);
                               }}
                             >
                               <img
-                                src={
-                                  skin
-                                    ? `/charas/${c}Skin${skin}.png`
-                                    : `/charas/${c}.png`
-                                }
+                                src={getCharaImageUrl(
+                                  skin ? `${c}Skin${skin}` : `${c}`,
+                                  isAF && "af-i"
+                                )}
                                 className={cn(
                                   "rounded w-16 h-16",
-                                  personalityBG[
-                                    Number(chara[c].t[0]) as Personality
-                                  ]
+                                  isAF && "scale-125"
                                 )}
                               />
                             </div>
@@ -512,22 +534,24 @@ const Restaurant = () => {
                         return (
                           <div
                             key={c}
-                            className="relative"
+                            className={cn(
+                              "relative rounded w-16 h-16",
+                              personalityBG[
+                                Number(chara[c].t[0]) as Personality
+                              ]
+                            )}
                             onClick={() => {
                               searchChara(c);
                             }}
                           >
                             <img
-                              src={
-                                skin
-                                  ? `/charas/${c}Skin${skin}.png`
-                                  : `/charas/${c}.png`
-                              }
+                              src={getCharaImageUrl(
+                                skin ? `${c}Skin${skin}` : `${c}`,
+                                isAF && "af-i"
+                              )}
                               className={cn(
                                 "rounded w-16 h-16",
-                                personalityBG[
-                                  Number(chara[c].t[0]) as Personality
-                                ]
+                                isAF && "scale-125"
                               )}
                             />
                           </div>
@@ -564,22 +588,24 @@ const Restaurant = () => {
                         return (
                           <div
                             key={c}
-                            className="relative"
+                            className={cn(
+                              "relative rounded w-16 h-16",
+                              personalityBG[
+                                Number(chara[c].t[0]) as Personality
+                              ]
+                            )}
                             onClick={() => {
                               searchChara(c);
                             }}
                           >
                             <img
-                              src={
-                                skin
-                                  ? `/charas/${c}Skin${skin}.png`
-                                  : `/charas/${c}.png`
-                              }
+                              src={getCharaImageUrl(
+                                skin ? `${c}Skin${skin}` : `${c}`,
+                                isAF && "af-i"
+                              )}
                               className={cn(
                                 "rounded w-16 h-16",
-                                personalityBG[
-                                  Number(chara[c].t[0]) as Personality
-                                ]
+                                isAF && "scale-125"
                               )}
                             />
                           </div>
@@ -641,7 +667,12 @@ const Restaurant = () => {
                     }}
                   >
                     <img
-                      src={`/charas/${c}.png`}
+                      src={getCharaImageUrl(
+                        userDataCharaInfo[c].skin
+                          ? `${c}Skin${userDataCharaInfo[c].skin}`
+                          : `${c}`,
+                        isAF && "af-i"
+                      )}
                       className="w-48 h-48 bg-restaurant bg-cover bg-no-repeat"
                     />
                     <div className="relative -mt-8 pt-1.5 z-10 bg-foodcard-frame">

@@ -25,12 +25,17 @@ import { ScrollArea, ScrollAreaViewportRef } from "@/components/ui/scroll-area";
 import Select from "@/components/common/combobox-select";
 import ItemSlot from "@/components/parts/item-slot";
 import { personalityBG, personalityBGMarked } from "@/utils/personalityBG";
-import { Personality, StatType } from "@/types/enums";
 import rankClassNames from "@/utils/rankClassNames";
+import { Personality, StatType } from "@/types/enums";
+import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
 
 import chara from "@/data/chara";
 import equip from "@/data/equip";
 import EquipItemSlot from "./components/parts/equip-item-slot";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 const MAX_RANK = 10;
 
@@ -41,6 +46,8 @@ interface IComboboxOuterProp {
 
 const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
   const { t } = useTranslation();
+  const userCharaInfo = useUserDataCharaInfo();
+  const isAF = useIsAFActive();
   const [open, setOpen] = useState(false);
   const [v, setV] = useState(value ? t(`chara.${value}`) : "");
   useEffect(() => {
@@ -108,8 +115,16 @@ const CharacterCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                           )}
                         >
                           <img
-                            src={`/charas/${charaId}.png`}
-                            className="w-full aspect-square"
+                            src={getCharaImageUrl(
+                              userCharaInfo?.[charaId].skin
+                                ? `${charaId}Skin${userCharaInfo[charaId].skin}`
+                                : `${charaId}`,
+                              isAF && "af-i"
+                            )}
+                            className={cn(
+                              "w-full aspect-square",
+                              isAF && "scale-125"
+                            )}
                           />
                           <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">
                             {t(`chara.${charaId}`)}
@@ -334,6 +349,8 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
 
 const EquipViewer = () => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [showEquipPartsRequired, setShowEquipPartsRequired] =
     useState<boolean>(false);
   const [showStats, setShowStats] = useState<boolean>(false);
@@ -392,7 +409,15 @@ const EquipViewer = () => {
         </div>
         {selectedChara && (
           <div className="flex gap-2">
-            <img src={`/charas/${selectedChara}.png`} className="w-24 h-24" />
+            <img
+              src={getCharaImageUrl(
+                userCharaInfo?.[selectedChara].skin
+                  ? `${selectedChara}Skin${userCharaInfo[selectedChara].skin}`
+                  : `${selectedChara}`,
+                isAF && "af-i"
+              )}
+              className={cn("w-24 h-24", isAF && "scale-125")}
+            />
             <div className="flex flex-col justify-start gap-1 p-1">
               <div className="text-2xl">{t(`chara.${selectedChara}`)}</div>
               <div className="text-sm flex items-center gap-2">
@@ -1015,9 +1040,15 @@ const EquipViewer = () => {
                           >
                             <div className="flex flex-col items-center p-0 sm:min-w-16 sm:min-h-16 md:min-w-20 md:min-h-20 max-w-32 relative">
                               <img
-                                src={`/charas/${name}.png`}
+                                src={getCharaImageUrl(
+                                  userCharaInfo?.[name].skin
+                                    ? `${name}Skin${userCharaInfo[name].skin}`
+                                    : `${name}`,
+                                  isAF && "af-i"
+                                )}
                                 className={cn(
                                   "w-full aspect-square",
+                                  isAF && "scale-125",
                                   personalityBG[
                                     Number(chara[name].t[0]) as Personality
                                   ]

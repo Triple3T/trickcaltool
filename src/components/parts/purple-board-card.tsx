@@ -8,6 +8,10 @@ import SubtitleBar from "./subtitlebar";
 import purpleposition from "@/data/purpleposition";
 import { Race, PurpleBoardType, BoardType } from "@/types/enums";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 const purpleBoardDefaultLength = [4, 8, 12];
 
 interface PurpleBoardCardProps {
@@ -54,6 +58,7 @@ const PurpleBoardCard = ({
   board,
   pboard,
 }: PurpleBoardCardProps) => {
+  const isAF = useIsAFActive();
   return (
     <Card className="p-4 object-cover max-w-full break-inside-avoid">
       {/* title bar */}
@@ -64,15 +69,16 @@ const PurpleBoardCard = ({
         >
           <div
             className={cn(
-              "min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 max-w-14 aspect-square",
+              "min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 max-w-14 aspect-square overflow-hidden",
               personalityClassName
             )}
           >
             <img
-              src={
-                skin ? `/charas/${name}Skin${skin}.png` : `/charas/${name}.png`
-              }
-              className="aspect-square w-full"
+              src={getCharaImageUrl(
+                skin ? `${name}Skin${skin}` : `${name}`,
+                isAF && "af"
+              )}
+              className={cn("aspect-square w-full", isAF && "scale-125")}
             />
           </div>
           <div className="absolute right-0.5 bottom-0.5 flex flex-row p-px w-3 h-3">
@@ -354,48 +360,48 @@ const PurpleBoardCard = ({
             </div>
           </SubtitleBar>
           <div className="flex flex-row flex-wrap py-1 px-3 w-full justify-center">
-              {currentBoard[2].map((boardLockCollection, ldx) => {
-                return (
-                  <Fragment key={ldx}>
-                    {boardLockCollection
-                      .toString(10)
-                      .split("")
-                      .map((boardString, bdx) => {
-                        const boardType = BoardType[Number(boardString)];
-                        const checked = board[2][ldx] & (1 << bdx);
-                        return (
+            {currentBoard[2].map((boardLockCollection, ldx) => {
+              return (
+                <Fragment key={ldx}>
+                  {boardLockCollection
+                    .toString(10)
+                    .split("")
+                    .map((boardString, bdx) => {
+                      const boardType = BoardType[Number(boardString)];
+                      const checked = board[2][ldx] & (1 << bdx);
+                      return (
+                        <div
+                          key={`${ldx}-${bdx}`}
+                          className="w-1/6 aspect-square p-px"
+                        >
                           <div
-                            key={`${ldx}-${bdx}`}
-                            className="w-1/6 aspect-square p-px"
+                            className={cn(
+                              "flex aspect-square bg-cover",
+                              checked
+                                ? "bg-board-special"
+                                : "bg-board-special-disabled"
+                            )}
                           >
-                            <div
+                            <img
+                              src={`/boards/Tile_${boardType}${
+                                checked ? "On" : "Off"
+                              }.png`}
                               className={cn(
-                                "flex aspect-square bg-cover",
-                                checked
-                                  ? "bg-board-special"
-                                  : "bg-board-special-disabled"
+                                "w-full aspect-square bg-cover",
+                                checked ? "" : "brightness-[.15]"
                               )}
-                            >
-                              <img
-                                src={`/boards/Tile_${boardType}${
-                                  checked ? "On" : "Off"
-                                }.png`}
-                                className={cn(
-                                  "w-full aspect-square bg-cover",
-                                  checked ? "" : "brightness-[.15]"
-                                )}
-                                onClick={() => {
-                                  dispatchClickBoardData(name, 2, ldx, bdx);
-                                }}
-                              />
-                            </div>
+                              onClick={() => {
+                                dispatchClickBoardData(name, 2, ldx, bdx);
+                              }}
+                            />
                           </div>
-                        );
-                      })}
-                  </Fragment>
-                );
-              })}
-            </div>
+                        </div>
+                      );
+                    })}
+                </Fragment>
+              );
+            })}
+          </div>
           <div className="flex flex-row flex-wrap py-1 px-3 w-full justify-center">
             {currentPurpleBoard.b[2]
               .toString(10)

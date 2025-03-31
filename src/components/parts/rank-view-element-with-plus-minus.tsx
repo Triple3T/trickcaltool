@@ -1,10 +1,14 @@
+import { useCallback, useMemo } from "react";
 import { Info, Plus, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import chara from "@/data/chara";
 import eqrank from "@/data/eqrank";
 import { Personality } from "@/types/enums";
 import { personalityBG } from "@/utils/personalityBG";
-import { useCallback, useMemo } from "react";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 interface IRankDialogProp {
   chara: string;
@@ -22,7 +26,7 @@ interface IRankViewElementWithPlusMinusProps {
   rank: number;
   skin?: number;
   maxRank: number;
-  charaName:string;
+  charaName: string;
   setRankDialogProp: (prop: IRankDialogProp) => void;
   setRankDialogOpened: (opened: boolean) => void;
   rankModify: (chara: string, rank: number) => void;
@@ -37,21 +41,25 @@ const RankViewElementWithPlusMinus = ({
   setRankDialogProp,
   setRankDialogOpened,
   rankModify,
-}:IRankViewElementWithPlusMinusProps) => {
-  const rankDialogProp = useMemo(() => ({
-    chara: c,
-    charaTypes: chara[c].t,
-    rank,
-    rankStats: eqrank.r[eqrank.c[c].r].map((rs) =>
-      rs.map((r) => eqrank.s[r])
-    ),
-    sameRankBonus: Object.entries(eqrank.c)
-      .filter(([k, v]) => k !== c && v.r === eqrank.c[c].r)
-      .map(([k]) => k),
-    maxRank,
-    changeRank: rankModify,
-    skin,
-  }), [c, maxRank, rank, rankModify, skin]);
+}: IRankViewElementWithPlusMinusProps) => {
+  const isAF = useIsAFActive();
+  const rankDialogProp = useMemo(
+    () => ({
+      chara: c,
+      charaTypes: chara[c].t,
+      rank,
+      rankStats: eqrank.r[eqrank.c[c].r].map((rs) =>
+        rs.map((r) => eqrank.s[r])
+      ),
+      sameRankBonus: Object.entries(eqrank.c)
+        .filter(([k, v]) => k !== c && v.r === eqrank.c[c].r)
+        .map(([k]) => k),
+      maxRank,
+      changeRank: rankModify,
+      skin,
+    }),
+    [c, maxRank, rank, rankModify, skin]
+  );
   const rankPlus = useCallback(() => {
     rankModify(c, rank + 1);
   }, [c, rank, rankModify]);
@@ -60,13 +68,20 @@ const RankViewElementWithPlusMinus = ({
   }, [c, rank, rankModify]);
   return (
     <div key={c} className="min-w-20 sm:min-w-22 shadow-sm relative pr-5">
-      <img
-        src={skin ? `/charas/${c}Skin${skin}.png` : `/charas/${c}.png`}
+      <div
         className={cn(
-          personalityBG[Number(chara[c].t[0]) as Personality],
-          "aspect-square w-full border-slate-200 dark:border-slate-800 border-2 overflow-hidden rounded relative z-10"
+          "w-full aspect-square border-slate-200 dark:border-slate-800 border-2 overflow-hidden rounded relative z-10",
+          personalityBG[Number(chara[c].t[0]) as Personality]
         )}
-      />
+      >
+        <img
+          src={getCharaImageUrl(
+            skin ? `${c}Skin${skin}` : `${c}`,
+            isAF && "af"
+          )}
+          className={cn("aspect-square w-full", isAF && "scale-125")}
+        />
+      </div>
       {enableDialog && (
         <div className="absolute right-5 top-0 p-1 z-10">
           <Info
@@ -83,18 +98,12 @@ const RankViewElementWithPlusMinus = ({
         {rank >= maxRank ? (
           <Plus className="w-4 h-4 opacity-50" />
         ) : (
-          <Plus
-            className="w-4 h-4"
-            onClick={rankPlus}
-          />
+          <Plus className="w-4 h-4" onClick={rankPlus} />
         )}
         {rank <= 1 ? (
           <Minus className="w-4 h-4 opacity-50" />
         ) : (
-          <Minus
-            className="w-4 h-4"
-            onClick={rankMinus}
-          />
+          <Minus className="w-4 h-4" onClick={rankMinus} />
         )}
       </div>
     </div>

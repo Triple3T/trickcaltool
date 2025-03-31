@@ -18,6 +18,7 @@ import purpleboard from "@/data/purpleboard";
 import purpleposition from "@/data/purpleposition";
 import route from "@/data/route";
 import skillcoefficient from "@/data/skillcoefficient";
+import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
 import {
   Attack,
   // BoardType,
@@ -28,6 +29,10 @@ import {
   Race,
 } from "@/types/enums";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 const NAMEKEY = "chara";
 // const TABKEY = "tab";
 
@@ -35,6 +40,8 @@ type CharaMetaType = [Personality, number, Attack, Position, Class, Race];
 
 const Personal = () => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tab, setTab] = useState<string>("Board");
   const [lowLv, setLowLv] = useState<number>(1);
@@ -82,7 +89,15 @@ const Personal = () => {
       <div className="h-1" />
       <div className="flex flex-row gap-2">
         <div>
-          <img src={`/charas/${charaName}.png`} className="w-14 h-14" />
+          <img
+            src={getCharaImageUrl(
+              userCharaInfo?.[charaName].skin
+                ? `${charaName}Skin${userCharaInfo[charaName].skin}`
+                : `${charaName}`,
+              isAF && "af"
+            )}
+            className={cn("w-14 h-14", isAF && "scale-125 pointer-events-none")}
+          />
         </div>
         <div className="flex flex-col justify-evenly text-left gap-1">
           <div className="text-sm opacity-75">
@@ -253,7 +268,7 @@ const Personal = () => {
         </TabsContent>
         <TabsContent value="Food">
           {initialStar > 1 ? (
-            <FoodTasteViewer charaName={charaName} />
+            <FoodTasteViewer charaName={charaName} skin={userCharaInfo?.[charaName].skin} />
           ) : (
             <div>{t("ui.personal.cannotInviteToRestaurant")}</div>
           )}

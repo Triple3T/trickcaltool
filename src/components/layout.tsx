@@ -7,6 +7,8 @@ import { ModeToggle } from "./mode-toggle";
 import { QuickSync } from "./quick-sync";
 import BackButton from "./common/back-button";
 import MenuButton from "./common/menu-button";
+import { useIsAFOverlayActive } from "@/stores/useAFDataStore";
+import AFOverlay from "./afoverlay";
 
 const Layout = ({
   title,
@@ -16,6 +18,7 @@ const Layout = ({
   children: React.ReactNode;
 }) => {
   const { t } = useTranslation();
+  const isAFActive = useIsAFOverlayActive();
   const [displayScrollToTop, setDisplayScrollToTop] = useState<boolean>(false);
   useEffect(() => {
     const componentTitle = title ? t(title) ?? "" : "";
@@ -39,6 +42,7 @@ const Layout = ({
   }, []);
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      {isAFActive && <AFOverlay />}
       <div className="fixed top-0 left-0 p-2 w-auto flex gap-2 z-20">
         <div className="flex-1 flex gap-2 justify-start">
           <BackButton />
@@ -64,7 +68,6 @@ const Layout = ({
           }
         />
       </div>
-      {/* <div className="w-full h-10" /> */}
       {children}
     </ThemeProvider>
   );

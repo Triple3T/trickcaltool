@@ -5,6 +5,10 @@ import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { BoardType } from "@/types/enums";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 interface IBoardViewerProps {
   name: string;
   index: number;
@@ -25,13 +29,19 @@ const BoardViewer = ({
   skin,
 }: IBoardViewerProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
   return (
     <Card className="p-4">
       <div className="flex flex-row gap-2.5 items-center">
-        <img
-          className="w-12 h-12 aspect-square"
-          src={skin ? `/charas/${name}Skin${skin}.png` : `/charas/${name}.png`}
-        />
+        <div className="w-12 h-12 overflow-hidden">
+          <img
+            src={getCharaImageUrl(
+              skin ? `${name}Skin${skin}` : `${name}`,
+              isAF && "af-i"
+            )}
+            className={cn("w-full aspect-square", isAF && "scale-125")}
+          />
+        </div>
         <div>
           <div className="text-left text-sm">
             <img
@@ -104,7 +114,10 @@ const BoardViewer = ({
               const currentBlockedBy = blockedBy?.[0]?.split(".")?.[i];
               if (!currentBlockedBy) return null;
               return (
-                <div key={i} className="py-1.5 flex first-of-type:mt-4 border-t">
+                <div
+                  key={i}
+                  className="py-1.5 flex first-of-type:mt-4 border-t"
+                >
                   <img
                     src="/icons/TutorialPopupLock01.png"
                     className="w-7 h-7 my-0.5 mr-1.5"
@@ -131,7 +144,10 @@ const BoardViewer = ({
                             )}
                           />
                           {currentBlockedBy.length - 1 > k && (
-                            <Dot strokeWidth={2.5} className="w-6 h-6 -mx-1 my-1" />
+                            <Dot
+                              strokeWidth={2.5}
+                              className="w-6 h-6 -mx-1 my-1"
+                            />
                           )}
                         </Fragment>
                       );
@@ -153,7 +169,10 @@ const BoardViewer = ({
                 .fill(0)
                 .map((_, k) => currentBlockedBy.slice(k * 2, k * 2 + 2));
               return (
-                <div key={i} className="py-1.5 flex first-of-type:mt-4 border-t">
+                <div
+                  key={i}
+                  className="py-1.5 flex first-of-type:mt-4 border-t"
+                >
                   <img
                     src="/icons/TutorialPopupLock01.png"
                     className="w-7 h-7 my-0.5 mr-1.5"
@@ -189,7 +208,10 @@ const BoardViewer = ({
                             />
                           </div>
                           {currentBlockedByArray.length - 1 > k && (
-                            <Dot strokeWidth={2.5} className="w-6 h-6 -mx-1 my-1" />
+                            <Dot
+                              strokeWidth={2.5}
+                              className="w-6 h-6 -mx-1 my-1"
+                            />
                           )}
                         </Fragment>
                       );

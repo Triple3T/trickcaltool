@@ -66,6 +66,10 @@ import {
   useUserDataStatistics,
 } from "@/stores/useUserDataStore";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 const MAX_RANK = 10;
 
 type ViewType = "input" | "rankView" | "targetView";
@@ -87,6 +91,7 @@ const EquipRank = () => {
   const boardStat = useUserDataStatPercents();
   const userDataUnowned = useUserDataUnowned();
   const userStatistics = useUserDataStatistics();
+  const isAF = useIsAFActive();
   const [viewType, setViewType] = useState<ViewType>("rankView");
   const [enableDialog, setEnableDialog] = useState(true);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
@@ -182,7 +187,14 @@ const EquipRank = () => {
     [rankModify]
   );
 
-  if (dataStatus !== 'initialized' || !userDataEqrank || !userDataCharaInfo || !boardStat || !userDataUnowned) return <Loading />;
+  if (
+    dataStatus !== "initialized" ||
+    !userDataEqrank ||
+    !userDataCharaInfo ||
+    !boardStat ||
+    !userDataUnowned
+  )
+    return <Loading />;
 
   return (
     <>
@@ -291,9 +303,7 @@ const EquipRank = () => {
                                   className="flex-auto"
                                   size="sm"
                                   variant={sortedByThis ? "default" : "outline"}
-                                  onClick={() =>
-                                    rankSort(SortBy[s])
-                                  }
+                                  onClick={() => rankSort(SortBy[s])}
                                 >
                                   {sortedByThis && hasDirection ? (
                                     sortedDirection === SortType.Asc ? (
@@ -583,10 +593,7 @@ const EquipRank = () => {
                 />
                 {rankDirty && (
                   <div className="flex-initial text-right">
-                    <Button
-                      variant="destructive"
-                      onClick={rankApplyMinMax}
-                    >
+                    <Button variant="destructive" onClick={rankApplyMinMax}>
                       {t("ui.equiprank.applyMinMax")}
                     </Button>
                   </div>
@@ -626,15 +633,17 @@ const EquipRank = () => {
                       <div key={c} className="flex flex-col gap-1">
                         <div className="min-w-28 min-h-28 sm:min-w-32 sm:min-h-32 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                           <img
-                            src={
+                            src={getCharaImageUrl(
                               userDataCharaInfo[c].skin
-                                ? `/charas/${c}Skin${userDataCharaInfo[c].skin}.png`
-                                : `/charas/${c}.png`
-                            }
+                                ? `${c}Skin${userDataCharaInfo[c].skin}`
+                                : `${c}`,
+                              isAF && "af-i"
+                            )}
                             className={cn(
                               personalityBG[
                                 Number(chara[c].t[0]) as Personality
                               ],
+                              isAF && "scale-125",
                               "aspect-square w-full"
                             )}
                           />
@@ -645,9 +654,7 @@ const EquipRank = () => {
                         <div className="flex flex-row gap-2 pl-2 pr-1 py-1 rounded bg-slate-400 dark:bg-slate-600">
                           <Button
                             className="h-full p-0 aspect-square bg-greenicon"
-                            disabled={
-                              currentCharaEqrank <= userDataEqrank.s[0]
-                            }
+                            disabled={currentCharaEqrank <= userDataEqrank.s[0]}
                             onClick={() =>
                               rankModify({
                                 charaName: c,
@@ -674,10 +681,7 @@ const EquipRank = () => {
                             )}
                             pattern="[0-9]{1,2}"
                             value={`${Math.max(
-                              Math.min(
-                                currentCharaEqrank,
-                                userDataEqrank.s[1]
-                              ),
+                              Math.min(currentCharaEqrank, userDataEqrank.s[1]),
                               userDataEqrank.s[0]
                             )}`}
                             onValueChange={(v) =>
@@ -692,9 +696,7 @@ const EquipRank = () => {
                           />
                           <Button
                             className="h-full p-0 aspect-square bg-greenicon"
-                            disabled={
-                              currentCharaEqrank >= userDataEqrank.s[1]
-                            }
+                            disabled={currentCharaEqrank >= userDataEqrank.s[1]}
                             onClick={() =>
                               rankModify({
                                 charaName: c,
@@ -759,11 +761,8 @@ const EquipRank = () => {
                           (i) => {
                             const count = userDataUnowned.o.filter(
                               (c) =>
-                                (
-                                  userDataCharaInfo[
-                                    c
-                                  ] as UserDataOwnedCharaInfo
-                                ).eqrank ===
+                                (userDataCharaInfo[c] as UserDataOwnedCharaInfo)
+                                  .eqrank ===
                                 i + 1
                             ).length;
                             return (
@@ -805,11 +804,8 @@ const EquipRank = () => {
                             .sort(sortFunc)
                             .map((c) => {
                               if (
-                                (
-                                  userDataCharaInfo[
-                                    c
-                                  ] as UserDataOwnedCharaInfo
-                                ).eqrank !== rank
+                                (userDataCharaInfo[c] as UserDataOwnedCharaInfo)
+                                  .eqrank !== rank
                               )
                                 return null;
                               return (
@@ -902,14 +898,10 @@ const EquipRank = () => {
                               )
                               .sort((a, b) => {
                                 const aRank = (
-                                  userDataCharaInfo[
-                                    a
-                                  ] as UserDataOwnedCharaInfo
+                                  userDataCharaInfo[a] as UserDataOwnedCharaInfo
                                 ).eqrank;
                                 const bRank = (
-                                  userDataCharaInfo[
-                                    b
-                                  ] as UserDataOwnedCharaInfo
+                                  userDataCharaInfo[b] as UserDataOwnedCharaInfo
                                 ).eqrank;
                                 const aSort = (aRank + 99 - rank) % 99;
                                 const bSort = (bRank + 99 - rank) % 99;
@@ -921,9 +913,7 @@ const EquipRank = () => {
                               })
                               .map((c) => {
                                 const currentCharaEqrank = (
-                                  userDataCharaInfo[
-                                    c
-                                  ] as UserDataOwnedCharaInfo
+                                  userDataCharaInfo[c] as UserDataOwnedCharaInfo
                                 ).eqrank;
                                 return (
                                   <div
@@ -933,13 +923,15 @@ const EquipRank = () => {
                                     <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square border border-gray-700 rounded shadow-sm overflow-hidden relative">
                                       <div className="min-w-14 min-h-14 sm:min-w-16 sm:min-h-16 aspect-square">
                                         <img
-                                          src={
+                                          src={getCharaImageUrl(
                                             userDataCharaInfo[c].skin
-                                              ? `/charas/${c}Skin${userDataCharaInfo[c].skin}.png`
-                                              : `/charas/${c}.png`
-                                          }
+                                              ? `${c}Skin${userDataCharaInfo[c].skin}`
+                                              : `${c}`,
+                                            isAF && "af-i"
+                                          )}
                                           className={cn(
                                             "aspect-square w-full",
+                                            isAF && "scale-125",
                                             personalityBG[
                                               Number(
                                                 chara[c].t[0]
@@ -984,8 +976,7 @@ const EquipRank = () => {
                                                   )
                                                   .map(([k]) => k),
                                                 maxRank: userDataEqrank.s[1],
-                                                changeRank:
-                                                  rankModifyAsProp,
+                                                changeRank: rankModifyAsProp,
                                                 skin:
                                                   userDataCharaInfo[c].skin ||
                                                   0,

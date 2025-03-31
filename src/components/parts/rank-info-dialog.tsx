@@ -28,6 +28,10 @@ import {
 } from "@/types/enums";
 import rankClassNames from "@/utils/rankClassNames";
 
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
+
 export interface RankInfoDialogProps {
   rank: number;
   chara: string;
@@ -54,6 +58,7 @@ const RankInfoDialog = ({
   skin,
 }: RankInfoDialogProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
   const [currentRank, setCurrentRank] = useState(rank);
   const [rankSettingOpened, setRankSettingOpened] = useState(false);
   const [rankToBeChanged, setRankToBeChanged] = useState(rank);
@@ -195,14 +200,15 @@ const RankInfoDialog = ({
                 </Accordion>
               )}
               <div className="flex">
-                <img
-                  src={
-                    skin
-                      ? `/charas/${chara}Skin${skin}.png`
-                      : `/charas/${chara}.png`
-                  }
-                  className="w-14 h-14"
-                />
+                <div className="w-14 h-14 overflow-hidden">
+                  <img
+                    src={getCharaImageUrl(
+                      skin ? `${chara}Skin${skin}` : `${chara}`,
+                      isAF && "af"
+                    )}
+                    className={cn("w-full aspect-square", isAF && "scale-125")}
+                  />
+                </div>
                 <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
                   <div className="flex flex-row gap-px">
                     <img
@@ -306,9 +312,15 @@ const RankInfoDialog = ({
                     return (
                       <div
                         key={chara}
-                        className="min-w-12 sm:min-w-14 aspect-square"
+                        className="min-w-12 sm:min-w-14 aspect-square overflow-hidden"
                       >
-                        <img src={`/charas/${chara}.png`} className="w-full" />
+                        <img
+                          src={getCharaImageUrl(`${chara}`, isAF && "af")}
+                          className={cn(
+                            "w-full aspect-square",
+                            isAF && "scale-125"
+                          )}
+                        />
                       </div>
                     );
                   })}

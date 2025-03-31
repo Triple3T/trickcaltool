@@ -25,6 +25,11 @@ import {
 } from "@/utils/personalityBG";
 import chara from "@/data/chara";
 import { Personality } from "@/types/enums";
+import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 interface IComboboxOuterProp {
   value: string;
@@ -36,6 +41,8 @@ const ComboboxCharacterOnestarDisabled = ({
   onChange,
 }: IComboboxOuterProp) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
+  const userCharaInfo = useUserDataCharaInfo();
   const [open, setOpen] = useState(false);
   const [v, setV] = useState(value ? t(`chara.${value}`) : "");
   useEffect(() => {
@@ -112,8 +119,16 @@ const ComboboxCharacterOnestarDisabled = ({
                           )}
                         >
                           <img
-                            src={`/charas/${charaId}.png`}
-                            className="w-full aspect-square"
+                            src={getCharaImageUrl(
+                              userCharaInfo?.[charaId].skin
+                                ? `${charaId}Skin${userCharaInfo?.[charaId].skin}`
+                                : `${charaId}`,
+                              isAF && "af-i"
+                            )}
+                            className={cn(
+                              "w-full aspect-square",
+                              isAF && "scale-125"
+                            )}
                           />
                           <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">
                             {t(`chara.${charaId}`)}

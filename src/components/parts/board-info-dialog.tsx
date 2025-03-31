@@ -17,6 +17,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +34,10 @@ import {
   Position,
   Race,
 } from "@/types/enums";
-import { Checkbox } from "../ui/checkbox";
+
+// af
+import { useIsAFActive } from "@/stores/useAFDataStore";
+import { getCharaImageUrl } from "@/utils/getImageUrl";
 
 const boardButtonBgCommon =
   "bg-transparent hover:bg-transparent bg-gradient-to-b from-primary hover:from-primary/90 from-85% to-85%";
@@ -131,6 +135,7 @@ const BoardInfoDialog = ({
   eldain,
 }: BoardInfoDialogProps) => {
   const { t } = useTranslation();
+  const isAF = useIsAFActive();
   const [boardIndexSettingOpen, setBoardIndexSettingOpen] =
     useState<boolean>(false);
   const [currentUnlockedIndex, setCurrentUnlockedIndex] =
@@ -199,14 +204,15 @@ const BoardInfoDialog = ({
                 ) : null}
               </div>
               <div className="flex flex-row gap-2">
-                <img
-                  src={
-                    skin
-                      ? `/charas/${chara}Skin${skin}.png`
-                      : `/charas/${chara}.png`
-                  }
-                  className="w-14 h-14"
-                />
+                <div className="w-14 h-14 overflow-hidden">
+                  <img
+                    src={getCharaImageUrl(
+                      skin ? `${chara}Skin${skin}` : `${chara}`,
+                      isAF && "af"
+                    )}
+                    className={cn("w-full aspect-square", isAF && "scale-125")}
+                  />
+                </div>
                 <div className="flex-initial flex-shrink-0 flex flex-col items-start gap-0.5 p-0.5">
                   <div className="flex flex-row gap-px">
                     <img
