@@ -102,6 +102,7 @@ function App() {
               </p>
             )}
             <div className="flex flex-col sm:flex-row gap-2 items-center sm:items-baseline justify-center">
+              {isAFActive && <Link to="/setting" className="text-sm">{t("ui.common.afOffDesc")}</Link>}
               {/* <a
                 target="_blank"
                 rel="noopener noreferrer"

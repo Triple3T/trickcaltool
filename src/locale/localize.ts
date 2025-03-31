@@ -7392,6 +7392,7 @@ i18n
               accountDeleteSuccess: "계정 삭제가 완료되었습니다.",
               accountDeleteFailed: "계정 삭제에 실패했습니다. ({{0}})",
               accountDeleteTokenTryFailed: "계정 탈퇴 시도에 실패했습니다.",
+              afOffDesc: "만우절은 설정에서 끌 수 있어요",
               afOff: "만우절 꺼줘",
               afOverlay: "화면 주변",
               afChara: "사도 전체",
