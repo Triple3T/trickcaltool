@@ -6,6 +6,7 @@ interface AFDataStore {
   isToday: boolean;
   toggleActive: () => void;
   toggleOverlayActive: () => void;
+  checkIsToday: () => void;
 }
 
 const whetherIsOverlayActive = () => {
@@ -37,7 +38,12 @@ export const useAFDataStore = create<AFDataStore>((set) => ({
       else localStorage.removeItem("afo");
       return { isOverlayActive: !state.isOverlayActive };
     }),
+  checkIsToday: () => set(() => ({ isToday: whetherIsToday() })),
 }));
+
+setInterval(() => {
+  useAFDataStore.getState().checkIsToday();
+}, 12000);
 
 /**
  * Whether AF chara should actually be active
