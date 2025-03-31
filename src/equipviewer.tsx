@@ -1054,7 +1054,7 @@ const EquipViewer = () => {
                                   ]
                                 )}
                               />
-                              <div className="w-full -mt-3 bg-slate-200 dark:bg-slate-800 text-xs sm:text-sm break-keep flex-1 flex items-center justify-center py-0.5">
+                              <div className="w-full -mt-3 bg-slate-200 dark:bg-slate-800 text-xs sm:text-sm break-keep flex-1 flex items-center justify-center py-0.5 z-10">
                                 {t(`chara.${name}`)}
                               </div>
                             </div>
