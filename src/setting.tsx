@@ -392,7 +392,7 @@ const Setting = () => {
                     value={skinChangeChara}
                     onChange={(v) => {
                       setSkinChangeChara(v);
-                      const skinId = userDataCharaInfo[skinChangeChara].skin;
+                      const skinId = userDataCharaInfo[v].skin;
                       setSkinNameId(
                         skinId ? `skin.${v}.${skinId}` : "defaultSkin"
                       );
