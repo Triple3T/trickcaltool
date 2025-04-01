@@ -19,10 +19,19 @@ const Code = () => {
   const [recoveryCode, setRecoveryCode] = useState("");
   const [failedMessage, setFailedMessage] = useState("ui.common.tokenFailed");
   const [status429, setStatus429] = useState(false);
+  const [codeTriggered, setCodeTriggered] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (sync && getNewToken && navigate && searchParams) {
+    if (codeTriggered) return;
+    if (
+      sync &&
+      getNewToken &&
+      navigate &&
+      searchParams &&
+      !(alreadyRegistered || notRegistered || success || failed)
+    ) {
+      setCodeTriggered(true);
       if (searchParams.get("code")) {
         const code = searchParams.get("code");
         fetch(`https://api.triple-lab.com/api/v2/tr/code?code=${code}`, {
@@ -63,7 +72,17 @@ const Code = () => {
         setFailed(true);
       }
     }
-  }, [sync, getNewToken, navigate, searchParams]);
+  }, [
+    sync,
+    getNewToken,
+    navigate,
+    searchParams,
+    alreadyRegistered,
+    notRegistered,
+    success,
+    failed,
+    codeTriggered,
+  ]);
 
   const register = useCallback(() => {
     if (!sync || !getNewToken || !navigate) return;
