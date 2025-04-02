@@ -32,6 +32,7 @@ export function AccountDeleteConfirmDialog() {
         fetch("https://api.triple-lab.com/api/v2/tr/accountdelete", {
           method: "POST",
           headers: { Authorization: `Bearer ${data}` },
+          credentials: "include",
         }).then((response) => {
           if (response.ok) {
             toast.success(t("ui.common.accountDeleteSuccess"));
