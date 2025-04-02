@@ -47,6 +47,9 @@ const Code = () => {
             }, 10000);
             return;
           }
+          if (!response.ok) {
+            setFailed(true);
+          }
           if (response.status === 200) {
             response.text().then((text) => {
               if (text === "OK") {
@@ -66,6 +69,8 @@ const Code = () => {
               }
             });
           }
+        }).catch(() => {
+          setFailed(true);
         });
       }
       if (searchParams.get("error")) {
