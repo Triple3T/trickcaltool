@@ -892,7 +892,7 @@ const TrickcalBoard = () => {
                                   unowned={unowned}
                                   getFromRouteMap={getFromRouteMap}
                                   getFromBoardMap={getFromBoardMap}
-                                  clf={clf || undefined}
+                                  clf={clf}
                                 />
                               );
                             })}

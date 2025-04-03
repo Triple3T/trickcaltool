@@ -43,7 +43,7 @@ interface BoardCharaSlotProps {
   unowned: boolean;
   getFromRouteMap: (key: string) => string | number | string[] | undefined;
   getFromBoardMap: (key: string) => string[] | undefined;
-  clf?: number;
+  clf?: number | false;
 }
 const BoardCharaSlot = ({
   name,
