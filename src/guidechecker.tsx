@@ -205,7 +205,7 @@ const GuideChecker = () => {
                         })}
                     </div>
                   </div>
-                  <div className="p-px rounded-sm bg-accent/25 flex flex-row flex-wrap items-baseline justify-between flex-1">
+                  <div className="p-px bg-accent/25 flex flex-row flex-wrap items-baseline justify-between flex-1">
                     <div className="text-xs text-left flex-auto">
                       {t("ui.check.guide.remainStatAmountBefore")}
                       {t(`stat.${StatType[displayStat]}`)}
