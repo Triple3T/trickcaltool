@@ -197,17 +197,20 @@ const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
                     </div>
                     <LazyInput
                       value={`${prevLevel}`}
-                      onValueChange={(e) =>
-                        setPrevLevel(
-                          Math.max(
-                            1,
-                            Math.min(
-                              30,
-                              parseInt(e.replaceAll(/\D/g, "") || "1") || 1
-                            )
+                      sanitize={(v) =>
+                        `${Math.max(
+                          1,
+                          Math.min(
+                            29,
+                            parseInt(v.replaceAll(/\D/g, "") || "1") || 1
                           )
-                        )
+                        )}`
                       }
+                      onValueChange={(e) => {
+                        const value = Number(e);
+                        setPrevLevel(value);
+                        setPrevExp((x) => Math.min(level.f[value - 1] - 1, x));
+                      }}
                       type="text"
                       inputMode="numeric"
                       pattern="[0-9]*"
@@ -221,17 +224,16 @@ const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
                     <div className="flex items-baseline gap-1">
                       <LazyInput
                         value={`${prevExp}`}
-                        onValueChange={(e) =>
-                          setPrevExp(
-                            Math.max(
-                              0,
-                              Math.min(
-                                level.f[prevLevel - 1],
-                                parseInt(e.replaceAll(/\D/g, "") || "1") || 1
-                              )
+                        sanitize={(v) =>
+                          `${Math.max(
+                            0,
+                            Math.min(
+                              level.f[prevLevel - 1] - 1,
+                              parseInt(v.replaceAll(/\D/g, "") || "0") || 0
                             )
-                          )
+                          )}`
                         }
+                        onValueChange={(e) => setPrevExp(Number(e))}
                         type="text"
                         inputMode="numeric"
                         pattern="[0-9]*"

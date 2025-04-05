@@ -40,6 +40,7 @@ const AsideCalc = () => {
           Lv.
           <LazyInput
             value={`${levelSection[0]}`}
+            sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
             onValueChange={(a) =>
               setLevelSection(([, b]) => [
                 Math.min(Math.max(Number(a), 1), levelMax),
@@ -56,6 +57,7 @@ const AsideCalc = () => {
           →
           <LazyInput
             value={`${levelSection[1]}`}
+            sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
             onValueChange={(b) =>
               setLevelSection(([a]) => [
                 a,

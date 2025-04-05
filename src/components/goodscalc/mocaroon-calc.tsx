@@ -73,9 +73,10 @@ const MocaroonCalc = () => {
                 Lv.
                 <LazyInput
                   value={`${levelSection[0]}`}
+                  sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
                   onValueChange={(v) =>
                     setLevelSections((s) => {
-                      const newSections = s.map((v) => [...v]);
+                      const newSections = s.map((a) => [...a]);
                       newSections[i][0] = Math.min(
                         Math.max(Number(v), 1),
                         levelMax
@@ -93,9 +94,10 @@ const MocaroonCalc = () => {
                 →
                 <LazyInput
                   value={`${levelSection[1]}`}
+                  sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
                   onValueChange={(v) =>
                     setLevelSections((s) => {
-                      const newSections = s.map((v) => [...v]);
+                      const newSections = s.map((a) => [...a]);
                       newSections[i][1] = Math.min(
                         Math.max(Number(v), 1),
                         levelMax
@@ -113,9 +115,10 @@ const MocaroonCalc = () => {
                 &nbsp;x
                 <LazyInput
                   value={`${levelSection[2]}`}
+                  sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
                   onValueChange={(v) =>
                     setLevelSections((s) => {
-                      const newSections = s.map((v) => [...v]);
+                      const newSections = s.map((a) => [...a]);
                       newSections[i][2] = Math.max(Number(v), 0);
                       return newSections;
                     })

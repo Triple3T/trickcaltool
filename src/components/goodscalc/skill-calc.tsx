@@ -63,6 +63,7 @@ const SkillCalc = () => {
           저학년 Lv.
           <LazyInput
             value={`${levelSection[0]}`}
+            sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
             onValueChange={(a) =>
               setLevelSection(([, b, c, d]) => [
                 Math.min(Math.max(Number(a), 1), levelMaxLow),
@@ -81,6 +82,7 @@ const SkillCalc = () => {
           →
           <LazyInput
             value={`${levelSection[1]}`}
+            sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
             onValueChange={(b) =>
               setLevelSection(([a, , c, d]) => [
                 a,
@@ -103,6 +105,7 @@ const SkillCalc = () => {
           고학년 Lv.
           <LazyInput
             value={`${levelSection[2]}`}
+            sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
             onValueChange={(c) =>
               setLevelSection(([a, b, , d]) => [
                 a,
@@ -121,6 +124,7 @@ const SkillCalc = () => {
           →
           <LazyInput
             value={`${levelSection[3]}`}
+            sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
             onValueChange={(d) =>
               setLevelSection(([a, b, c]) => [
                 a,

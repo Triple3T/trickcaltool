@@ -684,13 +684,19 @@ const EquipRank = () => {
                               Math.min(currentCharaEqrank, userDataEqrank.s[1]),
                               userDataEqrank.s[0]
                             )}`}
+                            sanitize={(v) =>
+                              `${Math.max(
+                                Math.min(
+                                  parseInt(v.replaceAll(/\D/g, "") || "0") || 0,
+                                  userDataEqrank.s[1]
+                                ),
+                                userDataEqrank.s[0]
+                              )}`
+                            }
                             onValueChange={(v) =>
                               rankModify({
                                 charaName: c,
-                                rank: Math.max(
-                                  Math.min(Number(v), userDataEqrank.s[1]),
-                                  userDataEqrank.s[0]
-                                ),
+                                rank: Number(v),
                               })
                             }
                           />

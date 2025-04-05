@@ -176,7 +176,16 @@ const RankInfoDialog = ({
                           tabIndex={-1}
                         />
                         <LazyInput
-                          type="text"
+                          type="numeric"
+                          sanitize={(v) =>
+                            `${Math.max(
+                              Math.min(
+                                parseInt(v.replaceAll(/\D/g, "") || "0") || 0,
+                                maxRank
+                              ),
+                              1
+                            )}`
+                          }
                           className={cn(
                             "w-8 p-1.5 text-right h-full",
                             rankToBeChanged > maxRank || rankToBeChanged < 1
@@ -188,11 +197,7 @@ const RankInfoDialog = ({
                             Math.min(rankToBeChanged, maxRank),
                             1
                           )}`}
-                          onValueChange={(v) =>
-                            setRankToBeChanged(
-                              Math.max(Math.min(Number(v), maxRank), 1)
-                            )
-                          }
+                          onValueChange={(v) => setRankToBeChanged(Number(v))}
                         />
                       </div>
                     </AccordionContent>
