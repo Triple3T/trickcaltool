@@ -3,7 +3,7 @@ export interface ICardProperty {
   r: number;
   p: number | number[];
   s: number[];
-  c: (number | number[] | "p")[];
+  c: (number[] | "p")[];
   l: number;
 }
 export type ISpellData = ICardProperty;

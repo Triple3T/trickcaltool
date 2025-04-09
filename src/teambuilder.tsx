@@ -13,12 +13,20 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Select from "@/components/common/combobox-select";
+import LazyInput from "@/components/common/lazy-input";
 import ArtifactPicker from "@/components/teambuilder/artifact-picker";
 import CharaPicker from "@/components/teambuilder/chara-picker";
+import SpellPicker from "@/components/teambuilder/spell-picker";
+import CardSpecDialog from "@/components/teambuilder/card-spec-dialog";
 import chara from "@/data/chara";
 import card from "@/data/card";
 import skillcoefficient from "@/data/skillcoefficient";
-import { Aside3EffectCategory, Personality, Position } from "@/types/enums";
+import {
+  Aside3EffectCategory,
+  Personality,
+  Position,
+  StatType,
+} from "@/types/enums";
 import { CharaWithArtifact } from "@/types/types";
 import { personalityBG, personalityBGTranslucent } from "@/utils/personalityBG";
 import {
@@ -42,6 +50,7 @@ import {
 // af
 // import { useIsAFActive } from "@/stores/useAFDataStore";
 import { getCharaImageUrl } from "@/utils/getImageUrl";
+import { Checkbox } from "./components/ui/checkbox";
 
 const FRONT_COLOR = "#e35a5b";
 const MID_COLOR = "#57bc3f";
@@ -113,13 +122,25 @@ const TeamBuilder = () => {
   const [soloRaidStep, setSoloRaidStep] = useState<number>(1);
   const [soloRaidResearchSlot, setSoloRaidResearchSlot] = useState<number>(0);
   const [separateAllApplyEffect, setSeparateAllApplyEffect] = useState(false);
+  const [soloEndCoinLimit, setSoloEndCoinLimit] = useState<number>(0);
+  const [buyAuthority, setBuyAuthority] = useState<boolean>(true);
+  const [usingSpells, setUsingSpells] = useState<Record<string, number>>({});
+  const [cardLevels, setCardLevels] = useState<
+    Record<"a" | "s", Record<string, number>>
+  >({
+    a: Object.fromEntries(card.a.o.map((v) => [v, 1])),
+    s: Object.fromEntries(card.s.o.map((v) => [v, 1])),
+  });
 
+  // soloraid artifact count
   const artifactCount = useMemo(() => {
     return currentTeam.reduce(
       (acc, cur) => (cur?.artifacts.filter((v) => v).length ?? 0) + acc,
       0
     );
   }, [currentTeam]);
+
+  // soloend card limit
   const frontierLimit = useMemo(() => {
     const usedArtifacts = currentTeam
       .map((e) => e?.artifacts ?? [])
@@ -134,14 +155,126 @@ const TeamBuilder = () => {
         },
       ])
     );
+    const artifactCoinCost = usedArtifacts.reduce((acc, cur) => {
+      const curCostData = card.a.l[cur].p;
+      const actualCost = Array.isArray(curCostData)
+        ? curCostData[cardLevels.a[cur] - 1]
+        : curCostData;
+      return acc + actualCost;
+    }, 0);
     const disabledArtifact = Object.entries(limits)
       .filter(([, { limit, count }]) => count >= limit)
       .map(([k]) => Number(k));
+    let spellCoinCost = 0;
+    const spellStat = {
+      [StatType.Hp]: 0,
+      [StatType.AttackPhysic]: 0,
+      [StatType.AttackMagic]: 0,
+      [StatType.DefensePhysic]: 0,
+      [StatType.DefenseMagic]: 0,
+      [StatType.CriticalRate]: 0,
+      [StatType.CriticalMult]: 0,
+      [StatType.CriticalResist]: 0,
+      [StatType.CriticalMultResist]: 0,
+      [StatType.AttackSpeed]: 0,
+    };
+    const allAffectSpellLikeAside3Category = {
+      [Aside3EffectCategory.AllDamageUp]: 0,
+      [Aside3EffectCategory.AllReceiveDamageDown]: 0,
+      [Aside3EffectCategory.FrontDamageUp]: 0,
+      [Aside3EffectCategory.MiddleDamageUp]: 0,
+      [Aside3EffectCategory.BackDamageUp]: 0,
+      [Aside3EffectCategory.FrontReceiveDamageDown]: 0,
+      [Aside3EffectCategory.MiddleReceiveDamageDown]: 0,
+      [Aside3EffectCategory.BackReceiveDamageDown]: 0,
+      [Aside3EffectCategory.AllAttackSpeedUp]: 0,
+      [Aside3EffectCategory.AllSkillDamageUp]: 0,
+    };
+    let allNormalAttackDamage = 0;
+    let allSkillAttackDamage = 0;
+    Object.entries(usingSpells).forEach(([ss, count]) => {
+      const s = Number(ss);
+      const cardInfo = card.s.l[s];
+      const cardLevel = cardLevels.s[s];
+      const cardCostData = cardInfo.p;
+      const cardCost = Array.isArray(cardCostData)
+        ? cardCostData[cardLevel - 1]
+        : cardCostData;
+      spellCoinCost += cardCost * count;
+      const cardStat: StatType[] = cardInfo.s;
+      const cardStatValue = cardInfo.c.map((a) =>
+        a === "p" ? (cardCostData as Array<number>) : a
+      );
+      cardStat.forEach((stat, index) => {
+        spellStat[stat] += cardStatValue[index][cardLevel - 1] * count;
+      });
+      // allAffectLikeAside3
+      if (s === 18) {
+        // 안 아프게 맞는 법
+        allAffectSpellLikeAside3Category[
+          Aside3EffectCategory.AllReceiveDamageDown
+        ] += cardStatValue[2][cardLevel - 1] * count;
+      } else if (s === 15) {
+        // 선봉대
+        allAffectSpellLikeAside3Category[Aside3EffectCategory.FrontDamageUp] +=
+          cardStatValue[2][cardLevel - 1] * count;
+        allAffectSpellLikeAside3Category[
+          Aside3EffectCategory.FrontReceiveDamageDown
+        ] += cardStatValue[3][cardLevel - 1] * count;
+      } else if (s === 27) {
+        // 중앙굿
+        allAffectSpellLikeAside3Category[Aside3EffectCategory.MiddleDamageUp] +=
+          cardStatValue[1][cardLevel - 1] * count;
+        allAffectSpellLikeAside3Category[
+          Aside3EffectCategory.MiddleReceiveDamageDown
+        ] += cardStatValue[2][cardLevel - 1] * count;
+      } else if (s === 43) {
+        // 후발대
+        allAffectSpellLikeAside3Category[Aside3EffectCategory.BackDamageUp] +=
+          cardStatValue[1][cardLevel - 1] * count;
+        allAffectSpellLikeAside3Category[
+          Aside3EffectCategory.BackReceiveDamageDown
+        ] += cardStatValue[2][cardLevel - 1] * count;
+      } else if (s === 7) {
+        // 전투의달인 - 스킬피해
+        allSkillAttackDamage += cardStatValue[2][cardLevel - 1] * count;
+      } else if (s === 13) {
+        // 사기진작 - 공속
+        allAffectSpellLikeAside3Category[
+          Aside3EffectCategory.AllAttackSpeedUp
+        ] += cardStatValue[1][cardLevel - 1] * count;
+      } else if (s === 19) {
+        // 약자무시 - 평타피해
+        allNormalAttackDamage += cardStatValue[2][cardLevel - 1] * count;
+      } else if (s === 23) {
+        // 저놈 잡아라 - 웨이브 피해량
+        allAffectSpellLikeAside3Category[Aside3EffectCategory.AllDamageUp] +=
+          cardStatValue[1][cardLevel - 1] * count;
+      } else if (s === 24) {
+        // 전술 교본 - 피해량
+        allAffectSpellLikeAside3Category[Aside3EffectCategory.AllDamageUp] +=
+          cardStatValue[2][cardLevel - 1] * count;
+      } else if (s === 31) {
+        // 치매 - 평타피해
+        allNormalAttackDamage += cardStatValue[2][cardLevel - 1] * count;
+      }
+    });
+    allAffectSpellLikeAside3Category[Aside3EffectCategory.AllDamageUp] +=
+      allNormalAttackDamage;
+    allAffectSpellLikeAside3Category[Aside3EffectCategory.AllSkillDamageUp] +=
+      allSkillAttackDamage - allNormalAttackDamage;
+    const authorityCoinCost = buyAuthority ? 30 : 0;
+
     return {
       limits,
       disabledArtifact,
+      usingCoin: artifactCoinCost + spellCoinCost + authorityCoinCost,
+      spellStat,
+      allAffectSpellLikeAside3Category,
     };
-  }, [currentTeam]);
+  }, [buyAuthority, cardLevels.a, cardLevels.s, currentTeam, usingSpells]);
+
+  // calculate synergy
   const synergyTotal = useMemo(() => {
     const personalities: Record<string, number> = {
       [Personality.Gloomy]: 0,
@@ -189,6 +322,8 @@ const TeamBuilder = () => {
       notAppliedPersonalities,
     };
   }, [currentTeam, teamSpec]);
+
+  // total aside3 effects
   const aside3Total = useMemo(() => {
     const aside3Values: number[] = Array(ASIDE3_CATEGORY_COUNT).fill(0);
     Object.entries(teamSpec)
@@ -204,11 +339,23 @@ const TeamBuilder = () => {
     return aside3Values;
   }, [teamSpec]);
 
+  // save
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     const restrictTypeB64 = numberIntoB64(restrictType, 4);
     const teamData = compressXorB64(
-      JSON.stringify({ restrictType, currentTeam, teamSpec })
+      JSON.stringify({
+        restrictType,
+        currentTeam,
+        teamSpec,
+        soloRaidStep,
+        soloRaidResearchSlot,
+        separateAllApplyEffect,
+        soloEndCoinLimit,
+        buyAuthority,
+        usingSpells,
+        cardLevels,
+      })
     );
     const dataToSave = `b0${restrictTypeB64}${teamData}`;
     if (saveTimeout.current) {
@@ -228,30 +375,87 @@ const TeamBuilder = () => {
         clearTimeout(saveTimeout.current);
       }
     };
-  }, [currentTeam, isUsingIdb, restrictType, teamSpec]);
+  }, [
+    buyAuthority,
+    cardLevels,
+    currentTeam,
+    isUsingIdb,
+    restrictType,
+    separateAllApplyEffect,
+    soloEndCoinLimit,
+    soloRaidResearchSlot,
+    soloRaidStep,
+    teamSpec,
+    usingSpells,
+  ]);
+  // load
   useEffect(() => {
     if (typeof isUsingIdb === "boolean") {
       if (isUsingIdb) {
         loadTeamDataIdb().then((data) => {
           if (!data) return;
           if (!data.startsWith("b0")) return;
-          const { restrictType, currentTeam, teamSpec } = JSON.parse(
-            decompressXorB64(data.substring(6))
-          );
-          setRestrictType(restrictType);
-          setCurrentTeam(currentTeam);
-          setTeamSpec(teamSpec);
+          const {
+            restrictType,
+            currentTeam,
+            teamSpec,
+            soloRaidStep,
+            soloRaidResearchSlot,
+            separateAllApplyEffect,
+            soloEndCoinLimit,
+            buyAuthority,
+            usingSpells,
+            cardLevels,
+          } = JSON.parse(decompressXorB64(data.substring(6)));
+          if (restrictType) setRestrictType(restrictType);
+          if (currentTeam) setCurrentTeam(currentTeam);
+          if (teamSpec) setTeamSpec(teamSpec);
+          if (soloRaidStep) setSoloRaidStep(soloRaidStep);
+          if (soloRaidResearchSlot)
+            setSoloRaidResearchSlot(soloRaidResearchSlot);
+          if (typeof separateAllApplyEffect === "boolean")
+            setSeparateAllApplyEffect(separateAllApplyEffect);
+          if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
+          if (typeof buyAuthority === "boolean") setBuyAuthority(buyAuthority);
+          if (usingSpells) setUsingSpells(usingSpells);
+          if (cardLevels)
+            setCardLevels((prev) => ({
+              a: { ...prev.a, ...cardLevels.a },
+              s: { ...prev.s, ...cardLevels.s },
+            }));
         });
       } else {
         loadTeamDataLS().then((data) => {
           if (!data) return;
           if (!data.startsWith("b0")) return;
-          const { restrictType, currentTeam, teamSpec } = JSON.parse(
-            decompressXorB64(data.substring(6))
-          );
-          setRestrictType(restrictType);
-          setCurrentTeam(currentTeam);
-          setTeamSpec(teamSpec);
+          const {
+            restrictType,
+            currentTeam,
+            teamSpec,
+            soloRaidStep,
+            soloRaidResearchSlot,
+            separateAllApplyEffect,
+            soloEndCoinLimit,
+            buyAuthority,
+            usingSpells,
+            cardLevels,
+          } = JSON.parse(decompressXorB64(data.substring(6)));
+          if (restrictType) setRestrictType(restrictType);
+          if (currentTeam) setCurrentTeam(currentTeam);
+          if (teamSpec) setTeamSpec(teamSpec);
+          if (soloRaidStep) setSoloRaidStep(soloRaidStep);
+          if (soloRaidResearchSlot)
+            setSoloRaidResearchSlot(soloRaidResearchSlot);
+          if (typeof separateAllApplyEffect === "boolean")
+            setSeparateAllApplyEffect(separateAllApplyEffect);
+          if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
+          if (typeof buyAuthority === "boolean") setBuyAuthority(buyAuthority);
+          if (usingSpells) setUsingSpells(usingSpells);
+          if (cardLevels)
+            setCardLevels((prev) => ({
+              a: { ...prev.a, ...cardLevels.a },
+              s: { ...prev.s, ...cardLevels.s },
+            }));
         });
       }
     }
@@ -350,6 +554,97 @@ const TeamBuilder = () => {
                   <div className="mb-2 break-keep">
                     {t("ui.teambuilder.soloEndRestrictDescription")}
                   </div>
+                  <div className="flex flex-row flex-wrap px-1 py-2 mb-2 gap-4 items-baseline">
+                    <div>{t("ui.teambuilder.soloEndCoinLimit")}</div>
+                    <LazyInput
+                      value={`${soloEndCoinLimit || ""}`}
+                      sanitize={(v) =>
+                        `${Math.max(
+                          0,
+                          Math.min(
+                            9999,
+                            parseInt(v.replaceAll(/\D/g, "") || "0") || 0
+                          )
+                        )}`
+                      }
+                      onValueChange={(e) => setSoloEndCoinLimit(Number(e))}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]{0,4}"
+                      min={0}
+                      max={9999}
+                      placeholder={t("ui.teambuilder.coinLimitPlaceHolder")}
+                      className="flex-1 text-right w-24"
+                    />
+                    <div className="text-sm opacity-75">
+                      {t("ui.teambuilder.coinLimitIfEmpty")}
+                    </div>
+                  </div>
+                  <div className="px-2 my-2">
+                    <Checkbox
+                      id="buy-authority"
+                      checked={buyAuthority}
+                      onCheckedChange={(v) => setBuyAuthority(!!v)}
+                      disabled={
+                        soloEndCoinLimit > 0 &&
+                        !buyAuthority &&
+                        frontierLimit.usingCoin + 30 > soloEndCoinLimit
+                      }
+                      className="inline align-middle mr-2"
+                    />
+                    <label
+                      htmlFor="buy-authority"
+                      className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {t("ui.teambuilder.buyAuthority")}
+                    </label>
+                    <div
+                      className={cn(
+                        "ml-2 w-7 h-7 bg-cover items-center justify-center text-shadow-glow-2 inline-flex"
+                      )}
+                      style={{
+                        backgroundImage:
+                          "url(/ingameui/Icon_SoloEndInGameCoin.png)",
+                      }}
+                    >
+                      30
+                    </div>
+                  </div>
+                  <div className="mt-2 mb-4 text-base flex gap-2 justify-around items-baseline">
+                    <div
+                      className={cn(
+                        "w-10 h-10 bg-cover flex items-center justify-center text-shadow-glow-2",
+                        soloEndCoinLimit > 0 ? "text-xl" : "text-2xl"
+                      )}
+                      style={{
+                        backgroundImage:
+                          "url(/ingameui/Icon_SoloEndInGameCoin.png)",
+                      }}
+                    >
+                      {soloEndCoinLimit > 0
+                        ? soloEndCoinLimit - frontierLimit.usingCoin
+                        : "∞"}
+                    </div>
+                    <div>
+                      {t("ui.teambuilder.soloEndCoinCost")}
+                      <span
+                        className={cn(
+                          "ml-2 text-lg text-shadow-glow",
+                          soloEndCoinLimit &&
+                            soloEndCoinLimit < frontierLimit.usingCoin
+                            ? "text-red-700 dark:text-red-400"
+                            : "text-green-600 dark:text-green-300"
+                        )}
+                      >
+                        <span className="text-2xl">
+                          {frontierLimit.usingCoin}
+                        </span>
+                        /
+                        {soloEndCoinLimit ||
+                          t("ui.teambuilder.coinLimitPlaceHolder")}
+                      </span>
+                    </div>
+                  </div>
                   <div className="text-xs text-left ml-2">
                     {t("ui.teambuilder.usingArtifact")}
                   </div>
@@ -392,6 +687,56 @@ const TeamBuilder = () => {
                           </div>
                         );
                       })}
+                  </div>
+                  <div className="mt-4 text-right -mb-1">
+                    <SpellPicker
+                      currentUsingSpells={usingSpells}
+                      spellLevels={cardLevels.s}
+                      onChange={setUsingSpells}
+                      onReset={() => setUsingSpells({})}
+                      disableAll={restrictType === 1}
+                      disableMinCost={
+                        restrictType === 2 &&
+                        soloEndCoinLimit > 0 &&
+                        soloEndCoinLimit - frontierLimit.usingCoin
+                      }
+                    />
+                  </div>
+                  <div className="text-xs text-left ml-2">
+                    {t("ui.teambuilder.usingSpell")}
+                  </div>
+                  <div className="grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] auto-rows-auto gap-2 min-h-10 rounded bg-accent/90 p-2">
+                    {card.s.o.map((s) => {
+                      if (!usingSpells[s]) return null;
+                      const targetSpell = card.s.l[s];
+                      const count = usingSpells[s];
+                      const limit = targetSpell.l;
+                      return (
+                        <div key={s} className="w-20 p-2 mx-auto">
+                          <div
+                            className="w-16 h-16 bg-cover rounded-lg border-2 ring-foreground ring-2 overflow-hidden"
+                            style={{
+                              backgroundColor: card.r[targetSpell.r].b,
+                              borderColor: card.r[targetSpell.r].b,
+                            }}
+                          >
+                            <img
+                              src={`/spells/SpellCardIcon_${s}.png`}
+                              alt={t(`card.spell.${s}.title`)}
+                              className="max-w-full max-h-full mx-auto"
+                            />
+                          </div>
+                          <div
+                            className={cn(
+                              "mt-1",
+                              count > limit && "text-red-700 dark:text-red-400"
+                            )}
+                          >
+                            {count}/{limit}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </TabsContent>
               </Tabs>
@@ -490,6 +835,17 @@ const TeamBuilder = () => {
               </div>
             </AccordionContent>
           </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>
+              {t("ui.teambuilder.cardSpecAccordion")}
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              <CardSpecDialog
+                cardLevels={cardLevels}
+                onChange={setCardLevels}
+              />
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </Card>
       <div className="flex flex-row gap-2 mt-4">
@@ -567,6 +923,47 @@ const TeamBuilder = () => {
               </div>
             );
           })
+        )}
+      </div>
+      <div className="flex flex-row gap-2 mt-4">
+        <div>{t("ui.teambuilder.spellTotal")}</div>
+        <div className={cn("flex flex-row-reverse px-2 flex-1")}>
+          {restrictType === 1 && t("ui.teambuilder.spellNoApply")}
+        </div>
+      </div>
+      <div className="flex flex-row flex-wrap gap-2 mt-1.5">
+        {restrictType === 1 ? (
+          <div className="w-full text-center break-keep">
+            {t("ui.teambuilder.soloRaidNoSpell")}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-2 w-full">
+            {[
+              StatType.Hp,
+              StatType.AttackPhysic,
+              StatType.AttackMagic,
+              StatType.DefensePhysic,
+              StatType.DefenseMagic,
+              StatType.CriticalRate,
+              StatType.CriticalMult,
+              StatType.CriticalResist,
+              StatType.CriticalMultResist,
+              StatType.AttackSpeed,
+            ].map((stat) => {
+              const value = frontierLimit.spellStat[stat];
+              if (!value) return null;
+              const statString = StatType[stat];
+              return (
+                <div
+                  key={stat}
+                  className="flex flex-row gap-1 justify-between items-center text-sm bg-accent/50 pr-2 rounded-full"
+                >
+                  <img src={`icons/Icon_${statString}.png`} className="w-4 h-4 scale-125" />
+                  <div>+{value / 100}%</div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-2 mt-4">
@@ -725,6 +1122,7 @@ const TeamBuilder = () => {
                         <ArtifactPicker
                           key={j}
                           currentArtifact={artifact}
+                          artifactLevels={cardLevels.a}
                           targetChara={targetChara}
                           onChange={(a) =>
                             setCurrentTeam((prev) => {
@@ -758,6 +1156,11 @@ const TeamBuilder = () => {
                             restrictType === 2
                               ? frontierLimit.disabledArtifact
                               : undefined
+                          }
+                          disableMinCost={
+                            restrictType === 2 &&
+                            soloEndCoinLimit > 0 &&
+                            soloEndCoinLimit - frontierLimit.usingCoin
                           }
                         />
                       );
