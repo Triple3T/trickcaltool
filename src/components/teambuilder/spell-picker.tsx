@@ -146,7 +146,7 @@ const SpellPicker = ({
                           const prev = { ...prv };
                           prev[spellId] = Math.min(
                             (prev[spellId] || 0) + 1,
-                            spellInfo.l + 1
+                            spellInfo.l
                           );
                           return prev;
                         });
