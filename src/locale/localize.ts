@@ -6445,6 +6445,7 @@ i18n
               Shibadog: "잠바",
               SpacecraftElena: "미니 시장님",
               Stagbeetle: "풍멍이",
+              StarDreamSheep: "잠잠양",
             },
             skill: {
               1: "발랄함",
