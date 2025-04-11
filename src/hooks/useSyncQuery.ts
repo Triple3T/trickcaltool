@@ -135,6 +135,7 @@ export const useSyncQuery = () => {
             // invalid credentials(token)
             setApiErrorLocalize("401");
             setSyncStatus(SyncStatus.Errored);
+            queryClient.invalidateQueries({ queryKey: ["authToken"] });
             break;
           case 403:
             // not registered
@@ -230,6 +231,7 @@ export const useSyncQuery = () => {
             // invalid credentials(token)
             setApiErrorLocalize("401");
             setSyncStatus(SyncStatus.Errored);
+            queryClient.invalidateQueries({ queryKey: ["authToken"] });
             break;
           case 403:
             // not registered
@@ -321,6 +323,7 @@ export const useSyncQuery = () => {
             // invalid credentials(token)
             setApiErrorLocalize("401");
             setSyncStatus(SyncStatus.Errored);
+            queryClient.invalidateQueries({ queryKey: ["authToken"] });
             break;
           case 403:
             // not registered
