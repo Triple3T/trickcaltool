@@ -7517,6 +7517,7 @@ i18n
               updating: "업데이트 중...",
               checkingUpdate: "업데이트 확인 중...",
               export: "데이터 추출",
+              resetData: "초기화",
               contact: "문의",
               goto: {
                 main: "메인 화면으로",

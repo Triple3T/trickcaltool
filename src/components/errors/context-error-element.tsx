@@ -97,6 +97,17 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
         window.location.reload();
       });
   }, []);
+  const resetData = useCallback(async () => {
+    // remove all indexedDB
+    const dbs = await window.indexedDB.databases();
+    dbs.forEach((db) => {
+      if (db.name) window.indexedDB.deleteDatabase(db.name);
+    });
+    // remove all localstorage data
+    localStorage.clear();
+    // then move to main page
+    window.location.assign("/");
+  }, []);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -112,11 +123,11 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
           <div className="text-xs mt-1 rounded-sm bg-slate-100 dark:bg-slate-900 p-1 max-h-[40vh]">
             {`${error}`}
           </div>
-          <div className="text-sm mt-1 flex flex-col sm:flex-row justify-center items-center gap-1 p-1 my-1 text-blue-800/90 dark:text-blue-200/90 text-shadow-glow">
-            <a href={googleAccessUrlLegacy}>{t("ui.common.loadLegacy")}</a>
-            <Dot className="w-3 h-3 hidden sm:inline-block" strokeWidth={3} />
-            <span
-              className="cursor-pointer"
+          <div className="mt-1 flex flex-col sm:flex-row justify-center items-center gap-2 p-1 my-1">
+            <a href={googleAccessUrlLegacy}>
+              <Button>{t("ui.common.loadLegacy")}</Button>
+            </a>
+            <Button
               onClick={async () =>
                 exportTextFile({
                   fileName: "trickcal-note-legacymigration.txt",
@@ -125,12 +136,7 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
               }
             >
               {t("ui.common.retryLegacyMigration")}
-            </span>
-            <Dot className="w-3 h-3 hidden sm:inline-block" strokeWidth={3} />
-            <a href="mailto:trickcal-note@triple-lab.com">
-              <Mail className="w-4 h-4 mr-1 inline-block" />
-              {t("ui.error.contact")}
-            </a>
+            </Button>
           </div>
           <div className="mt-4 text-lg flex flex-wrap gap-2 justify-center">
             <a href="/">
@@ -198,6 +204,16 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
             >
               {t(updateButtonText)}
             </Button>
+          </div>
+          <div className="text-sm mt-4 flex flex-row justify-center items-center gap-2 p-1 my-1 text-blue-800/90 dark:text-blue-200/90 text-shadow-glow-0.75 text-shadow-glow-blue-200 dark:text-shadow-glow-blue-800">
+            <div className="cursor-pointer" onClick={resetData}>
+              {t("ui.error.resetData")}
+            </div>
+            <Dot className="w-3 h-3 inline-block" strokeWidth={3} />
+            <a href="mailto:trickcal-note@triple-lab.com">
+              <Mail className="w-4 h-4 mr-1 inline-block" />
+              {t("ui.error.contact")}
+            </a>
           </div>
         </div>
       </div>
