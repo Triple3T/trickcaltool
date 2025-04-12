@@ -397,6 +397,7 @@ const NormalDrop = () => {
                           size={3}
                           amount={probs[stage]?.p?.[drop] ?? "--%"}
                           fullItemPath
+                          innerSize={66}
                           rarityInfo={(() => {
                             if ([7, 8, 9, 10].includes(equipRank))
                               return { s: "Purple", b: "#B371F5" };
@@ -406,6 +407,7 @@ const NormalDrop = () => {
                               return { s: "Green", b: "#65DD82" };
                             return { s: "Gray", b: "#B0B0B0" };
                           })()}
+                          ring={equips.includes(drop)}
                         />
                       );
                     })}
