@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronsUpDown, Check, X, Dot } from "lucide-react";
-import { cn } from "./lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   CommandInput,
   CommandEmpty,
@@ -210,6 +211,7 @@ const NormalDrop = () => {
   const [equips, setEquips] = useState<string[]>([]);
   const [probs, setProbs] = useState<Record<string, DropProps>>({});
   const [errorFlag, setErrorFlag] = useState<boolean | undefined>(undefined);
+  const [summaryView, setSummaryView] = useState<boolean>(true);
   useEffect(() => {
     if (selectedEquip) {
       setEquips((prev) => [...new Set([...prev, selectedEquip])]);
@@ -317,11 +319,23 @@ const NormalDrop = () => {
                   );
                 })}
               </div>
+              <div className="mt-2 flex flex-row gap-2 justify-start items-center">
+                <Checkbox
+                  id="summary-view"
+                  checked={summaryView}
+                  onCheckedChange={(v) => setSummaryView(!!v)}
+                />
+                <label htmlFor="summary-view">
+                  {t("ui.normaldrop.summary")}
+                </label>
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       </Card>
-      <div className="text-xs opacity-75 font-onemobile my-2">{t("ui.normaldrop.alert")}</div>
+      <div className="text-xs opacity-75 font-onemobile my-2">
+        {t("ui.normaldrop.alert")}
+      </div>
       <div className="w-full font-onemobile">
         <div className="flex flex-row gap-2 flex-wrap">
           {Object.entries(dropTable)
@@ -333,23 +347,29 @@ const NormalDrop = () => {
                 return null;
               const expectation = getStageExpectation([stage, drops]);
               const [world, stageNum] = stage.split("-");
+              if (Number(world) < 3 && summaryView) return null;
               return (
-                <Card key={stage} className="p-4">
+                <Card
+                  key={stage}
+                  className={cn("p-4", summaryView && "w-[8.625rem]")}
+                >
                   <div className="flex gap-3 items-center">
                     <div className="text-xl text-left">{stage}</div>
-                    <div className="text-left">
-                      <div>{t(`stage.normal.${world}.${stageNum}`)}</div>
-                      <div className="text-xs opacity-70">
-                        {t("ui.normaldrop.recommendPower", {
-                          0: stageData.n[world][
-                            Number(stageNum) - 1
-                          ].toLocaleString(),
-                        })}
+                    {!summaryView && (
+                      <div className="text-left">
+                        <div>{t(`stage.normal.${world}.${stageNum}`)}</div>
+                        <div className="text-xs opacity-70">
+                          {t("ui.normaldrop.recommendPower", {
+                            0: stageData.n[world][
+                              Number(stageNum) - 1
+                            ].toLocaleString(),
+                          })}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   {equips.length > 0 && (
-                    <div className="opacity-80 text-left text-sm mt-1">
+                    <div className="opacity-80 text-left text-sm mt-1 break-keep">
                       {t("ui.normaldrop.hitCount", {
                         0: drops.filter((d) => equips.includes(d)).length,
                       })}
@@ -369,6 +389,7 @@ const NormalDrop = () => {
                         1
                       )}${equipNum}`;
                       const equipRank = Math.floor(Number(equipNum) / 100);
+                      if (equipRank === 1 && summaryView) return null;
                       return (
                         <ItemSlot
                           key={drop}
@@ -390,7 +411,7 @@ const NormalDrop = () => {
                     })}
                   </div>
                   <div className="text-left text-xs mt-1">
-                  {t(`ui.normaldrop.reliability.${probs[stage]?.r ?? 0}`)}
+                    {t(`ui.normaldrop.reliability.${probs[stage]?.r ?? 0}`)}
                     <div
                       className={cn(
                         "ml-2 h-2.5 w-2.5 inline-block rounded-full align-middle",
