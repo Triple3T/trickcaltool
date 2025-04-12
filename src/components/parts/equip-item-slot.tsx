@@ -16,6 +16,7 @@ interface EquipItemSlotProps {
   size?: number;
   innerSize?: number;
   slotOnly?: boolean;
+  ring?: boolean | string;
 }
 
 //equipCode = `${type}.${part}.${num}`
@@ -65,6 +66,7 @@ const EquipItemSlot = ({
   size,
   innerSize = 80,
   slotOnly = false,
+  ring,
 }: EquipItemSlotProps) => {
   const { t } = useTranslation();
   const [iType, iPart, iNum] = equipCode.split(".");
@@ -102,6 +104,7 @@ const EquipItemSlot = ({
         amount={amount}
         size={size}
         innerSize={innerSize}
+        ring={ring}
       />
     );
   return (
@@ -114,6 +117,7 @@ const EquipItemSlot = ({
           amount={amount}
           size={size}
           innerSize={innerSize}
+          ring={ring}
         />
       </PopoverTrigger>
       <PopoverContent className="w-max font-onemobile">

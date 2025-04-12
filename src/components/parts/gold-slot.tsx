@@ -13,6 +13,7 @@ interface GoldSlotProps {
   size?: number;
   innerSize?: number;
   slotOnly?: boolean;
+  ring?: boolean | string;
 }
 
 const GoldSlot = ({
@@ -20,6 +21,7 @@ const GoldSlot = ({
   size,
   innerSize,
   slotOnly = false,
+  ring,
 }: GoldSlotProps) => {
   const { t } = useTranslation();
   if (slotOnly)
@@ -31,6 +33,7 @@ const GoldSlot = ({
         size={size}
         innerSize={innerSize}
         fullItemPath
+        ring={ring === true ? "ring-amber-500" : ring}
       />
     );
   return (
@@ -43,6 +46,7 @@ const GoldSlot = ({
           size={size}
           innerSize={innerSize}
           fullItemPath
+          ring={ring === true ? "ring-amber-500" : ring}
         />
       </PopoverTrigger>
       <PopoverContent className="w-max font-onemobile">

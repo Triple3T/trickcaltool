@@ -11,6 +11,7 @@ export interface ItemSlotProps {
   amount?: number | ReactNode;
   size?: number;
   innerSize?: number;
+  ring?: boolean | string;
 }
 
 const ItemSlot = ({
@@ -20,10 +21,15 @@ const ItemSlot = ({
   amount,
   size = 5,
   innerSize = 60,
+  ring = false,
 }: ItemSlotProps) => {
   return (
     <div
-      className="bg-cover bg-center bg-no-repeat rounded-[18%] relative"
+      className={cn(
+        "bg-cover bg-center bg-no-repeat rounded-[18%] relative",
+        ring && (typeof ring === "string" ? ring : "ring-green-500"),
+        ring && "ring"
+      )}
       style={{
         width: `${size}rem`,
         height: `${size}rem`,

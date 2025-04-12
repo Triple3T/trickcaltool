@@ -34,6 +34,7 @@ const ItemSlotWithRecipe = ({
   innerSize,
   nameKey,
   recipe,
+  ring,
 }: ItemSlotWithRecipeProps) => {
   const { t } = useTranslation();
   return (
@@ -67,6 +68,7 @@ const ItemSlotWithRecipe = ({
               fullItemPath={fullItemPath}
               amount={1}
               size={3}
+              ring={ring}
             />
             <div>
               <ArrowLeft className="w-4 h-4" />
