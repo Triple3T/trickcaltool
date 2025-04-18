@@ -326,8 +326,9 @@ const TeamBuilder = () => {
   // total aside3 effects
   const aside3Total = useMemo(() => {
     const aside3Values: number[] = Array(ASIDE3_CATEGORY_COUNT).fill(0);
+    const currentTeamMembers = currentTeam.map((e) => e?.charaName).filter((v) => v);
     Object.entries(teamSpec)
-      .filter(([, v]) => v >= 8)
+      .filter(([n, v]) => currentTeamMembers.includes(n) && v >= 8)
       .forEach(([charaName]) => {
         const charaAside3Types = skillcoefficient.c[charaName].a?.e3;
         const charaAside3Values = skillcoefficient.c[charaName].a?.[3];
@@ -337,7 +338,7 @@ const TeamBuilder = () => {
         });
       });
     return aside3Values;
-  }, [teamSpec]);
+  }, [currentTeam, teamSpec]);
 
   // save
   const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
