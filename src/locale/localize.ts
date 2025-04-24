@@ -6598,6 +6598,7 @@ i18n
               Hoodlumbird: "팹새",
               Kiwibird: "뚜따키위",
               MatchaJellyCat: "말냥젤리",
+              Mini_CrayonKnight: "쁘띠 크레용사용",
               Mini_Curburus: "쁘띠 크르브르스",
               Mini_LeafSnowRabbit: "잎눈토끼",
               Mini_Lil1li: "쁘띠 릴1리",
