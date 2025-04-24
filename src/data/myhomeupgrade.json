@@ -11,7 +11,8 @@
         {"MadeHigh2":50,"MadeHigh3":30,"g":750000},
         {"MadeHigh2":60,"MadeHigh3":35,"g":1000000},
         {"MadeHigh2":70,"MadeHigh3":40,"g":1250000},
-        {"MadeHigh2":80,"MadeHigh3":45,"g":1500000}
+        {"MadeHigh2":80,"MadeHigh3":45,"g":1500000},
+        {"MadeHigh2":90,"MadeHigh3":50,"g":1750000}
     ],
     "r":[
         {"MadeLow2":10,"MadeLow12":10,"MadeLow14":10,"g":10000},
