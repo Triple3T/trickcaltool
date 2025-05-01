@@ -522,7 +522,7 @@ const TeamBuilder = () => {
                       value={soloRaidResearchSlot || -1}
                       setValue={(v) => setSoloRaidResearchSlot(Math.max(v, 0))}
                       placeholder={t("ui.teambuilder.raidExtraSlotNone")}
-                      items={Array(3)
+                      items={Array(4)
                         .fill(0)
                         .map((_, count) => ({
                           value: count || -1,
