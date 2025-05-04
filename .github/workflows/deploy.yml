@@ -1,11 +1,11 @@
-name: Optimize Images and Deploy to Cloudflare Pages
+name: Convert Images and Push to Deploy
 
 on:
   push:
     branches: [main]
 
 jobs:
-  optimize-and-deploy:
+  convert-images:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,56 +22,61 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: |
-          bun install --frozen-lockfile
-          bun install sharp
+      - name: Install sharp
+        run: bun install sharp
 
-      - name: Identify changed PNG files
-        id: changes
+      - name: Detect changed and deleted PNG files
+        id: detect
         run: |
-          git diff --name-only HEAD^ HEAD | grep '^public/.*\\.png$' > changed_pngs.txt || true
-          cat changed_pngs.txt
-          echo "changed=$(paste -sd ',' changed_pngs.txt)" >> $GITHUB_OUTPUT
+          mkdir -p tmp
+          # 1. Detect added or modified PNG files
+          git diff --name-status HEAD^ HEAD | grep -E '^A|^M' | awk '{ print $2 }' | grep '^public/.*\.png$' > tmp/changed_files.txt || true
+          # 2. Detect deleted PNG files
+          git diff --name-status HEAD^ HEAD | grep '^D' | awk '{ print $2 }' | grep '^public/.*\.png$' > tmp/deleted_files.txt || true
+          # 3. Output
+          echo "changed=$(cat tmp/changed_files.txt | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          echo "deleted=$(cat tmp/deleted_files.txt | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout deploy branch as worktree
-        run: |
-          git fetch origin deploy
-          git worktree add deploy-temp origin/deploy
 
-      - name: Copy existing optimized images from deploy
-        run: |
-          mkdir -p optimized/public
-          rsync -a --include='*/' --include='*.webp' --include='*.avif' --exclude='*' deploy-temp/public/ optimized/public/
+      - name: Checkout deploy branch
+        uses: actions/checkout@v4
+        with:
+          ref: deploy
+          path: deploy-temp
 
-      - name: Convert changed PNGs to webp and avif
+      - name: Copy all files from main branch
         run: |
+          rsync -a --delete ./ ./deploy-temp/
+
+      - name: Convert changed PNGs to WebP and AVIF
+        if: steps.detect.outputs.changed != ''
+        run: |
+          mkdir -p public
           while IFS= read -r file; do
             [ -z "$file" ] && continue
             filename="${file#public/}"
             mkdir -p "optimized/public/$(dirname "$filename")"
             node -e "const sharp = require('sharp'); sharp('$file').toFile('optimized/public/${filename%.png}.webp')"
-            node -e "const sharp = require('sharp'); sharp('$file').toFile('optimized/public/${filename%.png}.avif')"
+            # node -e "const sharp = require('sharp'); sharp('$file').toFile('optimized/public/${filename%.png}.avif')"
           done < changed_pngs.txt
 
-      - name: Build Vite project
-        run: bun run build
-
-      - name: Prepare deploy directory
+      - name: Remove deleted PNG's converted versions
+        if: steps.detect.outputs.deleted != ''
         run: |
-          rm -rf deploy-temp
-          mv dist deploy-temp
-          mkdir -p deploy-temp/public
-          cp -r optimized/public/* deploy-temp/public/
+          for file in ${{ steps.detect.outputs.deleted }}; do
+            rm -f "${file%.png}.webp" # "${file%.png}.avif"
+          done
 
       - name: Commit and push to deploy branch
         run: |
           cd deploy-temp
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Deploy image-optimized build from $GITHUB_SHA" || echo "No changes to commit"
+
+          git add public/
+          git commit -m "Convert updated PNG images [bot]" || echo "Nothing to commit"
           git push origin HEAD:deploy --force
 
-      - name: Cleanup
-        run: git worktree remove deploy-temp --force
+      - name: Cleanup worktree
+        run: |
+          rm -rf deploy-temp
