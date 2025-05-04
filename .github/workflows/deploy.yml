@@ -59,8 +59,9 @@ jobs:
 
       - name: Prepare deploy directory
         run: |
-          rm -rf deploy-temp/*
-          cp -r dist/* deploy-temp/
+          rm -rf deploy-temp
+          mv dist deploy-temp
+          mkdir -p deploy-temp/public
           cp -r optimized/public/* deploy-temp/public/
 
       - name: Commit and push to deploy branch
