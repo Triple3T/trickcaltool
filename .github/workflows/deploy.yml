@@ -18,11 +18,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
         run: |
-          npm ci
-          npm install sharp
+          bun install --frozen-lockfile
+          bun install sharp
 
       - name: Identify changed PNG files
         id: changes
@@ -52,7 +55,7 @@ jobs:
           done < changed_pngs.txt
 
       - name: Build Vite project
-        run: npm run build
+        run: bun run build
 
       - name: Prepare deploy directory
         run: |
