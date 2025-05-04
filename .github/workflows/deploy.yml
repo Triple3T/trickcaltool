@@ -26,7 +26,10 @@ jobs:
 
       - name: Find all PNG files and convert to WebP
         run: |
-          find public -type f -name '*.png' ! -path 'public/AppImages/*' > png_files.txt
+          find public -type f -name '*.png' \
+          ! -path 'public/AppImages/*' \
+          ! -path 'public/favicon-16x16.png' \
+          ! -path 'public/favicon-32x32.png' > png_files.txt
           while IFS= read -r file; do
             webp_path="${file%.png}.webp"
             bun -e "const sharp = require('sharp'); sharp('$file').webp({ quality: 80 }).toFile('$webp_path')"
