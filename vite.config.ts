@@ -13,7 +13,7 @@ export default defineConfig({
       },
     }),
     VitePWA({
-      includeAssets: ["favicon.ico", "apple-touch-icon.webp", "mask-icon.svg"],
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css}"],
