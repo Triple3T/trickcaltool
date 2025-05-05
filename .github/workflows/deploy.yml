@@ -76,7 +76,7 @@ jobs:
           find . \( -wholename './vite.config.ts' -o -wholename './tailwind.config.ts' -o -wholename './src/*.ts' -o -wholename './src/*.tsx' \) > files_to_check.txt
           while IFS= read -r file; do
             awk '
-            /\/AppImages\// || /https:/ {
+            /\/AppImages\// || /https:/ || /apple-touch-icon/ {
               print; next
             }
             {
