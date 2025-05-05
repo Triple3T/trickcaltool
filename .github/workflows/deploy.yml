@@ -72,7 +72,6 @@ jobs:
       
       - name: Replace .png to .webp for load optimized images
         run: |
-          cd deploy-temp
           find . \( -wholename './vite.config.ts' -o -wholename './tailwind.config.ts' -o -wholename './src/*.ts' -o -wholename './src/*.tsx' \) > files_to_check.txt
           while IFS= read -r file; do
             awk '
@@ -85,10 +84,9 @@ jobs:
               gsub(/\.png`/, ".webp`");
               print
             }
-            ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+            ' "$file" > "deploy-temp/$file.tmp"
           done < files_to_check.txt
           rm files_to_check.txt
-          cd ..
 
       - name: Prepare deploy directory
         run: |
