@@ -1,17 +1,18 @@
-name: One-time PNG to WebP Migration
+name: Convert Images and Push to Deploy
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
-  convert-all-png:
+  convert-images:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout deploy branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
-          ref: deploy
+          fetch-depth: 2
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,24 +25,87 @@ jobs:
       - name: Install sharp
         run: bun install sharp
 
-      - name: Find all PNG files and convert to WebP
+      - name: Detect changed and deleted PNG files
+        id: detect
         run: |
-          find public -type f -name '*.png' \
-          ! -path 'public/AppImages/*' \
-          ! -path 'public/favicon-16x16.png' \
-          ! -path 'public/favicon-32x32.png' > png_files.txt
-          while IFS= read -r file; do
-            webp_path="${file%.png}.webp"
-            bun -e "const sharp = require('sharp'); sharp('$file').webp({ quality: 80 }).toFile('$webp_path')"
-            rm "$file"
-          done < png_files.txt
-          rm png_files.txt
+          mkdir -p tmp
+          # 1. Detect added or modified PNG files
+          git diff --name-status HEAD^ HEAD | grep -E '^A|^M' | awk '{ print $2 }' | grep '^public/.*\.png$' > tmp/changed_files.txt || true
+          # 2. Detect deleted PNG files
+          git diff --name-status HEAD^ HEAD | grep '^D' | awk '{ print $2 }' | grep '^public/.*\.png$' > tmp/deleted_files.txt || true
+          # 3. Output
+          echo "changed=$(cat tmp/changed_files.txt | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          echo "deleted=$(cat tmp/deleted_files.txt | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push changes
+      - name: Remove sharp
+        run: bun uninstall sharp
+
+      - name: Checkout deploy branch as worktree
         run: |
+          git fetch origin deploy
+          git worktree add -b deploy-local deploy-temp origin/deploy
+
+      - name: Copy existing optimized images from deploy
+        run: |
+          mkdir -p optimized/public
+          [ -d deploy-temp/public ] && rsync -a --include='*/' --include='*.webp' --include='*.avif' --exclude='*' deploy-temp/public/ optimized/public/ || true
+
+      - name: Convert changed PNGs to WebP and AVIF
+        if: steps.detect.outputs.changed != ''
+        run: |
+          mkdir -p public
+          for file in ${{ steps.detect.outputs.changed }}; do
+            filename="${file#public/}"
+            mkdir -p "optimized/public/$(dirname "$filename")"
+            bun -e "const sharp = require('sharp'); sharp('$file').webp({ quality: 80 }).toFile('optimized/public/${filename%.png}.webp')"
+            # bun -e "const sharp = require('sharp'); sharp('$file').avif({ quality: 50 }).toFile('optimized/public/${filename%.png}.avif')"
+          done
+
+      - name: Remove deleted PNG's converted versions
+        if: steps.detect.outputs.deleted != ''
+        run: |
+          for file in ${{ steps.detect.outputs.deleted }}; do
+            filename="${file#public/}"
+            rm -f "optimized/public/${filename%.png}.webp"
+            # rm -f "optimized/public/${filename%.png}.avif"
+          done
+      
+      - name: Replace .png to .webp for load optimized images
+        run: |
+          cd deploy-temp
+          find . \( -wholename './vite.config.ts' -o -wholename './tailwind.config.ts' -o -wholename './src/*.ts' -o -wholename './src/*.tsx' \) > files_to_check.txt
+          while IFS= read -r file; do
+            awk '
+            /\/AppImages\// || /https:/ {
+              print; next
+            }
+            {
+              gsub(/\.png"/, ".webp\"");
+              gsub(/\.png'\''/, ".webp'\''");
+              gsub(/\.png`/, ".webp`");
+              print
+            }
+            ' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+          done < files_to_check.txt
+          rm files_to_check.txt
+          cd ..
+
+      - name: Prepare deploy directory
+        run: |
+          mkdir -p deploy-temp/public
+          cp -r optimized/public/* deploy-temp/public/
+
+      - name: Commit and push to deploy branch
+        run: |
+          cd deploy-temp
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add public/
-          git commit -m "Migrate all PNG images to WebP [one-time]"
-          git push origin deploy
+          git add *
+          git commit -m "Convert updated PNG images [bot]" || echo "Nothing to commit"
+          git push origin HEAD:deploy
+
+      - name: Cleanup
+        run: |
+          git worktree remove deploy-temp --force
+          rm -rf deploy-temp

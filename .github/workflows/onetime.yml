@@ -1,0 +1,47 @@
+name: One-time PNG to WebP Migration
+
+on:
+  workflow_dispatch:
+
+jobs:
+  convert-all-png:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout deploy branch
+        uses: actions/checkout@v4
+        with:
+          ref: deploy
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install sharp
+        run: bun install sharp
+
+      - name: Find all PNG files and convert to WebP
+        run: |
+          find public -type f -name '*.png' \
+          ! -path 'public/AppImages/*' \
+          ! -path 'public/favicon-16x16.png' \
+          ! -path 'public/favicon-32x32.png' > png_files.txt
+          while IFS= read -r file; do
+            webp_path="${file%.png}.webp"
+            bun -e "const sharp = require('sharp'); sharp('$file').webp({ quality: 80 }).toFile('$webp_path')"
+            rm "$file"
+          done < png_files.txt
+          rm png_files.txt
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add public/
+          git commit -m "Migrate all PNG images to WebP [one-time]"
+          git push origin deploy
