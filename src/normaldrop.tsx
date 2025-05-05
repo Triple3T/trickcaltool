@@ -165,7 +165,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                     { e: "", p: "Piece_", r: "Recipe_" }[equipType]
                   }Icon_${equipPos.charAt(0).toUpperCase()}${equipPos.slice(
                     1
-                  )}${equipNum}.png`;
+                  )}${equipNum}.webp`;
                   return (
                     <CommandItem
                       key={equipId}
@@ -293,7 +293,7 @@ const NormalDrop = () => {
                     { e: "", p: "Piece_", r: "Recipe_" }[equipType]
                   }Icon_${equipPos.charAt(0).toUpperCase()}${equipPos.slice(
                     1
-                  )}${equipNum}.png`;
+                  )}${equipNum}.webp`;
                   const equipRank = Math.floor(Number(equipNum) / 100);
                   return (
                     <div

@@ -93,7 +93,7 @@ const PurpleBoardStatStatistic = ({
       <div className="relative z-10">
         <img
           className="h-10 mr-2 aspect-square inline-block align-middle"
-          src={`/icons/Icon_${stat}.png`}
+          src={`/icons/Icon_${stat}.webp`}
         />
       </div>
       <div className="flex flex-col flex-1 gap-1 -ml-8">
@@ -119,7 +119,7 @@ const PurpleBoardStatStatistic = ({
                 <img
                   src={`/icons/RecordReward_Tab_${
                     ["Easy", "Herd", "VeryHard"][i]
-                  }Lv.png`}
+                  }Lv.webp`}
                   className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
                 />
                 <span
@@ -156,7 +156,7 @@ const PurpleBoardStatStatistic = ({
 //       <div className="relative z-10">
 //         <img
 //           className="h-10 mr-2 aspect-square inline-block align-middle"
-//           src={`/icons/Item_Crayon${rarity}.png`}
+//           src={`/icons/Item_Crayon${rarity}.webp`}
 //         />
 //       </div>
 //       <div className="flex flex-col flex-1 gap-1 -ml-8">
@@ -177,7 +177,7 @@ const PurpleBoardStatStatistic = ({
 //               <img
 //                 src={`/icons/RecordReward_Tab_${
 //                   ["Easy", "Herd", "VeryHard"][i]
-//                 }Lv.png`}
+//                 }Lv.webp`}
 //                 className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
 //               />
 //               <span>{count.toLocaleString()}</span>

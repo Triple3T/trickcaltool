@@ -110,7 +110,7 @@ const Personal = () => {
         <div className="p-2">
           <div>
             <img
-              src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
+              src={`/icons/Common_UnitPersonality_${Personality[personality]}.webp`}
               alt=""
               className="w-8 h-8 inline"
             />
@@ -122,7 +122,7 @@ const Personal = () => {
         <div className="p-2">
           <div>
             <img
-              src={`/icons/Common_Unit${Class[unitClass]}.png`}
+              src={`/icons/Common_Unit${Class[unitClass]}.webp`}
               alt=""
               className="w-8 h-8 inline"
             />
@@ -134,7 +134,7 @@ const Personal = () => {
         <div className="p-2">
           <div>
             <img
-              src={`/icons/Common_UnitAttack${Attack[attackType]}.png`}
+              src={`/icons/Common_UnitAttack${Attack[attackType]}.webp`}
               alt=""
               className="w-8 h-8 inline"
             />
@@ -146,7 +146,7 @@ const Personal = () => {
         <div className="p-2">
           <div>
             <img
-              src={`/icons/Common_Position${Position[position]}.png`}
+              src={`/icons/Common_Position${Position[position]}.webp`}
               alt=""
               className="w-8 h-8 inline"
             />
@@ -158,7 +158,7 @@ const Personal = () => {
         <div className="p-2">
           <div>
             <img
-              src={`/album/Album_Icon_${Race[race]}.png`}
+              src={`/album/Album_Icon_${Race[race]}.webp`}
               alt=""
               className="w-8 h-8 inline"
             />
@@ -175,7 +175,7 @@ const Personal = () => {
                 return (
                   <img
                     key={i}
-                    src={`/icons/HeroGrade_000${[0, 5, 3, 4][initialStar]}.png`}
+                    src={`/icons/HeroGrade_000${[0, 5, 3, 4][initialStar]}.webp`}
                     alt=""
                     className="w-8 h-8 -mx-1"
                   />
@@ -192,7 +192,7 @@ const Personal = () => {
       {initialStar > 1 && (
         <Card className="p-2 mt-2 flex items-start gap-4">
           <img
-            src="/clonefactoryicon/GradeDungeon_Logo.png"
+            src="/clonefactoryicon/GradeDungeon_Logo.webp"
             className="w-16 flex-initial"
           />
           <div className="flex items-center gap-4 flex-wrap flex-1">
@@ -281,11 +281,11 @@ const Personal = () => {
             <div className="flex flex-row items-center gap-2">
               <div className="aspect-square w-12 h-12 relative">
                 <img
-                  src={`/skills/Icon_AdmissionSKill_${charaName}.png`}
+                  src={`/skills/Icon_AdmissionSKill_${charaName}.webp`}
                   className="w-12 h-12 rounded border-2 border-green-500 border-inset"
                 />
                 <img
-                  src="/skills/HeroSkill_Icon_SkillSp.png"
+                  src="/skills/HeroSkill_Icon_SkillSp.webp"
                   className="absolute -top-1 -left-1 w-5"
                 />
               </div>
@@ -393,11 +393,11 @@ const Personal = () => {
             <div className="flex flex-row items-center gap-2">
               <div className="aspect-square w-12 h-12 relative">
                 <img
-                  src={`/skills/Icon_GraduateSKill_${charaName}.png`}
+                  src={`/skills/Icon_GraduateSKill_${charaName}.webp`}
                   className="w-12 h-12 rounded border-2 border-green-600 border-inset"
                 />
                 <img
-                  src="/skills/HeroSkill_Icon_SkillUltimate.png"
+                  src="/skills/HeroSkill_Icon_SkillUltimate.webp"
                   className="absolute -top-1 -left-1 w-5"
                 />
               </div>
@@ -423,7 +423,7 @@ const Personal = () => {
             </div>
             <div className="flex flex-row items-center gap-1 my-1">
               <img
-                src="/common/ClockIcon_002.png"
+                src="/common/ClockIcon_002.webp"
                 className="w-6 h-6 -rotate-10"
               />
               <div className="flex-1">
@@ -547,7 +547,7 @@ const Personal = () => {
               <img
                 src={`/skills/${
                   chara[charaName].t.charAt(2) === "0" ? "Magic" : "Physic"
-                }_NormalAttack.png`}
+                }_NormalAttack.webp`}
                 className="w-12 h-12 rounded border-2 border-lime-200 border-inset"
               />
               <div>
@@ -737,7 +737,7 @@ const Personal = () => {
           {chara[charaName].a ? (
             <div className="grid grid-cols-1 gap-4 relative">
               <img
-                src={`/asideicons/AsideIcon_${charaName}.png`}
+                src={`/asideicons/AsideIcon_${charaName}.webp`}
                 className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 absolute top-0 right-0 animate-bounce"
               />
               <div className="text-2xl">{t(`aside.${charaName}.name`)}</div>
@@ -745,7 +745,7 @@ const Personal = () => {
                 <div className="flex flex-row items-center gap-2">
                   <div className="aspect-square w-12 h-12 relative">
                     <img
-                      src={`/asideskills/Aside_Skill_${charaName}_1.png`}
+                      src={`/asideskills/Aside_Skill_${charaName}_1.webp`}
                       className="w-12 h-12 rounded"
                     />
                   </div>
@@ -760,7 +760,7 @@ const Personal = () => {
                                 key={i}
                                 src={`/icons/HeroGrade_000${
                                   [0, 3, 3, 4][initialStar]
-                                }.png`}
+                                }.webp`}
                                 alt=""
                                 className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
                               />
@@ -772,7 +772,7 @@ const Personal = () => {
                             return (
                               <img
                                 key={i}
-                                src={`/icons/HeroGrade_0005.png`}
+                                src={`/icons/HeroGrade_0005.webp`}
                                 alt=""
                                 className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
                               />
@@ -848,7 +848,7 @@ const Personal = () => {
                 <div className="flex flex-row items-center gap-2">
                   <div className="aspect-square w-12 h-12 relative">
                     <img
-                      src={`/asideskills/Aside_Skill_${charaName}_2.png`}
+                      src={`/asideskills/Aside_Skill_${charaName}_2.webp`}
                       className="w-12 h-12 rounded"
                     />
                   </div>
@@ -863,7 +863,7 @@ const Personal = () => {
                                 key={i}
                                 src={`/icons/HeroGrade_000${
                                   [0, 3, 3, 4][initialStar]
-                                }.png`}
+                                }.webp`}
                                 alt=""
                                 className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
                               />
@@ -875,7 +875,7 @@ const Personal = () => {
                             return (
                               <img
                                 key={i}
-                                src={`/icons/HeroGrade_0005.png`}
+                                src={`/icons/HeroGrade_0005.webp`}
                                 alt=""
                                 className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
                               />
@@ -974,7 +974,7 @@ const Personal = () => {
                 <div className="flex flex-row items-center gap-2">
                   <div className="aspect-square w-12 h-12 relative">
                     <img
-                      src={`/asideskills/Aside_Skill_${charaName}_3.png`}
+                      src={`/asideskills/Aside_Skill_${charaName}_3.webp`}
                       className="w-12 h-12 rounded"
                     />
                   </div>
@@ -989,7 +989,7 @@ const Personal = () => {
                                 key={i}
                                 src={`/icons/HeroGrade_000${
                                   [0, 3, 3, 4][initialStar]
-                                }.png`}
+                                }.webp`}
                                 alt=""
                                 className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
                               />
@@ -1001,7 +1001,7 @@ const Personal = () => {
                             return (
                               <img
                                 key={i}
-                                src={`/icons/HeroGrade_0005.png`}
+                                src={`/icons/HeroGrade_0005.webp`}
                                 alt=""
                                 className="w-5 h-5 inline -ml-1 first-of-type:ml-0"
                               />

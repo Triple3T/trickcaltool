@@ -47,7 +47,7 @@ const GuideChecker = () => {
             <div className="-mt-2.5 flex flex-row justify-between">
               <div>
                 <img
-                  src={`/icons/Icon_${StatType[displayStat]}.png`}
+                  src={`/icons/Icon_${StatType[displayStat]}.webp`}
                   className="w-5 h-5 inline mr-1 mb-1"
                 />
                 <span className="text-shadow-glow">

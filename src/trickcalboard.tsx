@@ -119,7 +119,7 @@ export const BoardStatStatistic = ({
       <div className="relative z-10">
         <img
           className="h-10 mr-2 aspect-square inline-block align-middle"
-          src={`/icons/Icon_${stat}.png`}
+          src={`/icons/Icon_${stat}.webp`}
         />
       </div>
       <div className="flex flex-col flex-1 gap-1 -ml-8">
@@ -160,7 +160,7 @@ export const BoardStatStatistic = ({
                 <img
                   src={`/icons/RecordReward_Tab_${
                     ["Easy", "Herd", "VeryHard"][i]
-                  }Lv.png`}
+                  }Lv.webp`}
                   className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
                 />
                 <span
@@ -207,7 +207,7 @@ export const BoardCrayonStatistic = ({
       <div className="relative z-10">
         <img
           className="h-10 mr-2 aspect-square inline-block align-middle"
-          src={`/icons/Item_Crayon${rarity}.png`}
+          src={`/icons/Item_Crayon${rarity}.webp`}
         />
       </div>
       <div className="flex flex-col flex-1 gap-1 -ml-8">
@@ -228,7 +228,7 @@ export const BoardCrayonStatistic = ({
               <img
                 src={`/icons/RecordReward_Tab_${
                   ["Easy", "Herd", "VeryHard"][i]
-                }Lv.png`}
+                }Lv.webp`}
                 className="bg-greenicon rounded-full align-middle h-4 aspect-square mr-1 inline-block dark:border dark:border-white"
               />
               <span>{count.toLocaleString()}</span>
@@ -251,7 +251,7 @@ const BoardTotal = ({ current, max }: { current: number; max: number }) => {
       {current === max && (
         <div className="absolute w-14 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
           <img
-            src="/icons/Photo_Complete_Stamp.png"
+            src="/icons/Photo_Complete_Stamp.webp"
             className="w-100 opacity-100"
           />
         </div>
@@ -455,7 +455,7 @@ const TrickcalBoard = () => {
                             className="px-2"
                           >
                             <img
-                              src={`/boards/Tile_${bt}On.png`}
+                              src={`/boards/Tile_${bt}On.webp`}
                               className="h-8 w-8 aspect-square"
                             />
                           </ToggleGroupItem>
@@ -713,7 +713,7 @@ const TrickcalBoard = () => {
                 <div className="flex gap-2 items-center">
                   <img
                     className="bg-board-special rotate-10 w-[3.2rem] flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
-                    src={`/boards/Tile_${bt}On.png`}
+                    src={`/boards/Tile_${bt}On.webp`}
                   />
                   <div className="flex-initial flex-shrink-0 flex flex-col items-start">
                     <div className="text-sm">
@@ -721,7 +721,7 @@ const TrickcalBoard = () => {
                         className="mr-1 w-[1.2rem] inline-flex bg-greenicon rounded-full align-middle"
                         src={`/icons/RecordReward_Tab_${
                           ["Easy", "Herd", "VeryHard"][userDataBoard.i]
-                        }Lv.png`}
+                        }Lv.webp`}
                       />
                       <span className="align-middle">
                         {t(`ui.board.board${userDataBoard.i + 1}`)}
@@ -784,7 +784,7 @@ const TrickcalBoard = () => {
                                   className="w-6 mr-1 inline-flex align-middle"
                                   src={`/icons/HeroGrade_000${
                                     [5, 3, 4][Number(k) - 1]
-                                  }.png`}
+                                  }.webp`}
                                 />
                               ))}
                             </>
@@ -801,7 +801,7 @@ const TrickcalBoard = () => {
                                     "/icons/Common_Unit",
                                     "/album/Album_Icon_",
                                   ][userDataBoard.c[0]]
-                                }${k}.png`}
+                                }${k}.webp`}
                               />
                               {t(
                                 `${
@@ -931,7 +931,7 @@ const TrickcalBoard = () => {
                             className="flex justify-end items-center"
                           >
                             <img
-                              src={`/icons/Icon_${stat}.png`}
+                              src={`/icons/Icon_${stat}.webp`}
                               className="h-6 mr-1"
                             />
                             <span>

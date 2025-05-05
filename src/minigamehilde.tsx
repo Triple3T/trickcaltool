@@ -65,7 +65,7 @@ const MiniGameHilde = () => {
               <Card className="p-4 object-cover max-w-full">
                 <div className="flex flex-row gap-4 items-stretch">
                   <img
-                    src={`/charas/${chara}.png`}
+                    src={`/charas/${chara}.webp`}
                     className="aspect-square w-12 h-12"
                   />
                   <div className="flex flex-col justify-between text-left">

@@ -92,7 +92,7 @@ const RaidBossStatDialog = ({
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
                     <img
-                      src="/icons/Icon_AttackPhysic.png"
+                      src="/icons/Icon_AttackPhysic.webp"
                       className="w-5 h-5 inline mr-1"
                     />
                     물리 공격력
@@ -102,7 +102,7 @@ const RaidBossStatDialog = ({
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
                     <img
-                      src="/icons/Icon_AttackMagic.png"
+                      src="/icons/Icon_AttackMagic.webp"
                       className="w-5 h-5 inline mr-1"
                     />
                     마법 공격력
@@ -112,11 +112,11 @@ const RaidBossStatDialog = ({
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
                     <img
-                      src="/icons/Icon_CriticalRate.png"
+                      src="/icons/Icon_CriticalRate.webp"
                       className="w-5 h-5 inline -mr-1"
                     />
                     <img
-                      src="/icons/Icon_CriticalMult.png"
+                      src="/icons/Icon_CriticalMult.webp"
                       className="w-5 h-5 inline mr-1"
                     />
                     치명 스탯
@@ -126,11 +126,11 @@ const RaidBossStatDialog = ({
                 <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
                   <div>
                     <img
-                      src="/icons/Icon_CriticalResist.png"
+                      src="/icons/Icon_CriticalResist.webp"
                       className="w-5 h-5 inline -mr-1"
                     />
                     <img
-                      src="/icons/Icon_CriticalMultResist.png"
+                      src="/icons/Icon_CriticalMultResist.webp"
                       className="w-5 h-5 inline mr-1"
                     />
                     저항 스탯
@@ -145,7 +145,7 @@ const RaidBossStatDialog = ({
               <div className="mt-2 p-1">
                 <div>
                   <img
-                    src="/icons/Icon_Hp.png"
+                    src="/icons/Icon_Hp.webp"
                     className="w-5 h-5 inline mr-1"
                   />
                   {currentBoss.h.toLocaleString()}{" "}
@@ -160,7 +160,7 @@ const RaidBossStatDialog = ({
                 <div className="text-right">
                   실질{" "}
                   <img
-                    src="/icons/Icon_Hp.png"
+                    src="/icons/Icon_Hp.webp"
                     className="w-5 h-5 inline mr-1"
                   />
                   {Math.round(
@@ -193,7 +193,7 @@ const RaidBossStatDialog = ({
                   }
                 >
                   <img
-                    src={`/icons/Icon_${StatType[stat]}.png`}
+                    src={`/icons/Icon_${StatType[stat]}.webp`}
                     className="w-5 h-5 inline mr-1"
                   />
                   {[

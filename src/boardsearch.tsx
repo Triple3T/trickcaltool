@@ -189,7 +189,7 @@ const BoardSearch = () => {
                             aria-label={`Toggle ${bIndex}`}
                           >
                             <img
-                              src={`/icons/RecordReward_Tab_${bText}Lv.png`}
+                              src={`/icons/RecordReward_Tab_${bText}Lv.webp`}
                               className="h-5 w-5 aspect-square mr-1 bg-greenicon rounded-full inline-flex align-middle"
                             />
                             {t(`ui.board.board${bIndex + 1}Short`)}
@@ -244,7 +244,7 @@ const BoardSearch = () => {
                           }
                         >
                           <img
-                            src={`/boards/Tile_${bt}On.png`}
+                            src={`/boards/Tile_${bt}On.webp`}
                             className="h-8 w-8 aspect-square"
                           />
                         </Button>

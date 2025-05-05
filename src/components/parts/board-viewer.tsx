@@ -47,7 +47,7 @@ const BoardViewer = ({
             <img
               src={`/icons/RecordReward_Tab_${
                 ["Easy", "Herd", "VeryHard"][index - 1]
-              }Lv.png`}
+              }Lv.webp`}
               className="mr-1 w-[1.2rem] inline-flex bg-greenicon rounded-full align-middle"
             />
             {t(`ui.board.board${index}`)}
@@ -89,7 +89,7 @@ const BoardViewer = ({
                 <div className="w-1/6 max-w-12 relative" key={i}>
                   <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                     <img
-                      src={`/boards/Tile_${bt}On.png`}
+                      src={`/boards/Tile_${bt}On.webp`}
                       className={cn(
                         "bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125",
                         search.includes(Number(b))
@@ -119,17 +119,17 @@ const BoardViewer = ({
                   className="py-1.5 flex first-of-type:mt-4 border-t"
                 >
                   <img
-                    src="/icons/TutorialPopupLock01.png"
+                    src="/icons/TutorialPopupLock01.webp"
                     className="w-7 h-7 my-0.5 mr-1.5"
                   />
                   <img
-                    src={`/boards/Tile_${BoardType[thisBoard]}On.png`}
+                    src={`/boards/Tile_${BoardType[thisBoard]}On.webp`}
                     className={cn(
                       "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                     )}
                   />
                   <img
-                    src="/common/Icon_Arrow.png"
+                    src="/common/Icon_Arrow.webp"
                     className="h-5 aspect-[8/7] mx-2.5 my-1"
                   />
                   <div className="flex flex-wrap">
@@ -138,7 +138,7 @@ const BoardViewer = ({
                       return (
                         <Fragment key={`${bb}-${k}`}>
                           <img
-                            src={`/boards/Tile_${BoardType[thisBlock]}On.png`}
+                            src={`/boards/Tile_${BoardType[thisBlock]}On.webp`}
                             className={cn(
                               "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                             )}
@@ -174,17 +174,17 @@ const BoardViewer = ({
                   className="py-1.5 flex first-of-type:mt-4 border-t"
                 >
                   <img
-                    src="/icons/TutorialPopupLock01.png"
+                    src="/icons/TutorialPopupLock01.webp"
                     className="w-7 h-7 my-0.5 mr-1.5"
                   />
                   <img
-                    src={`/boards/Tile_${BoardType[thisBoard]}On.png`}
+                    src={`/boards/Tile_${BoardType[thisBoard]}On.webp`}
                     className={cn(
                       "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                     )}
                   />
                   <img
-                    src="/common/Icon_Arrow.png"
+                    src="/common/Icon_Arrow.webp"
                     className="h-5 aspect-[8/7] mx-2.5 my-1"
                   />
                   <div className="flex flex-wrap">
@@ -195,13 +195,13 @@ const BoardViewer = ({
                         <Fragment key={`${bb}-${k}`}>
                           <div className="flex">
                             <img
-                              src={`/boards/Tile_${BoardType[thisBlock1]}On.png`}
+                              src={`/boards/Tile_${BoardType[thisBlock1]}On.webp`}
                               className={cn(
                                 "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                               )}
                             />
                             <img
-                              src={`/boards/Tile_${BoardType[thisBlock2]}On.png`}
+                              src={`/boards/Tile_${BoardType[thisBlock2]}On.webp`}
                               className={cn(
                                 "bg-board-special w-8 h-8 rotate-10 align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125 -ml-2"
                               )}

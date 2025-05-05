@@ -146,7 +146,7 @@ const CardSpecDialog = ({ cardLevels, onChange }: CardSpecDialogProps) => {
                       <img
                         src={`/${cardType}s/${
                           cardType === "artifact" ? "Artifact" : "SpellCard"
-                        }Icon_${cardId}.png`}
+                        }Icon_${cardId}.webp`}
                         alt={t(`card.${cardType}.${cardId}.title`)}
                         className="max-w-full max-h-full mx-auto"
                       />
@@ -176,7 +176,7 @@ const CardSpecDialog = ({ cardLevels, onChange }: CardSpecDialogProps) => {
                             return (
                               <div key={i}>
                                 <img
-                                  src={`/icons/Icon_${statString}.png`}
+                                  src={`/icons/Icon_${statString}.webp`}
                                   alt={statString}
                                   className="w-5 h-5 inline-block"
                                 />

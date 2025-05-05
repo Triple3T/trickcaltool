@@ -98,7 +98,7 @@ const SpellPicker = ({
                 }}
               >
                 <img
-                  src={`/icons/Icon_${statString}.png`}
+                  src={`/icons/Icon_${statString}.webp`}
                   className="w-full aspect-square"
                 />
               </div>
@@ -154,7 +154,7 @@ const SpellPicker = ({
                   >
                     <div className="w-full h-full">
                       <img
-                        src={`/spells/SpellCardIcon_${spellId}.png`}
+                        src={`/spells/SpellCardIcon_${spellId}.webp`}
                         alt={t(`card.spell.${spellId}.title`)}
                         className="w-full aspect-square object-cover"
                       />

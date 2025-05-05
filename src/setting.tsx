@@ -375,8 +375,8 @@ const Setting = () => {
                     className="w-16 h-16"
                     src={
                       userDataCharaInfo[skinChangeChara].skin
-                        ? `/charas/${skinChangeChara}Skin${userDataCharaInfo[skinChangeChara].skin}.png`
-                        : `/charas/${skinChangeChara}.png`
+                        ? `/charas/${skinChangeChara}Skin${userDataCharaInfo[skinChangeChara].skin}.webp`
+                        : `/charas/${skinChangeChara}.webp`
                     }
                   />
                 ) : (
@@ -414,7 +414,7 @@ const Setting = () => {
                           return (
                             <img
                               key={`${skinChangeChara}-${i}`}
-                              src={`/charas/${imgName}.png`}
+                              src={`/charas/${imgName}.webp`}
                               alt={t(skinNameId)}
                               className="w-9 h-9"
                               onClick={() => {

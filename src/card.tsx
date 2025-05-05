@@ -55,7 +55,7 @@ const Cards = () => {
                       aria-label={`Toggle ${statString}`}
                     >
                       <img
-                        src={`/icons/Icon_${statString}.png`}
+                        src={`/icons/Icon_${statString}.webp`}
                         className="h-5 w-5 aspect-square inline-flex align-middle"
                       />
                     </ToggleGroupItem>
@@ -172,7 +172,7 @@ const Cards = () => {
                 >
                   <div className="aspect-square w-full p-2">
                     <img
-                      src={`/artifacts/ArtifactIcon_${i}.png`}
+                      src={`/artifacts/ArtifactIcon_${i}.webp`}
                       className="max-w-full max-h-full mx-auto my-auto"
                     />
                   </div>
@@ -186,7 +186,7 @@ const Cards = () => {
                       return (
                         <div key={stat}>
                           <img
-                            src={`/icons/Icon_${statString}.png`}
+                            src={`/icons/Icon_${statString}.webp`}
                             className="w-4 h-4 inline-block mr-1"
                           />
                           {t(`stat.${statString}`)} +
@@ -323,7 +323,7 @@ const Cards = () => {
                 >
                   <div className="aspect-square w-full p-0">
                     <img
-                      src={`/spells/SpellCardIcon_${i}.png`}
+                      src={`/spells/SpellCardIcon_${i}.webp`}
                       className="max-w-full max-h-full"
                     />
                   </div>
@@ -337,7 +337,7 @@ const Cards = () => {
                       return (
                         <div key={stat}>
                           <img
-                            src={`/icons/Icon_${statString}.png`}
+                            src={`/icons/Icon_${statString}.webp`}
                             className="w-4 h-4 inline-block mr-1"
                           />
                           {t(`stat.${statString}`)} +

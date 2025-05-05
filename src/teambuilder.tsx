@@ -671,7 +671,7 @@ const TeamBuilder = () => {
                               }}
                             >
                               <img
-                                src={`/artifacts/ArtifactIcon_${v}.png`}
+                                src={`/artifacts/ArtifactIcon_${v}.webp`}
                                 alt={t(`card.artifact.${v}.title`)}
                                 className="max-w-full max-h-full mx-auto"
                               />
@@ -722,7 +722,7 @@ const TeamBuilder = () => {
                             }}
                           >
                             <img
-                              src={`/spells/SpellCardIcon_${s}.png`}
+                              src={`/spells/SpellCardIcon_${s}.webp`}
                               alt={t(`card.spell.${s}.title`)}
                               className="max-w-full max-h-full mx-auto"
                             />
@@ -868,7 +868,7 @@ const TeamBuilder = () => {
                       return (
                         <img
                           key={`${index}-${personality}-${i}`}
-                          src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
+                          src={`/icons/Common_UnitPersonality_${Personality[personality]}.webp`}
                           className={cn(
                             "w-6 h-6 -mx-2 z-0",
                             index ? "" : "brightness-50",
@@ -898,7 +898,7 @@ const TeamBuilder = () => {
                       return (
                         <img
                           key={i}
-                          src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
+                          src={`/icons/Common_UnitPersonality_${Personality[personality]}.webp`}
                           className="w-5 h-5 -mx-1"
                         />
                       );
@@ -959,7 +959,7 @@ const TeamBuilder = () => {
                   key={stat}
                   className="flex flex-row gap-1 justify-between items-center text-sm bg-accent/50 pr-2 rounded-full"
                 >
-                  <img src={`icons/Icon_${statString}.png`} className="w-4 h-4 scale-125" />
+                  <img src={`icons/Icon_${statString}.webp`} className="w-4 h-4 scale-125" />
                   <div>+{value / 100}%</div>
                 </div>
               );

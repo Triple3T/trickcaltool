@@ -129,7 +129,7 @@ const NthBoardViewer = ({
                         <img
                           src={`/boards/Tile_${
                             PurpleBoardType[cell.stat]
-                          }On.png`}
+                          }On.webp`}
                           className="w-full h-full aspect-square"
                         />
                       </div>
@@ -142,7 +142,7 @@ const NthBoardViewer = ({
                         className="w-6 h-6 bg-board-special bg-cover"
                       >
                         <img
-                          src={`/boards/Tile_${BoardType[cell.stat]}On.png`}
+                          src={`/boards/Tile_${BoardType[cell.stat]}On.webp`}
                           className="w-full h-full aspect-square"
                         />
                       </div>
@@ -166,7 +166,7 @@ const NthBoardViewer = ({
                     className="w-6 h-6 bg-board-normal bg-cover"
                   >
                     <img
-                      src="/boards/Tile_Start.png"
+                      src="/boards/Tile_Start.webp"
                       className="w-full h-full aspect-square"
                     />
                   </div>
@@ -175,7 +175,7 @@ const NthBoardViewer = ({
               return (
                 <div key={colNum} className="w-6 h-6 bg-board-gate bg-cover">
                   <img
-                    src="/boards/Tile_Gate.png"
+                    src="/boards/Tile_Gate.webp"
                     className="w-full h-full aspect-square"
                   />
                 </div>

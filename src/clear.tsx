@@ -61,7 +61,7 @@ const Clear = () => {
           <div>
             <div>
               <img
-                src="/networkicon/NetworkIcon_Elena.png"
+                src="/networkicon/NetworkIcon_Elena.webp"
                 className="w-24 h-24 mx-auto"
               />
             </div>

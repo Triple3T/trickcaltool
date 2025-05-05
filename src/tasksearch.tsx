@@ -467,7 +467,7 @@ const TaskSearch = () => {
                         <div className="w-8 h-8 rounded-full overflow-hidden inline-block">
                           <img
                             className="w-full h-full"
-                            src={`/schedule/LifeSkill${lifeskillId}.png`}
+                            src={`/schedule/LifeSkill${lifeskillId}.webp`}
                           />
                         </div>
                         {t(`lifeskill.${lifeskillId}`)}

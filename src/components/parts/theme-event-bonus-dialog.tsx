@@ -42,7 +42,7 @@ const ThemeEventBonusDialog = ({ bonus }: ThemeEventBonusDialogProps) => {
                 className="flex flex-col w-16 text-center text-sm overflow-hidden relative"
               >
                 <img
-                  src={`/charas/${c}.png`}
+                  src={`/charas/${c}.webp`}
                   alt={t(`chara.${c}`)}
                   className={cn(
                     "w-full aspect-square",

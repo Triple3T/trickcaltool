@@ -29,7 +29,7 @@ const LicenseImg = (props: LicenseImgProps) => {
         )}
       >
         <img
-          src={`/charas/${props.name}.png`}
+          src={`/charas/${props.name}.webp`}
           alt=""
           className="absolute max-w-[calc(100%_/_0.43)] w-[calc(100%_/_0.43)] h-[calc(100%_/_0.43)] aspect-square -top-[46%] -left-[64%]"
         />

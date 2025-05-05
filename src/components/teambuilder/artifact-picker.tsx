@@ -61,7 +61,7 @@ const ArtifactPicker = ({
   if (!targetChara)
     return (
       <img
-        src="/ingameui/Ingame_ArtifactBase_Empty.png"
+        src="/ingameui/Ingame_ArtifactBase_Empty.webp"
         alt="empty"
         className="w-8 h-8 min-[342px]:w-9 min-[342px]:h-9 sm:w-12 sm:h-12"
       />
@@ -88,8 +88,8 @@ const ArtifactPicker = ({
           <img
             src={
               currentArtifact
-                ? `/artifacts/ArtifactIcon_${currentArtifact}.png`
-                : "/ingameui/Ingame_ArtifactBase_Empty.png"
+                ? `/artifacts/ArtifactIcon_${currentArtifact}.webp`
+                : "/ingameui/Ingame_ArtifactBase_Empty.webp"
             }
             alt={t(
               currentArtifact
@@ -142,7 +142,7 @@ const ArtifactPicker = ({
                 }}
               >
                 <img
-                  src={`/icons/Icon_${statString}.png`}
+                  src={`/icons/Icon_${statString}.webp`}
                   className="w-full aspect-square"
                 />
               </div>
@@ -199,7 +199,7 @@ const ArtifactPicker = ({
                   >
                     <div className="w-full h-full px-3 py-2">
                       <img
-                        src={`/artifacts/ArtifactIcon_${artifactId}.png`}
+                        src={`/artifacts/ArtifactIcon_${artifactId}.webp`}
                         alt={t(`card.artifact.${artifactId}.title`)}
                         className="max-w-full max-h-full mx-auto"
                       />

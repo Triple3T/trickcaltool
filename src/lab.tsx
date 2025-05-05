@@ -420,7 +420,7 @@ const Lab = () => {
                             className="w-full aspect-square"
                             src={`/lab/Icon_${
                               LabEffectCategory[Math.floor(v.e / 10)]
-                            }.png`}
+                            }.webp`}
                           />
                         </div>
                         <div className="flex-1">
@@ -449,13 +449,13 @@ const Lab = () => {
                             className="w-full aspect-square"
                             src={`/lab/Icon_${
                               LabEffectCategory[Math.floor(vt.e / 10)]
-                            }.png`}
+                            }.webp`}
                           />
                         </div>
                         <div className="w-6 h-6 inline-flex align-middle">
                           <img
                             className="w-full aspect-square"
-                            src={`/icons/Icon_${StatType[vt.s]}.png`}
+                            src={`/icons/Icon_${StatType[vt.s]}.webp`}
                           />
                         </div>
                         <div className="flex-1">
@@ -479,13 +479,13 @@ const Lab = () => {
                           className="w-full aspect-square"
                           src={`/lab/Icon_${
                             LabEffectCategory[Math.floor(vt.e / 10)]
-                          }.png`}
+                          }.webp`}
                         />
                       </div>
                       <div className="w-6 h-6 inline-flex align-middle">
                         <img
                           className="w-full aspect-square"
-                          src={`/icons/Icon_${StatType[vt.s]}.png`}
+                          src={`/icons/Icon_${StatType[vt.s]}.webp`}
                         />
                       </div>
                       <div className="flex-1">
@@ -511,7 +511,7 @@ const Lab = () => {
                                       <img
                                         key={race}
                                         className="w-6 h-6 inline-block align-middle"
-                                        src={`/album/Album_Icon_${Race[race]}.png`}
+                                        src={`/album/Album_Icon_${Race[race]}.webp`}
                                         alt={t(`race.${Race[race]}`)}
                                       />
                                     );
@@ -693,7 +693,7 @@ const Lab = () => {
               <div className="flex flex-col">
                 <img
                   className="w-18 mx-auto"
-                  src="/myhomeicons/MyHome_Button_001.png"
+                  src="/myhomeicons/MyHome_Button_001.webp"
                 />
                 {t("myhome.lab")}
               </div>
@@ -790,7 +790,7 @@ const Lab = () => {
               <div className="flex flex-col">
                 <img
                   className="w-18 mx-auto"
-                  src="/myhomeicons/MyHome_Button_002.png"
+                  src="/myhomeicons/MyHome_Button_002.webp"
                 />
                 {t("myhome.restaurant")}
               </div>
@@ -887,7 +887,7 @@ const Lab = () => {
               <div className="flex flex-col">
                 <img
                   className="w-18 mx-auto"
-                  src="/myhomeicons/MyHome_Button_003.png"
+                  src="/myhomeicons/MyHome_Button_003.webp"
                 />
                 {t("myhome.myhome")}
               </div>
@@ -984,7 +984,7 @@ const Lab = () => {
               <div className="flex flex-col">
                 <img
                   className="w-18 mx-auto"
-                  src="/myhomeicons/MyHome_Button_004.png"
+                  src="/myhomeicons/MyHome_Button_004.webp"
                 />
                 {t("myhome.schedule")}
               </div>
@@ -1081,7 +1081,7 @@ const Lab = () => {
               <div className="flex flex-col">
                 <img
                   className="w-18 mx-auto"
-                  src="/myhomeicons/MyHome_Button_005.png"
+                  src="/myhomeicons/MyHome_Button_005.webp"
                 />
                 {t("myhome.archive")}
               </div>
@@ -1148,7 +1148,7 @@ const Lab = () => {
                                   LabEffectCategory[
                                     Math.floor(lab.e[labeffect.e].e / 10)
                                   ]
-                                }.png`}
+                                }.webp`}
                               />
                             </div>
                             <div className="break-keep">
@@ -1170,7 +1170,7 @@ const Lab = () => {
                           <div className="text-right">
                             <img
                               className="w-6 h-6 mr-1 inline align-middle"
-                              src="/icons/CurrencyIcon_0008.png"
+                              src="/icons/CurrencyIcon_0008.webp"
                             />
                             {labeffect.g.toLocaleString()}
                           </div>
@@ -1201,7 +1201,7 @@ const Lab = () => {
                           {!incompleted && (
                             <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
                               <img
-                                src="/icons/Stage_RewardChack.png"
+                                src="/icons/Stage_RewardChack.webp"
                                 className="w-100 opacity-100"
                               />
                             </div>
@@ -1229,7 +1229,7 @@ const Lab = () => {
                     <div className="w-10 h-full flex justify-center items-center absolute -left-2">
                       <img
                         className="w-full"
-                        src="/myhomeicons/IconFamous_1.png"
+                        src="/myhomeicons/IconFamous_1.webp"
                       />
                     </div>
                     {materialRemainCollection
@@ -1335,7 +1335,7 @@ const Lab = () => {
                               {collected && (
                                 <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100">
                                   <img
-                                    src="/icons/Stage_RewardChack.png"
+                                    src="/icons/Stage_RewardChack.webp"
                                     className="w-100 opacity-100"
                                   />
                                 </div>
@@ -1360,7 +1360,7 @@ const Lab = () => {
                                   <div className="w-7 h-full flex justify-center items-center absolute -left-2">
                                     <img
                                       className="w-full"
-                                      src="/common/ClockIcon_002.png"
+                                      src="/common/ClockIcon_002.webp"
                                     />
                                   </div>
                                   {Math.floor(s / 3600)
@@ -1379,7 +1379,7 @@ const Lab = () => {
                                   <div className="w-8 h-full flex justify-center items-center absolute -left-2">
                                     <img
                                       className="w-full"
-                                      src="/myhomeicons/IconFamous_1.png"
+                                      src="/myhomeicons/IconFamous_1.webp"
                                     />
                                   </div>
                                   {fame}

@@ -61,12 +61,12 @@ const TaskCard = ({
       <div className="w-full relative aspect-[254/176]">
         <img
           className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
-          src={`/tasks/Img_${taskId}_Back.png`}
+          src={`/tasks/Img_${taskId}_Back.webp`}
         />
         {frontImgWidthPercent && (
           <img
             className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
-            src={`/tasks/Img_${taskId}_Front.png`}
+            src={`/tasks/Img_${taskId}_Front.webp`}
             style={{ width: `${frontImgWidthPercent}%` }}
           />
         )}

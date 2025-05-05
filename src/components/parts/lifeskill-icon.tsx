@@ -55,7 +55,7 @@ const LifeskillIcon = ({
         <div className={classNames[2]}>
           <img
             className="w-full h-full dark:contrast-125 dark:brightness-80"
-            src={`/schedule/LifeSkill${id}.png`}
+            src={`/schedule/LifeSkill${id}.webp`}
           />
         </div>
       </div>
@@ -63,14 +63,14 @@ const LifeskillIcon = ({
         <div className={classNames[3]}>
           <img
             className="mx-auto aspect-[160/148]"
-            src={`/schedule/Skill_EffectOn.png`}
+            src={`/schedule/Skill_EffectOn.webp`}
           />
         </div>
       ) : (
         <div className={classNames[4]}>
           <img
             className="w-full h-full aspect-square"
-            src={`/schedule/IconSkillBorder.png`}
+            src={`/schedule/IconSkillBorder.webp`}
           />
         </div>
       )}

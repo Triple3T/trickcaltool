@@ -219,31 +219,31 @@ const RankInfoDialog = ({
                     <img
                       src={`/icons/Common_UnitPersonality_${
                         Personality[Number(charaTypes[0])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/icons/Common_UnitAttack${
                         Attack[Number(charaTypes[2])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/icons/Common_Position${
                         Position[Number(charaTypes[3])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/icons/Common_Unit${
                         Class[Number(charaTypes[4])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/album/Album_Icon_${
                         Race[Number(charaTypes[5])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                   </div>
@@ -276,7 +276,7 @@ const RankInfoDialog = ({
                         </div>
                         {currentRank > index + 1 && (
                           <img
-                            src="/icons/Stage_RewardChack.png"
+                            src="/icons/Stage_RewardChack.webp"
                             className="w-10 inline-block align-middle absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                           />
                         )}
@@ -290,7 +290,7 @@ const RankInfoDialog = ({
                             >
                               <div className="flex-auto text-left">
                                 <img
-                                  src={`/icons/Icon_${StatType[stat]}.png`}
+                                  src={`/icons/Icon_${StatType[stat]}.webp`}
                                   className="w-6 h-6 -my-1 -ml-4 mr-1 inline-block align-middle"
                                 />
                                 {t(`stat.${StatType[stat]}`)}
