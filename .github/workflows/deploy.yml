@@ -84,7 +84,7 @@ jobs:
               gsub(/\.png`/, ".webp`");
               print
             }
-            ' "$file" > "deploy-temp/$file.tmp"
+            ' "$file" > "deploy-temp/$file"
           done < files_to_check.txt
           rm files_to_check.txt
 
