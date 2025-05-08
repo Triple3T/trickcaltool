@@ -1986,6 +1986,18 @@
             ["e.weapon.904","e.armor.911","e.armor.905","e.weapon.913","e.accessory.911","e.armor.918"],
             ["e.weapon.1004","e.armor.1010","e.armor.1005","e.weapon.1021","e.accessory.1011","e.armor.1017"]
         ],
+        "MayoCool":[
+            ["e.weapon.111","e.armor.115","e.armor.101","e.accessory.103","e.accessory.111","e.armor.104"],
+            ["e.weapon.214","e.armor.219","e.armor.202","e.accessory.206","e.accessory.210","e.armor.221"],
+            ["e.weapon.313","e.armor.319","e.armor.305","e.accessory.308","e.accessory.301","e.armor.314"],
+            ["e.weapon.414","e.armor.409","e.armor.404","e.armor.419","e.accessory.403","e.armor.418"],
+            ["e.weapon.513","e.armor.518","e.armor.504","e.accessory.509","e.accessory.503","e.armor.512"],
+            ["e.weapon.613","e.armor.618","e.armor.604","e.accessory.606","e.accessory.605","e.armor.619"],
+            ["e.armor.703","e.armor.712","e.weapon.708","e.accessory.701","e.accessory.707","e.armor.716"],
+            ["e.weapon.815","e.armor.810","e.armor.804","e.weapon.805","e.accessory.813","e.armor.817"],
+            ["e.weapon.901","e.armor.910","e.armor.904","e.weapon.910","e.accessory.901","e.armor.914"],
+            ["e.weapon.1001","e.armor.1009","e.armor.1004","e.weapon.1017","e.accessory.1001","e.armor.1013"]
+        ],
         "Meluna":[
             ["e.weapon.126","e.armor.112","e.armor.101","e.accessory.108","e.accessory.109","e.accessory.110"],
             ["e.weapon.217","e.armor.201","e.weapon.222","e.armor.220","e.accessory.211","e.armor.218"],

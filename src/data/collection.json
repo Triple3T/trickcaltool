@@ -153,6 +153,8 @@
         "PillowL12":{"m":{"CollectMadeHigh6":6,"MadeLow13":4},"s":1200,"f":100,"r":3},
         "PillowL13":{"m":{"CollectMadeHigh6":8,"FurnMadeLow2":4},"s":1800,"f":125,"r":4},
         "PillowL14":{"m":{"CollectMadeLow8":6,"MadeLow13":4},"s":600,"f":75,"r":2},
+        "PillowL15":{"m":{"CollectMadeLow8":6,"MadeLow13":4},"s":600,"f":75,"r":2},
+        "PillowL16":{"m":{"CollectMadeHigh6":8,"FurnMadeLow2":4},"s":1800,"f":125,"r":4},
         "PillowM1":{"m":{"MadeLow15":10},"s":180,"f":25,"r":0},
         "PillowM2":{"m":{"MadeLow12":6,"MadeLow15":4},"s":300,"f":50,"r":1},
         "PillowM3":{"m":{"MadeLow12":8,"MadeLow15":4},"s":600,"f":75,"r":2},
@@ -170,6 +172,9 @@
         "PillowM15":{"m":{"CollectMadeLow8":6,"MadeLow13":4},"s":600,"f":75,"r":2},
         "PillowM16":{"m":{"CollectMadeHigh6":6,"MadeLow13":4},"s":1200,"f":100,"r":3},
         "PillowM17":{"m":{"CollectMadeHigh6":8,"FurnMadeLow2":4},"s":1800,"f":125,"r":4},
+
+        "PillowM19":{"m":{"CollectMadeHigh6":6,"MadeLow13":4},"s":1200,"f":100,"r":3},
+        "PillowM20":{"m":{"CollectMadeHigh6":8,"FurnMadeLow2":4},"s":1800,"f":125,"r":4},
         "PosterL1":{"m":{"CollectMadeLow2":6,"MadeLow9":4},"s":600,"f":90,"r":2},
         "PosterL2":{"m":{"MadeHigh13":6,"CollectMadeLow2":4},"s":1200,"f":120,"r":3},
         "PosterL3":{"m":{"MadeHigh13":8,"CollectMadeLow2":4},"s":1800,"f":150,"r":4},
