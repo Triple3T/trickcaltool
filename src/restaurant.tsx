@@ -173,6 +173,7 @@ const Restaurant = () => {
   const [producibleOnly, setProducibleOnly] = useState<boolean>(false);
   const [showValue, setShowValue] = useState<boolean>(false);
   const [showIngredients, setShowIngredients] = useState<boolean>(false);
+  const [listScroll, setListScroll] = useState<boolean>(false);
   const searchChara = useCallback((charaId: string) => {
     setSelectedChara(charaId);
     setSelectedFood("");
@@ -244,6 +245,21 @@ const Restaurant = () => {
                 </label>
               </div>
             )}
+            {!!(selectedChara || selectedFood) && (
+              <div className="flex items-center gap-1.5">
+                <Checkbox
+                  id="list-scroll"
+                  checked={listScroll}
+                  onCheckedChange={(v) => setListScroll(!!v)}
+                />
+                <label
+                  htmlFor="list-scroll"
+                  className="text-sm font-onemobile"
+                >
+                  {t("ui.restaurant.listScroll")}
+                </label>
+              </div>
+            )}
           </div>
         </div>
       </Card>
@@ -281,7 +297,7 @@ const Restaurant = () => {
               <div className="w-full overflow-hidden">
                 <div>{t("ui.restaurant.mostFavoriteFood")}</div>
                 <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
-                  <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
+                  <div className={cn("flex gap-2 p-2 justify-center", listScroll ? "w-max min-w-full" : "flex-wrap")}>
                     {food.c[selectedChara][5].map((fid) => {
                       if (!food.f[fid].t && producibleOnly) return null;
                       return (
@@ -318,7 +334,7 @@ const Restaurant = () => {
               <div className="w-full overflow-hidden">
                 <div>{t("ui.restaurant.favoriteFood")}</div>
                 <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
-                  <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
+                  <div className={cn("flex gap-2 p-2 justify-center", listScroll ? "w-max min-w-full" : "flex-wrap")}>
                     {food.c[selectedChara][1].map((fid) => {
                       if (!food.f[fid].t && producibleOnly) return null;
                       return (
@@ -355,7 +371,7 @@ const Restaurant = () => {
               <div className="w-full overflow-hidden">
                 <div>{t("ui.restaurant.dislikeFood")}</div>
                 <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
-                  <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
+                  <div className={cn("flex gap-2 p-2 justify-center", listScroll ? "w-max min-w-full" : "flex-wrap")}>
                     {food.c[selectedChara][3].map((fid) => {
                       if (!food.f[fid].t && producibleOnly) return null;
                       return (
@@ -483,7 +499,7 @@ const Restaurant = () => {
                 <div className="w-full overflow-hidden">
                   <div>{t("ui.restaurant.mostLovingCharacter")}</div>
                   <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
-                    <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
+                    <div className={cn("flex gap-2 p-2 justify-center", listScroll ? "w-max min-w-full" : "flex-wrap")}>
                       {Object.entries(food.c)
                         .filter(([, foodList]) =>
                           foodList[5].includes(Number(selectedFood))
@@ -524,7 +540,7 @@ const Restaurant = () => {
               <div className="w-full overflow-hidden">
                 <div>{t("ui.restaurant.lovingCharacter")}</div>
                 <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
-                  <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
+                  <div className={cn("flex gap-2 p-2 justify-center", listScroll ? "w-max min-w-full" : "flex-wrap")}>
                     {Object.entries(food.c)
                       .filter(([, foodList]) =>
                         foodList[1].includes(Number(selectedFood))
@@ -571,7 +587,7 @@ const Restaurant = () => {
                       : t("ui.restaurant.indifferenceCharacter")}
                   </div>
                   <ScrollArea className="max-w-full whitespace-nowrap rounded-md">
-                    <div className="flex w-max min-w-full space-x-2 p-2 justify-center">
+                    <div className={cn("flex gap-2 p-2 justify-center", listScroll ? "w-max min-w-full" : "flex-wrap")}>
                       {(Object.entries(food.c).filter(([, foodList]) =>
                         foodList[3].includes(Number(selectedFood))
                       ).length
@@ -640,12 +656,12 @@ const Restaurant = () => {
             return [
               "ui.restaurant.foodScrollableNotice",
               "ui.restaurant.tapFoodToSearch",
-            ];
+            ].slice(listScroll ? 0 : 1);
           if (selectedFood)
             return [
               "ui.restaurant.characterScrollableNotice",
               "ui.restaurant.tapCharacterToSearch",
-            ];
+            ].slice(listScroll ? 0 : 1);
           return ["ui.restaurant.needToSelect"];
         })().map((tKey) => {
           return <div key={tKey}>{t(tKey)}</div>;
