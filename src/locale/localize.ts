@@ -7301,6 +7301,7 @@ i18n
                 "사도가 많은 경우 좌우로 스크롤하여 모두 볼 수 있습니다.",
               tapFoodToSearch: "음식을 누르면 음식으로 검색할 수 있습니다.",
               tapCharacterToSearch: "사도를 누르면 사도로 검색할 수 있습니다.",
+              listScroll: "넘칠 시 스크롤",
             },
             cards: {
               title: "카드 목록",
