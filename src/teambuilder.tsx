@@ -131,6 +131,7 @@ const TeamBuilder = () => {
     a: Object.fromEntries(card.a.o.map((v) => [v, 1])),
     s: Object.fromEntries(card.s.o.map((v) => [v, 1])),
   });
+  const [allIncludeFlag, setAllIncludeFlag] = useState<number>(1);
 
   // soloraid artifact count
   const artifactCount = useMemo(() => {
@@ -178,7 +179,7 @@ const TeamBuilder = () => {
       [StatType.CriticalMultResist]: 0,
       [StatType.AttackSpeed]: 0,
     };
-    const allAffectSpellLikeAside3Category = {
+    const allAffectSpellLikeAside3CategoryProto: Record<string, number> = {
       [Aside3EffectCategory.AllDamageUp]: 0,
       [Aside3EffectCategory.AllReceiveDamageDown]: 0,
       [Aside3EffectCategory.FrontDamageUp]: 0,
@@ -211,28 +212,31 @@ const TeamBuilder = () => {
       // allAffectLikeAside3
       if (s === 18) {
         // 안 아프게 맞는 법
-        allAffectSpellLikeAside3Category[
+        allAffectSpellLikeAside3CategoryProto[
           Aside3EffectCategory.AllReceiveDamageDown
         ] += cardStatValue[2][cardLevel - 1] * count;
       } else if (s === 15) {
         // 선봉대
-        allAffectSpellLikeAside3Category[Aside3EffectCategory.FrontDamageUp] +=
-          cardStatValue[2][cardLevel - 1] * count;
-        allAffectSpellLikeAside3Category[
+        allAffectSpellLikeAside3CategoryProto[
+          Aside3EffectCategory.FrontDamageUp
+        ] += cardStatValue[2][cardLevel - 1] * count;
+        allAffectSpellLikeAside3CategoryProto[
           Aside3EffectCategory.FrontReceiveDamageDown
         ] += cardStatValue[3][cardLevel - 1] * count;
       } else if (s === 27) {
         // 중앙굿
-        allAffectSpellLikeAside3Category[Aside3EffectCategory.MiddleDamageUp] +=
-          cardStatValue[1][cardLevel - 1] * count;
-        allAffectSpellLikeAside3Category[
+        allAffectSpellLikeAside3CategoryProto[
+          Aside3EffectCategory.MiddleDamageUp
+        ] += cardStatValue[1][cardLevel - 1] * count;
+        allAffectSpellLikeAside3CategoryProto[
           Aside3EffectCategory.MiddleReceiveDamageDown
         ] += cardStatValue[2][cardLevel - 1] * count;
       } else if (s === 43) {
         // 후발대
-        allAffectSpellLikeAside3Category[Aside3EffectCategory.BackDamageUp] +=
-          cardStatValue[1][cardLevel - 1] * count;
-        allAffectSpellLikeAside3Category[
+        allAffectSpellLikeAside3CategoryProto[
+          Aside3EffectCategory.BackDamageUp
+        ] += cardStatValue[1][cardLevel - 1] * count;
+        allAffectSpellLikeAside3CategoryProto[
           Aside3EffectCategory.BackReceiveDamageDown
         ] += cardStatValue[2][cardLevel - 1] * count;
       } else if (s === 7) {
@@ -240,7 +244,7 @@ const TeamBuilder = () => {
         allSkillAttackDamage += cardStatValue[2][cardLevel - 1] * count;
       } else if (s === 13) {
         // 사기진작 - 공속
-        allAffectSpellLikeAside3Category[
+        allAffectSpellLikeAside3CategoryProto[
           Aside3EffectCategory.AllAttackSpeedUp
         ] += cardStatValue[1][cardLevel - 1] * count;
       } else if (s === 19) {
@@ -248,22 +252,31 @@ const TeamBuilder = () => {
         allNormalAttackDamage += cardStatValue[2][cardLevel - 1] * count;
       } else if (s === 23) {
         // 저놈 잡아라 - 웨이브 피해량
-        allAffectSpellLikeAside3Category[Aside3EffectCategory.AllDamageUp] +=
-          cardStatValue[1][cardLevel - 1] * count;
+        allAffectSpellLikeAside3CategoryProto[
+          Aside3EffectCategory.AllDamageUp
+        ] += cardStatValue[1][cardLevel - 1] * count;
       } else if (s === 24) {
         // 전술 교본 - 피해량
-        allAffectSpellLikeAside3Category[Aside3EffectCategory.AllDamageUp] +=
-          cardStatValue[2][cardLevel - 1] * count;
+        allAffectSpellLikeAside3CategoryProto[
+          Aside3EffectCategory.AllDamageUp
+        ] += cardStatValue[2][cardLevel - 1] * count;
       } else if (s === 31) {
         // 치매 - 평타피해
         allNormalAttackDamage += cardStatValue[2][cardLevel - 1] * count;
       }
     });
-    allAffectSpellLikeAside3Category[Aside3EffectCategory.AllDamageUp] +=
+    allAffectSpellLikeAside3CategoryProto[Aside3EffectCategory.AllDamageUp] +=
       allNormalAttackDamage;
-    allAffectSpellLikeAside3Category[Aside3EffectCategory.AllSkillDamageUp] +=
-      allSkillAttackDamage - allNormalAttackDamage;
+    allAffectSpellLikeAside3CategoryProto[
+      Aside3EffectCategory.AllSkillDamageUp
+    ] += allSkillAttackDamage - allNormalAttackDamage;
     const authorityCoinCost = buyAuthority ? 30 : 0;
+    const allAffectSpellLikeAside3Category = Object.fromEntries(
+      Object.entries(allAffectSpellLikeAside3CategoryProto).map(([k, v]) => [
+        k,
+        v * 100,
+      ])
+    );
 
     return {
       limits,
@@ -326,7 +339,9 @@ const TeamBuilder = () => {
   // total aside3 effects
   const aside3Total = useMemo(() => {
     const aside3Values: number[] = Array(ASIDE3_CATEGORY_COUNT).fill(0);
-    const currentTeamMembers = currentTeam.map((e) => e?.charaName).filter((v) => v);
+    const currentTeamMembers = currentTeam
+      .map((e) => e?.charaName)
+      .filter((v) => v);
     Object.entries(teamSpec)
       .filter(([n, v]) => currentTeamMembers.includes(n) && v >= 8)
       .forEach(([charaName]) => {
@@ -882,48 +897,78 @@ const TeamBuilder = () => {
               })}
         </div>
       </div>
-      <div className="flex flex-row flex-wrap gap-2 mt-1.5">
+      <div>
         {restrictType === 2 ? (
-          <div className="w-full text-center break-keep">
+          <div className="w-full text-center break-keep p-2">
             {t("ui.teambuilder.soloEndSynergyDescription")}
           </div>
         ) : (
-          synergyTotal.synergyApplied.map(({ personality, count, percent }) => {
-            return (
-              <div key={personality} className="flex flex-col gap-1">
-                <div className="flex flex-row-reverse px-2 justify-center z-10 overflow-visible max-w-28">
-                  {Array(count)
-                    .fill(0)
-                    .map((_, i) => {
-                      return (
-                        <img
-                          key={i}
-                          src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
-                          className="w-5 h-5 -mx-1"
-                        />
-                      );
-                    })}
-                </div>
-                <div
-                  className={cn(
-                    "flex flex-col -mt-3 w-28 pt-3 pb-1 rounded text-sm",
-                    personalityBGTranslucent[personality]
-                  )}
-                >
-                  <div>
-                    {t("ui.teambuilder.synergyEffectHp", {
-                      0: percent,
-                    })}
-                  </div>
-                  <div>
-                    {t("ui.teambuilder.synergyEffectDamage", {
-                      0: percent,
-                    })}
-                  </div>
-                </div>
-              </div>
-            );
-          })
+          <div className="mt-4 flex flex-col items-center gap-1">
+            <div className="flex flex-row max-w-lg w-full my-1.5 gap-1">
+              {((percent: number) => {
+                if (!percent) return null;
+                return (
+                  <>
+                    <div className="pr-1 text-sm flex-0 min-w-max">
+                      {t("ui.teambuilder.total")}
+                    </div>
+                    <div className="flex-1 text-sm bg-slate-300 dark:bg-slate-700 rounded-full px-1 py-px">
+                      {t("ui.teambuilder.synergyEffectHp", {
+                        0: percent,
+                      })}
+                    </div>
+                    <div className="flex-1 text-sm bg-slate-300 dark:bg-slate-700 rounded-full px-1 py-px">
+                      {t("ui.teambuilder.synergyEffectDamage", {
+                        0: percent,
+                      })}
+                    </div>
+                  </>
+                );
+              })(
+                synergyTotal.synergyApplied.reduce((a, c) => c.percent + a, 0)
+              )}
+            </div>
+            <div className="flex flex-row flex-wrap gap-2 justify-evenly">
+              {synergyTotal.synergyApplied.map(
+                ({ personality, count, percent }) => {
+                  return (
+                    <div key={personality} className="flex flex-col gap-1">
+                      <div className="flex flex-row-reverse px-2 justify-center z-10 overflow-visible max-w-28">
+                        {Array(count)
+                          .fill(0)
+                          .map((_, i) => {
+                            return (
+                              <img
+                                key={i}
+                                src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
+                                className="w-5 h-5 -mx-1"
+                              />
+                            );
+                          })}
+                      </div>
+                      <div
+                        className={cn(
+                          "flex flex-col -mt-3 w-28 pt-3 pb-1 rounded text-sm",
+                          personalityBGTranslucent[personality]
+                        )}
+                      >
+                        <div>
+                          {t("ui.teambuilder.synergyEffectHp", {
+                            0: percent,
+                          })}
+                        </div>
+                        <div>
+                          {t("ui.teambuilder.synergyEffectDamage", {
+                            0: percent,
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          </div>
         )}
       </div>
       <div className="flex flex-row gap-2 mt-4">
@@ -959,7 +1004,10 @@ const TeamBuilder = () => {
                   key={stat}
                   className="flex flex-row gap-1 justify-between items-center text-sm bg-accent/50 pr-2 rounded-full"
                 >
-                  <img src={`icons/Icon_${statString}.png`} className="w-4 h-4 scale-125" />
+                  <img
+                    src={`icons/Icon_${statString}.png`}
+                    className="w-4 h-4 scale-125"
+                  />
                   <div>+{value / 100}%</div>
                 </div>
               );
@@ -969,7 +1017,7 @@ const TeamBuilder = () => {
       </div>
       <div className="flex flex-col gap-2 mt-4">
         <div className="flex flex-row gap-2 justify-between flex-wrap">
-          <div>{t("ui.teambuilder.aside3Total")}</div>
+          <div>{t("ui.teambuilder.allApplyTotal")}</div>
           <div className="text-sm flex items-center gap-1">
             <Label htmlFor="separate-all-apply-effect">
               {t("ui.teambuilder.separateAllApplyEffect")}
@@ -981,7 +1029,35 @@ const TeamBuilder = () => {
             />
           </div>
         </div>
+        <div className="flex flex-row gap-2 justify-between flex-wrap">
+          <div className="text-sm flex items-center gap-1 flex-1 min-w-max justify-end">
+            <Label htmlFor="include-aside3-all-apply-effect">
+              {t("ui.teambuilder.includeAside3Effect")}
+            </Label>
+            <Switch
+              id="include-aside3-all-apply-effect"
+              checked={Boolean(allIncludeFlag & 1)}
+              onCheckedChange={() => setAllIncludeFlag((v) => v ^ 1)}
+            />
+          </div>
+          <div className="text-sm flex items-center gap-1 flex-1 min-w-max justify-end">
+            <Label htmlFor="include-spell-all-apply-effect">
+              {t("ui.teambuilder.includeSpellAllEffect")}
+            </Label>
+            <Switch
+              id="include-spell-all-apply-effect"
+              checked={Boolean(allIncludeFlag & 2) && restrictType !== 1}
+              onCheckedChange={() => setAllIncludeFlag((v) => v ^ 2)}
+              disabled={restrictType === 1}
+            />
+          </div>
+        </div>
         <Card className="p-2 bg-accent/25 [&_>_div:has(>_div)_~_div:has(>_div)]:border-t [&_>_div:has(>_div)_~_div:has(>_div)]:pt-0.5 [&_>_div:has(>_div)_~_div:has(>_div)]:mt-0.5">
+          {allIncludeFlag === 0 && (
+            <div className="text-xs opacity-80">
+              {t("ui.teambuilder.noEffectListToShow")}
+            </div>
+          )}
           {ASIDE3_CATEGORY_SORT.map((categories, index) => {
             return (
               <div key={index} className="">
@@ -995,12 +1071,25 @@ const TeamBuilder = () => {
                   const needIncludeCategory = separateAllApplyEffect
                     ? ASIDE3_CATEGORY_ALL_AFFECT[category]
                     : undefined;
-                  const categoryValue =
-                    aside3Total[category] +
+                  const categoryValueAside3 =
+                    (aside3Total[category] ?? 0) +
                     (needIncludeCategory
-                      ? aside3Total[needIncludeCategory]
+                      ? aside3Total[needIncludeCategory] ?? 0
                       : 0);
-                  if (categoryValue <= 0) return null;
+                  const spellValueLikeAside3 =
+                    (frontierLimit.allAffectSpellLikeAside3Category[category] ??
+                      0) +
+                    (needIncludeCategory
+                      ? frontierLimit.allAffectSpellLikeAside3Category[
+                          needIncludeCategory
+                        ] ?? 0
+                      : 0);
+                  const categoryValue =
+                    (allIncludeFlag & 1 ? categoryValueAside3 : 0) +
+                    (restrictType !== 1 && allIncludeFlag & 2
+                      ? spellValueLikeAside3
+                      : 0);
+                  if (categoryValue === 0) return null;
                   return (
                     <div
                       key={`${index}-${category}`}
