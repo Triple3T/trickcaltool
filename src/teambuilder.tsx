@@ -1119,7 +1119,7 @@ const TeamBuilder = () => {
                         )}
                       </div>
                       <div className="text-blue-500 dark:text-blue-300">
-                        +{categoryValue / 100}
+                        {categoryValue > 0 ? "+" : ""}{categoryValue / 100}
                         {!ASIDE3_CATEGORY_FIXED_VALUE.includes(category) && "%"}
                       </div>
                     </div>

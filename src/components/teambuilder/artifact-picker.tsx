@@ -162,7 +162,7 @@ const ArtifactPicker = ({
                 disableAll ||
                 disableList?.includes(artifactId) ||
                 (typeof disableMinCost === "number" &&
-                  artifactCost >= disableMinCost);
+                  artifactCost > disableMinCost);
               const artifactRarity = artifactInfo.r;
               const isSignature = artifactInfo.a?.t === targetChara;
               const filterTrue =

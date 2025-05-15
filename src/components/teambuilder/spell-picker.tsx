@@ -118,7 +118,7 @@ const SpellPicker = ({
                 disableAll ||
                 disableList?.includes(spellId) ||
                 (typeof disableMinCost === "number" &&
-                  spellCost >= disableMinCost);
+                  spellCost > disableMinCost);
               const spellRarity = spellInfo.r;
               const filterTrue =
                 statFilter.length > 0
