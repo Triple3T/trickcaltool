@@ -57,5 +57,5 @@ export const sortArray: { [key: string]: number[] } = {
 export const FILTER_COUNT = Object.values(FilterProperty).filter(
   (v) => typeof v === "number"
 ).length;
-export const KEYWORD_COUNT = 32;
+export const KEYWORD_COUNT = 33;
 export const ASIDE3EFFECT_COUNT = 20;

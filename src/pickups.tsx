@@ -98,6 +98,8 @@ const lineups = [
   [82, 1, 1, 0, "Aya"],
   [83, 1, 1, 0, "Opal", "Butter", "Picora", "Lion", "Diana"],
   [84, 2, 0, 1, "MayoCool"],
+  [85, 1, 1, 0, "Haley", "Tig", "Barong", "Hilde", "Ner"],
+  [86, 2, 0, 1, "Orr"],
 ];
 const widthcount = Math.max(...lineups.map((l) => l[2] as number)) + 1;
 const personalityFrom = {

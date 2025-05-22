@@ -2082,6 +2082,18 @@
             ["e.weapon.901","e.armor.910","e.armor.904","e.weapon.909","e.accessory.907","e.armor.916"],
             ["e.weapon.1001","e.armor.1009","e.armor.1004","e.weapon.1016","e.accessory.1004","e.armor.1015"]
         ],
+        "Orr":[
+            ["e.weapon.121","e.accessory.111","e.armor.102","e.accessory.107","e.accessory.110","e.accessory.103"],
+            ["e.weapon.220","e.armor.201","e.weapon.220","e.accessory.211","e.accessory.207","e.armor.220"],
+            ["e.weapon.324","e.armor.302","e.weapon.318","e.armor.313","e.accessory.304","e.armor.316"],
+            ["e.weapon.429","e.armor.402","e.weapon.418","e.accessory.406","e.accessory.411","e.armor.415"],
+            ["e.weapon.521","e.armor.501","e.weapon.516","e.accessory.505","e.accessory.509","e.armor.516"],
+            ["e.weapon.618","e.armor.602","e.weapon.616","e.armor.613","e.accessory.602","e.armor.616"],
+            ["e.armor.703","e.armor.713","e.weapon.721","e.accessory.701","e.accessory.707","e.armor.717"],
+            ["e.weapon.826","e.armor.810","e.armor.805","e.weapon.805","e.accessory.810","e.armor.819"],
+            ["e.weapon.918","e.armor.910","e.armor.905","e.weapon.925","e.accessory.904","e.armor.916"],
+            ["e.weapon.1008","e.armor.1009","e.armor.1005","e.weapon.1029","e.accessory.1004","e.armor.1015"]
+        ],
         "Patula":[
             ["e.weapon.104","e.armor.111","e.armor.105","e.accessory.105","e.accessory.111","e.accessory.103"],
             ["e.weapon.205","e.armor.219","e.armor.204","e.accessory.212","e.accessory.201","e.armor.214"],
