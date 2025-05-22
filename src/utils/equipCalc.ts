@@ -1,6 +1,6 @@
 import equip from "@/data/equip";
 
-const MAX_RANK = 10;
+const MAX_RANK = 11;
 type EquipType = "weapon" | "armor" | "accessory";
 type EquipRequirePropType = [Record<string, number>, number];
 

@@ -27,23 +27,23 @@ const equipCodeToRarity = (equipCode: string) => {
   const [iType, , iNum] = equipCode.split(".");
   const iRank = Math.floor(Number(iNum) / 100);
   if (iType === "e") {
-    if ([9, 10].includes(iRank)) return { s: "Yellow" };
-    if ([7, 8].includes(iRank)) return { s: "Purple", b: "#B371F5" };
-    if ([5, 6].includes(iRank)) return { s: "Blue", b: "#65A7E9" };
-    if ([3, 4].includes(iRank)) return { s: "Green", b: "#65DD82" };
+    if (iRank > 8) return { s: "Yellow" };
+    if (iRank > 6) return { s: "Purple", b: "#B371F5" };
+    if (iRank > 4) return { s: "Blue", b: "#65A7E9" };
+    if (iRank > 2) return { s: "Green", b: "#65DD82" };
     return { s: "Gray", b: "#B0B0B0" };
   }
-  if ([7, 8, 9, 10].includes(iRank))
+  if (iRank > 6)
     return {
       s: "Purple",
       b: "#B371F5",
     };
-  if ([5, 6].includes(iRank))
+  if (iRank > 4)
     return {
       s: "Blue",
       b: "#65A7E9",
     };
-  if ([3, 4].includes(iRank))
+  if (iRank > 2)
     return {
       s: "Green",
       b: "#65DD82",

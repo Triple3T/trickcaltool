@@ -18,7 +18,7 @@ import pboard from "@/data/purpleboard";
 import int1BitCount from "./int1bitCount";
 import { compressXorB64, numberIntoB64 } from "./pakoB64Pack";
 
-const MAX_RANK = 10;
+const MAX_RANK = 11;
 
 interface ExportTextFileProps {
   fileName?: string;

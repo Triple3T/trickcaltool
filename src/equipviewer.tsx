@@ -37,7 +37,7 @@ import EquipItemSlot from "./components/parts/equip-item-slot";
 import { useIsAFActive } from "@/stores/useAFDataStore";
 import { getCharaImageUrl } from "@/utils/getImageUrl";
 
-const MAX_RANK = 10;
+const MAX_RANK = 11;
 
 interface IComboboxOuterProp {
   value: string;
@@ -717,13 +717,13 @@ const EquipViewer = () => {
                                   size={3}
                                   fullItemPath
                                   rarityInfo={(() => {
-                                    if ([9, 10].includes(iRank))
+                                    if (iRank > 8)
                                       return { s: "Yellow" };
-                                    if ([7, 8].includes(iRank))
+                                    if (iRank > 6)
                                       return { s: "Purple", b: "#B371F5" };
-                                    if ([5, 6].includes(iRank))
+                                    if (iRank > 4)
                                       return { s: "Blue", b: "#65A7E9" };
-                                    if ([3, 4].includes(iRank))
+                                    if (iRank > 2)
                                       return { s: "Green", b: "#65DD82" };
                                     return { s: "Gray", b: "#B0B0B0" };
                                   })()}
@@ -901,13 +901,13 @@ const EquipViewer = () => {
                                   size={3}
                                   fullItemPath
                                   rarityInfo={(() => {
-                                    if ([9, 10].includes(iRank))
+                                    if (iRank > 8)
                                       return { s: "Yellow" };
-                                    if ([7, 8].includes(iRank))
+                                    if (iRank > 6)
                                       return { s: "Purple", b: "#B371F5" };
-                                    if ([5, 6].includes(iRank))
+                                    if (iRank > 4)
                                       return { s: "Blue", b: "#65A7E9" };
-                                    if ([3, 4].includes(iRank))
+                                    if (iRank > 2)
                                       return { s: "Green", b: "#65DD82" };
                                     return { s: "Gray", b: "#B0B0B0" };
                                   })()}

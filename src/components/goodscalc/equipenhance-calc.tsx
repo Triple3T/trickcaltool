@@ -331,10 +331,10 @@ const EquipEnhanceCalc = () => {
                 const er = Math.floor(
                   Number(selectedEquip.split(".")[2]) / 100
                 );
-                if ([9, 10].includes(er)) return { s: "Yellow" };
-                if ([7, 8].includes(er)) return { s: "Purple", b: "#B371F5" };
-                if ([5, 6].includes(er)) return { s: "Blue", b: "#65A7E9" };
-                if ([3, 4].includes(er)) return { s: "Green", b: "#65DD82" };
+                if (er > 8) return { s: "Yellow" };
+                if (er > 6) return { s: "Purple", b: "#B371F5" };
+                if (er > 4) return { s: "Blue", b: "#65A7E9" };
+                if (er > 2) return { s: "Green", b: "#65DD82" };
                 return { s: "Gray", b: "#B0B0B0" };
               })()}
               item={`/equips/Equip_Icon_${selectedEquip

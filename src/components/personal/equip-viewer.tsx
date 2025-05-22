@@ -16,7 +16,7 @@ interface EquipViewerProps {
   charaName: string;
 }
 
-const MAX_RANK = 10;
+const MAX_RANK = 11;
 
 const EquipViewer = ({ charaName }: EquipViewerProps) => {
   const { t } = useTranslation();

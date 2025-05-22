@@ -70,7 +70,7 @@ import {
 import { useIsAFActive } from "@/stores/useAFDataStore";
 import { getCharaImageUrl } from "@/utils/getImageUrl";
 
-const MAX_RANK = 10;
+const MAX_RANK = 11;
 
 type ViewType = "input" | "rankView" | "targetView";
 
@@ -225,7 +225,7 @@ const EquipRank = () => {
                       <div className="flex flex-row gap-2">
                         <Select
                           value={Math.min(
-                            10,
+                            MAX_RANK,
                             Math.max(userDataEqrank.s[0] || 1, 1)
                           )}
                           setValue={rankMinRank}
@@ -243,7 +243,7 @@ const EquipRank = () => {
                         />
                         <Select
                           value={Math.min(
-                            10,
+                            MAX_RANK,
                             Math.max(userDataEqrank.s[1] || 1, 1)
                           )}
                           setValue={rankMaxRank}

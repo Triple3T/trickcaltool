@@ -89,6 +89,15 @@ const rankClassNames = [
     "border-amber-300",
     "hover:bg-amber-500 dark:hover:bg-amber-400",
   ],
+  [
+    "bg-green-300 dark:bg-green-800",
+    "text-green-800 dark:text-green-300",
+    "bg-green-500 dark:bg-green-400",
+    "bg-green-300",
+    "text-green-800",
+    "border-green-300",
+    "hover:bg-green-500 dark:hover:bg-green-400",
+  ],
 ];
 
 export default rankClassNames;

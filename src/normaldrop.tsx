@@ -399,11 +399,11 @@ const NormalDrop = () => {
                           fullItemPath
                           innerSize={66}
                           rarityInfo={(() => {
-                            if ([7, 8, 9, 10].includes(equipRank))
+                            if (equipRank > 6)
                               return { s: "Purple", b: "#B371F5" };
-                            if ([5, 6].includes(equipRank))
+                            if (equipRank > 4)
                               return { s: "Blue", b: "#65A7E9" };
-                            if ([3, 4].includes(equipRank))
+                            if (equipRank > 2)
                               return { s: "Green", b: "#65DD82" };
                             return { s: "Gray", b: "#B0B0B0" };
                           })()}
