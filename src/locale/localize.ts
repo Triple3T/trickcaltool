@@ -6766,6 +6766,7 @@ i18n
               FriedSeal: "바삭범",
               HippoBaby: "베베하망",
               Hoodlumbird: "팹새",
+              KindergartenChinchilla: "팔락칠라",
               Kiwibird: "뚜따키위",
               MatchaJellyCat: "말냥젤리",
               Mini_CopyMayoCool: "완전 또까틈",
