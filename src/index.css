@@ -123,3 +123,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  html[lang^="zh"] .break-keep {
+    word-break: break-all;
+  }
+}

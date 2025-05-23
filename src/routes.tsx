@@ -1,5 +1,9 @@
 import { Suspense, lazy } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import type { IndexRouteObject, NonIndexRouteObject } from "react-router-dom";
 import App from "./App";
 import ErrorElement from "@/components/error-element";
@@ -53,7 +57,10 @@ const MiniGameHilde = lazy(() => import("./minigamehilde"));
 const TeamBuilder = lazy(() => import("./teambuilder"));
 import Error404 from "./components/errors/404";
 
-const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
+import { changeLanguage, supportedLngs } from "@/locale/localize";
+
+type RouteType = (IndexRouteObject | NonIndexRouteObject) & { path: string };
+const routes: RouteType[] = [
   {
     path: "/",
     element: <App />,
@@ -331,7 +338,37 @@ const routes: (IndexRouteObject | NonIndexRouteObject)[] = [
   },
 ];
 
-const router = createBrowserRouter(routes);
+const localizedRoutes: RouteType[] = supportedLngs.flatMap((lng) =>
+  routes.map(({ path, ...routeProps }) => ({
+    path: `/${lng}${path}`,
+    ...routeProps,
+    loader: async () => {
+      await changeLanguage(lng);
+      return null;
+    },
+    index: false,
+  }))
+);
+
+const fallbackRedirectRoutes: RouteType[] = routes.map(
+  ({ path, ...routeProps }) => ({
+    path: `/:locale${path}`,
+    ...routeProps,
+    loader: ({ params }) => {
+      if (!supportedLngs.includes(params.locale ?? "")) {
+        return Navigate({ to: path, replace: true });
+      }
+      return null;
+    },
+    index: false as const,
+  })
+);
+
+const router = createBrowserRouter([
+  ...routes,
+  ...localizedRoutes,
+  ...fallbackRedirectRoutes,
+]);
 
 const Routes = () => {
   return <RouterProvider router={router} />;
