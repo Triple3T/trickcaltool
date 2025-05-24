@@ -6369,10 +6369,12 @@
         "testMark": "[테스트]",
         "gameCopyright": "Trickcal copyrighted by EPIDGames",
         "sitePoweredBy": "Trickcal Note powered by Triple",
+        "textAbout": "소개",
         "textPrivacy": "개인정보처리방침",
         "textSetting": "설정",
         "textHelp": "도움말",
         "textUpdateLog": "변경 내역",
+        "textMail": "메일",
         "suspenseLoading": "Loading...",
         "buyMeACoffee": "실례가 안 된다면..."
       },
@@ -6608,6 +6610,9 @@
         "spell": "스펠",
         "searchPlaceholder": "검색..."
       },
+      "skillmatchfinder": {
+        "title": "스킬 검색기"
+      },
       "equipviewer": {
         "title": "장비 검색기",
         "selectAny": "사도, 장비, 또는 랭크를 선택해주세요!",
@@ -6653,8 +6658,8 @@
         "has": "있음",
         "hasnt": "없음",
         "whetherhasornot": "모두",
-        "charaSortAside3Effect": "어사이드 3성 효과",
-        "charaSortAside3Stat": "어사이드 3성 스탯",
+        "charaFilterAside3Effect": "어사이드 3성 효과",
+        "charaFilterAside3Stat": "어사이드 3성 스탯",
         "charaFilterDialogApply": "확인",
         "charaFilterReset": "필터 리셋",
         "requireRankEquips": "랭크별 착용 장비",

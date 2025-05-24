@@ -433,7 +433,7 @@ export function CharaFilter({
                 </div>
                 <div>
                   <SubtitleBar>
-                    {t(`ui.personal.charaSortAside3Effect`)}
+                    {t(`ui.personal.charaFilterAside3Effect`)}
                   </SubtitleBar>
                   <ToggleGroup
                     type="multiple"
@@ -473,7 +473,7 @@ export function CharaFilter({
                 </div>
                 <div>
                   <SubtitleBar>
-                    {t(`ui.personal.charaSortAside3Stat`)}
+                    {t(`ui.personal.charaFilterAside3Stat`)}
                   </SubtitleBar>
                   <ToggleGroup
                     type="multiple"
