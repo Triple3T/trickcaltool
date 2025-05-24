@@ -7022,7 +7022,9 @@
         "normalAttack": "일반 공격",
         "normalAttackBase": "기본",
         "normalAttackAdvanced": "강화",
-        "entire": "전체"
+        "entire": "전체",
+        "language": "언어",
+        "languageChange": "언어 변경"
       },
       "error": {
         "title": "Error",
