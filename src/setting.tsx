@@ -10,6 +10,7 @@ import {
   Sun,
   SunMoon,
 } from "lucide-react";
+import { getCurrentLanguage } from "@/locale/localize";
 import { useTheme } from "@/components/theme-provider";
 import Loading from "@/components/common/loading";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -34,6 +35,7 @@ import CacheClearWithConfirm from "@/components/parts/cache-clear-with-confirm";
 import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
+import LanguageSelector from "@/components/common/language-selector";
 import chara from "@/data/chara";
 import {
   useUserDataActions,
@@ -195,6 +197,14 @@ const Setting = () => {
                 <SunMoon className="mr-2 h-4 w-4" />{" "}
                 {t("ui.common.themeSystem")}
               </Button>
+            </div>
+          </div>
+          <div>
+            <SubtitleBar>
+              {{ "ko-KR": "언어", "zh-CN": "语言" }[getCurrentLanguage()]}
+            </SubtitleBar>
+            <div className="p-2 flex gap-2 justify-center">
+              <LanguageSelector />
             </div>
           </div>
           {isAFToday && (

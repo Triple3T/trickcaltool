@@ -136,7 +136,9 @@ const MenuButton = () => {
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => navigate("/dispatchcalc")}
-          disabled={matchPath(location.pathname, "/dispatchcalc") ? true : false}
+          disabled={
+            matchPath(location.pathname, "/dispatchcalc") ? true : false
+          }
         >
           <img
             src="/icons/CurrencyIcon_0048.png"
@@ -170,7 +172,8 @@ const MenuButton = () => {
           target="_blank"
           rel="noreferrer"
         >
-          <DropdownMenuItem>{t("ui.index.textHelp")}
+          <DropdownMenuItem>
+            {t("ui.index.textHelp")}
             <ExternalLink className="w-4 h-4 inline-block ml-1" />
           </DropdownMenuItem>
         </a>

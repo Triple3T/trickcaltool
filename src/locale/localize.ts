@@ -18,8 +18,8 @@ i18n
       escapeValue: false,
     },
     resources: {
-      'ko-KR': ko_KR,
-      'zh-CN': zh_CN,
+      "ko-KR": ko_KR,
+      "zh-CN": zh_CN,
     },
     detection: {
       order: ["localStorage", "navigator"],
@@ -39,6 +39,10 @@ export const changeLanguage = async (lng: string) => {
   }
   await i18n.changeLanguage(lng);
   document.documentElement.lang = lng;
+};
+
+export const getCurrentLanguage = () => {
+  return i18n.language;
 };
 
 export default i18n;
