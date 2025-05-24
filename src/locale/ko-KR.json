@@ -7016,6 +7016,12 @@
         "afChara": "사도 전체",
         "yes": "그래요",
         "no": "아니오",
+        "admissionSkill": "저학년 스킬",
+        "graduateSkill": "고학년 스킬",
+        "cooltime": "재사용 대기시간",
+        "normalAttack": "일반 공격",
+        "normalAttackBase": "기본",
+        "normalAttackAdvanced": "강화",
         "entire": "전체"
       },
       "error": {

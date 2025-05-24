@@ -295,7 +295,9 @@ const Personal = () => {
                 />
               </div>
               <div>
-                <div className="text-sm mt-2 opacity-80">저학년 스킬</div>
+                <div className="text-sm mt-2 opacity-80">
+                  {t("ui.common.admissionSkill")}
+                </div>
                 <div className="text-xl">
                   {t(`skill.${charaName}.low.title`)}
                 </div>
@@ -407,7 +409,9 @@ const Personal = () => {
                 />
               </div>
               <div>
-                <div className="text-sm opacity-80">고학년 스킬</div>
+                <div className="text-sm opacity-80">
+                  {t("ui.common.graduateSkill")}
+                </div>
                 <div className="text-xl">
                   {isPvP && "[PVP]"}
                   {t(`skill.${charaName}.high.title`)}
@@ -432,7 +436,7 @@ const Personal = () => {
                 className="w-6 h-6 -rotate-10"
               />
               <div className="flex-1">
-                재사용 대기시간{" "}
+                {t("ui.common.cooltime")}{" "}
                 <span
                   className={
                     isPvP
@@ -556,13 +560,13 @@ const Personal = () => {
                 className="w-12 h-12 rounded border-2 border-lime-200 border-inset"
               />
               <div>
-                <div className="text-xl">일반 공격</div>
+                <div className="text-xl">{t("ui.common.normalAttack")}</div>
               </div>
             </div>
             {skillcoefficient.c[charaName].s.a && (
               <div className="text-sm my-1">
                 <span className="px-8 py-1 bg-emerald-700 text-slate-50 dark:bg-lime-300 dark:text-slate-950 rounded-full">
-                  기본
+                  {t("ui.common.normalAttackBase")}
                 </span>
               </div>
             )}
@@ -650,7 +654,7 @@ const Personal = () => {
               <>
                 <div className="text-sm mt-2 mb-1">
                   <span className="px-8 py-1 bg-emerald-700 text-slate-50 dark:bg-lime-300 dark:text-slate-950 rounded-full">
-                    강화
+                    {t("ui.common.normalAttackAdvanced")}
                   </span>
                 </div>
                 <div className="text-base break-keep">
@@ -1085,7 +1089,10 @@ const Personal = () => {
                       const stat = isPercent ? target - 10000 : target;
                       const statStr = StatType[stat];
                       return (
-                        <div key={i} className="flex flex-row justify-between gap-1 sm:flex-1">
+                        <div
+                          key={i}
+                          className="flex flex-row justify-between gap-1 sm:flex-1"
+                        >
                           <div className="text-left">
                             <img
                               src={`/icons/Icon_${statStr}.png`}
