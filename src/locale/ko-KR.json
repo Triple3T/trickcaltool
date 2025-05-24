@@ -6654,6 +6654,7 @@
         "hasnt": "없음",
         "whetherhasornot": "모두",
         "charaSortAside3Effect": "어사이드 3성 효과",
+        "charaSortAside3Stat": "어사이드 3성 스탯",
         "charaFilterDialogApply": "확인",
         "charaFilterReset": "필터 리셋",
         "requireRankEquips": "랭크별 착용 장비",
@@ -6674,6 +6675,7 @@
         "starCount": "{{0}}성",
         "noCloneFactoryHistory": "클론 팩토리에 편성된 적이 없어요",
         "noAside": "아직 사념이 깊지 않은 것 같다",
+        "allApplyStat": "사도 전체 능력치",
         "tab": {
           "board": "보드",
           "equip": "장비",
@@ -7013,7 +7015,8 @@
         "afOverlay": "화면 주변",
         "afChara": "사도 전체",
         "yes": "그래요",
-        "no": "아니오"
+        "no": "아니오",
+        "entire": "전체"
       },
       "error": {
         "title": "Error",

@@ -54,6 +54,11 @@ const filterPropertyChara = (
   } else if (propertyType === 8) {
     return (c: string) =>
       skillcoefficient.c[c].a?.e3.some((e) => propertyFilter.includes(e));
+  } else if (propertyType === 9) {
+    return (c: string) =>
+      skillcoefficient.c[c].a?.s3
+        ?.map((e) => e[0])
+        ?.some((e) => propertyFilter.includes(e));
   }
   return () => true;
 };

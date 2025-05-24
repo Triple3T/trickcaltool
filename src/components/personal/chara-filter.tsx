@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowDown, ArrowUp, Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,6 +23,7 @@ import {
   Class,
   Race,
   Aside3EffectCategory,
+  StatType,
 } from "@/types/enums";
 
 import {
@@ -466,6 +467,62 @@ export function CharaFilter({
                               `aside.aside3effect.${Aside3EffectCategory[keywordNum]}`
                             )}
                           </ToggleGroupItem>
+                        );
+                      })}
+                  </ToggleGroup>
+                </div>
+                <div>
+                  <SubtitleBar>
+                    {t(`ui.personal.charaSortAside3Stat`)}
+                  </SubtitleBar>
+                  <ToggleGroup
+                    type="multiple"
+                    value={filters[9]?.[1]?.map((v) => v.toString()) ?? []}
+                    onValueChange={(v) => {
+                      const newFilterLength = Math.max(9, filters.length);
+                      applyFilters(
+                        Array(newFilterLength)
+                          .fill(0)
+                          .map((_, i) =>
+                            i === 9
+                              ? [9, v.map((s) => Number(s))]
+                              : filters[i] ?? [i, []]
+                          )
+                      );
+                    }}
+                    className="grid grid-cols-2 sm:grid-cols-4"
+                  >
+                    {Array(9)
+                      .fill(0)
+                      .map((_, statNum) => {
+                        const percentStatNum = statNum + 10000;
+                        const statStr = StatType[statNum];
+                        return (
+                          <Fragment key={statNum}>
+                            <ToggleGroupItem
+                              value={statNum.toString()}
+                              variant="outline"
+                              className="text-sm break-keep py-2 min-h-min h-full"
+                            >
+                              +
+                              <img
+                                src={`/icons/Icon_${statStr}.png`}
+                                className="w-6 h-6 -my-1 inline-block mr-0.5"
+                              />
+                            </ToggleGroupItem>
+                            <ToggleGroupItem
+                              value={percentStatNum.toString()}
+                              variant="outline"
+                              className="text-sm break-keep py-2 min-h-min h-full"
+                            >
+                              +
+                              <img
+                                src={`/icons/Icon_${statStr}.png`}
+                                className="w-6 h-6 -my-1 inline-block mr-0.5"
+                              />
+                              %
+                            </ToggleGroupItem>
+                          </Fragment>
                         );
                       })}
                   </ToggleGroup>

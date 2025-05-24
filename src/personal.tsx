@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SubtitleBar from "@/components/parts/subtitlebar";
 import CharaList from "@/components/personal/chara-list";
 import BoardViewer from "@/components/personal/board-viewer";
 import EquipViewer from "@/components/personal/equip-viewer";
@@ -27,6 +28,7 @@ import {
   Position,
   // PurpleBoardType,
   Race,
+  StatType,
 } from "@/types/enums";
 
 // af
@@ -237,16 +239,16 @@ const Personal = () => {
             {t("ui.personal.tab.board")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Equip">
-          {t("ui.personal.tab.equip")}
+            {t("ui.personal.tab.equip")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Food">
-          {t("ui.personal.tab.food")}
+            {t("ui.personal.tab.food")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Skill">
-          {t("ui.personal.tab.skill")}
+            {t("ui.personal.tab.skill")}
           </TabsTrigger>
           <TabsTrigger className="flex-1" value="Aside">
-          {t("ui.personal.tab.aside")}
+            {t("ui.personal.tab.aside")}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="Board">
@@ -268,7 +270,10 @@ const Personal = () => {
         </TabsContent>
         <TabsContent value="Food">
           {initialStar > 1 ? (
-            <FoodTasteViewer charaName={charaName} skin={userCharaInfo?.[charaName].skin} />
+            <FoodTasteViewer
+              charaName={charaName}
+              skin={userCharaInfo?.[charaName].skin}
+            />
           ) : (
             <div>{t("ui.personal.cannotInviteToRestaurant")}</div>
           )}
@@ -1071,6 +1076,33 @@ const Personal = () => {
                         </div>
                       );
                     })}
+                </div>
+                <SubtitleBar>{t("ui.personal.allApplyStat")}</SubtitleBar>
+                <div className="text-base break-keep flex flex-col px-2 pt-1 gap-y-1.5">
+                  {skillcoefficient.c[charaName].a!.s3.map(
+                    ([target, value], i) => {
+                      const isPercent = target > 9999;
+                      const stat = isPercent ? target - 10000 : target;
+                      const statStr = StatType[stat];
+                      return (
+                        <div key={i} className="flex flex-row justify-between gap-1 sm:flex-1">
+                          <div className="text-left">
+                            <img
+                              src={`/icons/Icon_${statStr}.png`}
+                              className="inline w-6 h-6 -my-1 mr-1"
+                            />
+                            {t("ui.common.entire")} {t(`stat.${statStr}`)}
+                          </div>
+                          <div className="text-right">
+                            <span className="text-emerald-500">
+                              {isPercent ? value / 100 : value}
+                            </span>
+                            {isPercent && "%"}
+                          </div>
+                        </div>
+                      );
+                    }
+                  )}
                 </div>
               </Card>
             </div>

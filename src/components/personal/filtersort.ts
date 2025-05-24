@@ -17,6 +17,7 @@ export enum FilterProperty {
   Keyword = 6,
   Aside = 7,
   Aside3Effect = 8,
+  Aside3Stat = 9,
 }
 export enum SortProperty {
   Name = -1,
