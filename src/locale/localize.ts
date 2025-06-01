@@ -1,9 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { supportedLngs, defaultLng } from "./langs";
+export { supportedLngs, defaultLng };
 
-export const supportedLngs = ["ko-KR", "zh-CN"];
-export const defaultLng = "ko-KR";
 import ko_KR from "./ko-KR.json";
 import zh_CN from "./zh-CN.json";
 
