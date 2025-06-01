@@ -12,8 +12,23 @@ i18n
   .use(initReactI18next)
   .init({
     debug: import.meta.env.DEV,
-    fallbackLng: defaultLng,
-    supportedLngs,
+    fallbackLng: {
+      ...supportedLngs.reduce<Record<string, string[]>>(
+        (acc, lng) => {
+          const shortLng = lng.split("-")[0];
+          if (typeof acc[shortLng] === "undefined") acc[shortLng] = [];
+          acc[shortLng].push(lng);
+          return acc;
+        },
+        { default: [defaultLng] }
+      ),
+    },
+    supportedLngs: [
+      ...new Set([
+        ...supportedLngs,
+        ...supportedLngs.map((v) => v.split("-")[0]),
+      ]),
+    ],
     interpolation: {
       escapeValue: false,
     },
