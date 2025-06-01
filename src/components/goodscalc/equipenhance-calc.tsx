@@ -101,6 +101,10 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
     []
   );
   const [totalListHeight, setTotalListHeight] = useState<number>(9999);
+  const onTotalListHeightChanged = useCallback(
+    (height: number) => setTotalListHeight(Math.max(0.1, height)),
+    []
+  );
 
   const filteredValues = Object.values(rankEquips).map((values) =>
     values.filter((value) =>
@@ -174,7 +178,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
             >
               <GroupedVirtuoso
                 overscan={128}
-                totalListHeightChanged={setTotalListHeight}
+                totalListHeightChanged={onTotalListHeightChanged}
                 customScrollParent={scrollParent ?? undefined}
                 groupCounts={filteredValues
                   .map((f) => f.length)
