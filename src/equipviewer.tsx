@@ -721,8 +721,7 @@ const EquipViewer = () => {
                                   size={3}
                                   fullItemPath
                                   rarityInfo={(() => {
-                                    if (iRank > 8)
-                                      return { s: "Yellow" };
+                                    if (iRank > 8) return { s: "Yellow" };
                                     if (iRank > 6)
                                       return { s: "Purple", b: "#B371F5" };
                                     if (iRank > 4)
@@ -905,8 +904,7 @@ const EquipViewer = () => {
                                   size={3}
                                   fullItemPath
                                   rarityInfo={(() => {
-                                    if (iRank > 8)
-                                      return { s: "Yellow" };
+                                    if (iRank > 8) return { s: "Yellow" };
                                     if (iRank > 6)
                                       return { s: "Purple", b: "#B371F5" };
                                     if (iRank > 4)
@@ -1015,7 +1013,7 @@ const EquipViewer = () => {
               .sort(([a], [b]) =>
                 sortBy[1] ? Number(a) - Number(b) : Number(b) - Number(a)
               )
-              .map(([part, names]) => {
+              .map(([part, names], index, array) => {
                 return (
                   <div key={part} className="flex flex-col gap-2 w-full">
                     <div
@@ -1033,6 +1031,11 @@ const EquipViewer = () => {
                         className="w-5 h-5"
                       />
                       {Number(part).toLocaleString()}
+                      {array.length > 1 && (
+                        <div className="ml-0.5 text-sm">{`(#${
+                          sortBy[1] ? array.length - index : index + 1
+                        })`}</div>
+                      )}
                     </div>
                     <div className="grid grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] gap-1">
                       {names.map((name) => {
