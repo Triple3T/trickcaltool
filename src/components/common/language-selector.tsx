@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { supportedLngs, getCurrentLanguage } from "@/locale/localize";
+import { useTranslation } from "react-i18next";
 import { Languages } from "lucide-react";
+import { getCurrentLanguage } from "@/locale/localize";
+import { supportedLngNames, supportedLngs } from "@/locale/langs";
 import { useLanguageChange } from "@/hooks/useLanguageChange";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,28 +13,46 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+const ENGAGE_URL = "https://localizer.triple-lab.com/engage/trickcal-note/-/";
+const WIDGET_URL =
+  "https://localizer.triple-lab.com/widget/trickcal-note/localize/";
+
 const LanguageSelector = () => {
   const [currentLanguage, setCurrentLanguage] = useState(getCurrentLanguage());
   const { languageChange } = useLanguageChange();
+  const { t } = useTranslation();
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button>
           <Languages className="w-4 h-4 inline-block mr-1" />
-          {{ "ko-KR": "언어 변경", "zh-CN": "语言更改" }[currentLanguage] ||
-            "Change Language"}
+          {t("ui.common.languageChange")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
             <div className="font-medium font-onemobile">
-              {{ "ko-KR": "언어 변경", "zh-CN": "语言更改" }[currentLanguage] ||
-                "Change Language"}
+              {t("ui.common.languageChange")}
             </div>
           </DialogTitle>
         </DialogHeader>
+        <div className="text-center">
+          <a href={`${ENGAGE_URL}${currentLanguage.replaceAll("-", "_")}/`}>
+            <span className="font-onemobile">
+              {supportedLngNames[currentLanguage] || "Language"}
+            </span>
+            <img
+              src={`${WIDGET_URL}${currentLanguage.replaceAll(
+                "-",
+                "_"
+              )}/svg-badge.svg`}
+              alt={t("translation.ui.index.translationNoticeDescription")}
+              className="inline ml-2"
+            />
+          </a>
+        </div>
         <div className="grid gap-2 grid-cols-2">
           {supportedLngs.map((lng) => (
             <Button
@@ -43,7 +63,7 @@ const LanguageSelector = () => {
                 setCurrentLanguage(getCurrentLanguage());
               }}
             >
-              {{ "ko-KR": "한국어", "zh-CN": "简体中文" }[lng] || "Language"}
+              {supportedLngNames[lng] || "Language"}
             </Button>
           ))}
         </div>
