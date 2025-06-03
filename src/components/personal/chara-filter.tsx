@@ -171,7 +171,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[1]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(1, filters.length);
+                      const newFilterLength = Math.max(2, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -218,7 +218,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[2]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(2, filters.length);
+                      const newFilterLength = Math.max(3, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -257,7 +257,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[3]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(3, filters.length);
+                      const newFilterLength = Math.max(4, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -294,7 +294,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[4]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(4, filters.length);
+                      const newFilterLength = Math.max(5, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -331,7 +331,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[5]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(5, filters.length);
+                      const newFilterLength = Math.max(6, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -368,7 +368,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[6]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(6, filters.length);
+                      const newFilterLength = Math.max(7, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -405,7 +405,7 @@ export function CharaFilter({
                     value={filters[7]?.[1]?.[0]?.toString() ?? "3"}
                     onValueChange={(vp) => {
                       const v = vp || "3";
-                      const newFilterLength = Math.max(7, filters.length);
+                      const newFilterLength = Math.max(8, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -439,7 +439,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[8]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(8, filters.length);
+                      const newFilterLength = Math.max(9, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
@@ -479,7 +479,7 @@ export function CharaFilter({
                     type="multiple"
                     value={filters[9]?.[1]?.map((v) => v.toString()) ?? []}
                     onValueChange={(v) => {
-                      const newFilterLength = Math.max(9, filters.length);
+                      const newFilterLength = Math.max(10, filters.length);
                       applyFilters(
                         Array(newFilterLength)
                           .fill(0)
