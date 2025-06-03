@@ -90,24 +90,12 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
   const [search, setSearch] = useState<string>("");
   const [filterProperties, setFilterProperties] = useState<
     [FilterProperty, number[]][]
-  >(
-    Array(FILTER_COUNT)
-      .fill(0)
-      .map((_, i) => [i, []])
-  );
+  >([]);
   const [sortProperty, setSortProperty] = useState<SortProperty>(
     SortProperty.Name
   );
   const [sortAsc, setSortAsc] = useState<boolean>(true);
-  const resetFilter = useCallback(
-    () =>
-      setFilterProperties(
-        Array(FILTER_COUNT)
-          .fill(0)
-          .map((_, i) => [i, []])
-      ),
-    []
-  );
+  const resetFilter = useCallback(() => setFilterProperties([]), []);
   return (
     <div className="font-onemobile">
       <div className="text-2xl my-2">{t("ui.personal.charaList")}</div>
