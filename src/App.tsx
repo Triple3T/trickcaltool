@@ -7,6 +7,7 @@ import "./App.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { QuickSync } from "@/components/quick-sync";
+import LocalizeEngageNotice from "@/components/parts/localize-engage-notice";
 import MainMenuCard from "@/components/parts/main-menu-card";
 // import GoogleSyncChangedNotice from "@/components/parts/google-sync-changed-notice";
 import UtilitySetCard from "@/components/parts/menu-card-utilityset";
@@ -118,6 +119,7 @@ function App() {
                 </Button>
               </a>
               <GoogleSyncChangedNotice /> */}
+              <LocalizeEngageNotice />
             </div>
             <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-8 sm:pt-10 md:pt-12 lg:pt-16 pb-16">
               <MainMenuCard
