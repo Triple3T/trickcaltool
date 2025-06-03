@@ -17,7 +17,7 @@ import {
   FilterProperty,
   SortProperty,
   sortArray,
-  FILTER_COUNT,
+  // FILTER_COUNT,
 } from "./filtersort";
 
 // af
