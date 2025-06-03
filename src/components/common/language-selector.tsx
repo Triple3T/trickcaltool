@@ -48,7 +48,7 @@ const LanguageSelector = () => {
                 "-",
                 "_"
               )}/svg-badge.svg`}
-              alt={t("translation.ui.index.translationNoticeDescription")}
+              alt={t("ui.index.translationNoticeDescription")}
               className="inline ml-2"
             />
           </a>
