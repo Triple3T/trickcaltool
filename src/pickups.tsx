@@ -5,7 +5,7 @@ import { personalityBG } from "./utils/personalityBG";
 
 const timeZero = new Date("2023-09-27");
 const timeOne = new Date("2023-10-05");
-const timeEnd = new Date("2025-05-22");
+const timeEnd = new Date("2025-06-05");
 const timesFromOne = Array(
   Math.ceil(
     (timeEnd.getTime() - timeOne.getTime()) / (1000 * 60 * 60 * 24 * 7)
@@ -100,6 +100,8 @@ const lineups = [
   [84, 2, 0, 1, "MayoCool"],
   [85, 1, 1, 0, "Haley", "Tig", "Barong", "Hilde", "Ner"],
   [86, 2, 0, 1, "Orr"],
+  [87, 1, 1, 0, "xXionx"],
+  [87, 1, 2, 0, "Naia", "Selline", "Amelia", "Blanchet", "Alice"],
 ];
 const widthcount = Math.max(...lineups.map((l) => l[2] as number)) + 1;
 const personalityFrom = {
@@ -115,6 +117,13 @@ const personalityTo = {
   [Personality.Jolly]: "to-personality-Jolly",
   [Personality.Mad]: "to-personality-Mad",
   [Personality.Naive]: "to-personality-Naive",
+};
+const personalityVia = {
+  [Personality.Cool]: "via-personality-Cool",
+  [Personality.Gloomy]: "via-personality-Gloomy",
+  [Personality.Jolly]: "via-personality-Jolly",
+  [Personality.Mad]: "via-personality-Mad",
+  [Personality.Naive]: "via-personality-Naive",
 };
 const PickupLog = () => {
   return (
@@ -147,7 +156,26 @@ const PickupLog = () => {
                   }
                   const charas = lineup.slice(4);
                   const bg = (() => {
-                    if (charas.length > 2) return "bg-slate-300";
+                    if (charas.length > 3) return "bg-slate-300";
+                    if (charas.length > 2)
+                      return [
+                        personalityFrom[
+                          Number(
+                            chara[charas[0]].t[0]
+                          ) as keyof typeof personalityFrom
+                        ],
+                        personalityVia[
+                          Number(
+                            chara[charas[1]].t[0]
+                          ) as keyof typeof personalityFrom
+                        ],
+                        personalityTo[
+                          Number(
+                            chara[charas[2]].t[0]
+                          ) as keyof typeof personalityFrom
+                        ],
+                        "bg-gradient-to-r from-10% via-50% to-90%",
+                      ].join(" ");
                     if (charas.length > 1)
                       return [
                         personalityFrom[
@@ -160,7 +188,7 @@ const PickupLog = () => {
                             chara[charas[1]].t[0]
                           ) as keyof typeof personalityTo
                         ],
-                        "bg-gradient-to-r from-40% to-70%",
+                        "bg-gradient-to-r from-35% to-65%",
                       ].join(" ");
                     return personalityBG[
                       Number(
