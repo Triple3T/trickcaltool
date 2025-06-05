@@ -104,9 +104,18 @@ jobs:
             rm -f "optimized/public/${filename%.png}.webp"
             # rm -f "optimized/public/${filename%.png}.avif"
           done
+
+      - name: Prepare deploy directory
+        run: |
+          mkdir -p deploy-temp/public
+          rm -rf deploy-temp/*
+          rm -rf deploy-temp/.github
+          cp -r optimized/* deploy-temp/
+          cp -r optimized/.github deploy-temp/.github
       
       - name: Replace .png to .webp for load optimized images
         run: |
+          cd deploy-temp
           find . \( -wholename './vite.config.ts' -o -wholename './tailwind.config.ts' -o -wholename './src/*.ts' -o -wholename './src/*.tsx' \) > files_to_check.txt
           while IFS= read -r file; do
             awk '
@@ -122,14 +131,7 @@ jobs:
             ' "$file" > "deploy-temp/$file"
           done < files_to_check.txt
           rm files_to_check.txt
-
-      - name: Prepare deploy directory
-        run: |
-          mkdir -p deploy-temp/public
-          rm -rf deploy-temp/*
-          rm -rf deploy-temp/.github
-          cp -r optimized/* deploy-temp/
-          cp -r optimized/.github deploy-temp/.github
+          cd ..
 
       - name: Commit and push to deploy branch
         run: |
@@ -137,6 +139,7 @@ jobs:
           git add *
           git commit -m "${{ steps.last_commit.outputs.last_commit_message }}" || echo "Nothing to commit"
           git push origin HEAD:deploy
+          cd ..
 
       - name: Cleanup
         run: |
