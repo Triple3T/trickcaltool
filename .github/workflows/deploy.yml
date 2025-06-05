@@ -117,7 +117,9 @@ jobs:
         run: |
           mkdir -p deploy-temp/public
           rm -rf deploy-temp/*
+          rm -rf deploy-temp/.github
           cp -r optimized/* deploy-temp/
+          cp -r optimized/.github deploy-temp/.github
 
       - name: Commit and push to deploy branch
         run: |
