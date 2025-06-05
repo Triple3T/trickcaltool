@@ -66,8 +66,10 @@ jobs:
         run: |
           mkdir -p optimized/public/AppImages
           mkdir -p optimized/public/fonts
+          mkdir -p optimized/public/networkicon
           cp -r public/AppImages/* optimized/public/AppImages/
           cp -r public/fonts/* optimized/public/fonts/
+          cp -r public/networkicon/* optimized/public/networkicon/
           cp public/favicon-16x16.png optimized/public/favicon-16x16.png
           cp public/favicon-32x32.png optimized/public/favicon-32x32.png
           cp public/favicon.ico optimized/public/favicon.ico
@@ -119,7 +121,7 @@ jobs:
           find . \( -wholename './vite.config.ts' -o -wholename './tailwind.config.ts' -o -wholename './src/*.ts' -o -wholename './src/*.tsx' \) > files_to_check.txt
           while IFS= read -r file; do
             awk '
-            /\/AppImages\// || /https:/ || /apple-touch-icon/ {
+            /\/AppImages\// || /https:/ || /apple-touch-icon/ || /\/networkicon\// {
               print; next
             }
             {
