@@ -126,6 +126,7 @@ jobs:
               gsub(/\.png"/, ".webp\"");
               gsub(/\.png'\''/, ".webp'\''");
               gsub(/\.png`/, ".webp`");
+              gsub(/\.png\)/, ".webp)");
               print
             }
             ' "$file" > "../deploy-temp/$file"
