@@ -26,7 +26,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/board") ? true : false}
         >
           <img
-            src="/icons/Item_Crayon4.png"
+            src="/icons/Item_Crayon4.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.board.title")}
@@ -36,7 +36,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/pboard") ? true : false}
         >
           <img
-            src="/itemslot/Tab_Tree.png"
+            src="/itemslot/Tab_Tree.webp"
             className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
           />
           {t("ui.board.pboardTitle")}
@@ -46,7 +46,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/eqrank") ? true : false}
         >
           <img
-            src="/growth/CommonLevelUpPopupIcon.png"
+            src="/growth/CommonLevelUpPopupIcon.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.equiprank.title")}
@@ -56,7 +56,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/lab") ? true : false}
         >
           <img
-            src="/mainlobby/HousingButton.png"
+            src="/mainlobby/HousingButton.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.lab.title")}
@@ -67,7 +67,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/personal") ? true : false}
         >
           <img
-            src="/itemslot/Tab_Detail.png"
+            src="/itemslot/Tab_Detail.webp"
             className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
           />
           {t("ui.personal.title")}
@@ -77,7 +77,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/equipviewer") ? true : false}
         >
           <img
-            src="/itemslot/Tab_Equip_Default.png"
+            src="/itemslot/Tab_Equip_Default.webp"
             className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
           />
           {t("ui.equipviewer.title")}
@@ -87,7 +87,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/normaldrop") ? true : false}
         >
           <img
-            src="/icons/CurrencyIcon_0011.png"
+            src="/icons/CurrencyIcon_0011.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.normaldrop.title")}
@@ -98,7 +98,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/tasksearch") ? true : false}
         >
           <img
-            src="/myhomeicons/MyHome_Button_004.png"
+            src="/myhomeicons/MyHome_Button_004.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.tasksearch.title")}
@@ -108,7 +108,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/boardsearch") ? true : false}
         >
           <img
-            src="/icons/Common_Node_Special.png"
+            src="/icons/Common_Node_Special.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.boardsearch.title")}
@@ -118,7 +118,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/restaurant") ? true : false}
         >
           <img
-            src="/foods/MyHomeRestaurant_EatingInviteIcon.png"
+            src="/foods/MyHomeRestaurant_EatingInviteIcon.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.restaurant.title")}
@@ -129,7 +129,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/goodscalc") ? true : false}
         >
           <img
-            src="/icons/CurrencyIcon_0041.png"
+            src="/icons/CurrencyIcon_0041.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.goodscalc.title")}
@@ -141,7 +141,7 @@ const MenuButton = () => {
           }
         >
           <img
-            src="/icons/CurrencyIcon_0048.png"
+            src="/icons/CurrencyIcon_0048.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.dispatchcalc.title")}
@@ -151,7 +151,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/teambuilder") ? true : false}
         >
           <img
-            src="/scenes/DeckButton.png"
+            src="/scenes/DeckButton.webp"
             className="w-4 h-4 inline-block mr-1"
           />
           {t("ui.teambuilder.title")}
@@ -161,7 +161,7 @@ const MenuButton = () => {
           disabled={matchPath(location.pathname, "/guidecheck") ? true : false}
         >
           <img
-            src="/common/BoardRecord_Tab_Stat.png"
+            src="/common/BoardRecord_Tab_Stat.webp"
             className="w-4 h-4 inline-block mr-1 rounded-full bg-greenicon"
           />
           {t("ui.check.guide.index")}

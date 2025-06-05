@@ -356,7 +356,7 @@ const PetSolver = () => {
                               className="flex flex-row gap-0.5 bg-background rounded-full p-0.5"
                             >
                               <img
-                                src={`/pets/Pet_Characteristic_${skill}.png`}
+                                src={`/pets/Pet_Characteristic_${skill}.webp`}
                                 className="w-4 h-4 inline-block align-middle"
                               />
                               <div className="text-xs">
@@ -395,7 +395,7 @@ const PetSolver = () => {
                     </div>
                   </div>
                   <div className="pt-7 pb-1 px-2 relative">
-                    <img src={`/pets/Icon_${id}.png`} className="w-full" />
+                    <img src={`/pets/Icon_${id}.webp`} className="w-full" />
                   </div>
                   {step === 1 && (
                     <div className="flex flex-row gap-1 p-1">
@@ -446,7 +446,7 @@ const PetSolver = () => {
                         style={{
                           backgroundImage: `url(/pets/GuildPetDispatch_ResultTimeIcon_${i
                             .toString()
-                            .padStart(2, "0")}.png)`,
+                            .padStart(2, "0")}.webp)`,
                         }}
                         className="w-24 aspect-[3/2] flex-initial bg-cover flex justify-center items-center text-sm text-shadow-glow"
                       >
@@ -465,7 +465,7 @@ const PetSolver = () => {
                               className="flex flex-row gap-0.5 bg-background rounded-full p-0.5 flex-initial w-max"
                             >
                               <img
-                                src={`/pets/Pet_Characteristic_${skill}.png`}
+                                src={`/pets/Pet_Characteristic_${skill}.webp`}
                                 className="w-4 h-4 inline-block align-middle"
                               />
                               <div className="text-xs pr-0.5">
@@ -553,7 +553,7 @@ const PetSolver = () => {
                               <img
                                 src={`/pets/DispatchRank_${"DCBAS".charAt(
                                   calcResult.assignments[`e${i}`].rank
-                                )}.png`}
+                                )}.webp`}
                                 className="w-12 h-12"
                               />
                               <GoldSlot

@@ -61,7 +61,7 @@ const ArtifactPicker = ({
   if (!targetChara)
     return (
       <img
-        src="/ingameui/Ingame_ArtifactBase_Empty.png"
+        src="/ingameui/Ingame_ArtifactBase_Empty.webp"
         alt="empty"
         className="w-8 h-8 min-[342px]:w-9 min-[342px]:h-9 sm:w-12 sm:h-12"
       />
@@ -79,7 +79,7 @@ const ArtifactPicker = ({
                     card.a.l[currentArtifact]?.a?.t === targetChara
                       ? "SignatureCard"
                       : card.a.l[currentArtifact].r
-                  }.png)`,
+                  }.webp)`,
                   backgroundSize: "cover",
                 }
               : undefined
@@ -88,8 +88,8 @@ const ArtifactPicker = ({
           <img
             src={
               currentArtifact
-                ? `/artifacts/ArtifactIcon_${currentArtifact}.png`
-                : "/ingameui/Ingame_ArtifactBase_Empty.png"
+                ? `/artifacts/ArtifactIcon_${currentArtifact}.webp`
+                : "/ingameui/Ingame_ArtifactBase_Empty.webp"
             }
             alt={t(
               currentArtifact
@@ -142,7 +142,7 @@ const ArtifactPicker = ({
                 }}
               >
                 <img
-                  src={`/icons/Icon_${statString}.png`}
+                  src={`/icons/Icon_${statString}.webp`}
                   className="w-full aspect-square"
                 />
               </div>
@@ -188,7 +188,7 @@ const ArtifactPicker = ({
                     style={{
                       backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${
                         card.r[isSignature ? 0 : artifactRarity].s
-                      }.png)`,
+                      }.webp)`,
                       backgroundColor:
                         card.r[isSignature ? 0 : artifactRarity].b,
                       backgroundSize: "cover",
@@ -199,7 +199,7 @@ const ArtifactPicker = ({
                   >
                     <div className="w-full h-full px-3 py-2">
                       <img
-                        src={`/artifacts/ArtifactIcon_${artifactId}.png`}
+                        src={`/artifacts/ArtifactIcon_${artifactId}.webp`}
                         alt={t(`card.artifact.${artifactId}.title`)}
                         className="max-w-full max-h-full mx-auto"
                       />
@@ -216,7 +216,7 @@ const ArtifactPicker = ({
                         : "cursor-pointer"
                     )}
                     style={{
-                      backgroundImage: "url(/ingameui/Ingame_Cost_Small.png)",
+                      backgroundImage: "url(/ingameui/Ingame_Cost_Small.webp)",
                     }}
                   >
                     {artifactCost}

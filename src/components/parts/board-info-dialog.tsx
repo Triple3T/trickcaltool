@@ -90,7 +90,7 @@ const BoardInfoDialogTrigger = ({
               return (
                 <img
                   key={i}
-                  src="/icons/Item_Crayon4.png"
+                  src="/icons/Item_Crayon4.webp"
                   alt="crayon4"
                   className="h-4 w-4 absolute top-0"
                   style={{ left }}
@@ -99,7 +99,7 @@ const BoardInfoDialogTrigger = ({
             return (
               <img
                 key={i}
-                src="/icons/Item_Crayon3.png"
+                src="/icons/Item_Crayon3.webp"
                 alt="crayon3"
                 className="h-4 w-4 absolute top-0"
                 style={{ left }}
@@ -181,14 +181,14 @@ const BoardInfoDialog = ({
                   className="mr-1 w-[1.2rem] inline-flex bg-greenicon rounded-full align-middle"
                   src={`/icons/RecordReward_Tab_${
                     ["Easy", "Herd", "VeryHard"][boardIndex]
-                  }Lv.png`}
+                  }Lv.webp`}
                 />
                 <span className="align-middle">
                   {t(`ui.board.board${boardIndex + 1}`)}
                 </span>
                 <Dot className="inline-block w-4 h-4 mx-px align-middle" />
                 <img
-                  src={`/boards/Tile_${boardTypeString}On.png`}
+                  src={`/boards/Tile_${boardTypeString}On.webp`}
                   className="mr-1 w-5 h-5 inline-block align-middle"
                 />
                 <span className="align-middle">
@@ -218,31 +218,31 @@ const BoardInfoDialog = ({
                     <img
                       src={`/icons/Common_UnitPersonality_${
                         Personality[Number(charaTypes[0])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/icons/Common_UnitAttack${
                         Attack[Number(charaTypes[2])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/icons/Common_Position${
                         Position[Number(charaTypes[3])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/icons/Common_Unit${
                         Class[Number(charaTypes[4])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     <img
                       src={`/album/Album_Icon_${
                         Race[Number(charaTypes[5])]
-                      }.png`}
+                      }.webp`}
                       className="w-5 h-5 inline-block align-middle"
                     />
                     {currentUnlockedIndex > 0 && (
@@ -338,7 +338,7 @@ const BoardInfoDialog = ({
                     )}
                     {checked && (
                       <img
-                        src="/icons/Stage_RewardChack.png"
+                        src="/icons/Stage_RewardChack.webp"
                         className="w-100 opacity-100 w-6 inline-block ml-2 align-middle"
                       />
                     )}
@@ -388,7 +388,7 @@ const BoardInfoDialog = ({
                             return (
                               <div key={j} className="aspect-square w-full">
                                 <img
-                                  src="/boards/Rect_01.png"
+                                  src="/boards/Rect_01.webp"
                                   className={cn(
                                     "aspect-square w-full",
                                     noRouteOff &&
@@ -402,7 +402,7 @@ const BoardInfoDialog = ({
                             return (
                               <div key={j} className="aspect-square w-full">
                                 <img
-                                  src="/boards/Rect_06.png"
+                                  src="/boards/Rect_06.webp"
                                   className={cn(
                                     "aspect-square w-full",
                                     noRouteOff &&
@@ -416,7 +416,7 @@ const BoardInfoDialog = ({
                             return (
                               <div key={j} className="aspect-square w-full">
                                 <img
-                                  src={`/boards/Tile_${BoardType[boardTypeIfExists]}On.png`}
+                                  src={`/boards/Tile_${BoardType[boardTypeIfExists]}On.webp`}
                                   className={cn(
                                     "aspect-square w-full bg-board-special bg-cover",
                                     noRouteOff &&
@@ -442,7 +442,7 @@ const BoardInfoDialog = ({
                             <img
                               src={`/boards/Tile_${
                                 boardIndex ? "Gate" : "Start"
-                              }.png`}
+                              }.webp`}
                               className="aspect-square w-full scale-150"
                             />
                           </div>
@@ -460,7 +460,7 @@ const BoardInfoDialog = ({
                     <div>
                       {t("ui.board.importantBoardTilesBefore")}
                       <img
-                        src="/icons/Common_Node_Special.png"
+                        src="/icons/Common_Node_Special.webp"
                         className="w-5 h-5 inline-block"
                       />
                       {t("ui.board.importantBoardTilesAfter")}
@@ -470,7 +470,7 @@ const BoardInfoDialog = ({
                     <div>
                       {t("ui.board.importantBoardTilesBefore")}
                       <img
-                        src="/icons/Common_Node_Premium.png"
+                        src="/icons/Common_Node_Premium.webp"
                         className="w-5 h-5 inline-block"
                       />
                       {t("ui.board.importantBoardTilesAfter")}
@@ -499,7 +499,7 @@ const BoardInfoDialog = ({
                                           className="bg-board-special rotate-10 w-10 -m-1 flex-initial flex-shrink-0 bg-cover dark:brightness-80 dark:contrast-125"
                                           src={`/boards/Tile_${
                                             BoardType[Number(b)]
-                                          }On.png`}
+                                          }On.webp`}
                                         />
                                       );
                                     })}
@@ -546,7 +546,7 @@ const BoardInfoDialog = ({
                             <div className="w-1/6 max-w-12 relative" key={i}>
                               <div className="absolute w-12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                                 <img
-                                  src={`/boards/Tile_${bt}On.png`}
+                                  src={`/boards/Tile_${bt}On.webp`}
                                   className="bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125"
                                 />
                               </div>

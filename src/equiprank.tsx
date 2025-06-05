@@ -356,7 +356,7 @@ const EquipRank = () => {
                                 )}
                               >
                                 <img
-                                  src={`/icons/Common_UnitPersonality_${p}.png`}
+                                  src={`/icons/Common_UnitPersonality_${p}.webp`}
                                   className="max-w-full w-6 aspect-square"
                                 />
                               </Button>
@@ -421,7 +421,7 @@ const EquipRank = () => {
                             aria-label={`Toggle ${bt}`}
                           >
                             <img
-                              src={`/icons/Icon_${bt}.png`}
+                              src={`/icons/Icon_${bt}.webp`}
                               className="h-6 w-6 aspect-square"
                             />
                           </ToggleGroupItem>
@@ -522,7 +522,7 @@ const EquipRank = () => {
                         <div className="relative z-10">
                           <img
                             className="h-6 mr-2 aspect-square inline-block align-middle"
-                            src={`/icons/Icon_${stat}.png`}
+                            src={`/icons/Icon_${stat}.webp`}
                           />
                         </div>
                         <div className="flex-1 -ml-8 bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
@@ -877,7 +877,7 @@ const EquipRank = () => {
                             <div className="flex-auto text-right">
                               {checkedCount === targetCount && (
                                 <img
-                                  src="/icons/Photo_Complete_Stamp.png"
+                                  src="/icons/Photo_Complete_Stamp.webp"
                                   className="h-10 -my-1.5 -mr-5 inline-block relative z-10"
                                 />
                               )}
@@ -952,7 +952,7 @@ const EquipRank = () => {
                                       {rank <= currentCharaEqrank && (
                                         <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
                                           <img
-                                            src="/icons/Stage_RewardChack.png"
+                                            src="/icons/Stage_RewardChack.webp"
                                             className="w-100 opacity-100"
                                           />
                                         </div>
@@ -1019,7 +1019,7 @@ const EquipRank = () => {
                                               className="flex flex-row gap-1 text-sm justify-center items-center"
                                             >
                                               <img
-                                                src={`/icons/Icon_${StatType[s]}.png`}
+                                                src={`/icons/Icon_${StatType[s]}.webp`}
                                                 className="w-5 h-5"
                                               />
                                               <div>+{v}</div>

@@ -15,5 +15,5 @@ export const getCharaImageUrl = (chara: string, variant?: string | boolean): str
     return `https://media-af-tr.triple-lab.com/Mini_${chara}_Fail.png`;
   if (variant === "af-s")
     return `https://media-af-tr.triple-lab.com/Mini_${chara}_Success.png`;
-  return `/charas/${chara}.png`;
+  return `/charas/${chara}.webp`;
 };

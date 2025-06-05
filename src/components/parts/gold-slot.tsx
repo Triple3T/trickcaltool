@@ -56,7 +56,7 @@ const GoldSlot = ({
               <div className="-mt-2.5">{t("currency.gold")}</div>
             </div>
             <div>
-              <img src="/icons/CurrencyIcon_0008.png" alt="" className="w-4 h-4" />
+              <img src="/icons/CurrencyIcon_0008.webp" alt="" className="w-4 h-4" />
             </div>
             {amount && (
               <div className="text-sm">

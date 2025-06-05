@@ -288,7 +288,7 @@ const Restaurant = () => {
                   </div>
                 </div>
                 <img
-                  src="/foods/Deco_Clip.png"
+                  src="/foods/Deco_Clip.webp"
                   className="absolute -left-px -top-[1.7rem] h-[2.75rem]"
                 />
               </div>
@@ -321,7 +321,7 @@ const Restaurant = () => {
                             innerSize={60}
                           />
                           <img
-                            src="/foods/MyHomeRestaurant_FeelingStatus_5.png"
+                            src="/foods/MyHomeRestaurant_FeelingStatus_5.webp"
                             className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                           />
                         </div>
@@ -358,7 +358,7 @@ const Restaurant = () => {
                             innerSize={60}
                           />
                           <img
-                            src="/foods/MyHomeRestaurant_FeelingStatus_1.png"
+                            src="/foods/MyHomeRestaurant_FeelingStatus_1.webp"
                             className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                           />
                         </div>
@@ -395,7 +395,7 @@ const Restaurant = () => {
                             innerSize={60}
                           />
                           <img
-                            src="/foods/MyHomeRestaurant_FeelingStatus_3.png"
+                            src="/foods/MyHomeRestaurant_FeelingStatus_3.webp"
                             className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                           />
                         </div>
@@ -450,7 +450,7 @@ const Restaurant = () => {
                 )}
                 <div className="flex w-48 h-48 px-10 pt-12 pb-8 justify-center items-end bg-dish bg-cover bg-no-repeat -mt-4 mx-auto">
                   <img
-                    src={`/foods/Icon_Food_${selectedFood}.png`}
+                    src={`/foods/Icon_Food_${selectedFood}.webp`}
                     className="max-w-full max-h-full"
                   />
                 </div>
@@ -702,7 +702,7 @@ const Restaurant = () => {
                       </div>
                     </div>
                     <img
-                      src="/foods/Deco_Clip.png"
+                      src="/foods/Deco_Clip.webp"
                       className="absolute -left-px -top-[1.7rem] h-[2.75rem]"
                     />
                   </div>
@@ -737,7 +737,7 @@ const Restaurant = () => {
                                     innerSize={60}
                                   />
                                   <img
-                                    src="/foods/MyHomeRestaurant_FeelingStatus_5.png"
+                                    src="/foods/MyHomeRestaurant_FeelingStatus_5.webp"
                                     className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                                   />
                                 </div>
@@ -775,7 +775,7 @@ const Restaurant = () => {
                                 innerSize={60}
                               />
                               <img
-                                src="/foods/MyHomeRestaurant_FeelingStatus_1.png"
+                                src="/foods/MyHomeRestaurant_FeelingStatus_1.webp"
                                 className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                               />
                             </div>
@@ -812,7 +812,7 @@ const Restaurant = () => {
                                 innerSize={60}
                               />
                               <img
-                                src="/foods/MyHomeRestaurant_FeelingStatus_3.png"
+                                src="/foods/MyHomeRestaurant_FeelingStatus_3.webp"
                                 className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                               />
                             </div>

@@ -211,7 +211,7 @@ const BoardCharaSlot = ({
           }
         >
           <img
-            src="/icons/Stage_RewardChack.png"
+            src="/icons/Stage_RewardChack.webp"
             className="w-100 opacity-100"
           />
         </div>
@@ -229,7 +229,7 @@ const BoardCharaSlot = ({
           }
         >
           <img
-            src="/clonefactoryicon/GradeDungeon_Logo.png"
+            src="/clonefactoryicon/GradeDungeon_Logo.webp"
             className="w-100 opacity-100"
           />
           <div className="text-xs [text-shadow:_1px_1px_2px_rgb(0_0_0_/_70%)] text-slate-50">

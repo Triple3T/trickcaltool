@@ -33,7 +33,7 @@ const ItemSlot = ({
       style={{
         width: `${size}rem`,
         height: `${size}rem`,
-        backgroundImage: `url(/itemslot/ItemSlot_${rarityInfo.s}.png)`,
+        backgroundImage: `url(/itemslot/ItemSlot_${rarityInfo.s}.webp)`,
       }}
     >
       <div
@@ -53,7 +53,7 @@ const ItemSlot = ({
         >
           {typeof item === "string" ? (
             <img
-              src={fullItemPath ? `${item}.png` : `/items/Icon_${item}.png`}
+              src={fullItemPath ? `${item}.webp` : `/items/Icon_${item}.webp`}
               className="max-w-full max-h-full"
               // style={{
               //   maxWidth: "100%",

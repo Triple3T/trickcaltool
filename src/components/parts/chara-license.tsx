@@ -17,7 +17,7 @@ const LicenseImg = (props: LicenseImgProps) => {
     <div
       className="bg-cover bg-no-repeat relative"
       style={{
-        backgroundImage: "url(/icons/LicenseBg.png)",
+        backgroundImage: "url(/icons/LicenseBg.webp)",
         width: props.fullSize ? "100%" : props.size,
         height: props.fullSize ? "100%" : props.size,
       }}
@@ -29,7 +29,7 @@ const LicenseImg = (props: LicenseImgProps) => {
         )}
       >
         <img
-          src={`/charas/${props.name}.png`}
+          src={`/charas/${props.name}.webp`}
           alt=""
           className="absolute max-w-[calc(100%_/_0.43)] w-[calc(100%_/_0.43)] h-[calc(100%_/_0.43)] aspect-square -top-[46%] -left-[64%]"
         />
@@ -65,7 +65,7 @@ const LicenseSlot = (props: LicenseSlotProps) => {
     <div
       className="bg-cover bg-no-repeat relative font-onemobile"
       style={{
-        backgroundImage: "url(/itemslot/ItemSlot_LightGreen.png)",
+        backgroundImage: "url(/itemslot/ItemSlot_LightGreen.webp)",
         width: props.fullSize ? "100%" : props.size,
         height: props.fullSize ? "100%" : props.size,
       }}

@@ -95,7 +95,7 @@ const CharaPicker = ({
                       : `${currentChara}`,
                     isAF && "af"
                   )
-                : "/ingameui/Ingame_Artifact_HeroEmpty.png"
+                : "/ingameui/Ingame_Artifact_HeroEmpty.webp"
             }
             alt={t(
               currentChara
@@ -143,7 +143,7 @@ const CharaPicker = ({
                 }}
               >
                 <img
-                  src={`/icons/Common_UnitPersonality_${personalityString}.png`}
+                  src={`/icons/Common_UnitPersonality_${personalityString}.webp`}
                   className="w-full aspect-square"
                 />
               </div>
@@ -173,7 +173,7 @@ const CharaPicker = ({
                 }}
               >
                 <img
-                  src={`/icons/HeroGrade_000${starImgNum}.png`}
+                  src={`/icons/HeroGrade_000${starImgNum}.webp`}
                   className={cn("w-full aspect-square")}
                 />
               </div>

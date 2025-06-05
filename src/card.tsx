@@ -55,7 +55,7 @@ const Cards = () => {
                       aria-label={`Toggle ${statString}`}
                     >
                       <img
-                        src={`/icons/Icon_${statString}.png`}
+                        src={`/icons/Icon_${statString}.webp`}
                         className="h-5 w-5 aspect-square inline-flex align-middle"
                       />
                     </ToggleGroupItem>
@@ -138,7 +138,7 @@ const Cards = () => {
                 <div
                   className="aspect-square w-6 h-6 bg-cover flex justify-center items-center text-shadow-glow-foreground text-background text-shadow-glow-2 text-lg"
                   style={{
-                    backgroundImage: "url(/ingameui/Ingame_Cost_Small.png)",
+                    backgroundImage: "url(/ingameui/Ingame_Cost_Small.webp)",
                   }}
                 >
                   {Array.isArray(targetCard.p)
@@ -164,7 +164,7 @@ const Cards = () => {
                 <div
                   className="aspect-square rounded-xl border-[3px] ring-2 ring-foreground w-20 relative overflow-hidden"
                   style={{
-                    backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${background.s}.png)`,
+                    backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${background.s}.webp)`,
                     backgroundColor: background.b,
                     backgroundSize: "cover",
                     borderColor,
@@ -172,7 +172,7 @@ const Cards = () => {
                 >
                   <div className="aspect-square w-full p-2">
                     <img
-                      src={`/artifacts/ArtifactIcon_${i}.png`}
+                      src={`/artifacts/ArtifactIcon_${i}.webp`}
                       className="max-w-full max-h-full mx-auto my-auto"
                     />
                   </div>
@@ -186,7 +186,7 @@ const Cards = () => {
                       return (
                         <div key={stat}>
                           <img
-                            src={`/icons/Icon_${statString}.png`}
+                            src={`/icons/Icon_${statString}.webp`}
                             className="w-4 h-4 inline-block mr-1"
                           />
                           {t(`stat.${statString}`)} +
@@ -291,7 +291,7 @@ const Cards = () => {
                 <div
                   className="aspect-square w-6 h-6 bg-cover flex justify-center items-center text-shadow-glow-foreground text-background text-shadow-glow-2 text-lg"
                   style={{
-                    backgroundImage: "url(/ingameui/Ingame_Cost_Small.png)",
+                    backgroundImage: "url(/ingameui/Ingame_Cost_Small.webp)",
                   }}
                 >
                   {Array.isArray(targetCard.p)
@@ -323,7 +323,7 @@ const Cards = () => {
                 >
                   <div className="aspect-square w-full p-0">
                     <img
-                      src={`/spells/SpellCardIcon_${i}.png`}
+                      src={`/spells/SpellCardIcon_${i}.webp`}
                       className="max-w-full max-h-full"
                     />
                   </div>
@@ -337,7 +337,7 @@ const Cards = () => {
                       return (
                         <div key={stat}>
                           <img
-                            src={`/icons/Icon_${statString}.png`}
+                            src={`/icons/Icon_${statString}.webp`}
                             className="w-4 h-4 inline-block mr-1"
                           />
                           {t(`stat.${statString}`)} +

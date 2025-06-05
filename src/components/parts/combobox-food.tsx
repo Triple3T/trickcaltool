@@ -119,7 +119,7 @@ const ComboboxFood = ({ value, onChange }: IComboboxOuterProp) => {
                             </div>
                             <div className="flex w-[5.8125rem] h-[5.8125rem] md:w-[calc(19.375rem_/_3)] md:h-[calc(19.375rem_/_3)] px-4 pt-6 pb-3 mt-4 justify-center items-end bg-dish bg-cover bg-no-repeat">
                               <img
-                                src={`/foods/Icon_Food_${foodId}.png`}
+                                src={`/foods/Icon_Food_${foodId}.webp`}
                                 className="max-w-full max-h-full"
                               />
                             </div>
@@ -174,7 +174,7 @@ const ComboboxFood = ({ value, onChange }: IComboboxOuterProp) => {
                             </div>
                             <div className="flex w-[5.8125rem] h-[5.8125rem] md:w-[calc(19.375rem_/_3)] md:h-[calc(19.375rem_/_3)] px-4 pt-6 pb-3 mt-4 justify-center items-end bg-dish bg-cover bg-no-repeat">
                               <img
-                                src={`/foods/Icon_Food_${foodId}.png`}
+                                src={`/foods/Icon_Food_${foodId}.webp`}
                                 className="max-w-full max-h-full"
                               />
                             </div>
@@ -229,7 +229,7 @@ const ComboboxFood = ({ value, onChange }: IComboboxOuterProp) => {
                             </div>
                             <div className="flex w-[5.8125rem] h-[5.8125rem] md:w-[calc(19.375rem_/_3)] md:h-[calc(19.375rem_/_3)] px-4 pt-6 pb-3 mt-4 justify-center items-end bg-dish bg-cover bg-no-repeat">
                               <img
-                                src={`/foods/Icon_Food_${foodId}.png`}
+                                src={`/foods/Icon_Food_${foodId}.webp`}
                                 className="max-w-full max-h-full"
                               />
                             </div>

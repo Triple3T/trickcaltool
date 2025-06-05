@@ -77,7 +77,7 @@ const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
                     innerSize={60}
                   />
                   <img
-                    src="/foods/MyHomeRestaurant_FeelingStatus_5.png"
+                    src="/foods/MyHomeRestaurant_FeelingStatus_5.webp"
                     className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                   />
                   <div className="text-sm">
@@ -98,7 +98,7 @@ const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
                     innerSize={60}
                   />
                   <img
-                    src="/foods/MyHomeRestaurant_FeelingStatus_1.png"
+                    src="/foods/MyHomeRestaurant_FeelingStatus_1.webp"
                     className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                   />
                   <div className="text-sm">
@@ -124,7 +124,7 @@ const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
                     innerSize={60}
                   />
                   <img
-                    src="/foods/MyHomeRestaurant_FeelingStatus_3.png"
+                    src="/foods/MyHomeRestaurant_FeelingStatus_3.webp"
                     className="absolute w-5 aspect-[28/25] -top-1 -right-1"
                   />
                   <div className="text-sm">
@@ -178,13 +178,13 @@ const FoodTasteViewer = ({ charaName, skin }: EquipViewerProps) => {
                   />
                 </div>
                 <img
-                  src="/foods/MyHomeRestaurant_table.png"
+                  src="/foods/MyHomeRestaurant_table.webp"
                   alt=""
                   className="absolute w-[120%] left-0 -bottom-10"
                 />
                 <div className="w-1/4 absolute -bottom-2 right-1/2 bg-dish bg-cover aspect-square flex flex-row justify-center items-end px-1.5 pb-2">
                   <img
-                    src={`/foods/Icon_Food_${foodId}.png`}
+                    src={`/foods/Icon_Food_${foodId}.webp`}
                     className="w-full"
                   />
                 </div>

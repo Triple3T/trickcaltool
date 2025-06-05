@@ -86,7 +86,7 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
           <div className="text-sm">
             {t("ui.board.recommendBoardDesc1Front")}
             {t("ui.board.recommendBoardDescItemName")}
-            <img src="/icons/Item_Crayon4.png" className="inline w-4 h-4" />
+            <img src="/icons/Item_Crayon4.webp" className="inline w-4 h-4" />
             {t("ui.board.recommendBoardDesc1Back")}
           </div>
           <div className="text-sm">{t("ui.board.recommendBoardDesc2")}</div>
@@ -102,37 +102,37 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                         <div className="relative">
                           <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                             <img
-                              src="/boards/Tile_NextBoard.png"
+                              src="/boards/Tile_NextBoard.webp"
                               className="w-12 h-12 brightness-15"
                             />
                           </div>
                           <img
-                            src="/icons/Item_Crayon4.png"
+                            src="/icons/Item_Crayon4.webp"
                             className="absolute w-6 h-6 -right-1 -bottom-1"
                           />
                         </div>
                       </div>
                       <div className="flex items-center">
-                        <img src="/common/Icon_Arrow.png" className="w-6" />
+                        <img src="/common/Icon_Arrow.webp" className="w-6" />
                       </div>
                       <div className="flex items-center">
                         <div className="relative">
                           <div className="flex px-3">
                             <img
-                              src={`/charas/${randomCharas[0]}.png`}
+                              src={`/charas/${randomCharas[0]}.webp`}
                               className="w-12 h-12 mt-4 -mx-3 z-[2]"
                             />
                             <img
-                              src={`/charas/${randomCharas[1]}.png`}
+                              src={`/charas/${randomCharas[1]}.webp`}
                               className="w-12 h-12 mb-4 -mx-4 z-[1]"
                             />
                             <img
-                              src={`/charas/${randomCharas[2]}.png`}
+                              src={`/charas/${randomCharas[2]}.webp`}
                               className="w-12 h-12 mt-4 -mx-3 z-[3]"
                             />
                           </div>
                           <img
-                            src="/scenes/Icon_Levelup_Arrow.png"
+                            src="/scenes/Icon_Levelup_Arrow.webp"
                             className="w-5 h-5 absolute bottom-0 right-0 z-[5]"
                           />
                         </div>
@@ -151,26 +151,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                         <div className="relative">
                           <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                             <img
-                              src="/boards/Tile_CriticalRateOff.png"
+                              src="/boards/Tile_CriticalRateOff.webp"
                               className="w-12 h-12 brightness-15"
                             />
                           </div>
                           <img
-                            src="/icons/Item_Crayon4.png"
+                            src="/icons/Item_Crayon4.webp"
                             className="absolute w-6 h-6 -right-1 -bottom-1"
                           />
                         </div>
                       </div>
                       <div className="flex items-center">
                         <img
-                          src="/common/CommonLevelUpArrow.png"
+                          src="/common/CommonLevelUpArrow.webp"
                           className="w-6"
                         />
                       </div>
                       <div className="flex items-center">
                         <div className="relative">
                           <img
-                            src="/boards/Tile_CriticalRateOn.png"
+                            src="/boards/Tile_CriticalRateOn.webp"
                             className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                           />
                         </div>
@@ -190,26 +190,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                           <div className="relative">
                             <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                               <img
-                                src="/boards/Tile_AttackBothOff.png"
+                                src="/boards/Tile_AttackBothOff.webp"
                                 className="w-12 h-12 brightness-15"
                               />
                             </div>
                             <img
-                              src="/icons/Item_Crayon4.png"
+                              src="/icons/Item_Crayon4.webp"
                               className="absolute w-6 h-6 -right-1 -bottom-1"
                             />
                           </div>
                         </div>
                         <div className="flex items-center">
                           <img
-                            src="/common/CommonLevelUpArrow.png"
+                            src="/common/CommonLevelUpArrow.webp"
                             className="w-6"
                           />
                         </div>
                         <div className="flex items-center">
                           <div className="relative">
                             <img
-                              src="/boards/Tile_AttackBothOn.png"
+                              src="/boards/Tile_AttackBothOn.webp"
                               className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                             />
                           </div>
@@ -220,26 +220,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                           <div className="relative">
                             <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                               <img
-                                src="/boards/Tile_HpOff.png"
+                                src="/boards/Tile_HpOff.webp"
                                 className="w-12 h-12 brightness-15"
                               />
                             </div>
                             <img
-                              src="/icons/Item_Crayon4.png"
+                              src="/icons/Item_Crayon4.webp"
                               className="absolute w-6 h-6 -right-1 -bottom-1"
                             />
                           </div>
                         </div>
                         <div className="flex items-center">
                           <img
-                            src="/common/CommonLevelUpArrow.png"
+                            src="/common/CommonLevelUpArrow.webp"
                             className="w-6"
                           />
                         </div>
                         <div className="flex items-center">
                           <div className="relative">
                             <img
-                              src="/boards/Tile_HpOn.png"
+                              src="/boards/Tile_HpOn.webp"
                               className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                             />
                           </div>
@@ -260,26 +260,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                           <div className="relative">
                             <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                               <img
-                                src="/boards/Tile_CriticalRateOff.png"
+                                src="/boards/Tile_CriticalRateOff.webp"
                                 className="w-12 h-12 brightness-15"
                               />
                             </div>
                             <img
-                              src="/icons/Item_Crayon4.png"
+                              src="/icons/Item_Crayon4.webp"
                               className="absolute w-6 h-6 -right-1 -bottom-1"
                             />
                           </div>
                         </div>
                         <div className="flex items-center">
                           <img
-                            src="/common/CommonLevelUpArrow.png"
+                            src="/common/CommonLevelUpArrow.webp"
                             className="w-6"
                           />
                         </div>
                         <div className="flex items-center">
                           <div className="relative">
                             <img
-                              src="/boards/Tile_CriticalRateOn.png"
+                              src="/boards/Tile_CriticalRateOn.webp"
                               className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                             />
                           </div>
@@ -290,26 +290,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                           <div className="relative">
                             <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                               <img
-                                src="/boards/Tile_CriticalMultOff.png"
+                                src="/boards/Tile_CriticalMultOff.webp"
                                 className="w-12 h-12 brightness-15"
                               />
                             </div>
                             <img
-                              src="/icons/Item_Crayon4.png"
+                              src="/icons/Item_Crayon4.webp"
                               className="absolute w-6 h-6 -right-1 -bottom-1"
                             />
                           </div>
                         </div>
                         <div className="flex items-center">
                           <img
-                            src="/common/CommonLevelUpArrow.png"
+                            src="/common/CommonLevelUpArrow.webp"
                             className="w-6"
                           />
                         </div>
                         <div className="flex items-center">
                           <div className="relative">
                             <img
-                              src="/boards/Tile_CriticalMultOn.png"
+                              src="/boards/Tile_CriticalMultOn.webp"
                               className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                             />
                           </div>
@@ -330,26 +330,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                           <div className="relative">
                             <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                               <img
-                                src="/boards/Tile_CriticalResistOff.png"
+                                src="/boards/Tile_CriticalResistOff.webp"
                                 className="w-12 h-12 brightness-15"
                               />
                             </div>
                             <img
-                              src="/icons/Item_Crayon4.png"
+                              src="/icons/Item_Crayon4.webp"
                               className="absolute w-6 h-6 -right-1 -bottom-1"
                             />
                           </div>
                         </div>
                         <div className="flex items-center">
                           <img
-                            src="/common/CommonLevelUpArrow.png"
+                            src="/common/CommonLevelUpArrow.webp"
                             className="w-6"
                           />
                         </div>
                         <div className="flex items-center">
                           <div className="relative">
                             <img
-                              src="/boards/Tile_CriticalResistOn.png"
+                              src="/boards/Tile_CriticalResistOn.webp"
                               className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                             />
                           </div>
@@ -365,26 +365,26 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                           <div className="relative">
                             <div className="w-12 h-12 flex rotate-10 bg-board-special-disabled bg-cover">
                               <img
-                                src="/boards/Tile_CriticalMultResistOff.png"
+                                src="/boards/Tile_CriticalMultResistOff.webp"
                                 className="w-12 h-12 brightness-15"
                               />
                             </div>
                             <img
-                              src="/icons/Item_Crayon4.png"
+                              src="/icons/Item_Crayon4.webp"
                               className="absolute w-6 h-6 -right-1 -bottom-1"
                             />
                           </div>
                         </div>
                         <div className="flex items-center">
                           <img
-                            src="/common/CommonLevelUpArrow.png"
+                            src="/common/CommonLevelUpArrow.webp"
                             className="w-6"
                           />
                         </div>
                         <div className="flex items-center">
                           <div className="relative">
                             <img
-                              src="/boards/Tile_CriticalMultResistOn.png"
+                              src="/boards/Tile_CriticalMultResistOn.webp"
                               className="w-12 h-12 rotate-10 bg-board-special bg-cover"
                             />
                           </div>
@@ -404,12 +404,12 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                         <div className="relative">
                           <div className="w-16 h-16 flex rotate-10 bg-board-special-disabled bg-cover">
                             <img
-                              src="/boards/Tile_DefensePhysicOff.png"
+                              src="/boards/Tile_DefensePhysicOff.webp"
                               className="w-16 h-16 brightness-15"
                             />
                           </div>
                           <img
-                            src="/icons/Banned_Icon.png"
+                            src="/icons/Banned_Icon.webp"
                             className="absolute w-8 h-8 -right-1 -bottom-1"
                           />
                         </div>
@@ -418,12 +418,12 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                         <div className="relative">
                           <div className="w-16 h-16 flex rotate-10 bg-board-special-disabled bg-cover">
                             <img
-                              src="/boards/Tile_DefenseMagicOff.png"
+                              src="/boards/Tile_DefenseMagicOff.webp"
                               className="w-16 h-16 brightness-15"
                             />
                           </div>
                           <img
-                            src="/icons/Banned_Icon.png"
+                            src="/icons/Banned_Icon.webp"
                             className="absolute w-8 h-8 -right-1 -bottom-1"
                           />
                         </div>
@@ -440,9 +440,9 @@ const BoardGuideDialog = (props: BoardGuideDialogProps) => {
                     <div className="flex p-2 justify-center gap-2 h-40 items-center">
                       <div className="flex items-center">
                         <div className="relative">
-                          <img src="/boards/Gate.png" className="w-16 h-16" />
+                          <img src="/boards/Gate.webp" className="w-16 h-16" />
                           <img
-                            src="/icons/Banned_Icon.png"
+                            src="/icons/Banned_Icon.webp"
                             className="absolute w-8 h-8 -right-1 -bottom-1"
                           />
                         </div>

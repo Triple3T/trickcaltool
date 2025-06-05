@@ -229,7 +229,7 @@ const PickupLog = () => {
                         >
                           {lineup[3] !== 0 && (
                             <img
-                              src="/itemslot/Common_New_2.png"
+                              src="/itemslot/Common_New_2.webp"
                               className="absolute top-px left-px w-10"
                             />
                           )}
@@ -243,7 +243,7 @@ const PickupLog = () => {
                               return (
                                 <img
                                   key={charaId}
-                                  src={`/charas/${charaId}.png`}
+                                  src={`/charas/${charaId}.webp`}
                                   className={cn("rounded-sm", imageSize)}
                                 />
                               );

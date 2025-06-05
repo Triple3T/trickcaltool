@@ -316,7 +316,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                   const selected = v === equipId;
                   const fileName = `/equips/Equip_Icon_${equipPos
                     .charAt(0)
-                    .toUpperCase()}${equipPos.slice(1)}${equipNum}.png`;
+                    .toUpperCase()}${equipPos.slice(1)}${equipNum}.webp`;
                   return (
                     <CommandItem
                       key={equipId}
@@ -509,7 +509,7 @@ const EquipViewer = () => {
                                   className="flex flex-row items-center gap-2"
                                 >
                                   <img
-                                    src={`/icons/Icon_${st}.png`}
+                                    src={`/icons/Icon_${st}.webp`}
                                     className="w-6 h-6"
                                   />
                                   <div className="flex-auto text-sm text-left">
@@ -556,7 +556,7 @@ const EquipViewer = () => {
                               <div className="flex justify-center items-center text-sm">
                                 <img
                                   className="w-4 h-4 mr-0.5"
-                                  src="/icons/CurrencyIcon_0008.png"
+                                  src="/icons/CurrencyIcon_0008.webp"
                                 />
                                 {equipInfo.g}
                                 <div className="w-4 h-4 ml-0.5" />
@@ -748,7 +748,7 @@ const EquipViewer = () => {
                     {showEquipPartsRequired && (
                       <div className="flex w-full justify-center items-center gap-1">
                         <img
-                          src="/icons/CurrencyIcon_0047.png"
+                          src="/icons/CurrencyIcon_0047.webp"
                           alt=""
                           className="w-5 h-5"
                         />
@@ -809,7 +809,7 @@ const EquipViewer = () => {
                                   className="flex items-center justify-between"
                                 >
                                   <img
-                                    src={`/icons/Icon_${s}.png`}
+                                    src={`/icons/Icon_${s}.webp`}
                                     alt=""
                                     className="w-4 h-4"
                                   />
@@ -1025,8 +1025,8 @@ const EquipViewer = () => {
                       <img
                         src={
                           sortBy[0] === -1
-                            ? "/icons/CurrencyIcon_0047.png"
-                            : `/icons/Icon_${StatType[sortBy[0]]}.png`
+                            ? "/icons/CurrencyIcon_0047.webp"
+                            : `/icons/Icon_${StatType[sortBy[0]]}.webp`
                         }
                         className="w-5 h-5"
                       />

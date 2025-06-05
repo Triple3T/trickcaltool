@@ -107,7 +107,7 @@ export default defineConfig({
             description: "전체 스탯 % 보드 현황을 체크합니다.",
             icons: [
               {
-                src: "/icons/Item_Crayon4.png",
+                src: "/icons/Item_Crayon4.webp",
                 sizes: "256x256",
               },
             ],
@@ -118,7 +118,7 @@ export default defineConfig({
             description: "사도들의 장비 랭크를 메모합니다.",
             icons: [
               {
-                src: "/itemslot/Tab_Equip_Default.png",
+                src: "/itemslot/Tab_Equip_Default.webp",
                 sizes: "120x120",
               },
             ],
@@ -129,7 +129,7 @@ export default defineConfig({
             description: "교단의 연구 현황을 체크합니다.",
             icons: [
               {
-                src: "/mainlobby/HousingButton.png",
+                src: "/mainlobby/HousingButton.webp",
                 sizes: "144x144",
               },
             ],

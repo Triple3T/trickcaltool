@@ -13,12 +13,12 @@ const DealDesc = () => {
           <div className="inline-flex text-lg rounded-full ring-1 ring-red-900 h-8 items-center">
             <div className="bg-red-300/75 w-7 h-7 m-0.5 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/icons/Icon_AttackPhysic.png"
+                src="/icons/Icon_AttackPhysic.webp"
                 alt="물리 공격력"
                 className="w-5 h-5 inline-block -ml-1.5 -mr-0.5"
               />
               <img
-                src="/icons/Icon_AttackMagic.png"
+                src="/icons/Icon_AttackMagic.webp"
                 alt="마법 공격력"
                 className="w-5 h-5 inline-block -ml-1.5 -mr-0.5"
               />
@@ -30,7 +30,7 @@ const DealDesc = () => {
           <div className="inline-flex text-lg rounded-full ring-1 ring-yellow-900 h-8 items-center">
             <div className="bg-yellow-300/90 w-7 h-7 m-0.5 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/icons/Common_UnitPersonality_None.png"
+                src="/icons/Common_UnitPersonality_None.webp"
                 alt="성격"
                 className="w-5 h-5 inline-block -ml-0.5"
               />
@@ -42,12 +42,12 @@ const DealDesc = () => {
           <div className="inline-flex text-lg rounded-full ring-1 ring-green-900 h-8 items-center">
             <div className="bg-green-300/75 w-7 h-7 m-0.5 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/icons/Icon_DefensePhysic.png"
+                src="/icons/Icon_DefensePhysic.webp"
                 alt="물리 방어력"
                 className="w-5 h-5 inline-block -ml-1.5 -mr-0.5"
               />
               <img
-                src="/icons/Icon_DefenseMagic.png"
+                src="/icons/Icon_DefenseMagic.webp"
                 alt="마법 방어력"
                 className="w-5 h-5 inline-block -ml-1.5 -mr-0.5"
               />
@@ -59,12 +59,12 @@ const DealDesc = () => {
           <div className="inline-flex text-lg rounded-full ring-1 ring-blue-900 h-8 items-center">
             <div className="bg-blue-300/75 w-7 h-7 m-0.5 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/icons/Icon_CriticalMult.png"
+                src="/icons/Icon_CriticalMult.webp"
                 alt="물리 방어력"
                 className="w-5 h-5 inline-block -ml-1.5 -mr-0.5"
               />
               <img
-                src="/icons/Icon_CriticalMultResist.png"
+                src="/icons/Icon_CriticalMultResist.webp"
                 alt="마법 방어력"
                 className="w-5 h-5 inline-block -ml-1.5 -mr-0.5"
               />
@@ -76,7 +76,7 @@ const DealDesc = () => {
           <div className="inline-flex text-lg rounded-full ring-1 ring-purple-900 h-8 items-center">
             <div className="bg-purple-300/75 w-7 h-7 m-0.5 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/icons/Icon_Status_Up.png"
+                src="/icons/Icon_Status_Up.webp"
                 alt="상승"
                 className="w-5 h-5 inline-block -ml-0.5"
               />
@@ -88,7 +88,7 @@ const DealDesc = () => {
           <div className="inline-flex text-lg rounded-full ring-1 ring-slate-900 h-8 items-center">
             <div className="bg-slate-300/75 w-7 h-7 m-0.5 rounded-full overflow-hidden flex justify-center items-center">
               <img
-                src="/icons/Icon_Status_Down.png"
+                src="/icons/Icon_Status_Down.webp"
                 alt="하락"
                 className="w-5 h-5 inline-block -ml-0.5"
               />

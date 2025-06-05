@@ -154,7 +154,7 @@ export function CharaFilter({
                           className={cn()}
                         >
                           <img
-                            src={`/icons/Common_UnitPersonality_${Personality[num]}.png`}
+                            src={`/icons/Common_UnitPersonality_${Personality[num]}.webp`}
                             alt={`personality.${Personality[num]}`}
                             className="w-6 h-6"
                           />
@@ -201,7 +201,7 @@ export function CharaFilter({
                               .map((__, j) => (
                                 <img
                                   key={j}
-                                  src={`/icons/HeroGrade_000${starNum}.png`}
+                                  src={`/icons/HeroGrade_000${starNum}.webp`}
                                   className="w-6 h-6"
                                 />
                               ))}
@@ -240,7 +240,7 @@ export function CharaFilter({
                           className={cn()}
                         >
                           <img
-                            src={`/icons/Common_UnitAttack${Attack[num]}.png`}
+                            src={`/icons/Common_UnitAttack${Attack[num]}.webp`}
                             alt={`attack.${Attack[num]}`}
                             className="w-6 h-6"
                           />
@@ -279,7 +279,7 @@ export function CharaFilter({
                           className={cn()}
                         >
                           <img
-                            src={`/icons/Common_Position${Position[num]}.png`}
+                            src={`/icons/Common_Position${Position[num]}.webp`}
                             alt={`position.${Position[num]}`}
                             className="w-6 h-6"
                           />
@@ -316,7 +316,7 @@ export function CharaFilter({
                           className={cn()}
                         >
                           <img
-                            src={`/icons/Common_Unit${Class[num]}.png`}
+                            src={`/icons/Common_Unit${Class[num]}.webp`}
                             alt={`class.${Class[num]}`}
                             className="w-6 h-6"
                           />
@@ -353,7 +353,7 @@ export function CharaFilter({
                           className={cn()}
                         >
                           <img
-                            src={`/album/Album_Icon_${Race[num]}.png`}
+                            src={`/album/Album_Icon_${Race[num]}.webp`}
                             alt={`race.${Race[num]}`}
                             className="w-6 h-6"
                           />
@@ -506,7 +506,7 @@ export function CharaFilter({
                             >
                               +
                               <img
-                                src={`/icons/Icon_${statStr}.png`}
+                                src={`/icons/Icon_${statStr}.webp`}
                                 className="w-6 h-6 -my-1 inline-block mr-0.5"
                               />
                             </ToggleGroupItem>
@@ -517,7 +517,7 @@ export function CharaFilter({
                             >
                               +
                               <img
-                                src={`/icons/Icon_${statStr}.png`}
+                                src={`/icons/Icon_${statStr}.webp`}
                                 className="w-6 h-6 -my-1 inline-block mr-0.5"
                               />
                               %

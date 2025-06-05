@@ -98,7 +98,7 @@ const SpellPicker = ({
                 }}
               >
                 <img
-                  src={`/icons/Icon_${statString}.png`}
+                  src={`/icons/Icon_${statString}.webp`}
                   className="w-full aspect-square"
                 />
               </div>
@@ -136,7 +136,7 @@ const SpellPicker = ({
                         : "cursor-pointer"
                     )}
                     style={{
-                      backgroundImage: `url(/ingameui/Ingame_CardBase_Spell_${card.r[spellRarity].s}.png)`,
+                      backgroundImage: `url(/ingameui/Ingame_CardBase_Spell_${card.r[spellRarity].s}.webp)`,
                       backgroundColor: card.r[spellRarity].b,
                       backgroundSize: "cover",
                     }}
@@ -154,7 +154,7 @@ const SpellPicker = ({
                   >
                     <div className="w-full h-full">
                       <img
-                        src={`/spells/SpellCardIcon_${spellId}.png`}
+                        src={`/spells/SpellCardIcon_${spellId}.webp`}
                         alt={t(`card.spell.${spellId}.title`)}
                         className="w-full aspect-square object-cover"
                       />
@@ -171,7 +171,7 @@ const SpellPicker = ({
                         : "cursor-pointer"
                     )}
                     style={{
-                      backgroundImage: "url(/ingameui/Ingame_Cost_Small.png)",
+                      backgroundImage: "url(/ingameui/Ingame_Cost_Small.webp)",
                     }}
                   >
                     {spellCost}

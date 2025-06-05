@@ -127,23 +127,23 @@ function App() {
                 description={t("ui.index.buttonGroup.note.description")}
                 subMenus={[
                   {
-                    icon: "/icons/Item_Crayon4.png",
+                    icon: "/icons/Item_Crayon4.webp",
                     title: t("ui.board.title"),
                     to: "/board",
                   },
                   {
-                    icon: "/itemslot/Tab_Tree.png",
+                    icon: "/itemslot/Tab_Tree.webp",
                     title: t("ui.board.pboardTitle"),
                     to: "/pboard",
                     greenIcon: true,
                   },
                   {
-                    icon: "/growth/CommonLevelUpPopupIcon.png",
+                    icon: "/growth/CommonLevelUpPopupIcon.webp",
                     title: t("ui.equiprank.title"),
                     to: "/eqrank",
                   },
                   {
-                    icon: "/mainlobby/HousingButton.png",
+                    icon: "/mainlobby/HousingButton.webp",
                     title: t("ui.lab.title"),
                     to: "/lab",
                   },
@@ -156,19 +156,19 @@ function App() {
                 )}
                 subMenus={[
                   {
-                    icon: "/itemslot/Tab_Detail.png",
+                    icon: "/itemslot/Tab_Detail.webp",
                     title: t("ui.personal.title"),
                     to: "/personal",
                     greenIcon: true,
                   },
                   {
-                    icon: "/itemslot/Tab_Equip_Default.png",
+                    icon: "/itemslot/Tab_Equip_Default.webp",
                     title: t("ui.equipviewer.title"),
                     to: "/equipviewer",
                     greenIcon: true,
                   },
                   {
-                    icon: "/icons/CurrencyIcon_0011.png",
+                    icon: "/icons/CurrencyIcon_0011.webp",
                     title: t("ui.normaldrop.title"),
                     to: "/normaldrop",
                   },
@@ -179,17 +179,17 @@ function App() {
                 description={t("ui.index.buttonGroup.search.description")}
                 subMenus={[
                   {
-                    icon: "/myhomeicons/MyHome_Button_004.png",
+                    icon: "/myhomeicons/MyHome_Button_004.webp",
                     title: t("ui.tasksearch.title"),
                     to: "/tasksearch",
                   },
                   {
-                    icon: "/icons/Common_Node_Special.png",
+                    icon: "/icons/Common_Node_Special.webp",
                     title: t("ui.boardsearch.title"),
                     to: "/boardsearch",
                   },
                   {
-                    icon: "/foods/MyHomeRestaurant_EatingInviteIcon.png",
+                    icon: "/foods/MyHomeRestaurant_EatingInviteIcon.webp",
                     title: t("ui.restaurant.title"),
                     to: "/restaurant",
                   },
@@ -200,22 +200,22 @@ function App() {
                 description={t("ui.index.buttonGroup.calculator.description")}
                 subMenus={[
                   {
-                    icon: "/icons/CurrencyIcon_0041.png",
+                    icon: "/icons/CurrencyIcon_0041.webp",
                     title: t("ui.goodscalc.title"),
                     to: "/goodscalc",
                   },
                   {
-                    icon: "/icons/CurrencyIcon_0048.png",
+                    icon: "/icons/CurrencyIcon_0048.webp",
                     title: t("ui.dispatchcalc.title"),
                     to: "/dispatchcalc",
                   },
                   {
-                    icon: "/scenes/DeckButton.png",
+                    icon: "/scenes/DeckButton.webp",
                     title: t("ui.teambuilder.title"),
                     to: "/teambuilder",
                   },
                   {
-                    icon: "/common/BoardRecord_Tab_Stat.png",
+                    icon: "/common/BoardRecord_Tab_Stat.webp",
                     title: t("ui.check.guide.index"),
                     to: "/guidecheck",
                     greenIcon: true,

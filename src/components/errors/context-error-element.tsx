@@ -113,7 +113,7 @@ const ContextErrorElement = ({ error }: { error: unknown }) => {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div
         className="absolute left-0 top-0 bg-center bg-cover w-full h-full font-onemobile bg-no-repeat bg-blend-overlay bg-slate-100/90 dark:bg-slate-900/90"
-        style={{ backgroundImage: `url(/dialogcut/${bgFileName}.png)` }}
+        style={{ backgroundImage: `url(/dialogcut/${bgFileName}.webp)` }}
       >
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full p-8 opacity-70 max-h-full overflow-y-auto">
           <div className="text-6xl">{t("ui.error.title")}</div>

@@ -205,7 +205,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                   const selected = v === equipId;
                   const fileName = `/equips/Equip_Icon_${equipPos
                     .charAt(0)
-                    .toUpperCase()}${equipPos.slice(1)}${equipNum}.png`;
+                    .toUpperCase()}${equipPos.slice(1)}${equipNum}.webp`;
                   return (
                     <CommandItem
                       key={equipId}
@@ -367,7 +367,7 @@ const EquipEnhanceCalc = () => {
                 </div>
                 {enhanceLevel[0] !== enhanceLevel[1] && (
                   <>
-                    <img src="/common/CommonLevelUpArrow.png" className="h-3" />
+                    <img src="/common/CommonLevelUpArrow.webp" className="h-3" />
                     <div
                       className="text-[#5082e6]"
                       style={{
@@ -417,7 +417,7 @@ const EquipEnhanceCalc = () => {
             })}
           </div>
           <div className="flex flex-row gap-2 justify-center items-center bg-green-50 dark:bg-green-950 rounded ring-1 ring-green-100 dark:ring-green-900 p-0.5">
-            <img src="/icons/CurrencyIcon_0008.png" className="w-5 h-5" />
+            <img src="/icons/CurrencyIcon_0008.webp" className="w-5 h-5" />
             <div>{requirements[1].toLocaleString()}</div>
           </div>
           <Separator className="my-4" />
@@ -434,7 +434,7 @@ const EquipEnhanceCalc = () => {
                 <div key={stat} className="flex flex-row">
                   <div className="flex flex-row gap-1 text-left flex-auto items-center">
                     <img
-                      src={`/icons/Icon_${stat}.png`}
+                      src={`/icons/Icon_${stat}.webp`}
                       alt=""
                       className="w-4 h-4"
                     />

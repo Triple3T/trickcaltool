@@ -110,7 +110,7 @@ const SkinChangeableCombobox = ({ value, onChange }: IComboboxOuterProp) => {
                           )}
                         >
                           <img
-                            src={`/charas/${charaId}.png`}
+                            src={`/charas/${charaId}.webp`}
                             className="w-full aspect-square"
                           />
                           <div className="w-full absolute text-center text-sm py-0.5 bottom-0 left-0 bg-slate-100/90 dark:bg-slate-900/90">

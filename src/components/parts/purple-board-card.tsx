@@ -164,7 +164,7 @@ const PurpleBoardCard = ({
                               <img
                                 src={`/boards/Tile_${boardType}${
                                   checked ? "On" : "Off"
-                                }.png`}
+                                }.webp`}
                                 className={cn(
                                   "w-full aspect-square bg-cover",
                                   checked ? "" : "brightness-[.15]"
@@ -201,7 +201,7 @@ const PurpleBoardCard = ({
                         <img
                           src={`/boards/Tile_${
                             PurpleBoardType[parseInt(pb, 10)]
-                          }${checked ? "On" : "Off"}.png`}
+                          }${checked ? "On" : "Off"}.webp`}
                           className={cn(
                             "w-full aspect-square bg-cover",
                             checked ? "bg-board-high" : "bg-board-high-disabled"
@@ -274,7 +274,7 @@ const PurpleBoardCard = ({
                               <img
                                 src={`/boards/Tile_${boardType}${
                                   checked ? "On" : "Off"
-                                }.png`}
+                                }.webp`}
                                 className={cn(
                                   "w-full aspect-square bg-cover",
                                   checked ? "" : "brightness-[.15]"
@@ -311,7 +311,7 @@ const PurpleBoardCard = ({
                         <img
                           src={`/boards/Tile_${
                             PurpleBoardType[parseInt(pb, 10)]
-                          }${checked ? "On" : "Off"}.png`}
+                          }${checked ? "On" : "Off"}.webp`}
                           className={cn(
                             "w-full aspect-square bg-cover",
                             checked ? "bg-board-high" : "bg-board-high-disabled"
@@ -385,7 +385,7 @@ const PurpleBoardCard = ({
                             <img
                               src={`/boards/Tile_${boardType}${
                                 checked ? "On" : "Off"
-                              }.png`}
+                              }.webp`}
                               className={cn(
                                 "w-full aspect-square bg-cover",
                                 checked ? "" : "brightness-[.15]"
@@ -422,7 +422,7 @@ const PurpleBoardCard = ({
                       <img
                         src={`/boards/Tile_${
                           PurpleBoardType[parseInt(pb, 10)]
-                        }${checked ? "On" : "Off"}.png`}
+                        }${checked ? "On" : "Off"}.webp`}
                         className={cn(
                           "w-full aspect-square bg-cover",
                           checked ? "bg-board-high" : "bg-board-high-disabled"

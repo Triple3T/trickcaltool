@@ -240,7 +240,7 @@ const BonusChecker = (props: BonusStatProps) => {
                 ) : (
                   <img
                     className="w-8 h-8 mb-1"
-                    src={`/icons/LoveHero${loveToggle ? "On" : "Off"}.png`}
+                    src={`/icons/LoveHero${loveToggle ? "On" : "Off"}.webp`}
                     onClick={() => setLoveToggle((v) => !v)}
                   />
                 )}
@@ -294,7 +294,7 @@ const BonusChecker = (props: BonusStatProps) => {
                 <Fragment key={`-${s}`}>
                   <div className="text-[#315c15] dark:text-[#f5fde5] text-left">
                     <img
-                      src={`/icons/Icon_${statName}.png`}
+                      src={`/icons/Icon_${statName}.webp`}
                       className="w-5 h-5 inline-block align-middle mr-1.5"
                     />
                     {t(`stat.${statName}`)}

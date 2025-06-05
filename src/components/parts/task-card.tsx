@@ -47,7 +47,7 @@ const TaskCard = ({
       <div
         className={cn("absolute -top-2 -left-2 aspect-[55/71] bg-cover text-2xl text-slate-50", small ? "w-10 pt-1" : "w-11 pt-1.5")}
         style={{
-          backgroundImage: `url(/tasks/Icon_Task_${taskLevel + 1}.png)`,
+          backgroundImage: `url(/tasks/Icon_Task_${taskLevel + 1}.webp)`,
         }}
         onClick={() => setTaskLevel((level: number) => (level + 1) % 5)}
       >
@@ -61,12 +61,12 @@ const TaskCard = ({
       <div className="w-full relative aspect-[254/176]">
         <img
           className="w-full aspect-[254/176] dark:contrast-125 dark:brightness-80"
-          src={`/tasks/Img_${taskId}_Back.png`}
+          src={`/tasks/Img_${taskId}_Back.webp`}
         />
         {frontImgWidthPercent && (
           <img
             className="absolute bottom-0 left-0 dark:contrast-125 dark:brightness-80"
-            src={`/tasks/Img_${taskId}_Front.png`}
+            src={`/tasks/Img_${taskId}_Front.webp`}
             style={{ width: `${frontImgWidthPercent}%` }}
           />
         )}

@@ -166,7 +166,7 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
                   </Badge>
                 )}
                 <img
-                  src={`/album/Album_Icon_${Race[race]}.png`}
+                  src={`/album/Album_Icon_${Race[race]}.webp`}
                   alt=""
                   className="w-4 h-4 absolute top-1 right-1"
                 />
@@ -174,19 +174,19 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
                   <div className="h-5 md:h-6">
                     <div className="flex justify-center gap-0.5 p-0.5 w-max mx-auto rounded-full bg-slate-200/65 dark:bg-slate-800/65">
                       <img
-                        src={`/icons/Common_UnitPersonality_${Personality[personality]}.png`}
+                        src={`/icons/Common_UnitPersonality_${Personality[personality]}.webp`}
                         className="w-4 h-4 md:w-5 md:h-5"
                       />
                       <img
-                        src={`/icons/Common_Unit${Class[unitClass]}.png`}
+                        src={`/icons/Common_Unit${Class[unitClass]}.webp`}
                         className="w-4 h-4 md:w-5 md:h-5"
                       />
                       <img
-                        src={`/icons/Common_UnitAttack${Attack[attackType]}.png`}
+                        src={`/icons/Common_UnitAttack${Attack[attackType]}.webp`}
                         className="w-4 h-4 md:w-5 md:h-5"
                       />
                       <img
-                        src={`/icons/Common_Position${Position[position]}.png`}
+                        src={`/icons/Common_Position${Position[position]}.webp`}
                         className="w-4 h-4 md:w-5 md:h-5"
                       />
                     </div>
@@ -200,7 +200,7 @@ const CharaList = ({ setTargetChara }: CharaListProps) => {
                             key={i}
                             src={`/icons/HeroGrade_000${
                               [0, 3, 3, 4][initialStar]
-                            }.png`}
+                            }.webp`}
                             alt=""
                             className="w-6 h-6 -mx-[3px]"
                           />
