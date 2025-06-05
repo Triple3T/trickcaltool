@@ -28,6 +28,7 @@ jobs:
         run: |
           find public -type f -name '*.png' \
           ! -path 'public/AppImages/*' \
+          ! -path 'public/networkicon/*' \
           ! -path 'public/favicon-16x16.png' \
           ! -path 'public/favicon-32x32.png' > png_files.txt
           while IFS= read -r file; do
