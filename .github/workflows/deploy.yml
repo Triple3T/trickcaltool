@@ -128,7 +128,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add *
-          git commit -m ${{ steps.last_commit.outputs.last_commit_message }} || echo "Nothing to commit"
+          git commit -m "${{ steps.last_commit.outputs.last_commit_message }}" || echo "Nothing to commit"
           git push origin HEAD:deploy
 
       - name: Cleanup
