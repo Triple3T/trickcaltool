@@ -58,6 +58,7 @@ jobs:
         run: |
           mkdir -p optimized/public/AppImages
           cp -r public/AppImages/* optimized/public/AppImages/
+          cp -r public/AppImages/* optimized/public/fonts/
           cp public/favicon-16x16.png optimized/public/favicon-16x16.png
           cp public/favicon-32x32.png optimized/public/favicon-32x32.png
           cp public/favicon.ico optimized/public/favicon.ico
