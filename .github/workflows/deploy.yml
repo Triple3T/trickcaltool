@@ -48,6 +48,14 @@ jobs:
         run: |
           git fetch origin deploy
           git worktree add -b deploy-local deploy-temp origin/deploy
+      
+      - name: Prepare merge commit to deploy branch
+        run: |
+          cd deploy-temp
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git merge --no-commit --no-ff origin/main
+          cd ..
 
       - name: Copy existing optimized images and other files from deploy
         run: |
@@ -126,9 +134,6 @@ jobs:
       - name: Commit and push to deploy branch
         run: |
           cd deploy-temp
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add *
           git commit -m "${{ steps.last_commit.outputs.last_commit_message }}" || echo "Nothing to commit"
           git push origin HEAD:deploy
