@@ -18,9 +18,11 @@ import { Separator } from "@/components/ui/separator";
 const RaidBossStatDialog = ({
   stat,
   apply,
+  disabled = false,
 }: {
   stat: StatType;
   apply: (value: number) => void;
+  disabled?: boolean;
 }) => {
   const { t } = useTranslation();
   const [stage, setStage] = useState(15);
@@ -40,11 +42,16 @@ const RaidBossStatDialog = ({
   }, [bossSeason, stage]);
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button size="sm">
+      <DialogTrigger disabled={disabled}>
+        <Button size="sm" disabled={disabled}>
           <Search className="w-4 h-4 mr-2 inline" />
           보스별 요구 스탯 검색
         </Button>
+        {disabled && (
+          <div className="text-xs opcaity-50 break-keep break min-w-full max-w-full w-min text-red-600 dark:text-red-400 mt-1">
+            선택한 스탯으로는 보스 기준치가 제공되지 않습니다.
+          </div>
+        )}
       </DialogTrigger>
       <DialogContent
         className="font-onemobile"
@@ -87,61 +94,7 @@ const RaidBossStatDialog = ({
           <>
             <Separator />
             <div className="px-2 py-1">
-              <div className="text-lg">요구 스탯</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 mt-2">
-                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
-                  <div>
-                    <img
-                      src="/icons/Icon_AttackPhysic.png"
-                      className="w-5 h-5 inline mr-1"
-                    />
-                    물리 공격력
-                  </div>
-                  <div>{currentBoss.p.toLocaleString()}</div>
-                </div>
-                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
-                  <div>
-                    <img
-                      src="/icons/Icon_AttackMagic.png"
-                      className="w-5 h-5 inline mr-1"
-                    />
-                    마법 공격력
-                  </div>
-                  <div>{currentBoss.m.toLocaleString()}</div>
-                </div>
-                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
-                  <div>
-                    <img
-                      src="/icons/Icon_CriticalRate.png"
-                      className="w-5 h-5 inline -mr-1"
-                    />
-                    <img
-                      src="/icons/Icon_CriticalMult.png"
-                      className="w-5 h-5 inline mr-1"
-                    />
-                    치명 스탯
-                  </div>
-                  <div>{currentBoss.c.toLocaleString()}</div>
-                </div>
-                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
-                  <div>
-                    <img
-                      src="/icons/Icon_CriticalResist.png"
-                      className="w-5 h-5 inline -mr-1"
-                    />
-                    <img
-                      src="/icons/Icon_CriticalMultResist.png"
-                      className="w-5 h-5 inline mr-1"
-                    />
-                    저항 스탯
-                  </div>
-                  <div>{currentBoss.r.toLocaleString()}</div>
-                </div>
-              </div>
-            </div>
-            <Separator />
-            <div className="px-2 py-1">
-              <div className="text-lg">체력</div>
+              <div className="text-lg">보스 체력</div>
               <div className="mt-2 p-1">
                 <div>
                   <img
@@ -166,6 +119,140 @@ const RaidBossStatDialog = ({
                   {Math.round(
                     (currentBoss.h * 10000) / (10000 - currentBoss.l)
                   ).toLocaleString()}
+                </div>
+              )}
+            </div>
+            <Separator />
+            <div className="px-2 py-1">
+              <div className="text-lg">요구 스탯</div>
+              {stat === StatType.AttackPhysic && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_AttackPhysic.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    물리 공격력 기준치
+                  </div>
+                  <div>{currentBoss.p.toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.AttackPhysic && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_AttackPhysic.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    물리 공격력 보정치
+                  </div>
+                  <div>{(0).toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.AttackMagic && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_AttackMagic.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    마법 공격력 기준치
+                  </div>
+                  <div>{currentBoss.m.toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.AttackMagic && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_AttackMagic.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    마법 공격력 보정치
+                  </div>
+                  <div>{(0).toLocaleString()}</div>
+                </div>
+              )}
+              {(stat === StatType.CriticalMult ||
+                stat === StatType.CriticalRate) && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_CriticalRate.png"
+                      className="w-5 h-5 inline -mr-1"
+                    />
+                    <img
+                      src="/icons/Icon_CriticalMult.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    치명 스탯 기준치
+                  </div>
+                  <div>{currentBoss.c.toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.CriticalMult && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_CriticalMult.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    치명 피해 보정치
+                  </div>
+                  <div>{(10120).toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.CriticalRate && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_CriticalRate.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    치명타 추정 보정치
+                  </div>
+                  <div>{(2000).toLocaleString()}</div>
+                </div>
+              )}
+              {(stat === StatType.CriticalMultResist ||
+                stat === StatType.CriticalResist) && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_CriticalResist.png"
+                      className="w-5 h-5 inline -mr-1"
+                    />
+                    <img
+                      src="/icons/Icon_CriticalMultResist.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    저항 스탯 기준치
+                  </div>
+                  <div>{currentBoss.r.toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.CriticalMultResist && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_CriticalMultResist.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    치명 피해 저항 보정치
+                  </div>
+                  <div>{(1480).toLocaleString()}</div>
+                </div>
+              )}
+              {stat === StatType.CriticalResist && (
+                <div className="flex flex-row justify-between px-4 py-1 sm:py-2">
+                  <div>
+                    <img
+                      src="/icons/Icon_CriticalResist.png"
+                      className="w-5 h-5 inline mr-1"
+                    />
+                    치명타 저항 추정 보정치
+                  </div>
+                  <div>{(500).toLocaleString()}</div>
                 </div>
               )}
             </div>

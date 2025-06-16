@@ -164,7 +164,7 @@ const BonusChecker = (props: BonusStatProps) => {
     setSelectedChara(charaId);
     setRace(Number(chara[charaId].t.charAt(5)));
   }, []);
-  const [statType, setStatType] = useState<StatType>(StatType.AttackPhysic);
+  const [statType, setStatType] = useState<StatType>(StatType.Hp);
   const [startStat, setStartStat] = useState<number>(0);
   const [goalStat, setGoalStat] = useState<number>(0);
   const [additionalBoardPercent, setAdditionalBoardPercent] =
@@ -267,9 +267,7 @@ const BonusChecker = (props: BonusStatProps) => {
                         )
                       )}`
                     }
-                    onValueChange={(v) =>
-                      setLoveLevel(Number(v))
-                    }
+                    onValueChange={(v) => setLoveLevel(Number(v))}
                   />
                 </div>
               </div>
@@ -423,7 +421,9 @@ const BonusChecker = (props: BonusStatProps) => {
                 <div>
                   <LazyInput
                     value={`${startStat}`}
-                    sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || '0') || 0}`}
+                    sanitize={(v) =>
+                      `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                    }
                     onValueChange={(v) => {
                       const val = Math.max(Number(v) || 0, 0);
                       setStartStat(val);
@@ -443,7 +443,9 @@ const BonusChecker = (props: BonusStatProps) => {
                 <div>
                   <LazyInput
                     value={`${goalStat}`}
-                    sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || '0') || 0}`}
+                    sanitize={(v) =>
+                      `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                    }
                     onValueChange={(v) => {
                       const val = Math.max(Number(v) || 0, 0);
                       setGoalStat(Number(v));
@@ -458,24 +460,23 @@ const BonusChecker = (props: BonusStatProps) => {
                   />
                 </div>
               </div>
-              {[
-                StatType.AttackMagic,
-                StatType.AttackPhysic,
-                StatType.CriticalMult,
-                StatType.CriticalMultResist,
-                StatType.CriticalRate,
-                StatType.CriticalResist,
-              ].includes(statType) && (
-                <div>
-                  <RaidBossStatDialog
-                    stat={statType}
-                    apply={(v) => {
-                      setGoalStat(v);
-                      adjustStat(v, "goal");
-                    }}
-                  />
-                </div>
-              )}
+              <RaidBossStatDialog
+                stat={statType}
+                apply={(v) => {
+                  setGoalStat(v);
+                  adjustStat(v, "goal");
+                }}
+                disabled={
+                  ![
+                    StatType.AttackMagic,
+                    StatType.AttackPhysic,
+                    StatType.CriticalMult,
+                    StatType.CriticalMultResist,
+                    StatType.CriticalRate,
+                    StatType.CriticalResist,
+                  ].includes(statType)
+                }
+              />
             </div>
             {startStat < goalStat && (
               <>
@@ -488,7 +489,9 @@ const BonusChecker = (props: BonusStatProps) => {
                       <div className="flex flex-row items-baseline">
                         <LazyInput
                           value={`${additionalBoardPercent}`}
-                          sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || '0') || 0}`}
+                          sanitize={(v) =>
+                            `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                          }
                           onValueChange={(v) => {
                             const val = Math.max(Number(v) || 0, 0);
                             setAdditionalBoardPercent(val);
@@ -550,7 +553,9 @@ const BonusChecker = (props: BonusStatProps) => {
                       <div className="flex flex-row items-baseline">
                         <LazyInput
                           value={`${artifactPercent}`}
-                          sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || '0') || 0}`}
+                          sanitize={(v) =>
+                            `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                          }
                           onValueChange={(v) => {
                             const val = Math.max(Number(v) || 0, 0);
                             setArtifactPercent(Number(v));
