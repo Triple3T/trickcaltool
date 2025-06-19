@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import SearchBox from "@/components/common/search-with-icon";
 import chara from "@/data/chara";
 import skillcoefficient from "@/data/skillcoefficient";
+import aside3stat from "@/data/aside3stat";
 import { personalityBG } from "@/utils/personalityBG";
 import icSearch from "@/lib/initialConsonantSearch";
 import { Personality, Attack, Position, Class, Race } from "@/types/enums";
@@ -56,7 +57,7 @@ const filterPropertyChara = (
       skillcoefficient.c[c].a?.e3.some((e) => propertyFilter.includes(e));
   } else if (propertyType === 9) {
     return (c: string) =>
-      skillcoefficient.c[c].a?.s3
+      aside3stat.c[c]?.s
         ?.map((e) => e[0])
         ?.some((e) => propertyFilter.includes(e));
   }

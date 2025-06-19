@@ -19,6 +19,7 @@ import purpleboard from "@/data/purpleboard";
 import purpleposition from "@/data/purpleposition";
 import route from "@/data/route";
 import skillcoefficient from "@/data/skillcoefficient";
+import aside3stat from "@/data/aside3stat";
 import { useUserDataCharaInfo } from "@/stores/useUserDataStore";
 import {
   Attack,
@@ -1083,7 +1084,7 @@ const Personal = () => {
                 </div>
                 <SubtitleBar>{t("ui.personal.allApplyStat")}</SubtitleBar>
                 <div className="text-base break-keep flex flex-col px-2 pt-1 gap-y-1.5">
-                  {skillcoefficient.c[charaName].a!.s3.map(
+                  {aside3stat.c[charaName].s.map(
                     ([target, value], i) => {
                       const isPercent = target > 9999;
                       const stat = isPercent ? target - 10000 : target;

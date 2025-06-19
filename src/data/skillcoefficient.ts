@@ -21,7 +21,6 @@ export default skillcoefficient as {
         2: CoefficientType[];
         3: FixedCoefficientType[];
         e3: Aside3EffectCategory[];
-        s3: number[][];
       };
       k: {
         l: number[];
