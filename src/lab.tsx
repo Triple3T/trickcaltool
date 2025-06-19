@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, ArrowRight, Minus, Plus } from "lucide-react";
+import { ArrowLeft, ArrowRight, CircleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Loading from "@/components/common/loading";
 import {
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Select from "@/components/common/combobox-select";
+import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { toast } from "sonner";
@@ -331,6 +332,8 @@ const Lab = () => {
   const userDataLab = useUserDataLab();
   const userDataMyhome = useUserDataMyhome();
   const userDataCollection = useUserDataCollection();
+  const [userMyhomeArchiveLevelDummy, setUserMyhomeArchiveLevelDummy] =
+    useState<number[]>([0, 1]);
   const effectTotal = useMemo(() => {
     if (!userDataLab) return [];
     return reduceEffectTotal({
@@ -680,413 +683,239 @@ const Lab = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="levels">
-            <div className="grid grid-cols-3 max-w-80 mx-auto gap-x-2 gap-y-4">
-              <div>
+            <div className="grid grid-cols-12 max-w-80 mx-auto gap-x-2 gap-y-4">
+              <div className="col-span-4">
                 <SubtitleBar>{t("ui.lab.myHomeCategory")}</SubtitleBar>
               </div>
-              <div>
+              <div className="col-span-4">
                 <SubtitleBar>{t("ui.lab.myHomeCurrentLevel")}</SubtitleBar>
               </div>
-              <div>
+              <div className="col-span-4">
                 <SubtitleBar>{t("ui.lab.myHomeGoalLevel")}</SubtitleBar>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col col-span-4">
                 <img
                   className="w-18 mx-auto"
                   src="/myhomeicons/MyHome_Button_001.png"
                 />
-                {t("myhome.lab")}
               </div>
-              <div>
-                <div>{userDataMyhome.l[0] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.l[0] === 0}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "lab",
-                        0,
-                        Math.min(
-                          userDataMyhome.l[1],
-                          Math.max(userDataMyhome.l[0] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.l[0] === myhomeupgrade.l.length ||
-                      userDataMyhome.l[0] === userDataMyhome.l[1]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "lab",
-                        0,
-                        Math.min(
-                          userDataMyhome.l[1],
-                          Math.min(
-                            userDataMyhome.l[0] + 1,
-                            myhomeupgrade.l.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-3">
+                {userDataMyhome.l[0] + 1}
               </div>
-              <div>
-                <div>{userDataMyhome.l[1] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.l[1] === 0 ||
-                      userDataMyhome.l[1] === userDataMyhome.l[0]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "lab",
-                        1,
-                        Math.max(
-                          userDataMyhome.l[0],
-                          Math.max(userDataMyhome.l[1] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.l[1] === myhomeupgrade.l.length}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "lab",
-                        1,
-                        Math.max(
-                          userDataMyhome.l[0],
-                          Math.min(
-                            userDataMyhome.l[1] + 1,
-                            myhomeupgrade.l.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-2">
+                &rarr;
               </div>
-              <div className="flex flex-col">
+              <div className="flex justify-center items-center text-lg col-span-3 relative">
+                {userDataMyhome.l[1] + 1}
+                {userDataMyhome.m[1] < 9 &&
+                  userDataMyhome.l[1] + 1 > userDataMyhome.m[1] && (
+                    <div className="absolute -top-1 right-0 text-xs break-keep whitespace-nowrap text-red-600 dark:text-red-400">
+                      <CircleAlert
+                        className="w-3.5 h-3.5 inline-block mr-1 -mt-1"
+                        strokeWidth={3}
+                      />
+                      {/* 본부 레벨 {Math.min(10, userDataMyhome.l[1] + 2)}에서 생산
+                      랩 레벨 {userDataMyhome.l[1] + 1} 해방 */}
+                      {t("ui.lab.myHomeAlertMyhomeLevel", {
+                        0: t("myhome.lab"),
+                        1: Math.min(10, userDataMyhome.l[1] + 2),
+                        2: userDataMyhome.l[1] + 1,
+                      })}
+                    </div>
+                  )}
+              </div>
+              <div className="col-span-4">{t("myhome.lab")}</div>
+              <div className="col-span-8 px-1">
+                <Slider
+                  value={userDataMyhome.l}
+                  onValueChange={(v) => {
+                    v.sort((a, b) => a - b);
+                    labMyHomeLevelModify("lab", 0, v[0]);
+                    labMyHomeLevelModify("lab", 1, v[1]);
+                  }}
+                  min={0}
+                  max={myhomeupgrade.l.length}
+                  defaultValue={[0, 0]}
+                />
+              </div>
+              <div className="flex flex-col col-span-4">
                 <img
                   className="w-18 mx-auto"
                   src="/myhomeicons/MyHome_Button_002.png"
                 />
-                {t("myhome.restaurant")}
               </div>
-              <div>
-                <div>{userDataMyhome.r[0] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.r[0] === 0}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "restaurant",
-                        0,
-                        Math.min(
-                          userDataMyhome.r[1],
-                          Math.max(userDataMyhome.r[0] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.r[0] === myhomeupgrade.r.length ||
-                      userDataMyhome.r[0] === userDataMyhome.r[1]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "restaurant",
-                        0,
-                        Math.min(
-                          userDataMyhome.r[1],
-                          Math.min(
-                            userDataMyhome.r[0] + 1,
-                            myhomeupgrade.r.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-3">
+                {userDataMyhome.r[0] + 1}
               </div>
-              <div>
-                <div>{userDataMyhome.r[1] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.r[1] === 0 ||
-                      userDataMyhome.r[1] === userDataMyhome.r[0]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "restaurant",
-                        1,
-                        Math.max(
-                          userDataMyhome.r[0],
-                          Math.max(userDataMyhome.r[1] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.r[1] === myhomeupgrade.r.length}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "restaurant",
-                        1,
-                        Math.max(
-                          userDataMyhome.r[0],
-                          Math.min(
-                            userDataMyhome.r[1] + 1,
-                            myhomeupgrade.r.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-2">
+                &rarr;
               </div>
-              <div className="flex flex-col">
+              <div className="flex justify-center items-center text-lg col-span-3 relative">
+                {userDataMyhome.r[1] + 1}
+                {userDataMyhome.m[1] < 9 &&
+                  userDataMyhome.r[1] > 0 &&
+                  userDataMyhome.r[1] * 2 >= userDataMyhome.m[1] && (
+                    <div className="absolute -top-1 right-0 text-xs break-keep whitespace-nowrap text-red-600 dark:text-red-400">
+                      <CircleAlert
+                        className="w-3.5 h-3.5 inline-block mr-1 -mt-1"
+                        strokeWidth={3}
+                      />
+                      {/* 본부 레벨 {userDataMyhome.r[1] * 2 + 2}에서 연회장 레벨{" "}
+                      {userDataMyhome.r[1] + 1} 해방 */}
+                      {t("ui.lab.myHomeAlertMyhomeLevel", {
+                        0: t("myhome.restaurant"),
+                        1: userDataMyhome.r[1] * 2 + 2,
+                        2: userDataMyhome.r[1] + 1,
+                      })}
+                    </div>
+                  )}
+              </div>
+              <div className="col-span-4">{t("myhome.restaurant")}</div>
+              <div className="col-span-8 px-1">
+                <Slider
+                  value={userDataMyhome.r}
+                  onValueChange={(v) => {
+                    v.sort((a, b) => a - b);
+                    labMyHomeLevelModify("restaurant", 0, v[0]);
+                    labMyHomeLevelModify("restaurant", 1, v[1]);
+                  }}
+                  min={0}
+                  max={myhomeupgrade.r.length}
+                  defaultValue={[0, 0]}
+                />
+              </div>
+              <div className="flex flex-col col-span-4">
                 <img
                   className="w-18 mx-auto"
                   src="/myhomeicons/MyHome_Button_003.png"
                 />
-                {t("myhome.myhome")}
               </div>
-              <div>
-                <div>{userDataMyhome.m[0] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.m[0] === 0}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "myhome",
-                        0,
-                        Math.min(
-                          userDataMyhome.m[1],
-                          Math.max(userDataMyhome.m[0] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.m[0] === myhomeupgrade.m.length ||
-                      userDataMyhome.m[0] === userDataMyhome.m[1]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "myhome",
-                        0,
-                        Math.min(
-                          userDataMyhome.m[1],
-                          Math.min(
-                            userDataMyhome.m[0] + 1,
-                            myhomeupgrade.m.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-3">
+                {userDataMyhome.m[0] + 1}
               </div>
-              <div>
-                <div>{userDataMyhome.m[1] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.m[1] === 0 ||
-                      userDataMyhome.m[1] === userDataMyhome.m[0]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "myhome",
-                        1,
-                        Math.max(
-                          userDataMyhome.m[0],
-                          Math.max(userDataMyhome.m[1] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.m[1] === myhomeupgrade.m.length}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "myhome",
-                        1,
-                        Math.max(
-                          userDataMyhome.m[0],
-                          Math.min(
-                            userDataMyhome.m[1] + 1,
-                            myhomeupgrade.m.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-2">
+                &rarr;
               </div>
-              <div className="flex flex-col">
+              <div className="flex justify-center items-center text-lg col-span-3 relative">
+                {userDataMyhome.m[1] + 1}
+                {userDataMyhome.m[1] > 2 && (
+                  <div className="absolute -top-1 right-0 text-xs break-keep whitespace-nowrap text-amber-600 dark:text-amber-400">
+                    <CircleAlert
+                      className="w-3.5 h-3.5 inline-block mr-1 -mt-1"
+                      strokeWidth={3}
+                    />
+                    {/* 교주 레벨 {userDataMyhome.m[1] * 10 - 20}에서 본부 레벨{" "}
+                    {userDataMyhome.m[1] + 1} 해방 */}
+                    {t("ui.lab.myHomeAlertAccountLevel", {
+                      0: t("myhome.myhome"),
+                      1: userDataMyhome.m[1] * 10 - 20,
+                      2: userDataMyhome.m[1] + 1,
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className="col-span-4">{t("myhome.myhome")}</div>
+              <div className="col-span-8 px-1">
+                <Slider
+                  value={userDataMyhome.m}
+                  onValueChange={(v) => {
+                    v.sort((a, b) => a - b);
+                    labMyHomeLevelModify("myhome", 0, v[0]);
+                    labMyHomeLevelModify("myhome", 1, v[1]);
+                  }}
+                  min={0}
+                  max={myhomeupgrade.m.length}
+                  defaultValue={[0, 0]}
+                />
+              </div>
+              <div className="flex flex-col col-span-4">
                 <img
                   className="w-18 mx-auto"
                   src="/myhomeicons/MyHome_Button_004.png"
                 />
-                {t("myhome.schedule")}
               </div>
-              <div>
-                <div>{userDataMyhome.s[0] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.s[0] === 0}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "schedule",
-                        0,
-                        Math.min(
-                          userDataMyhome.s[1],
-                          Math.max(userDataMyhome.s[0] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.s[0] === myhomeupgrade.s.length ||
-                      userDataMyhome.s[0] === userDataMyhome.s[1]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "schedule",
-                        0,
-                        Math.min(
-                          userDataMyhome.s[1],
-                          Math.min(
-                            userDataMyhome.s[0] + 1,
-                            myhomeupgrade.s.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-3">
+                {userDataMyhome.s[0] + 1}
               </div>
-              <div>
-                <div>{userDataMyhome.s[1] + 1}</div>
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={
-                      userDataMyhome.s[1] === 0 ||
-                      userDataMyhome.s[1] === userDataMyhome.s[0]
-                    }
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "schedule",
-                        1,
-                        Math.max(
-                          userDataMyhome.s[0],
-                          Math.max(userDataMyhome.s[1] - 1, 0)
-                        )
-                      )
-                    }
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    disabled={userDataMyhome.s[1] === myhomeupgrade.s.length}
-                    onClick={() =>
-                      labMyHomeLevelModify(
-                        "schedule",
-                        1,
-                        Math.max(
-                          userDataMyhome.s[0],
-                          Math.min(
-                            userDataMyhome.s[1] + 1,
-                            myhomeupgrade.s.length
-                          )
-                        )
-                      )
-                    }
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
+              <div className="flex justify-center items-center text-lg col-span-2">
+                &rarr;
               </div>
-              <div className="flex flex-col">
+              <div className="flex justify-center items-center text-lg col-span-3 relative">
+                {userDataMyhome.s[1] + 1}
+                {userDataMyhome.m[1] < 9 &&
+                  userDataMyhome.s[1] - 1 > userDataMyhome.m[1] && (
+                    <div className="absolute -top-1 right-0 text-xs break-keep whitespace-nowrap text-red-600 dark:text-red-400">
+                      <CircleAlert
+                        className="w-3.5 h-3.5 inline-block mr-1 -mt-1"
+                        strokeWidth={3}
+                      />
+                      {/* 본부 레벨 {userDataMyhome.s[1]}에서 모험회
+                      레벨 {userDataMyhome.s[1] + 1} 해방 */}
+                      {t("ui.lab.myHomeAlertMyhomeLevel", {
+                        0: t("myhome.schedule"),
+                        1: userDataMyhome.s[1],
+                        2: userDataMyhome.s[1] + 1,
+                      })}
+                    </div>
+                  )}
+              </div>
+              <div className="col-span-4">{t("myhome.schedule")}</div>
+              <div className="col-span-8 px-1">
+                <Slider
+                  value={userDataMyhome.s}
+                  onValueChange={(v) => {
+                    v.sort((a, b) => a - b);
+                    labMyHomeLevelModify("schedule", 0, v[0]);
+                    labMyHomeLevelModify("schedule", 1, v[1]);
+                  }}
+                  min={0}
+                  max={myhomeupgrade.s.length}
+                  defaultValue={[0, 0]}
+                />
+              </div>
+              <div className="flex flex-col col-span-4">
                 <img
                   className="w-18 mx-auto"
                   src="/myhomeicons/MyHome_Button_005.png"
                 />
-                {t("myhome.archive")}
               </div>
-              <div>1</div>
-              <div>1</div>
+              <div className="flex justify-center items-center text-lg col-span-3">
+                {userMyhomeArchiveLevelDummy[0] + 1}
+              </div>
+              <div className="flex justify-center items-center text-lg col-span-2">
+                &rarr;
+              </div>
+              <div className="flex justify-center items-center text-lg col-span-3 relative">
+                {userMyhomeArchiveLevelDummy[1] + 1}
+                {userMyhomeArchiveLevelDummy[1] > 0 && (
+                  <div className="absolute -top-1 right-0 text-xs break-keep whitespace-nowrap text-amber-600 dark:text-amber-400">
+                    <CircleAlert
+                      className="w-3.5 h-3.5 inline-block mr-1 -mt-1"
+                      strokeWidth={3}
+                    />
+                    {/* 교주 레벨 {userMyhomeArchiveLevelDummy[1] * 100}에서 기록소
+                    레벨 {userMyhomeArchiveLevelDummy[1] + 1} 해방 */}
+                    {t("ui.lab.myHomeAlertAccountLevel", {
+                      0: t("myhome.archive"),
+                      1: userMyhomeArchiveLevelDummy[1] * 100,
+                      2: userMyhomeArchiveLevelDummy[1] + 1,
+                    })}
+                  </div>
+                )}
+              </div>
+              <div className="col-span-4">{t("myhome.archive")}</div>
+              <div className="col-span-8 px-1">
+                <Slider
+                  value={userMyhomeArchiveLevelDummy}
+                  onValueChange={(v) => {
+                    v.sort((a, b) => a - b);
+                    setUserMyhomeArchiveLevelDummy(v);
+                  }}
+                  min={0}
+                  max={2}
+                  defaultValue={[0, 1]}
+                />
+              </div>
             </div>
           </TabsContent>
           <TabsContent value="labStep">
