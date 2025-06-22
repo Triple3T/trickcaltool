@@ -32,6 +32,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import AccountDeleteConfirmDialog from "@/components/parts/account-delete-confirm-dialog";
 import CacheClearWithConfirm from "@/components/parts/cache-clear-with-confirm";
+import LoadLegacyDialog from "@/components/parts/load-legacy-dialog";
 import OnlineBackupListDialog from "@/components/parts/online-backup-list-dialog";
 import SkinChangeableCombobox from "@/components/parts/skin-changeable-combobox";
 import SubtitleBar from "@/components/parts/subtitlebar";
@@ -59,7 +60,6 @@ import {
 } from "@/utils/dataRW";
 import getServerHash from "@/utils/getServerHash";
 import googleAccessUrl from "@/utils/googleAccessUrl";
-import googleAccessUrlLegacy from "@/utils/googleAccessUrlLegacy";
 import { b64IntoNumber } from "@/utils/pakoB64Pack";
 import { currentSignature, oldSignatures } from "@/utils/versionMigrate";
 
@@ -259,7 +259,7 @@ const Setting = () => {
                 ) : (
                   <div className="p-2">
                     <a href={googleAccessUrl} target="_self" rel="noreferrer">
-                      {t("ui.common.authButtonText")}
+                      <Button>{t("ui.common.authButtonText")}</Button>
                     </a>
                     <Alert variant="default" className="mt-2">
                       <MessageCircleWarning className="h-5 w-5" />
@@ -273,17 +273,7 @@ const Setting = () => {
               ) : (
                 <div className="p-2">{t("ui.common.authLoading")}</div>
               )}
-              <div className="p-2">{t("ui.common.loadLegacyDesc")}</div>
-              <Button className="pb-2">
-                <a
-                  href={googleAccessUrlLegacy}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {t("ui.common.loadLegacy")}
-                </a>
-                <ExternalLink className="w-3 h-3 ml-0.5 inline" />
-              </Button>
+              <LoadLegacyDialog />
             </div>
           )}
           {isReady && googleLinked && (
