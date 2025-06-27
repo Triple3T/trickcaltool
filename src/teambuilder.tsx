@@ -416,6 +416,7 @@ const TeamBuilder = () => {
         soloEndCoinLimit,
         buyAuthority,
         usingSpells,
+        usingCheers,
         cardLevels,
       })
     );
@@ -448,6 +449,7 @@ const TeamBuilder = () => {
     soloRaidResearchSlot,
     soloRaidStep,
     teamSpec,
+    usingCheers,
     usingSpells,
   ]);
   // load
@@ -467,6 +469,7 @@ const TeamBuilder = () => {
             soloEndCoinLimit,
             buyAuthority,
             usingSpells,
+            usingCheers,
             cardLevels,
           } = JSON.parse(decompressXorB64(data.substring(6)));
           if (restrictType) setRestrictType(restrictType);
@@ -480,6 +483,7 @@ const TeamBuilder = () => {
           if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
           if (typeof buyAuthority === "boolean") setBuyAuthority(buyAuthority);
           if (usingSpells) setUsingSpells(usingSpells);
+          if (usingCheers) setUsingCheers(usingCheers);
           if (cardLevels)
             setCardLevels((prev) => ({
               a: { ...prev.a, ...cardLevels.a },
