@@ -681,7 +681,7 @@ const TeamBuilder = () => {
                       </span>
                     </div>
                   </div>
-                  <Tabs className="w-full">
+                  <Tabs className="w-full" defaultValue="0">
                     <TabsList
                       className={cn("grid grid-cols-2 md:grid-cols-4 h-max")}
                     >
