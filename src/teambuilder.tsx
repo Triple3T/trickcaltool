@@ -16,9 +16,11 @@ import Select from "@/components/common/combobox-select";
 import LazyInput from "@/components/common/lazy-input";
 import ArtifactPicker from "@/components/teambuilder/artifact-picker";
 import CharaPicker from "@/components/teambuilder/chara-picker";
+import CheerPicker from "@/components/teambuilder/cheer-picker";
 import SpellPicker from "@/components/teambuilder/spell-picker";
 import CardSpecDialog from "@/components/teambuilder/card-spec-dialog";
 import chara from "@/data/chara";
+import cheer from "@/data/cheer";
 import card from "@/data/card";
 import skillcoefficient from "@/data/skillcoefficient";
 import {
@@ -125,6 +127,7 @@ const TeamBuilder = () => {
   const [soloEndCoinLimit, setSoloEndCoinLimit] = useState<number>(0);
   const [buyAuthority, setBuyAuthority] = useState<boolean>(true);
   const [usingSpells, setUsingSpells] = useState<Record<string, number>>({});
+  const [usingCheers, setUsingCheers] = useState<Record<string, number>>({});
   const [cardLevels, setCardLevels] = useState<
     Record<"a" | "s", Record<string, number>>
   >({
@@ -277,15 +280,58 @@ const TeamBuilder = () => {
         v * 100,
       ])
     );
+    let cheerCoinCost = 0;
+    const cheerStat = {
+      [StatType.Hp]: 0,
+      [StatType.AttackPhysic]: 0,
+      [StatType.AttackMagic]: 0,
+      [StatType.DefensePhysic]: 0,
+      [StatType.DefenseMagic]: 0,
+      [StatType.CriticalRate]: 0,
+      [StatType.CriticalMult]: 0,
+      [StatType.CriticalResist]: 0,
+      [StatType.CriticalMultResist]: 0,
+      [StatType.AttackSpeed]: 0,
+    };
+    const cheerLikeAside3Category: Record<string, number> = {
+      [Aside3EffectCategory.AllDamageUp]: 0,
+      [Aside3EffectCategory.AllReceiveDamageDown]: 0,
+      [Aside3EffectCategory.AllSkillDamageUp]: 0,
+    };
+    Object.entries(usingCheers).forEach(([ss, count]) => {
+      const s = Number(ss);
+      const cheerInfo = cheer.c[s];
+      const cheerTotalCost =
+        (cheerInfo.firstPrice * (cheerInfo.purchaseMult ** count - 1)) /
+        (cheerInfo.purchaseMult - 1);
+      cheerCoinCost += cheerTotalCost;
+      cheerInfo.stat.forEach((stat, index) => {
+        cheerStat[stat] += cheerInfo.statValue[index] * count;
+      });
+      cheerInfo.aside3LikeCategory.forEach((cate, index) => {
+        cheerLikeAside3Category[cate] +=
+          cheerInfo.aside3LikeValue[index] * count * 100;
+      });
+    });
 
     return {
       limits,
       disabledArtifact,
-      usingCoin: artifactCoinCost + spellCoinCost + authorityCoinCost,
+      usingCoin:
+        artifactCoinCost + spellCoinCost + authorityCoinCost + cheerCoinCost,
       spellStat,
       allAffectSpellLikeAside3Category,
+      cheerStat,
+      cheerLikeAside3Category,
     };
-  }, [buyAuthority, cardLevels.a, cardLevels.s, currentTeam, usingSpells]);
+  }, [
+    buyAuthority,
+    cardLevels.a,
+    cardLevels.s,
+    currentTeam,
+    usingCheers,
+    usingSpells,
+  ]);
 
   // calculate synergy
   const synergyTotal = useMemo(() => {
@@ -596,36 +642,6 @@ const TeamBuilder = () => {
                       {t("ui.teambuilder.coinLimitIfEmpty")}
                     </div>
                   </div>
-                  <div className="px-2 my-2">
-                    <Checkbox
-                      id="buy-authority"
-                      checked={buyAuthority}
-                      onCheckedChange={(v) => setBuyAuthority(!!v)}
-                      disabled={
-                        soloEndCoinLimit > 0 &&
-                        !buyAuthority &&
-                        frontierLimit.usingCoin + 30 > soloEndCoinLimit
-                      }
-                      className="inline align-middle mr-2"
-                    />
-                    <label
-                      htmlFor="buy-authority"
-                      className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {t("ui.teambuilder.buyAuthority")}
-                    </label>
-                    <div
-                      className={cn(
-                        "ml-2 w-7 h-7 bg-cover items-center justify-center text-shadow-glow-2 inline-flex"
-                      )}
-                      style={{
-                        backgroundImage:
-                          "url(/ingameui/Icon_SoloEndInGameCoin.png)",
-                      }}
-                    >
-                      30
-                    </div>
-                  </div>
                   <div className="mt-2 mb-4 text-base flex gap-2 justify-around items-baseline">
                     <div
                       className={cn(
@@ -661,99 +677,206 @@ const TeamBuilder = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="text-xs text-left ml-2">
-                    {t("ui.teambuilder.usingArtifact")}
-                  </div>
-                  <div className="grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] auto-rows-auto gap-2 min-h-10 rounded bg-accent/90 p-2">
-                    {Object.entries(frontierLimit.limits)
-                      .sort(
-                        ([a], [b]) =>
-                          card.a.o.indexOf(Number(a)) -
-                          card.a.o.indexOf(Number(b))
-                      )
-                      .map(([v, { limit, count }]) => {
-                        const targetArtifact = card.a.l[v];
-                        return (
-                          <div key={v} className="w-20 p-2 mx-auto">
-                            <div
-                              className="w-16 h-16 bg-cover p-2 rounded-lg border-2 ring-foreground ring-2"
-                              style={{
-                                backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${
-                                  card.r[targetArtifact.r].s
-                                }.png)`,
-                                backgroundColor: card.r[targetArtifact.r].b,
-                                borderColor: card.r[targetArtifact.r].b,
-                              }}
-                            >
-                              <img
-                                src={`/artifacts/ArtifactIcon_${v}.png`}
-                                alt={t(`card.artifact.${v}.title`)}
-                                className="max-w-full max-h-full mx-auto"
-                              />
-                            </div>
-                            <div
-                              className={cn(
-                                "mt-1",
-                                count > limit &&
-                                  "text-red-700 dark:text-red-400"
-                              )}
-                            >
-                              {count}/{limit}
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                  <div className="mt-4 text-right -mb-1">
-                    <SpellPicker
-                      currentUsingSpells={usingSpells}
-                      spellLevels={cardLevels.s}
-                      onChange={setUsingSpells}
-                      onReset={() => setUsingSpells({})}
-                      disableAll={restrictType === 1}
-                      disableMinCost={
-                        restrictType === 2 &&
-                        soloEndCoinLimit > 0 &&
-                        soloEndCoinLimit - frontierLimit.usingCoin
-                      }
-                    />
-                  </div>
-                  <div className="text-xs text-left ml-2">
-                    {t("ui.teambuilder.usingSpell")}
-                  </div>
-                  <div className="grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] auto-rows-auto gap-2 min-h-10 rounded bg-accent/90 p-2">
-                    {card.s.o.map((s) => {
-                      if (!usingSpells[s]) return null;
-                      const targetSpell = card.s.l[s];
-                      const count = usingSpells[s];
-                      const limit = targetSpell.l;
-                      return (
-                        <div key={s} className="w-20 p-2 mx-auto">
-                          <div
-                            className="w-16 h-16 bg-cover rounded-lg border-2 ring-foreground ring-2 overflow-hidden"
-                            style={{
-                              backgroundColor: card.r[targetSpell.r].b,
-                              borderColor: card.r[targetSpell.r].b,
-                            }}
-                          >
-                            <img
-                              src={`/spells/SpellCardIcon_${s}.png`}
-                              alt={t(`card.spell.${s}.title`)}
-                              className="max-w-full max-h-full mx-auto"
-                            />
-                          </div>
-                          <div
-                            className={cn(
-                              "mt-1",
-                              count > limit && "text-red-700 dark:text-red-400"
-                            )}
-                          >
-                            {count}/{limit}
-                          </div>
+                  <Tabs className="w-full">
+                    <TabsList
+                      className={cn("grid grid-cols-2 md:grid-cols-4 h-max")}
+                    >
+                      <TabsTrigger value="0">
+                        <div>{t("ui.teambuilder.textAuthority")}</div>
+                      </TabsTrigger>
+                      <TabsTrigger value="1">
+                        <div>{t("ui.teambuilder.textArtifact")}</div>
+                      </TabsTrigger>
+                      <TabsTrigger value="2">
+                        <div>{t("ui.teambuilder.textSpell")}</div>
+                      </TabsTrigger>
+                      <TabsTrigger value="3">
+                        <div>{t("ui.teambuilder.textCheer")}</div>
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="0">
+                      <div className="px-2 my-2">
+                        <Checkbox
+                          id="buy-authority"
+                          checked={buyAuthority}
+                          onCheckedChange={(v) => setBuyAuthority(!!v)}
+                          disabled={
+                            soloEndCoinLimit > 0 &&
+                            !buyAuthority &&
+                            frontierLimit.usingCoin + 30 > soloEndCoinLimit
+                          }
+                          className="inline align-middle mr-2"
+                        />
+                        <label
+                          htmlFor="buy-authority"
+                          className="leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {t("ui.teambuilder.buyAuthority")}
+                        </label>
+                        <div
+                          className={cn(
+                            "ml-2 w-7 h-7 bg-cover items-center justify-center text-shadow-glow-2 inline-flex"
+                          )}
+                          style={{
+                            backgroundImage:
+                              "url(/ingameui/Icon_SoloEndInGameCoin.png)",
+                          }}
+                        >
+                          30
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="1">
+                      <div className="text-xs text-left ml-2">
+                        {t("ui.teambuilder.usingArtifact")}
+                      </div>
+                      <div className="grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] auto-rows-auto gap-2 min-h-10 rounded bg-accent/90 p-2">
+                        {Object.entries(frontierLimit.limits)
+                          .sort(
+                            ([a], [b]) =>
+                              card.a.o.indexOf(Number(a)) -
+                              card.a.o.indexOf(Number(b))
+                          )
+                          .map(([v, { limit, count }]) => {
+                            const targetArtifact = card.a.l[v];
+                            return (
+                              <div key={v} className="w-20 p-2 mx-auto">
+                                <div
+                                  className="w-16 h-16 bg-cover p-2 rounded-lg border-2 ring-foreground ring-2"
+                                  style={{
+                                    backgroundImage: `url(/ingameui/Ingame_CardBase_Artifact_${
+                                      card.r[targetArtifact.r].s
+                                    }.png)`,
+                                    backgroundColor: card.r[targetArtifact.r].b,
+                                    borderColor: card.r[targetArtifact.r].b,
+                                  }}
+                                >
+                                  <img
+                                    src={`/artifacts/ArtifactIcon_${v}.png`}
+                                    alt={t(`card.artifact.${v}.title`)}
+                                    className="max-w-full max-h-full mx-auto"
+                                  />
+                                </div>
+                                <div
+                                  className={cn(
+                                    "mt-1",
+                                    count > limit &&
+                                      "text-red-700 dark:text-red-400"
+                                  )}
+                                >
+                                  {count}/{limit}
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="2">
+                      <div className="mt-4 text-right -mb-1">
+                        <SpellPicker
+                          currentUsingSpells={usingSpells}
+                          spellLevels={cardLevels.s}
+                          onChange={setUsingSpells}
+                          onReset={() => setUsingSpells({})}
+                          disableAll={restrictType === 1}
+                          disableMinCost={
+                            restrictType === 2 &&
+                            soloEndCoinLimit > 0 &&
+                            soloEndCoinLimit - frontierLimit.usingCoin
+                          }
+                        />
+                      </div>
+                      <div className="text-xs text-left ml-2">
+                        {t("ui.teambuilder.usingSpell")}
+                      </div>
+                      <div className="grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] auto-rows-auto gap-2 min-h-10 rounded bg-accent/90 p-2">
+                        {card.s.o.map((s) => {
+                          if (!usingSpells[s]) return null;
+                          const targetSpell = card.s.l[s];
+                          const count = usingSpells[s];
+                          const limit = targetSpell.l;
+                          return (
+                            <div key={s} className="w-20 p-2 mx-auto">
+                              <div
+                                className="w-16 h-16 bg-cover rounded-lg border-2 ring-foreground ring-2 overflow-hidden"
+                                style={{
+                                  backgroundColor: card.r[targetSpell.r].b,
+                                  borderColor: card.r[targetSpell.r].b,
+                                }}
+                              >
+                                <img
+                                  src={`/spells/SpellCardIcon_${s}.png`}
+                                  alt={t(`card.spell.${s}.title`)}
+                                  className="max-w-full max-h-full mx-auto"
+                                />
+                              </div>
+                              <div
+                                className={cn(
+                                  "mt-1",
+                                  count > limit &&
+                                    "text-red-700 dark:text-red-400"
+                                )}
+                              >
+                                {count}/{limit}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="3">
+                      <div className="mt-4 text-right -mb-1">
+                        <CheerPicker
+                          currentUsingCheers={usingCheers}
+                          onChange={setUsingCheers}
+                          onReset={() => setUsingCheers({})}
+                          disableAll={restrictType === 1}
+                          disableMinCost={
+                            restrictType === 2 &&
+                            soloEndCoinLimit > 0 &&
+                            soloEndCoinLimit - frontierLimit.usingCoin
+                          }
+                        />
+                      </div>
+                      <div className="text-xs text-left ml-2">
+                        {t("ui.teambuilder.usingCheer")}
+                      </div>
+                      <div className="grid grid-cols-[repeat(auto-fill,_minmax(5rem,_1fr))] auto-rows-auto gap-2 min-h-10 rounded bg-accent/90 p-2">
+                        {cheer.o.map((s) => {
+                          if (!usingCheers[s]) return null;
+                          const targetCheer = cheer.c[s];
+                          const count = usingCheers[s];
+                          const limit = targetCheer.purchaseLimit;
+                          return (
+                            <div key={s} className="w-20 p-2 mx-auto">
+                              <div
+                                className="w-16 h-16 bg-cover rounded-lg border-2 ring-foreground ring-2 overflow-hidden"
+                                style={{
+                                  backgroundColor: "#b371f7",
+                                  borderColor: "#b371f7",
+                                }}
+                              >
+                                <img
+                                  src={`/spells/CheerCardIcon_${s}.png`}
+                                  alt={t(`card.cheer.${s}.title`)}
+                                  className="max-w-full max-h-full mx-auto"
+                                />
+                              </div>
+                              <div
+                                className={cn(
+                                  "mt-1",
+                                  count > limit &&
+                                    "text-red-700 dark:text-red-400"
+                                )}
+                              >
+                                {count}/{limit}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </TabsContent>
               </Tabs>
             </AccordionContent>
@@ -996,7 +1119,8 @@ const TeamBuilder = () => {
               StatType.CriticalMultResist,
               StatType.AttackSpeed,
             ].map((stat) => {
-              const value = frontierLimit.spellStat[stat];
+              const value =
+                frontierLimit.spellStat[stat] + frontierLimit.cheerStat[stat];
               if (!value) return null;
               const statString = StatType[stat];
               return (
@@ -1051,6 +1175,17 @@ const TeamBuilder = () => {
               disabled={restrictType === 1}
             />
           </div>
+          <div className="text-sm flex items-center gap-1 flex-1 min-w-max justify-end">
+            <Label htmlFor="include-cheer-effect">
+              {t("ui.teambuilder.includeCheerEffect")}
+            </Label>
+            <Switch
+              id="include-cheer-effect"
+              checked={Boolean(allIncludeFlag & 4) && restrictType !== 1}
+              onCheckedChange={() => setAllIncludeFlag((v) => v ^ 4)}
+              disabled={restrictType === 1}
+            />
+          </div>
         </div>
         <Card className="p-2 bg-accent/25 [&_>_div:has(>_div)_~_div:has(>_div)]:border-t [&_>_div:has(>_div)_~_div:has(>_div)]:pt-0.5 [&_>_div:has(>_div)_~_div:has(>_div)]:mt-0.5">
           {allIncludeFlag === 0 && (
@@ -1084,10 +1219,20 @@ const TeamBuilder = () => {
                           needIncludeCategory
                         ] ?? 0
                       : 0);
+                  const cheerValueLikeAside3 =
+                    (frontierLimit.cheerLikeAside3Category[category] ?? 0) +
+                    (needIncludeCategory
+                      ? frontierLimit.cheerLikeAside3Category[
+                          needIncludeCategory
+                        ] ?? 0
+                      : 0);
                   const categoryValue =
                     (allIncludeFlag & 1 ? categoryValueAside3 : 0) +
                     (restrictType !== 1 && allIncludeFlag & 2
                       ? spellValueLikeAside3
+                      : 0) +
+                    (restrictType !== 1 && allIncludeFlag & 4
+                      ? cheerValueLikeAside3
                       : 0);
                   if (categoryValue === 0) return null;
                   return (
@@ -1119,7 +1264,8 @@ const TeamBuilder = () => {
                         )}
                       </div>
                       <div className="text-blue-500 dark:text-blue-300">
-                        {categoryValue > 0 ? "+" : ""}{categoryValue / 100}
+                        {categoryValue > 0 ? "+" : ""}
+                        {categoryValue / 100}
                         {!ASIDE3_CATEGORY_FIXED_VALUE.includes(category) && "%"}
                       </div>
                     </div>
