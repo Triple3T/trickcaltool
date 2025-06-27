@@ -40,8 +40,7 @@ const CheerPicker = ({
   const resetHandler = useCallback(() => {
     onReset();
   }, [onReset]);
-  const confirmHandler = useCallback(() => {
-  }, []);
+  const confirmHandler = useCallback(() => {}, []);
 
   return (
     <Dialog>
@@ -62,7 +61,10 @@ const CheerPicker = ({
             {cheer.o.map((cheerId) => {
               const cheerInfo = cheer.c[cheerId];
               const cheerUsingCount = currentUsingCheers[cheerId] || 0;
-              const cheerCost = cheerInfo.firstPrice * cheerInfo.purchaseMult ** cheerUsingCount;
+              const cheerCost =
+                cheerInfo.firstPrice *
+                cheerInfo.purchaseMult **
+                  Math.min(cheerUsingCount, cheerInfo.purchaseLimit - 1);
               const disabled =
                 cheerInfo.purchaseLimit < 1 ||
                 cheerUsingCount >= cheerInfo.purchaseLimit ||
@@ -82,7 +84,7 @@ const CheerPicker = ({
                     )}
                     style={{
                       backgroundImage: `url(/ingameui/Ingame_CardBase_Spell_Grade_4.png)`,
-                      backgroundColor: '#b371f7',
+                      backgroundColor: "#b371f7",
                       backgroundSize: "cover",
                     }}
                     onClick={() => {
@@ -131,7 +133,10 @@ const CheerPicker = ({
                     </div>
                     <div>
                       <X
-                        className={cn("cursor-pointer w-5 h-5 text-red-500", !currentUsingCheers[cheerId] && "opacity-50")}
+                        className={cn(
+                          "cursor-pointer w-5 h-5 text-red-500",
+                          !currentUsingCheers[cheerId] && "opacity-50"
+                        )}
                         strokeWidth={3}
                         onClick={(e) => {
                           e.stopPropagation();
