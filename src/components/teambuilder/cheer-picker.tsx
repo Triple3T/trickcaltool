@@ -61,10 +61,11 @@ const CheerPicker = ({
           <div className="grid px-2 py-4 gap-x-2 gap-y-4 grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4.5rem,_1fr))] auto-rows-auto">
             {cheer.o.map((cheerId) => {
               const cheerInfo = cheer.c[cheerId];
-              const cheerInUseCount = currentUsingCheers[cheerId] || 0;
-              const cheerCost = cheerInfo.firstPrice * cheerInfo.purchaseMult ** cheerInUseCount;
+              const cheerUsingCount = currentUsingCheers[cheerId] || 0;
+              const cheerCost = cheerInfo.firstPrice * cheerInfo.purchaseMult ** cheerUsingCount;
               const disabled =
                 cheerInfo.purchaseLimit < 1 ||
+                cheerUsingCount >= cheerInfo.purchaseLimit ||
                 disableAll ||
                 disableList?.includes(cheerId) ||
                 (typeof disableMinCost === "number" &&
@@ -126,7 +127,7 @@ const CheerPicker = ({
                     )}
                   >
                     <div>
-                      {currentUsingCheers[cheerId] || 0}/{cheerInfo.purchaseLimit}
+                      {cheerUsingCount}/{cheerInfo.purchaseLimit}
                     </div>
                     <div>
                       <X

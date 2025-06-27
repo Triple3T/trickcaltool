@@ -109,12 +109,14 @@ const SpellPicker = ({
           <div className="grid px-2 py-4 gap-x-2 gap-y-4 grid-cols-[repeat(auto-fill,_minmax(4rem,_1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(4.5rem,_1fr))] auto-rows-auto">
             {card.s.o.map((spellId) => {
               const spellInfo = card.s.l[spellId];
+              const spellUsingCount = currentUsingSpells[spellId] || 0;
               const spellCostInfo = spellInfo.p;
               const spellCost = Array.isArray(spellCostInfo)
                 ? spellCostInfo[spellLevels[spellId] - 1]
                 : spellCostInfo;
               const disabled =
                 spellInfo.l < 1 ||
+                spellUsingCount >= spellInfo.l ||
                 disableAll ||
                 disableList?.includes(spellId) ||
                 (typeof disableMinCost === "number" &&
@@ -182,7 +184,7 @@ const SpellPicker = ({
                     )}
                   >
                     <div>
-                      {currentUsingSpells[spellId] || 0}/{spellInfo.l}
+                      {spellUsingCount}/{spellInfo.l}
                     </div>
                     <div>
                       <X
