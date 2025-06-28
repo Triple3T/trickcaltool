@@ -29,7 +29,7 @@ export function AccountDeleteConfirmDialog() {
     getNewToken
       .refetch()
       .then(async ({ data }) => {
-        fetch("https://api.triple-lab.com/api/v2/tr/accountdelete", {
+        fetch("https://api.triple-lab.com/api/v3/tr/accountdelete", {
           method: "POST",
           headers: { Authorization: `Bearer ${data}` },
           credentials: "include",

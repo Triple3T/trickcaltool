@@ -20,20 +20,29 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSyncQuery } from "@/hooks/useSyncQuery";
 import { useUserToken } from "@/stores/useUserDataStore";
 
+interface BackupDataType {
+  id: string;
+  fileTimestamp: number;
+  crayonStatistic: number;
+  totalRankStatistic: number;
+  purpleCrayonStatistic: number;
+  storedAt: number;
+}
+
 const OnlineBackupListDialog = () => {
   const { t } = useTranslation();
   const { applyBackup } = useSyncQuery();
   const token = useUserToken();
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [backupDatas, setBackupDatas] = useState<number[][]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [backupDatas, setBackupDatas] = useState<BackupDataType[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<string>("-1");
   useEffect(() => {
     if (!backupDatas.length && token) {
       // fetch backup datas
       (async () => {
         const res = await fetch(
-          "https://api.triple-lab.com/api/v2/tr/backuplist",
+          "https://api.triple-lab.com/api/v3/tr/backuplist",
           {
             method: "GET",
             credentials: "include",
@@ -47,7 +56,7 @@ const OnlineBackupListDialog = () => {
           toast.error(t("ui.common.onlineBackupListFetchFailed"));
           return;
         }
-        const data = await res.json();
+        const data: BackupDataType[] = await res.json();
         setBackupDatas(data);
         setSuccess(true);
       })();
@@ -83,28 +92,33 @@ const OnlineBackupListDialog = () => {
           <ScrollArea className="max-w-full whitespace-nowrap rounded-md h-96">
             {success ? (
               backupDatas.length > 0 ? (
-                backupDatas.map((dt, i) => {
+                backupDatas.map((dt) => {
                   return (
                     <Card
-                      key={i}
+                      key={dt.id}
                       className={cn(
                         "flex flex-col w-full p-4 my-1 justify-center items-stretch text-sm",
                         "bg-gradient-to-br from-green-300/60 dark:from-green-700/60 via-transparent dark:via-transparent to-transparent dark:to-transparent via-25%",
-                        i === selectedIndex &&
+                        dt.id === selectedIndex &&
                           "bg-green-500/20 ring-2 ring-green-200 dark:ring-green-800"
                       )}
-                      onClick={() => setSelectedIndex(i)}
+                      onClick={() => setSelectedIndex(dt.id)}
                     >
                       <div>
                         {t("ui.index.fileSync.dataFileTimestamp", {
-                          0: new Date(dt[0]).toLocaleString(),
+                          0: new Date(dt.fileTimestamp).toLocaleString(),
                         })}
                       </div>
                       <div>
-                        {t("ui.index.fileSync.dataFileCrayon", { 0: dt[1] })}
+                        {t("ui.index.fileSync.dataFileStoredTimestamp", {
+                          0: new Date(dt.storedAt).toLocaleString(),
+                        })}
                       </div>
                       <div>
-                        {t("ui.index.fileSync.dataFileTotalRank", { 0: dt[2] })}
+                        {t("ui.index.fileSync.dataFileCrayon", { 0: dt.crayonStatistic })}
+                      </div>
+                      <div>
+                        {t("ui.index.fileSync.dataFileTotalRank", { 0: dt.totalRankStatistic })}
                       </div>
                     </Card>
                   );
@@ -119,7 +133,7 @@ const OnlineBackupListDialog = () => {
         )}
         <div className="text-center opacity-75">
           {t(
-            selectedIndex < 0
+            selectedIndex === "-1"
               ? "ui.common.onlineBackupSelect"
               : "ui.common.onlineBackupApply"
           )}
@@ -134,7 +148,7 @@ const OnlineBackupListDialog = () => {
             <Button
               type="submit"
               onClick={() => applyBackup.mutateAsync(selectedIndex)}
-              disabled={selectedIndex < 0}
+              disabled={selectedIndex === "-1"}
             >
               {t("ui.common.yes")}
             </Button>

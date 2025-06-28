@@ -11,8 +11,8 @@ import { dataFileExport, dataFileImport, readIntoMemory } from "@/utils/dataRW";
 import { SyncStatus } from "@/types/enums";
 import { b64IntoNumber } from "@/utils/pakoB64Pack";
 
-const API_URL = "https://api.triple-lab.com/api/v2/tr";
-const TOKEN_URL = "https://api.triple-lab.com/api/v2/tr/token";
+const API_URL = "https://api.triple-lab.com/api/v3/tr";
+const TOKEN_URL = "https://api.triple-lab.com/api/v3/tr/token";
 
 const defaultHeader = {
   "Cache-Control": "no-cache",
@@ -277,7 +277,7 @@ export const useSyncQuery = () => {
     },
   });
 
-  const applyBackupFn = async (backupindex: number) => {
+  const applyBackupFn = async (backupid: string) => {
     if (typeof usingIDB === "undefined") return;
     const fileUrl = `${API_URL}/backupapply`;
     try {
@@ -290,7 +290,7 @@ export const useSyncQuery = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ backupindex }),
+        body: JSON.stringify({ backupid }),
       });
       if (response.ok) {
         const fileContent = await response.text();

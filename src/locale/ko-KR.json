@@ -6532,6 +6532,7 @@
                     "oldDataImported": "이전 데이터를 가져왔습니다.",
                     "dataFileImportInfo": "아래 데이터를 가져옵니다. 계속할까요?",
                     "dataFileTimestamp": "기록된 시점: {{0}}",
+                    "dataFileStoredTimestamp": "저장된 시점: {{0}}",
                     "dataFileCrayon": "최상급 크레파스 사용: {{0}}개",
                     "dataFileTotalRank": "전체 사도 랭크: {{0}}",
                     "dataFileImportCancel": "안 할래요",
