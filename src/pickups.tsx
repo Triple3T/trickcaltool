@@ -5,7 +5,7 @@ import { personalityBG } from "./utils/personalityBG";
 
 const timeZero = new Date("2023-09-27");
 const timeOne = new Date("2023-10-05");
-const timeEnd = new Date("2025-07-03");
+const timeEnd = new Date("2025-07-10");
 const timesFromOne = Array(
   Math.ceil(
     (timeEnd.getTime() - timeOne.getTime()) / (1000 * 60 * 60 * 24 * 7)
@@ -105,6 +105,8 @@ const lineups = [
   [88, 4, 0, 1, "DianaYester"],
   [89, 2, 2, 0, "Ran"],
   [90, 2, 1, 1, "Arco"],
+  [91, 1, 2, 0, "Kyarot", "Shoupan", "KommySwim", "Posher", "Shady"],
+  [92, 2, 0, 1, "Kathy"],
 ];
 const widthcount = Math.max(...lineups.map((l) => l[2] as number)) + 1;
 const personalityFrom = {
