@@ -159,7 +159,7 @@ const PickupLog = () => {
                   if (!lineup) {
                     return <div key={i} className="table-cell w-24 h-24"></div>;
                   }
-                  const charas = lineup.slice(4);
+                  const charas = lineup.slice(4) as string[];
                   const bg = (() => {
                     if (charas.length > 3) return "bg-slate-300";
                     if (charas.length > 2)
@@ -236,6 +236,12 @@ const PickupLog = () => {
                             <img
                               src="/itemslot/Common_New_2.png"
                               className="absolute top-px left-px w-10"
+                            />
+                          )}
+                          {charas.some((charaId) => chara[charaId].e) && (
+                            <img
+                              src="/gacha/PickPerconalityIcon_EldainHero.png"
+                              className="absolute top-px right-px w-10 drop-shadow-[0px_0_2px_white]"
                             />
                           )}
                           <div
