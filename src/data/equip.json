@@ -1966,6 +1966,19 @@
             ["e.weapon.1004","e.armor.1009","e.armor.1005","e.weapon.1022","e.accessory.1011","e.armor.1016"],
             ["e.weapon.1104","e.armor.1108","e.armor.1105","e.weapon.1116","e.accessory.1108","e.armor.1114"]
         ],
+        "Kathy":[
+            ["e.weapon.111","e.armor.115","e.armor.101","e.accessory.103","e.accessory.111","e.armor.104"],
+            ["e.weapon.214","e.armor.219","e.armor.202","e.accessory.206","e.accessory.210","e.armor.221"],
+            ["e.weapon.313","e.armor.319","e.armor.305","e.accessory.308","e.accessory.301","e.armor.314"],
+            ["e.weapon.414","e.armor.409","e.armor.404","e.armor.419","e.accessory.403","e.armor.418"],
+            ["e.weapon.513","e.armor.518","e.armor.504","e.accessory.509","e.accessory.503","e.armor.512"],
+            ["e.weapon.613","e.armor.618","e.armor.604","e.accessory.606","e.accessory.605","e.armor.619"],
+            ["e.armor.703","e.armor.712","e.weapon.708","e.accessory.701","e.accessory.707","e.armor.716"],
+            ["e.weapon.815","e.armor.810","e.armor.804","e.weapon.805","e.accessory.810","e.armor.817"],
+            ["e.weapon.901","e.armor.910","e.armor.904","e.weapon.910","e.accessory.904","e.armor.914"],
+            ["e.weapon.1001","e.armor.1009","e.armor.1004","e.weapon.1017","e.accessory.1004","e.armor.1013"],
+            ["e.weapon.1101","e.armor.1108","e.armor.1104","e.weapon.1113","e.accessory.1104","e.armor.1111"]
+        ],
         "Kidian":[
             ["e.weapon.104","e.armor.114","e.armor.104","e.accessory.111","e.accessory.110","e.armor.111"],
             ["e.weapon.205","e.armor.218","e.armor.205","e.accessory.211","e.accessory.201","e.armor.220"],
