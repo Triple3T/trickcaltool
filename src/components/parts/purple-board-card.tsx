@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -59,6 +59,7 @@ const PurpleBoardCard = ({
   pboard,
 }: PurpleBoardCardProps) => {
   const isAF = useIsAFActive();
+  const { t } = useTranslation();
   return (
     <Card className="p-4 object-cover max-w-full break-inside-avoid">
       {/* title bar */}
