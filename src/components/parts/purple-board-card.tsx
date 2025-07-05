@@ -1,12 +1,11 @@
 import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import SubtitleBar from "./subtitlebar";
 import purpleposition from "@/data/purpleposition";
-import { Race, PurpleBoardType, BoardType } from "@/types/enums";
+import asideSelectorClassNames from "@/utils/asideSelectorClassNames";
+import { BoardType, PurpleBoardType, Race, StatType } from "@/types/enums";
 
 // af
 import { useIsAFActive } from "@/stores/useAFDataStore";
@@ -22,10 +21,13 @@ interface PurpleBoardCardProps {
     p: string[];
   };
   // charaPersonality: number;
+  charaDefaultStar: number;
+  maxAside: number;
   charaRace: number;
   personalityClassName: string;
   skin?: number;
   openBoardIndex: number;
+  gradeData: number[];
   dispatchClickBoardData: (
     charaName: string,
     boardIndex: number,
@@ -39,8 +41,11 @@ interface PurpleBoardCardProps {
     bdx: number
   ) => void;
   dispatchNthBoardData: (charaName: string, index: number) => void;
+  dispatchStarGradeData: (charaName: string, grade: number) => void;
+  dispatchAsideGradeData: (charaName: string, grade: number) => void;
   board: number[][];
   pboard: number[][];
+  aside3stat: number[][];
 }
 
 const PurpleBoardCard = ({
@@ -48,15 +53,21 @@ const PurpleBoardCard = ({
   currentBoard,
   currentPurpleBoard,
   // charaPersonality,
+  charaDefaultStar,
+  maxAside,
   charaRace,
   personalityClassName,
   skin,
   openBoardIndex,
+  gradeData,
   dispatchClickBoardData,
   dispatchClickPurpleBoardData,
   dispatchNthBoardData,
+  dispatchStarGradeData,
+  dispatchAsideGradeData,
   board,
   pboard,
+  aside3stat,
 }: PurpleBoardCardProps) => {
   const isAF = useIsAFActive();
   const { t } = useTranslation();
@@ -104,33 +115,181 @@ const PurpleBoardCard = ({
           </div>
           <div className="text-2xl">{t(`chara.${name}`)}</div>
         </div>
-        <div className="flex-[1_0_4.5rem] w-18">
-          <div className="flex flex-wrap justify-end gap-x-4 gap-y-2 p-1">
-            <div className="text-left flex items-center gap-2">
-              <Checkbox
-                id={`2ndboard-${name}`}
-                checked={openBoardIndex > 1}
-                onCheckedChange={(c) => {
-                  dispatchNthBoardData(name, c ? 2 : 1);
-                }}
-              />
-              <Label htmlFor={`2ndboard-${name}`}>
-                {t("ui.board.nthBoardOpened", { 0: "2" })}
-              </Label>
+      </div>
+      <div className="flex flex-row gap-2 mt-2">
+        <div className="w-max">{t("ui.common.board")}</div>
+        <div className="flex flex-row rounded overflow-hidden text-xs flex-1 gap-px">
+          <div
+            className={cn(
+              openBoardIndex > 0
+                ? "bg-slate-300 dark:bg-slate-500 text-foreground"
+                : "bg-slate-300/50 dark:bg-slate-500/50 text-foreground/40",
+              "flex-1 flex justify-center items-center cursor-pointer"
+            )}
+            onClick={() => dispatchNthBoardData(name, 1)}
+          >
+            {t("ui.board.nthBoardOpened", { 0: "1" })}
+          </div>
+          <div
+            className={cn(
+              openBoardIndex > 1
+                ? "bg-emerald-400 dark:bg-emerald-700 text-foreground"
+                : "bg-emerald-400/50 dark:bg-emerald-700/50 text-foreground/40",
+              "flex-1 flex justify-center items-center cursor-pointer"
+            )}
+            onClick={() => dispatchNthBoardData(name, 2)}
+          >
+            {t("ui.board.nthBoardOpened", { 0: "2" })}
+          </div>
+          <div
+            className={cn(
+              openBoardIndex > 2
+                ? "bg-amber-300 dark:bg-amber-700 text-foreground"
+                : "bg-amber-300/50 dark:bg-amber-800/50 text-foreground/40",
+              "flex-1 flex justify-center items-center cursor-pointer"
+            )}
+            onClick={() => dispatchNthBoardData(name, 3)}
+          >
+            {t("ui.board.nthBoardOpened", { 0: "3" })}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row gap-2 mt-2 items-center">
+        <div className="w-max">{t("ui.common.grade")}</div>
+        <div className="flex flex-col rounded overflow-hidden text-xs flex-1 gap-px h-[41px] items-stretch">
+          <div className="flex flex-row gap-px flex-1">
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][0][
+                  gradeData[1] > 0 ? 0 : 1
+                ],
+                charaDefaultStar > 1 ? "cursor-not-allowed" : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => dispatchStarGradeData(name, 1)}
+            >
+              {t("ui.common.starGradeN", { 0: "1" })}
             </div>
-            <div className="text-left flex items-center gap-2">
-              <Checkbox
-                id={`3rdboard-${name}`}
-                checked={openBoardIndex > 2}
-                onCheckedChange={(c) => {
-                  dispatchNthBoardData(name, c ? 3 : 2);
-                }}
-              />
-              <Label htmlFor={`3rdboard-${name}`}>
-                {t("ui.board.nthBoardOpened", { 0: "3" })}
-              </Label>
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][1][
+                  gradeData[1] > 1 ? 0 : 1
+                ],
+                charaDefaultStar > 2 ? "cursor-not-allowed" : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => dispatchStarGradeData(name, 2)}
+            >
+              {t("ui.common.starGradeN", { 0: "2" })}
+            </div>
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][2][
+                  gradeData[1] > 2 ? 0 : 1
+                ],
+                charaDefaultStar > 3 ? "cursor-not-allowed" : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => dispatchStarGradeData(name, 3)}
+            >
+              {t("ui.common.starGradeN", { 0: "3" })}
+            </div>
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][3][
+                  gradeData[1] > 3 ? 0 : 1
+                ],
+                charaDefaultStar > 4 ? "cursor-not-allowed" : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => dispatchStarGradeData(name, 4)}
+            >
+              {t("ui.common.starGradeN", { 0: "4" })}
+            </div>
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][4][
+                  gradeData[1] > 4 ? 0 : 1
+                ],
+                charaDefaultStar > 5 ? "cursor-not-allowed" : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => {
+                dispatchStarGradeData(name, 5);
+                dispatchAsideGradeData(name, 0);
+              }}
+            >
+              {t("ui.common.starGradeN", { 0: "5" })}
             </div>
           </div>
+          <div className="flex flex-row gap-px flex-1">
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][5][
+                  gradeData[2] > 0 ? 0 : 1
+                ],
+                maxAside < 1
+                  ? "cursor-not-allowed brightness-50"
+                  : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => {
+                dispatchStarGradeData(name, 5);
+                dispatchAsideGradeData(name, 1);
+              }}
+            >
+              {t("ui.common.asideGradeN", { 0: "1" })}
+            </div>
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][6][
+                  gradeData[2] > 1 ? 0 : 1
+                ],
+                maxAside < 2
+                  ? "cursor-not-allowed brightness-50"
+                  : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => dispatchAsideGradeData(name, 2)}
+            >
+              {t("ui.common.asideGradeN", { 0: "2" })}
+            </div>
+            <div
+              className={cn(
+                asideSelectorClassNames[charaDefaultStar][7][
+                  gradeData[2] > 2 ? 0 : 1
+                ],
+                maxAside < 3
+                  ? "cursor-not-allowed brightness-50"
+                  : "cursor-pointer",
+                "flex-1 flex justify-center items-center"
+              )}
+              onClick={() => dispatchAsideGradeData(name, 3)}
+            >
+              {t("ui.common.asideGradeN", { 0: "3" })}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={cn("flex flex-row gap-2 mt-2 justify-between text-sm")}>
+        <div className="w-max">{t("ui.common.allApplyStat")}</div>
+        <div className={cn("flex flex-row gap-2", gradeData[2] < 3 && "brightness-75 opacity-75")}>
+          {aside3stat.map(([stat, value]) => {
+            if (!value) return null;
+            const targetStat = stat % 10000;
+            const targetStatString = StatType[targetStat];
+            const isPercent = stat > 9999;
+            return (
+              <div key={stat}>
+                <img
+                  src={`/icons/Icon_${targetStatString}.png`}
+                  className="inline-block w-4 h-4 mr-1"
+                />
+                +{isPercent ? `${value / 100}%` : `${value}`}
+              </div>
+            );
+          })}
+          {aside3stat.length === 0 && "-"}
         </div>
       </div>
       <div className="flex flex-col gap-1">

@@ -107,32 +107,23 @@ export const dataFileImport = async (
           .reduce((a, b) => a + b, 0);
       })
       .reduce((a, b) => a + b, 0);
-    const purpleCrayonStatistic = dataFile.pboard.p
-      .map((b) => {
-        if (!b) return 0;
-        return b
-          .map((nthboard, i) => {
-            const checkedCount = nthboard
-              .map((v) => int1BitCount(v))
-              .reduce((a, b) => a + b, 0);
-            return [3, 6, 9][i] * checkedCount;
-          })
-          .reduce((a, b) => a + b, 0);
-      })
-      .reduce((a, b) => a + b, 0);
     const totalRankStatistic = dataFile.eqrank.r.reduce(
       (acc, rank) => acc + rank,
+      0
+    );
+    const asideStatistic = dataFile.grade.g.reduce(
+      (acc, grd) => acc + grd[2],
       0
     );
     const timestamp = setNow ? Date.now() : readResult.timestamp ?? Date.now();
     const timestampInB64 = numberIntoB64(Number(timestamp), 8);
     const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
-    const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
+    const asideStatisticInB64 = numberIntoB64(asideStatistic, 4);
     const totalRankStatisticInB64 = numberIntoB64(totalRankStatistic, 4);
     const compressedInB64 = compressXorB64(JSON.stringify(dataFile));
     await saveData({
       timestamp,
-      data: `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${purpleCrayonStatisticInB64}${compressedInB64}`,
+      data: `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${asideStatisticInB64}${compressedInB64}`,
     });
     return { success: true };
   } else {
@@ -177,6 +168,7 @@ export const migrateIntoIdbFile = async () => {
     pboard: { p: [] as number[][][], d: pdtp.d },
     nthboard: { n: [] as number[] },
     eqrank: { r: [] as number[], s: [1, MAX_RANK], v: rdtp.v, f: rdtp.f },
+    grade: { g: [] as number[][] },
     unowned: udtp,
     lab: ldtp,
     myhome: mdtp,
@@ -231,6 +223,7 @@ export const migrateIntoIdbFile = async () => {
     userData.eqrank.r.push(
       Math.min(MAX_RANK, Math.max(Number(rdtp.r[charaName]) || 1, 1))
     );
+    userData.grade.g.push([0, Number(chara[charaName].t.charAt(1)), 0]);
     userData.memo.o.push([0, ""]);
     fullCharaNames.splice(fullCharaNames.indexOf(charaName), 1);
   });
@@ -248,28 +241,16 @@ export const migrateIntoIdbFile = async () => {
         .reduce((a, b) => a + b, 0);
     })
     .reduce((a, b) => a + b, 0);
-  const purpleCrayonStatistic = Object.values(pdtp.p)
-    .map((b) => {
-      return b
-        .map((nthboard, i) => {
-          const checkedCount = nthboard
-            .map((v) => int1BitCount(v))
-            .reduce((a, b) => a + b, 0);
-          return [3, 6, 9][i] * checkedCount;
-        })
-        .reduce((a, b) => a + b, 0);
-    })
-    .reduce((a, b) => a + b, 0);
   const totalRankStatistic = Object.values(rdtp.r).reduce(
     (acc, rank) => acc + rank,
     0
   );
   const timestampInB64 = numberIntoB64(Number(timestamp), 8);
   const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
-  const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
+  const asideStatisticInB64 = numberIntoB64(0, 4);
   const totalRankStatisticInB64 = numberIntoB64(totalRankStatistic, 4);
   const compressedInB64 = compressXorB64(JSON.stringify(userData));
-  const data = `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${purpleCrayonStatisticInB64}${compressedInB64}`;
+  const data = `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${asideStatisticInB64}${compressedInB64}`;
   return data;
 };
 
@@ -328,6 +309,7 @@ export const readIntoMemory = async (
             MAX_RANK,
             Math.max(Number(data.eqrank.r[i]) || 1, 1)
           ),
+          grade: data.grade.g[i] ?? [0, Number(chara[c].t.charAt(1)), 0],
           skin: data.skin[c],
           unowned: false,
           memo: data.memo.o[i] ?? [0, ""],
@@ -370,6 +352,7 @@ export const readIntoMemory = async (
           ),
           nthboard: 1,
           eqrank: 1,
+          grade: [0, Number(chara[c].t.charAt(1)), 0],
           unowned: false,
           memo: [0, ""],
         };
@@ -451,6 +434,7 @@ export const writeFromMemory = async (
     pboard: { p: [], d: data.pboard.d },
     nthboard: { n: [] },
     eqrank: { r: [], s: [1, MAX_RANK], v: data.eqrank.v, f: data.eqrank.f },
+    grade: { g: [] },
     unowned: { o: [], u: [] },
     lab: data.lab,
     myhome: data.myhome,
@@ -471,6 +455,7 @@ export const writeFromMemory = async (
       dataFile.pboard.p.push(data.charaInfo[c].pboard);
       dataFile.nthboard.n.push(data.charaInfo[c].nthboard);
       dataFile.eqrank.r.push(data.charaInfo[c].eqrank);
+      dataFile.grade.g.push(data.charaInfo[c].grade);
       if (data.charaInfo[c].skin) dataFile.skin[c] = data.charaInfo[c].skin;
       dataFile.memo.o.push(data.charaInfo[c].memo);
     }
@@ -487,29 +472,18 @@ export const writeFromMemory = async (
         .reduce((a, b) => a + b, 0);
     })
     .reduce((a, b) => a + b, 0);
-  const purpleCrayonStatistic = dataFile.pboard.p
-    .map((b) => {
-      return b
-        .map((nthboard, i) => {
-          const checkedCount = nthboard
-            .map((v) => int1BitCount(v))
-            .reduce((a, b) => a + b, 0);
-          return [3, 6, 9][i] * checkedCount;
-        })
-        .reduce((a, b) => a + b, 0);
-    })
-    .reduce((a, b) => a + b, 0);
   const totalRankStatistic = dataFile.eqrank.r.reduce(
     (acc, rank) => acc + rank,
     0
   );
+  const asideStatistic = dataFile.grade.g.reduce((acc, grd) => acc + grd[2], 0);
   const timestampInB64 = numberIntoB64(Number(timestamp), 8);
   const crayonStatisticInB64 = numberIntoB64(crayonStatistic, 4);
-  const purpleCrayonStatisticInB64 = numberIntoB64(purpleCrayonStatistic, 4);
+  const asideStatisticInB64 = numberIntoB64(asideStatistic, 4);
   const totalRankStatisticInB64 = numberIntoB64(totalRankStatistic, 4);
   const compressedInB64 = compressXorB64(JSON.stringify(dataFile));
   await saveData({
     timestamp,
-    data: `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${purpleCrayonStatisticInB64}${compressedInB64}`,
+    data: `${currentSignature}${timestampInB64}${crayonStatisticInB64}${totalRankStatisticInB64}${asideStatisticInB64}${compressedInB64}`,
   });
 };

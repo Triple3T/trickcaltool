@@ -11,11 +11,12 @@ interface IFileReadDataSuccess {
   crayon?: number;
   rank?: number;
   pcrayon?: number;
+  aside?: number;
 }
 type FileReadDataType = IFileReadDataFail | IFileReadDataSuccess;
 
-export const currentSignature = "3v";
-export const oldSignatures = ["3l", "0v", "3t", "3u"];
+export const currentSignature = "3w";
+export const oldSignatures = ["3l", "0v", "3t", "3u", "3v"];
 
 const b64t = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 
@@ -95,12 +96,41 @@ const fileRead2 = (fdt: string) => {
   }
 };
 
+const fileRead3 = (fdt: string) => {
+  const timeStampB64 = fdt.substring(0, 8);
+  const crayonB64 = fdt.substring(8, 12);
+  const rankB64 = fdt.substring(12, 16);
+  const asideB64 = fdt.substring(16, 20);
+  try {
+    const data = JSON.parse(decompressXorB64(fdt.substring(20)));
+    return {
+      success: true,
+      data,
+      timestamp: b64IntoNumber(timeStampB64),
+      crayon: b64IntoNumber(crayonB64),
+      rank: b64IntoNumber(rankB64),
+      aside: b64IntoNumber(asideB64),
+    } as IFileReadDataSuccess;
+  } catch (e) {
+    if (e instanceof Error)
+      return {
+        success: false,
+        reason: e.message,
+      } as IFileReadDataFail;
+    else return {
+      success: false,
+      reason: "ui.index.fileSync.unknownError",
+    } as IFileReadDataFail;
+  }
+};
+
 const fileRead = (fdt: string, sig: string): FileReadDataType => {
   if (sig === oldSignatures[0]) return fileRead0(fdt);
   else if (sig === oldSignatures[1]) return fileRead0(fdt);
   else if (sig === oldSignatures[2]) return fileRead2(fdt);
   else if (sig === oldSignatures[3]) return fileRead2(fdt);
-  else if (sig === currentSignature) return fileRead2(fdt);
+  else if (sig === oldSignatures[4]) return fileRead2(fdt);
+  else if (sig === currentSignature) return fileRead3(fdt);
   else {
     return {
       success: false,
@@ -138,6 +168,28 @@ const boardFix1 = (data: any) => {
       (data.board.b[elenaIndex][2][0] & 4) * 2 +
       (data.board.b[elenaIndex][2][0] & 8) / 2;
     data.board.b[elenaIndex] = data.board.b[elenaIndex].slice(0, 3);
+  }
+  return data;
+};
+
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+const boardFix2 = (data: any) => {
+  const kathyIndex = data.unowned.o.indexOf("Kathy");
+  if (kathyIndex >= 0 && data.board.b[kathyIndex]) {
+    if (data.board.b[kathyIndex][1].length === 2) {
+      data.board.b[kathyIndex][1] = [
+        ((data.board.b[kathyIndex][1][0] ?? 0) & 1 && 2) +
+          ((data.board.b[kathyIndex][1][0] ?? 0) & 2 && 8) +
+          ((data.board.b[kathyIndex][1][1] ?? 0) & 1 && 1) +
+          ((data.board.b[kathyIndex][1][1] ?? 0) & 2 && 4),
+      ];
+    }
+    data.board.b[kathyIndex][2] = [
+      ((data.board.b[kathyIndex][2][0] ?? 0) & 7) +
+        ((data.board.b[kathyIndex][2][0] ?? 0) & 16 && 8),
+      ((data.board.b[kathyIndex][2][0] ?? 0) & 8 && 2) +
+        ((data.board.b[kathyIndex][2][1] ?? 0) & 1),
+    ];
   }
   return data;
 };
@@ -227,6 +279,14 @@ const sigConvert = (fdt: string, sig: string): FileReadDataType => {
     case oldSignatures[3]:
       dataProto = dataProto ?? fileData;
       dataProto = boardFix1(dataProto);
+    // falls through
+    case oldSignatures[4]:
+      dataProto = {
+        ...boardFix2(dataProto ?? fileData),
+        grade: {
+          g: [],
+        },
+      };
     // falls through
     case currentSignature:
       dataProto = dataProto ?? fileData;

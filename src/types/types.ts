@@ -87,6 +87,9 @@ export interface UserDataMemoFile {
   o: [number, string][]; // 즐겨찾기(1이 on), 메모 데이터
   u: [number, string][]; // 즐겨찾기(1이 on), 메모 데이터
 }
+export interface UserDataGradeFile {
+  g: number[][]; // 캐릭터 등급 - index 0: 증명서, index 1: 성급, index 2: 어사이드
+}
 export interface UserDataBoardFindOption {
   x: number[]; // 0: 미보유 제외(0이 off, 1이 on), 1: 열린 보드 제외(0이 off, 1이 on)
   n: number[]; // 0: 보드 차수(0, 1, 2), 1: 이전 차수 포함(0이 off, 1이 on)
@@ -114,6 +117,7 @@ export interface UserDataFile {
   pboard: UserDataPurpleBoardFile;
   nthboard: UserDataNthBoardFile;
   eqrank: UserDataEqRankFile;
+  grade: UserDataGradeFile;
   unowned: UserDataUnowned;
   lab: UserDataLab;
   myhome: UserDataMyHome;
@@ -128,6 +132,7 @@ export interface UserDataOwnedCharaInfo {
   pboard: number[][]; // 보드 차수별 데이터 (bitmask)
   nthboard: number; // 보드 개방 수준
   eqrank: number; // 랭크 데이터
+  grade: number[]; // 캐릭터 등급 - index 0: 증명서, index 1: 성급, index 2: 어사이드
   skin?: number; // 스킨 적용 데이터
   unowned: false; // 보유 여부
   memo: [number, string]; // 즐겨찾기(1이 on), 메모 데이터
@@ -143,6 +148,7 @@ export interface UserDataMemory {
   pboard: Omit<UserDataPurpleBoardMemory,'p'>;
   // nthboard: Omit<UserDataNthBoardMemory,'n'>;
   eqrank: Omit<UserDataEqRankMemory,'r'>;
+  // grade: Omit<UserDataGradeFile,'g'>;
   unowned: UserDataUnowned;
   lab: UserDataLab;
   myhome: UserDataMyHome;

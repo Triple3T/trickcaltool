@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { create } from "zustand";
 import board from "@/data/board";
+import chara from "@/data/chara";
 import pboard from "@/data/purpleboard";
 import pet from "@/data/pet";
 import {
@@ -91,6 +92,11 @@ interface CharaMemoPayload {
   memo: string;
 }
 
+interface CharaGradePayload {
+  charaName: string;
+  value: number;
+}
+
 interface UserDataMemoryState extends Partial<UserDataMemory> {
   status: "waiting" | "initialized";
   token: string | undefined;
@@ -128,6 +134,9 @@ interface UserDataMemoryState extends Partial<UserDataMemory> {
     charaSkin: (payload: CharaSkinPayload) => void;
     charaFav: (payload: CharaFavPayload) => void;
     charaMemo: (payload: CharaMemoPayload) => void;
+    gradeStarChange: (payload: CharaGradePayload) => void;
+    gradeAsideChange: (payload: CharaGradePayload) => void;
+    gradeLicenseChange: (payload: CharaGradePayload) => void;
     boardFinderToggleExcludeUnowned: () => void;
     boardFinderToggleExcludeOpened: () => void;
     boardFinderToggleIncludePrevious: () => void;
@@ -194,6 +203,7 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
             pboard: pboard.c[charaName].b.map((d) =>
               Array(d.toString(10).length).fill(0)
             ),
+            grade: [0, Number(chara[charaName].t.charAt(1)), 0],
             nthboard: 1,
             eqrank: 1,
           };
@@ -486,6 +496,7 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           pboard: pboard.c[payload].b.map((d) =>
             Array(d.toString(10).length).fill(0)
           ),
+          grade: [0, Number(chara[payload].t.charAt(1)), 0],
           nthboard: 1,
           eqrank: 1,
         };
@@ -544,6 +555,7 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
                 pboard: pboard.c[name].b.map((d) =>
                   Array(d.toString(10).length).fill(0)
                 ),
+                grade: [0, Number(chara[name].t.charAt(1)), 0],
                 nthboard: 1,
                 eqrank: 1,
               },
@@ -616,6 +628,7 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
                   pboard: pboard.c[name].b.map((d) =>
                     Array(d.toString(10).length).fill(0)
                   ),
+                  grade: [0, Number(chara[name].t.charAt(1)), 0],
                   nthboard: 1,
                   eqrank: 1,
                 },
@@ -700,6 +713,75 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           timeestamp: Date.now(),
         };
       }),
+    gradeStarChange: (payload: CharaGradePayload) =>
+      set((state) => {
+        if (!state || !state.charaInfo || typeof state.dirty === "undefined")
+          return {};
+        const { charaName, value } = payload;
+        const charaInfo = state.charaInfo[charaName];
+        if (charaInfo.unowned) return {};
+        const grd = Math.max(
+          Math.min(value || 0, 5),
+          Number(chara[charaName].t.charAt(1))
+        );
+        const newCharaInfo: UserDataOwnedCharaInfo = {
+          ...charaInfo,
+          grade: [charaInfo.grade[0], grd, grd < 5 ? 0 : charaInfo.grade[2]],
+        };
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          charaInfo: {
+            ...state.charaInfo,
+            [charaName]: newCharaInfo,
+          },
+          timeestamp: Date.now(),
+        };
+      }),
+    gradeAsideChange: (payload: CharaGradePayload) =>
+      set((state) => {
+        if (!state || !state.charaInfo || typeof state.dirty === "undefined")
+          return {};
+        const { charaName, value } = payload;
+        const charaInfo = state.charaInfo[charaName];
+        if (charaInfo.unowned || !chara[charaName].a) return {};
+        const grd = Math.max(Math.min(value || 0, chara[charaName].a), 0);
+        const newCharaInfo: UserDataOwnedCharaInfo = {
+          ...charaInfo,
+          grade: [charaInfo.grade[0], grd > 0 ? 5 : charaInfo.grade[1], grd],
+        };
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          charaInfo: {
+            ...state.charaInfo,
+            [charaName]: newCharaInfo,
+          },
+          timeestamp: Date.now(),
+        };
+      }),
+    gradeLicenseChange: (payload: CharaGradePayload) =>
+      set((state) => {
+        if (!state || !state.charaInfo || typeof state.dirty === "undefined")
+          return {};
+        const { charaName, value } = payload;
+        const charaInfo = state.charaInfo[charaName];
+        if (charaInfo.unowned) return {};
+        const newCharaInfo: UserDataOwnedCharaInfo = {
+          ...charaInfo,
+          grade: [
+            Math.max(value || 0, 0),
+            charaInfo.grade[1],
+            charaInfo.grade[2],
+          ],
+        };
+        return {
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          charaInfo: {
+            ...state.charaInfo,
+            [charaName]: newCharaInfo,
+          },
+          timeestamp: Date.now(),
+        };
+      }),
     boardFinderToggleExcludeUnowned: () =>
       set((state) => {
         if (
@@ -754,22 +836,23 @@ export const useUserDataMemoryStore = create<UserDataMemoryState>()((set) => ({
           timeestamp: Date.now(),
         };
       }),
-    boardFinderSetTargetNthBoard: (payload: number) => set((state)=>{
-      if (
-        !state ||
-        !state.boardFindOption ||
-        typeof state.dirty === "undefined"
-      )
-        return {};
-      return {
-        boardFindOption: {
-          ...state.boardFindOption,
-          n: [payload, state.boardFindOption.n[1]],
-        },
-        dirty: ((state.dirty + 1) % 32768) + 65536,
-        timeestamp: Date.now(),
-      };
-    }),
+    boardFinderSetTargetNthBoard: (payload: number) =>
+      set((state) => {
+        if (
+          !state ||
+          !state.boardFindOption ||
+          typeof state.dirty === "undefined"
+        )
+          return {};
+        return {
+          boardFindOption: {
+            ...state.boardFindOption,
+            n: [payload, state.boardFindOption.n[1]],
+          },
+          dirty: ((state.dirty + 1) % 32768) + 65536,
+          timeestamp: Date.now(),
+        };
+      }),
     boardFinderRotateBoardPriority: (payload: number) =>
       set((state) => {
         if (

@@ -17,6 +17,7 @@ import SearchBox from "@/components/common/search-with-icon";
 import PurpleBoardCard from "@/components/parts/purple-board-card";
 import SelectChara from "@/components/parts/select-chara";
 import SubtitleBar from "@/components/parts/subtitlebar";
+import aside3stat from "@/data/aside3stat";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import purpleboard from "@/data/purpleboard";
@@ -196,6 +197,8 @@ const PurpleBoard = () => {
     boardClick,
     pboardClick,
     boardIndex: changeBoardIndex,
+    gradeStarChange,
+    gradeAsideChange,
   } = useUserDataActions();
   const userDataBoard = useUserDataBoard();
   const userDataCharaInfo = useUserDataCharaInfo();
@@ -209,21 +212,33 @@ const PurpleBoard = () => {
 
   const boardClickAsProp = useCallback(
     (charaName: string, boardIndex: number, ldx: number, bdx: number) => {
-      boardClick({charaName, boardIndex, ldx, bdx});
+      boardClick({ charaName, boardIndex, ldx, bdx });
     },
     [boardClick]
   );
   const pboardClickAsProp = useCallback(
     (charaName: string, boardIndex: number, ldx: number, bdx: number) => {
-      pboardClick({charaName, boardIndex, ldx, bdx});
+      pboardClick({ charaName, boardIndex, ldx, bdx });
     },
     [pboardClick]
   );
   const changeBoardIndexAsProp = useCallback(
     (charaName: string, boardIndex: number) => {
-      changeBoardIndex({charaName, boardIndex});
+      changeBoardIndex({ charaName, boardIndex });
     },
     [changeBoardIndex]
+  );
+  const gradeStarChangeAsProp = useCallback(
+    (charaName: string, grade: number) => {
+      gradeStarChange({ charaName, value: grade });
+    },
+    [gradeStarChange]
+  );
+  const gradeAsideChangeAsProp = useCallback(
+    (charaName: string, grade: number) => {
+      gradeAsideChange({ charaName, value: grade });
+    },
+    [gradeAsideChange]
   );
 
   useEffect(() => {
@@ -233,7 +248,14 @@ const PurpleBoard = () => {
     }
   }, [newCharaAlert, t]);
 
-  if (dataStatus !== 'initialized' || !userDataBoard || !userDataCharaInfo || !userDataPboard || !userDataUnowned) return <Loading />;
+  if (
+    dataStatus !== "initialized" ||
+    !userDataBoard ||
+    !userDataCharaInfo ||
+    !userDataPboard ||
+    !userDataUnowned
+  )
+    return <Loading />;
 
   return (
     <>
@@ -476,10 +498,14 @@ const PurpleBoard = () => {
             name
           ] as UserDataOwnedCharaInfo;
           const charaPersonality = Number(chara[name].t[0]);
+          const charaDefaultStar = Number(chara[name].t[1]);
           const charaRace = Number(chara[name].t[5]);
+          const maxAside = chara[name].a || 0;
           const personalityClassName =
             personalityBG[Number(charaPersonality) as Personality];
           const openBoardIndex = currentCharaInfo.nthboard;
+          const gradeData = currentCharaInfo.grade;
+          const aside3BonusStat = aside3stat.c[name]?.s ?? [];
           return (
             <PurpleBoardCard
               key={name}
@@ -487,15 +513,21 @@ const PurpleBoard = () => {
               currentBoard={board.c[name].b}
               currentPurpleBoard={purpleboard.c[name]}
               // charaPersonality,
+              charaDefaultStar={charaDefaultStar}
+              maxAside={maxAside}
               charaRace={charaRace}
               personalityClassName={personalityClassName}
               skin={currentCharaInfo.skin}
               openBoardIndex={openBoardIndex}
+              gradeData={gradeData}
               dispatchClickBoardData={boardClickAsProp}
               dispatchClickPurpleBoardData={pboardClickAsProp}
               dispatchNthBoardData={changeBoardIndexAsProp}
+              dispatchStarGradeData={gradeStarChangeAsProp}
+              dispatchAsideGradeData={gradeAsideChangeAsProp}
               board={currentCharaInfo.board}
               pboard={currentCharaInfo.pboard}
+              aside3stat={aside3BonusStat}
             />
           );
         }}
