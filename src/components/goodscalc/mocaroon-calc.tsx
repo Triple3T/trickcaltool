@@ -62,18 +62,20 @@ const MocaroonCalc = () => {
         <p>{t("ui.goodscalc.mocaroon.levelSectionInputDesc")}</p>
         <p>{t("ui.goodscalc.mocaroon.levelSectionInputFormatDesc")}</p>
       </div>
-      <div className="px-4 mt-4">
+      <div className="mt-4">
         {levelSections.map((levelSection, i) => {
           return (
             <div
               key={i}
-              className="mb-4 pb-4 break-keep flex justify-between items-center"
+              className="mb-4 pb-4 break-keep flex justify-around items-center"
             >
-              <div className="flex items-baseline rounded py-1 -my-1 px-1 ">
+              <div className="flex items-baseline rounded py-1 -my-1 px-1">
                 Lv.
                 <LazyInput
                   value={`${levelSection[0]}`}
-                  sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
+                  sanitize={(v) =>
+                    `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                  }
                   onValueChange={(v) =>
                     setLevelSections((s) => {
                       const newSections = s.map((a) => [...a]);
@@ -94,7 +96,9 @@ const MocaroonCalc = () => {
                 →
                 <LazyInput
                   value={`${levelSection[1]}`}
-                  sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
+                  sanitize={(v) =>
+                    `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                  }
                   onValueChange={(v) =>
                     setLevelSections((s) => {
                       const newSections = s.map((a) => [...a]);
@@ -115,7 +119,9 @@ const MocaroonCalc = () => {
                 &nbsp;x
                 <LazyInput
                   value={`${levelSection[2]}`}
-                  sanitize={(v) => `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`}
+                  sanitize={(v) =>
+                    `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                  }
                   onValueChange={(v) =>
                     setLevelSections((s) => {
                       const newSections = s.map((a) => [...a]);
@@ -128,7 +134,7 @@ const MocaroonCalc = () => {
                 />
                 명
               </div>
-              {i !== 0 && (
+              {levelSections.length > 1 && (
                 <X
                   className="w-4 h-4 inline cursor-pointer opacity-50"
                   onClick={() =>
