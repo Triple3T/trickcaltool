@@ -74,14 +74,14 @@ const PurpleBoardCard = ({
   return (
     <Card className="p-4 object-cover max-w-full break-inside-avoid">
       {/* title bar */}
-      <div className="flex gap-2 items-center flex-wrap">
+      <div className="flex gap-4 items-center flex-wrap">
         <div
           className="sm:min-w-10 sm:min-h-10 md:min-w-12 md:min-h-12 max-w-16 relative aspect-square"
           onContextMenu={(e) => e.preventDefault()}
         >
           <div
             className={cn(
-              "min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 max-w-14 aspect-square overflow-hidden",
+              "min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 max-w-14 aspect-square overflow-hidden rounded",
               personalityClassName
             )}
           >
@@ -106,6 +106,12 @@ const PurpleBoardCard = ({
               )}
             />
           </div>
+          {maxAside > 0 && gradeData[2] > 0 && (
+            <img
+              src={`/asideicons/AsideIcon_${name}.png`}
+              className="absolute top-[40%] -translate-y-1/2 right-0 translate-x-[36%] w-[80%] drop-shadow-[0px_0_4px_white]"
+            />
+          )}
         </div>
         <div className="flex-initial flex-shrink-0 flex flex-col items-start">
           <div className="text-sm">
@@ -273,7 +279,12 @@ const PurpleBoardCard = ({
       </div>
       <div className={cn("flex flex-row gap-2 mt-2 justify-between text-sm")}>
         <div className="w-max">{t("ui.common.allApplyStat")}</div>
-        <div className={cn("flex flex-row gap-2", gradeData[2] < 3 && "brightness-75 opacity-75")}>
+        <div
+          className={cn(
+            "flex flex-row gap-2",
+            gradeData[2] < 3 && "brightness-75 opacity-75"
+          )}
+        >
           {aside3stat.map(([stat, value]) => {
             if (!value) return null;
             const targetStat = stat % 10000;
