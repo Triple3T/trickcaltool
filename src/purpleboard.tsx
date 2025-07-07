@@ -42,6 +42,7 @@ import {
   useUserDataPboard,
   useUserDataUnowned,
   useUserDataStatPercents,
+  useUserDataAside3Stats,
 } from "@/stores/useUserDataStore";
 
 interface BoardDataCharaProps {
@@ -57,10 +58,12 @@ const PurpleBoardStatStatistic = ({
   stat,
   percentStat,
   data,
+  additionalValue = 0,
 }: {
   stat: string;
   percentStat: number;
   data: { [key: string]: BoardDataCharaProps[][] };
+  additionalValue?: number;
 }) => {
   const { t } = useTranslation();
   const statType = StatType[stat as keyof typeof StatType];
@@ -89,6 +92,9 @@ const PurpleBoardStatStatistic = ({
       max: [] as number[],
     }
   );
+  const finalBase =
+    statStatistic.reduce((a, b) => a + b.stat.reduce((a, b) => a + b, 0), 0) +
+    additionalValue;
   return (
     <div className="flex">
       <div className="relative z-10">
@@ -102,12 +108,7 @@ const PurpleBoardStatStatistic = ({
           <div className="text-left flex-auto">{t(`stat.${stat}`)}</div>
           <div className="text-right flex-auto">
             {Math.round(
-              (statStatistic.reduce(
-                (a, b) => a + b.stat.reduce((a, b) => a + b, 0),
-                0
-              ) *
-                (100 + percentStat)) /
-                100
+              (finalBase * (100 + percentStat)) / 100
             ).toLocaleString()}
           </div>
         </div>
@@ -205,10 +206,12 @@ const PurpleBoard = () => {
   const userDataPboard = useUserDataPboard();
   const userDataUnowned = useUserDataUnowned();
   const boardStatPercent = useUserDataStatPercents();
+  const asideStatPercent = useUserDataAside3Stats();
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [boardStatMultiplied, setBoardStatMultiplied] = useState(false);
   const [newCharaAlert, setNewCharaAlert] = useState(false);
+  const [includeAside, setIncludeAside] = useState(false);
 
   const boardClickAsProp = useCallback(
     (charaName: string, boardIndex: number, ldx: number, bdx: number) => {
@@ -283,7 +286,8 @@ const PurpleBoard = () => {
               {t("ui.board.allStatBaseTotal")}
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              <div className="mb-2 text-left flex items-center gap-2">
+              <div className="flex flex-row mb-2">
+                <div className="flex-1 text-left flex items-center gap-2">
                 <Switch
                   id="view-all-stat-with-board"
                   checked={boardStatMultiplied}
@@ -294,6 +298,17 @@ const PurpleBoard = () => {
                 <Label htmlFor="view-all-stat-with-board">
                   {t("ui.equiprank.viewAllStatWithBoard")}
                 </Label>
+                </div>
+                <div className="flex-1 text-left flex items-center gap-2">
+                  <Switch
+                    id="include-aside-base"
+                    checked={includeAside}
+                    onCheckedChange={setIncludeAside}
+                  />
+                  <Label htmlFor="include-aside-base">
+                    {t("ui.board.includeAside")}
+                  </Label>
+                </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
                 {[1, 0, 7, 6, 4, 2, 5, 3, 8].map((statNum) => {
@@ -359,13 +374,23 @@ const PurpleBoard = () => {
                         }),
                     ])
                   );
+                  const asideValuePercent = includeAside
+                    ? (asideStatPercent[10000 + statNum] ?? 0) / 100
+                    : 0;
+                  const asideValueBase = includeAside
+                    ? asideStatPercent[statNum] ?? 0
+                    : 0;
+                  const boardValuePercent = boardStatPercent[stat] || 0;
                   return (
                     <PurpleBoardStatStatistic
                       key={stat}
                       stat={stat}
                       percentStat={
-                        boardStatMultiplied ? boardStatPercent[stat] || 0 : 0
+                        boardStatMultiplied
+                          ? boardValuePercent + asideValuePercent
+                          : 0
                       }
+                      additionalValue={asideValueBase}
                       data={data}
                     />
                   );
@@ -385,6 +410,18 @@ const PurpleBoard = () => {
               {t("ui.board.allStatPercentTotal")}
             </AccordionTrigger>
             <AccordionContent className="text-base">
+              <div className="flex flex-row mb-2">
+                <div className="flex-1 text-left flex items-center gap-2">
+                  <Switch
+                    id="include-aside-percent"
+                    checked={includeAside}
+                    onCheckedChange={setIncludeAside}
+                  />
+                  <Label htmlFor="include-aside-percent">
+                    {t("ui.board.includeAside")}
+                  </Label>
+                </div>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
                 {[1, 0, 7, 6, 4, 2, 5, 3, 8].map((statNum) => {
                   const stat = StatType[statNum];
@@ -455,6 +492,11 @@ const PurpleBoard = () => {
                       key={stat}
                       stat={stat}
                       data={data}
+                      additionalValue={
+                        includeAside
+                          ? (asideStatPercent[10000 + statNum] ?? 0) / 100
+                          : 0
+                      }
                       withoutScrollButton
                     />
                   );

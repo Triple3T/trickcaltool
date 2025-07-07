@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { create } from "zustand";
+import aside3stat from "@/data/aside3stat";
 import board from "@/data/board";
 import chara from "@/data/chara";
 import pboard from "@/data/purpleboard";
@@ -1123,6 +1124,31 @@ const getStatPercentsCore = (s: Partial<Pick<UserDataMemory, "charaInfo">>) => {
 export const useUserDataStatPercents = () => {
   const charaInfo = useUserDataMemoryStore((s) => s.charaInfo);
   return useMemo(() => getStatPercentsCore({ charaInfo }), [charaInfo]);
+};
+
+const getAside3StatsCore = (s: Partial<Pick<UserDataMemory, "charaInfo">>) => {
+  if (!s.charaInfo) return {};
+  const asideStats: Record<string, number> = {};
+  const asideData = Object.fromEntries(
+    (
+      Object.entries(s.charaInfo).filter(([, v]) => !v.unowned) as [
+        string,
+        UserDataOwnedCharaInfo
+      ][]
+    ).map(([c, v]) => [c, v.grade])
+  );
+  Object.entries(asideData).forEach(([c, a]) => {
+    if (a[2] > 2) {
+      aside3stat.c[c].s.forEach(([stat, value]) => {
+        asideStats[stat] = (asideStats[stat] || 0) + value;
+      });
+    }
+  });
+  return asideStats;
+};
+export const useUserDataAside3Stats = () => {
+  const charaInfo = useUserDataMemoryStore((s) => s.charaInfo);
+  return useMemo(() => getAside3StatsCore({ charaInfo }), [charaInfo]);
 };
 
 export const useSaveUserData = () => {

@@ -6670,7 +6670,8 @@
                 "importantBoardCombination": "가능한 특수 칸 조합",
                 "maxBoardIndex": "열려 있는 최고 차수 보드",
                 "listInCurrentBoard": "{{0}}의 특수 칸 목록",
-                "starGrade": "성급"
+                "starGrade": "성급",
+                "includeAside": "어사이드 스탯 포함"
             },
             "equiprank": {
                 "title": "랭크 메모장",
@@ -7270,6 +7271,7 @@
                 "allApplyStat": "전체 스탯",
                 "board": "보드",
                 "grade": "등급",
+                "aside": "어사이드",
                 "starGradeN": "{{0}}성",
                 "asideGradeN": "어사{{0}}",
                 "language": "언어",

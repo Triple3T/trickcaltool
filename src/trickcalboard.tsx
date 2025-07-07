@@ -57,6 +57,7 @@ import {
   useUserDataStatus,
   useUserDataBoard,
   useUserDataCharaInfo,
+  useUserDataAside3Stats,
 } from "@/stores/useUserDataStore";
 
 interface BoardDataPropsBoard {
@@ -73,10 +74,12 @@ interface BoardDataPropsBoard {
 export const BoardStatStatistic = ({
   stat,
   data,
-  withoutScrollButton,
+  additionalValue = 0,
+  withoutScrollButton = false,
 }: {
   stat: string;
   data: { [key: string]: BoardDataPropsBoard[] };
+  additionalValue?: number;
   withoutScrollButton?: boolean;
 }) => {
   const { t } = useTranslation();
@@ -114,6 +117,9 @@ export const BoardStatStatistic = ({
       max: [] as number[],
     }
   );
+  const finalStat =
+    statStatistic.reduce((a, b) => a + b.stat.reduce((a, b) => a + b, 0), 0) +
+    additionalValue;
   return (
     <div className="flex">
       <div className="relative z-10">
@@ -126,10 +132,7 @@ export const BoardStatStatistic = ({
         <div className="bg-gradient-to-r from-transparent via-[#f2f9e7] dark:via-[#36a52d] via-[28px] to-[#f2f9e7] dark:to-[#36a52d] py-0.5 pr-2.5 pl-8 rounded-r-[14px] flex flex-row dark:contrast-125 dark:brightness-80">
           <div className="text-left flex-auto">{t(`stat.${stat}`)}</div>
           <div className="text-right flex-auto">
-            {statStatistic
-              .reduce((a, b) => a + b.stat.reduce((a, b) => a + b, 0), 0)
-              .toLocaleString()}
-            %
+            {finalStat.toLocaleString()}%
           </div>
           {!withoutScrollButton && (
             <CircleArrowDown
@@ -274,10 +277,12 @@ const TrickcalBoard = () => {
   } = useUserDataActions();
   const userDataBoard = useUserDataBoard();
   const userDataCharaInfo = useUserDataCharaInfo();
+  const userDataAside3Stats = useUserDataAside3Stats();
   const [enableDialog, setEnableDialog] = useState(true);
   const [charaDrawerOpen, setCharaDrawerOpen] = useState(false);
   const [newCharaAlert, setNewCharaAlert] = useState(false);
   const [boardDialogOpened, setBoardDialogOpened] = useState(false);
+  const [includeAside, setIncludeAside] = useState(false);
   const [boardDialogProp, setBoardDialogProp] =
     useState<Omit<BoardInfoDialogProps, "opened" | "onOpenChange">>();
 
@@ -352,7 +357,8 @@ const TrickcalBoard = () => {
     }
   }, [newCharaAlert, t]);
 
-  if (dataStatus !== 'initialized' || !userDataBoard || !userDataCharaInfo) return <Loading />;
+  if (dataStatus !== "initialized" || !userDataBoard || !userDataCharaInfo)
+    return <Loading />;
 
   return (
     <>
@@ -517,6 +523,18 @@ const TrickcalBoard = () => {
               {t("ui.board.allStatPercentTotal")}
             </AccordionTrigger>
             <AccordionContent className="text-base">
+              <div className="flex flex-row mb-2">
+                <div className="flex-1 text-left flex items-center gap-2">
+                  <Switch
+                    id="include-aside"
+                    checked={includeAside}
+                    onCheckedChange={setIncludeAside}
+                  />
+                  <Label htmlFor="include-aside">
+                    {t("ui.board.includeAside")}
+                  </Label>
+                </div>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">
                 {[1, 0, 7, 6, 4, 2, 5, 3, 8].map((statNum) => {
                   const stat = StatType[statNum];
@@ -583,7 +601,16 @@ const TrickcalBoard = () => {
                     ])
                   );
                   return (
-                    <BoardStatStatistic key={stat} stat={stat} data={data} />
+                    <BoardStatStatistic
+                      key={stat}
+                      stat={stat}
+                      data={data}
+                      additionalValue={
+                        includeAside
+                          ? (userDataAside3Stats[10000 + statNum] ?? 0) / 100
+                          : 0
+                      }
+                    />
                   );
                 })}
 
@@ -848,9 +875,7 @@ const TrickcalBoard = () => {
                               const boardIndex = userDataBoard.i;
                               const boardShape = board.c[name].s;
                               const boardPosition = Number(
-                                board.c[name].r[boardIndex][ldx].split(
-                                  "."
-                                )[bdx]
+                                board.c[name].r[boardIndex][ldx].split(".")[bdx]
                               );
                               return (
                                 <BoardCharaSlot
