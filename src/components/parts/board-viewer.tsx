@@ -93,7 +93,7 @@ const BoardViewer = ({
                       className={cn(
                         "bg-board-special w-12 h-12 rotate-10 inline-block align-middle aspect-square bg-cover dark:brightness-80 dark:contrast-125",
                         search.includes(Number(b))
-                          ? "drop-shadow-[0px_0_8px_#d97706] dark:drop-shadow-[0px_0_8px_#fbbf24]"
+                          ? "drop-shadow-[0_0_8px_#d97706] dark:drop-shadow-[0_0_8px_#fbbf24]"
                           : "brightness-90"
                       )}
                     />

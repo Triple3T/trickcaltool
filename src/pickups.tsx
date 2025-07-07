@@ -241,7 +241,7 @@ const PickupLog = () => {
                           {charas.some((charaId) => chara[charaId].e) && (
                             <img
                               src="/gacha/PickPerconalityIcon_EldainHero.png"
-                              className="absolute top-px right-px w-10 drop-shadow-[0px_0_2px_white]"
+                              className="absolute top-px right-px w-10 drop-shadow-[0_0_2px_white]"
                             />
                           )}
                           <div

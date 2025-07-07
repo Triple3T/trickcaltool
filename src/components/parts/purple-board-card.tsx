@@ -109,7 +109,7 @@ const PurpleBoardCard = ({
           {maxAside > 0 && gradeData[2] > 0 && (
             <img
               src={`/asideicons/AsideIcon_${name}.png`}
-              className="absolute top-[40%] -translate-y-1/2 right-0 translate-x-[36%] w-[80%] drop-shadow-[0px_0_4px_white]"
+              className="absolute top-[40%] -translate-y-1/2 right-0 translate-x-[36%] w-[80%] drop-shadow-[0_0_4px_white]"
             />
           )}
         </div>
