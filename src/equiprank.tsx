@@ -194,6 +194,7 @@ const EquipRank = () => {
     !userDataEqrank ||
     !userDataCharaInfo ||
     !boardStat ||
+    !asideStatPercent ||
     !userDataUnowned
   )
     return <Loading />;

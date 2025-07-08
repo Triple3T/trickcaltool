@@ -357,7 +357,12 @@ const TrickcalBoard = () => {
     }
   }, [newCharaAlert, t]);
 
-  if (dataStatus !== "initialized" || !userDataBoard || !userDataCharaInfo)
+  if (
+    dataStatus !== "initialized" ||
+    !userDataBoard ||
+    !userDataCharaInfo ||
+    !userDataAside3Stats
+  )
     return <Loading />;
 
   return (

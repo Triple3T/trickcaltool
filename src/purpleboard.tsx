@@ -263,7 +263,9 @@ const PurpleBoard = () => {
     !userDataBoard ||
     !userDataCharaInfo ||
     !userDataPboard ||
-    !userDataUnowned
+    !userDataUnowned ||
+    !boardStatPercent ||
+    !asideStatPercent
   )
     return <Loading />;
 
