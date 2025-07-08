@@ -200,6 +200,7 @@ const PurpleBoard = () => {
     boardIndex: changeBoardIndex,
     gradeStarChange,
     gradeAsideChange,
+    gradeLicenseChange,
   } = useUserDataActions();
   const userDataBoard = useUserDataBoard();
   const userDataCharaInfo = useUserDataCharaInfo();
@@ -242,6 +243,12 @@ const PurpleBoard = () => {
       gradeAsideChange({ charaName, value: grade });
     },
     [gradeAsideChange]
+  );
+  const gradeLicenseChangeAsProp = useCallback(
+    (charaName: string, value: number) => {
+      gradeLicenseChange({ charaName, value });
+    },
+    [gradeLicenseChange]
   );
 
   useEffect(() => {
@@ -567,6 +574,7 @@ const PurpleBoard = () => {
               dispatchNthBoardData={changeBoardIndexAsProp}
               dispatchStarGradeData={gradeStarChangeAsProp}
               dispatchAsideGradeData={gradeAsideChangeAsProp}
+              dispatchLicenseData={gradeLicenseChangeAsProp}
               board={currentCharaInfo.board}
               pboard={currentCharaInfo.pboard}
               aside3stat={aside3BonusStat}

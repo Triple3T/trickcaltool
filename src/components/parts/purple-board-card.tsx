@@ -2,7 +2,9 @@ import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import SubtitleBar from "./subtitlebar";
+import CharaLicense from "@/components/parts/chara-license";
+import ItemSlotWithCustomInput from "@/components/parts/item-slot-with-custom-input";
+import SubtitleBar from "@/components/parts/subtitlebar";
 import purpleposition from "@/data/purpleposition";
 import asideSelectorClassNames from "@/utils/asideSelectorClassNames";
 import { BoardType, PurpleBoardType, Race, StatType } from "@/types/enums";
@@ -43,6 +45,7 @@ interface PurpleBoardCardProps {
   dispatchNthBoardData: (charaName: string, index: number) => void;
   dispatchStarGradeData: (charaName: string, grade: number) => void;
   dispatchAsideGradeData: (charaName: string, grade: number) => void;
+  dispatchLicenseData: (charaName: string, license: number) => void;
   board: number[][];
   pboard: number[][];
   aside3stat: number[][];
@@ -65,6 +68,7 @@ const PurpleBoardCard = ({
   dispatchNthBoardData,
   dispatchStarGradeData,
   dispatchAsideGradeData,
+  dispatchLicenseData,
   board,
   pboard,
   aside3stat,
@@ -74,9 +78,9 @@ const PurpleBoardCard = ({
   return (
     <Card className="p-4 object-cover max-w-full break-inside-avoid">
       {/* title bar */}
-      <div className="flex gap-4 items-center flex-wrap">
+      <div className="flex items-center flex-wrap">
         <div
-          className="sm:min-w-10 sm:min-h-10 md:min-w-12 md:min-h-12 max-w-16 relative aspect-square"
+          className="sm:min-w-10 sm:min-h-10 md:min-w-12 md:min-h-12 max-w-16 relative aspect-square mr-3.5"
           onContextMenu={(e) => e.preventDefault()}
         >
           <div
@@ -109,17 +113,29 @@ const PurpleBoardCard = ({
           {maxAside > 0 && gradeData[2] > 0 && (
             <img
               src={`/asideicons/AsideIcon_${name}.png`}
-              className="absolute top-[40%] -translate-y-1/2 right-0 translate-x-[36%] w-[80%] drop-shadow-[0_0_4px_white]"
+              className="absolute top-[42%] -translate-y-1/2 right-0 translate-x-[36%] w-[70%] drop-shadow-[0_0_4px_white]"
             />
           )}
         </div>
         <div className="flex-initial flex-shrink-0 flex flex-col items-start">
-          <div className="text-sm">
-            <span className="align-middle">
-              {t(`ui.board.viewTargetBoardShort`)}
-            </span>
-          </div>
-          <div className="text-2xl">{t(`chara.${name}`)}</div>
+          <div className="text-sm">{t(`ui.board.viewTargetBoardShort`)}</div>
+          <div className="h-1" />
+          <div className="text-xl">{t(`chara.${name}`)}</div>
+        </div>
+        <div className="flex-1" />
+        <div>
+          <ItemSlotWithCustomInput
+            rarityInfo={{ s: "LightGreen" }}
+            item={<CharaLicense name={name} fullSize />}
+            fullItemPath
+            amount={gradeData[0]}
+            size={3}
+            innerSize={90}
+            onInputChange={(value) => {
+              if (value.length) dispatchLicenseData(name, Number(value || "0"));
+            }}
+            keyboardMode="numeric"
+          />
         </div>
       </div>
       <div className="flex flex-row gap-2 mt-2">
@@ -161,7 +177,9 @@ const PurpleBoardCard = ({
         </div>
       </div>
       <div className="flex flex-row gap-2 mt-2 items-center">
-        <div className="w-max">{t("ui.common.grade")}</div>
+        <div className="w-max">
+          <div>{t("ui.common.grade")}</div>
+        </div>
         <div className="flex flex-col rounded overflow-hidden text-xs flex-1 gap-px h-[41px] items-stretch">
           <div className="flex flex-row gap-px flex-1">
             <div
