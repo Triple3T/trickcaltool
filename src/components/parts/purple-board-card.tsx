@@ -123,20 +123,23 @@ const PurpleBoardCard = ({
           <div className="text-xl">{t(`chara.${name}`)}</div>
         </div>
         <div className="flex-1" />
-        <div>
-          <ItemSlotWithCustomInput
-            rarityInfo={{ s: "LightGreen" }}
-            item={<CharaLicense name={name} fullSize />}
-            fullItemPath
-            amount={gradeData[0]}
-            size={3}
-            innerSize={90}
-            onInputChange={(value) => {
-              if (value.length) dispatchLicenseData(name, Number(value || "0"));
-            }}
-            keyboardMode="numeric"
-          />
-        </div>
+        {charaDefaultStar > 1 && (
+          <div>
+            <ItemSlotWithCustomInput
+              rarityInfo={{ s: "LightGreen" }}
+              item={<CharaLicense name={name} fullSize />}
+              fullItemPath
+              amount={gradeData[0]}
+              size={3}
+              innerSize={90}
+              onInputChange={(value) => {
+                if (value.length)
+                  dispatchLicenseData(name, Number(value || "0"));
+              }}
+              keyboardMode="numeric"
+            />
+          </div>
+        )}
       </div>
       <div className="flex flex-row gap-2 mt-2">
         <div className="w-max">{t("ui.common.board")}</div>
