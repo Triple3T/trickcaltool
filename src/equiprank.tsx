@@ -64,6 +64,7 @@ import {
   useUserDataStatPercents,
   useUserDataUnowned,
   useUserDataStatistics,
+  useUserDataAside3Stats,
 } from "@/stores/useUserDataStore";
 
 // af
@@ -89,6 +90,7 @@ const EquipRank = () => {
   const userDataEqrank = useUserDataEqrank();
   const userDataCharaInfo = useUserDataCharaInfo();
   const boardStat = useUserDataStatPercents();
+  const asideStatPercent = useUserDataAside3Stats();
   const userDataUnowned = useUserDataUnowned();
   const userStatistics = useUserDataStatistics();
   const isAF = useIsAFActive();
@@ -515,10 +517,14 @@ const EquipRank = () => {
                       [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][parseInt(a[0], 10)] -
                       [1, 0, 5, 7, 4, 6, 3, 2, 8, 9][parseInt(b[0], 10)]
                   )
-                  .map(([statTypeNum, statValue]) => {
-                    const stat = StatType[parseInt(statTypeNum, 10)];
+                  .map(([statTypeNumStr, statValue]) => {
+                    const statTypeNum = parseInt(statTypeNumStr, 10);
+                    const stat = StatType[statTypeNum];
+                    const statPercentValue =
+                      (boardStat[stat] ?? 0) +
+                      (asideStatPercent[statTypeNum + 10000] ?? 0) / 100;
                     return (
-                      <div className="flex" key={statTypeNum}>
+                      <div className="flex" key={statTypeNumStr}>
                         <div className="relative z-10">
                           <img
                             className="h-6 mr-2 aspect-square inline-block align-middle"
@@ -532,8 +538,7 @@ const EquipRank = () => {
                           <div className="text-right flex-auto">
                             {(withBoardStat
                               ? Math.round(
-                                  (statValue * ((boardStat[stat] ?? 0) + 100)) /
-                                    100
+                                  (statValue * (statPercentValue + 100)) / 100
                                 )
                               : statValue
                             ).toLocaleString()}
