@@ -28,7 +28,7 @@ import rankClassNames from "@/utils/rankClassNames";
 
 import equip from "@/data/equip";
 
-const MAX_RANK = 10;
+const MAX_RANK = 11;
 
 interface IComboboxOuterProp {
   value: string;
