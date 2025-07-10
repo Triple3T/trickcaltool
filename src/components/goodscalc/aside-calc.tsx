@@ -70,7 +70,7 @@ const AsideCalc = () => {
                         return newSections;
                       })
                     }
-                    placeholder="시작 레벨"
+                    placeholder={t("ui.goodscalc.aside.levelStart")}
                     className={cn(
                       inputClassName,
                       "w-12",
@@ -79,7 +79,7 @@ const AsideCalc = () => {
                         : wrongInputClassName
                     )}
                   />
-                  →
+                  &rarr;
                   <LazyInput
                     value={`${levelSection[1]}`}
                     sanitize={(v) =>
@@ -95,7 +95,7 @@ const AsideCalc = () => {
                         return newSections;
                       })
                     }
-                    placeholder="종료 레벨"
+                    placeholder={t("ui.goodscalc.aside.levelEnd")}
                     className={cn(
                       inputClassName,
                       "w-12",
@@ -119,10 +119,10 @@ const AsideCalc = () => {
                         return newSections;
                       })
                     }
-                    placeholder="인원 수"
+                    placeholder={t("ui.goodscalc.aside.charaCount")}
                     className={cn(inputClassName, "w-10")}
                   />
-                  명
+                  {t("ui.common.charaCountUnit")}
                   <div className="flex-1" />
                   <Select
                     value={levelSection[3] + 1}

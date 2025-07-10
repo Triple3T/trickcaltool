@@ -86,14 +86,14 @@ const MocaroonCalc = () => {
                       return newSections;
                     })
                   }
-                  placeholder="시작 레벨"
+                  placeholder={t("ui.goodscalc.mocaroon.levelStart")}
                   className={cn(
                     inputClassName,
                     "w-12",
                     levelSection[0] < levelSection[1] ? "" : wrongInputClassName
                   )}
                 />
-                →
+                &rarr;
                 <LazyInput
                   value={`${levelSection[1]}`}
                   sanitize={(v) =>
@@ -109,7 +109,7 @@ const MocaroonCalc = () => {
                       return newSections;
                     })
                   }
-                  placeholder="종료 레벨"
+                  placeholder={t("ui.goodscalc.mocaroon.levelEnd")}
                   className={cn(
                     inputClassName,
                     "w-12",
@@ -129,10 +129,10 @@ const MocaroonCalc = () => {
                       return newSections;
                     })
                   }
-                  placeholder="인원 수"
+                  placeholder={t("ui.goodscalc.mocaroon.charaCount")}
                   className={cn(inputClassName, "w-10")}
                 />
-                명
+                {t("ui.common.charaCountUnit")}
               </div>
               {levelSections.length > 1 && (
                 <X

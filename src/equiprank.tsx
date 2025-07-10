@@ -486,7 +486,7 @@ const EquipRank = () => {
                   }}
                 />
                 <Label htmlFor="view-all-stat-with-board">
-                  {t("ui.equiprank.viewAllStatWithBoard")}
+                  {t("ui.equiprank.viewWithPercent")}
                 </Label>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 auto-rows-auto gap-2.5">

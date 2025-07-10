@@ -124,8 +124,7 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
           aria-expanded={open}
           className="w-60 justify-between font-onemobile"
         >
-          {/* {v ? v : t("ui.restaurant.selectFood")} */}
-          {v ? t(`equip.${idToLocKey(v)}`) || "???" : "아이템 선택..."}
+          {v ? t(`equip.${idToLocKey(v)}`) || "???" : t("ui.normaldrop.selectItem")}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -141,13 +140,13 @@ const EquipCombobox = ({ value, onChange }: IComboboxOuterProp) => {
         >
           <CommandInput
             // placeholder={t("ui.restaurant.searchFood")}
-            placeholder={"아이템 검색..."}
+            placeholder={t("ui.normaldrop.searchItem")}
             className="h-9"
             value={searchValue}
             onValueChange={setSearchValue}
           />
           {/* <CommandEmpty>{t("ui.restaurant.foodNotFound")}</CommandEmpty> */}
-          <CommandEmpty>{"아이템을 찾을 수 없습니다."}</CommandEmpty>
+          <CommandEmpty>{t("ui.normaldrop.itemNotFound")}</CommandEmpty>
           {!searchValue && (
             <div className="flex flex-wrap p-1 gap-1 justify-evenly">
               {Object.keys(rankEquips).map((r) => {
