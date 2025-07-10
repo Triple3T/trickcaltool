@@ -29,7 +29,7 @@ const itemNameInfo = {
   m: "Mid",
   h: "High",
 };
-const itemClassInfo = ["Dealer", "Tanker", "Supporter"];
+const itemClassInfo = ["", "Dealer", "Tanker", "Supporter"];
 const mergeObject = <T extends Record<string, number>>(obj1: T, obj2: T): T => {
   const keys = [...new Set([...Object.keys(obj1), ...Object.keys(obj2)])];
   return Object.fromEntries(
@@ -98,20 +98,14 @@ const SkillCalc = () => {
                       `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
                     }
                     onValueChange={(a) =>
-                      setLevelSections((sections) =>
-                        sections.map((section, index) =>
-                          index === i
-                            ? section
-                            : section.map((value, innerIndex) =>
-                                innerIndex === 0
-                                  ? Math.min(
-                                      Math.max(Number(a), 1),
-                                      levelMaxLow
-                                    )
-                                  : value
-                              )
-                        )
-                      )
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][0] = Math.min(
+                          Math.max(Number(a), 1),
+                          levelMaxLow
+                        );
+                        return newSections;
+                      })
                     }
                     placeholder={t("ui.goodscalc.skill.levelStart")}
                     className={cn(
@@ -129,20 +123,14 @@ const SkillCalc = () => {
                       `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
                     }
                     onValueChange={(b) =>
-                      setLevelSections((sections) =>
-                        sections.map((section, index) =>
-                          index === i
-                            ? section
-                            : section.map((value, innerIndex) =>
-                                innerIndex === 1
-                                  ? Math.min(
-                                      Math.max(Number(b), 1),
-                                      levelMaxLow
-                                    )
-                                  : value
-                              )
-                        )
-                      )
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][1] = Math.min(
+                          Math.max(Number(b), 1),
+                          levelMaxLow
+                        );
+                        return newSections;
+                      })
                     }
                     placeholder={t("ui.goodscalc.skill.levelEnd")}
                     className={cn(
@@ -162,20 +150,14 @@ const SkillCalc = () => {
                       `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
                     }
                     onValueChange={(c) =>
-                      setLevelSections((sections) =>
-                        sections.map((section, index) =>
-                          index === i
-                            ? section
-                            : section.map((value, innerIndex) =>
-                                innerIndex === 2
-                                  ? Math.min(
-                                      Math.max(Number(c), 1),
-                                      levelMaxHigh
-                                    )
-                                  : value
-                              )
-                        )
-                      )
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][2] = Math.min(
+                          Math.max(Number(c), 1),
+                          levelMaxHigh
+                        );
+                        return newSections;
+                      })
                     }
                     placeholder={t("ui.goodscalc.skill.levelStart")}
                     className={cn(
@@ -193,20 +175,14 @@ const SkillCalc = () => {
                       `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
                     }
                     onValueChange={(d) =>
-                      setLevelSections((sections) =>
-                        sections.map((section, index) =>
-                          index === i
-                            ? section
-                            : section.map((value, innerIndex) =>
-                                innerIndex === 3
-                                  ? Math.min(
-                                      Math.max(Number(d), 1),
-                                      levelMaxHigh
-                                    )
-                                  : value
-                              )
-                        )
-                      )
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][3] = Math.min(
+                          Math.max(Number(d), 1),
+                          levelMaxHigh
+                        );
+                        return newSections;
+                      })
                     }
                     placeholder={t("ui.goodscalc.skill.levelEnd")}
                     className={cn(
@@ -218,26 +194,44 @@ const SkillCalc = () => {
                     )}
                   />
                 </div>
-                <Select
-                  value={levelSection[4]}
-                  setValue={(e) =>
-                    setLevelSections((sections) =>
-                      sections.map((section, index) =>
-                        index === i
-                          ? section
-                          : section.map((value, innerIndex) =>
-                              innerIndex === 4 ? e : value
-                            )
-                      )
-                    )
-                  }
-                  items={Object.values(Class)
-                    .filter((v) => typeof v === "string")
-                    .map((v) => ({
-                      value: Class[v as keyof typeof Class],
-                      label: t(`class.${v}`),
-                    }))}
-                />
+                <div className="flex items-baseline rounded p-1 w-full justify-center">
+                  <Select
+                    value={levelSection[4]}
+                    setValue={(e) =>
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][4] = Math.min(e, levelMaxHigh);
+                        return newSections;
+                      })
+                    }
+                    items={Object.values(Class)
+                      .filter((v) => typeof v === "string")
+                      .map((v) => ({
+                        value: Class[v as keyof typeof Class],
+                        label: t(`class.${v}`),
+                      }))}
+                  />
+                  <div className="flex-1" />x
+                  <LazyInput
+                    value={`${levelSection[5]}`}
+                    sanitize={(v) =>
+                      `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                    }
+                    onValueChange={(f) =>
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][5] = Math.min(
+                          Math.max(Number(f), 0),
+                          levelMaxHigh
+                        );
+                        return newSections;
+                      })
+                    }
+                    placeholder={t("ui.goodscalc.mocaroon.charaCount")}
+                    className={cn(inputClassName, "w-10")}
+                  />
+                  {t("ui.common.charaCountUnit")}
+                </div>
               </div>
               {levelSections.length > 1 && (
                 <X
@@ -255,7 +249,10 @@ const SkillCalc = () => {
             className="w-full"
             variant="outline"
             onClick={() => {
-              setLevelSections((s) => [...s, [1, 100, 0]]);
+              setLevelSections((s) => [
+                ...s,
+                [1, 10, 1, 10, Class.Class_0001, 0],
+              ]);
             }}
           >
             <Plus className="w-8 h-8 opacity-50" strokeWidth={4} />
@@ -267,8 +264,7 @@ const SkillCalc = () => {
       <div className="flex flex-wrap justify-evenly my-4">
         {Object.entries(requirement).map(([key, val]) => {
           if (!val) return null;
-          if (key === "g")
-            return <GoldSlot key={key} size={4} amount={requirement.g} />;
+          if (key === "g") return null;
           const [kind, cls] = key.split("") as [
             "l" | "m" | "h",
             "1" | "2" | "3"
@@ -284,6 +280,9 @@ const SkillCalc = () => {
             />
           );
         })}
+        {requirement.g && requirement.g > 0 && (
+          <GoldSlot size={4} amount={requirement.g} />
+        )}
       </div>
       {/* <div className="text-xs opacity-75 break-keep">
           {requirement > 0

@@ -15,7 +15,7 @@ const { a: aside } = level;
 const levelMax = aside.findIndex((v) => v === -1) + 1 || aside.length + 1;
 const calcAside = (valueEntries: number[][]) => {
   return valueEntries.reduce((acc, values) => {
-    const [start, end, count, race] = values;
+    const [start, end, race, count] = values;
     if (count < 1) return acc;
     if (start >= end) return acc;
     acc[race] =
@@ -32,7 +32,7 @@ const wrongInputClassName = "bg-red-500/25 border-b-red-500";
 const AsideCalc = () => {
   const { t } = useTranslation();
   const [levelSections, setLevelSections] = useState<number[][]>([
-    [1, 30, 1, 2],
+    [1, 30, 2, 1],
   ]);
   const [requirement, setRequirement] = useState<Record<string, number>>({});
   useEffect(() => {
@@ -106,30 +106,12 @@ const AsideCalc = () => {
                   />
                 </div>
                 <div className="flex flex-row items-baseline rounded p-1 w-full gap-1">
-                  x
-                  <LazyInput
-                    value={`${levelSection[2]}`}
-                    sanitize={(v) =>
-                      `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
-                    }
-                    onValueChange={(v) =>
-                      setLevelSections((s) => {
-                        const newSections = s.map((a) => [...a]);
-                        newSections[i][2] = Math.max(Number(v), 0);
-                        return newSections;
-                      })
-                    }
-                    placeholder={t("ui.goodscalc.aside.charaCount")}
-                    className={cn(inputClassName, "w-10")}
-                  />
-                  {t("ui.common.charaCountUnit")}
-                  <div className="flex-1" />
                   <Select
-                    value={levelSection[3] + 1}
+                    value={levelSection[2] + 1}
                     setValue={(v) =>
                       setLevelSections((s) => {
                         const newSections = s.map((a) => [...a]);
-                        newSections[i][3] = v - 1;
+                        newSections[i][2] = v - 1;
                         return newSections;
                       })
                     }
@@ -140,6 +122,24 @@ const AsideCalc = () => {
                         label: t(`race.${v}`),
                       }))}
                   />
+                  <div className="flex-1" />
+                  x
+                  <LazyInput
+                    value={`${levelSection[3]}`}
+                    sanitize={(v) =>
+                      `${parseInt(v.replaceAll(/\D/g, "") || "0") || 0}`
+                    }
+                    onValueChange={(v) =>
+                      setLevelSections((s) => {
+                        const newSections = s.map((a) => [...a]);
+                        newSections[i][3] = Math.max(Number(v), 0);
+                        return newSections;
+                      })
+                    }
+                    placeholder={t("ui.goodscalc.aside.charaCount")}
+                    className={cn(inputClassName, "w-10")}
+                  />
+                  {t("ui.common.charaCountUnit")}
                 </div>
               </div>
               {levelSections.length > 1 && (
@@ -158,7 +158,7 @@ const AsideCalc = () => {
             className="w-full"
             variant="outline"
             onClick={() => {
-              setLevelSections((s) => [...s, [1, 30, 0, 2]]);
+              setLevelSections((s) => [...s, [1, 30, 2, 0]]);
             }}
           >
             <Plus className="w-8 h-8 opacity-50" strokeWidth={4} />
