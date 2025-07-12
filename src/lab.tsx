@@ -958,7 +958,7 @@ const Lab = () => {
                       <Card
                         key={indexDepth2}
                         className={cn(
-                          "text-center font-onemobile p-1 flex flex-row gap-2",
+                          "text-center font-onemobile p-1 flex flex-row gap-2 relative",
                           incompleted ? "" : "bg-[#f2f9e7] dark:bg-[#36a52d]"
                         )}
                         onClick={() => labIndex({ indexDepth1, indexDepth2 })}
@@ -1010,32 +1010,44 @@ const Lab = () => {
                               "flex justify-center",
                               incompleted ? "" : "opacity-50"
                             )}
+                            onClick={(e) => e.stopPropagation()}
                           >
                             {Object.entries(labeffect.m).map(
                               ([item, amount], index) => {
                                 const rarityInfo =
                                   material.r[material.m[item].r];
                                 return (
-                                  <ItemSlot
+                                  <ItemSlotWithRecipe
+                                    key={index}
+                                    nameKey={`material.${item}`}
                                     rarityInfo={rarityInfo}
                                     item={item}
                                     amount={amount}
                                     size={3.5}
-                                    key={index}
+                                    recipe={
+                                      material.m[item].m &&
+                                      Object.entries(material.m[item].m).map(([v, c]) => {
+                                        return {
+                                          rarityInfo: material.r[material.m[v].r],
+                                          item: v,
+                                          amount: c,
+                                        };
+                                      })
+                                    }
                                   />
                                 );
                               }
                             )}
                           </div>
-                          {!incompleted && (
-                            <div className="absolute w-8/12 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-100 z-10">
-                              <img
-                                src="/icons/Stage_RewardChack.png"
-                                className="w-100 opacity-100"
-                              />
-                            </div>
-                          )}
                         </div>
+                        {!incompleted && (
+                          <div className="absolute h-6 bottom-2 left-2 opacity-100 z-10">
+                            <img
+                              src="/icons/Stage_RewardChack.png"
+                              className="h-6 opacity-100"
+                            />
+                          </div>
+                        )}
                       </Card>
                     );
                   })}
