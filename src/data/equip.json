@@ -2161,6 +2161,19 @@
             ["e.weapon.1005","e.armor.1011","e.armor.1005","e.weapon.1024","e.accessory.1013","e.armor.1017"],
             ["e.weapon.1105","e.armor.1110","e.armor.1105","e.weapon.1118","e.accessory.1109","e.armor.1115"]
         ],
+        "Makasha":[
+            ["e.weapon.121","e.armor.118","e.armor.106","e.accessory.109","e.accessory.111","e.accessory.103"],
+            ["e.weapon.221","e.armor.212","e.armor.204","e.armor.221","e.accessory.211","e.armor.218"],
+            ["e.weapon.327","e.armor.313","e.armor.304","e.accessory.302","e.accessory.312","e.armor.321"],
+            ["e.weapon.426","e.armor.414","e.armor.403","e.accessory.402","e.accessory.405","e.armor.416"],
+            ["e.weapon.520","e.armor.510","e.armor.503","e.accessory.502","e.accessory.509","e.armor.517"],
+            ["e.weapon.621","e.armor.612","e.armor.603","e.armor.618","e.accessory.606","e.armor.615"],
+            ["e.armor.703","e.armor.713","e.weapon.721","e.accessory.701","e.accessory.707","e.armor.717"],
+            ["e.weapon.828","e.armor.810","e.armor.804","e.weapon.804","e.accessory.812","e.armor.819"],
+            ["e.weapon.917","e.armor.910","e.armor.904","e.weapon.926","e.accessory.902","e.armor.916"],
+            ["e.weapon.1007","e.armor.1009","e.armor.1004","e.weapon.1029","e.accessory.1002","e.armor.1015"],
+            ["e.weapon.1106","e.armor.1108","e.armor.1104","e.weapon.1121","e.accessory.1102","e.armor.1113"]
+        ],
         "Marie":[
             ["e.weapon.113","e.armor.118","e.armor.102","e.accessory.105","e.accessory.110","e.accessory.104"],
             ["e.weapon.213","e.armor.218","e.armor.204","e.accessory.204","e.accessory.203","e.armor.213"],
