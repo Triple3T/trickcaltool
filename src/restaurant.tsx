@@ -170,8 +170,8 @@ const Restaurant = () => {
   const [selectedChara, setSelectedChara] = useState<string>("");
   const [selectedFood, setSelectedFood] = useState<string>("");
   // const [selectedMaterial, setSelectedMaterial] = useState<string>("");
-  const [producibleOnly, setProducibleOnly] = useState<boolean>(false);
-  const [showValue, setShowValue] = useState<boolean>(false);
+  const [producibleOnly, setProducibleOnly] = useState<boolean>(true);
+  const [showValue, setShowValue] = useState<boolean>(true);
   const [showIngredients, setShowIngredients] = useState<boolean>(false);
   const [listScroll, setListScroll] = useState<boolean>(false);
   const searchChara = useCallback((charaId: string) => {
