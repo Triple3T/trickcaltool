@@ -150,6 +150,9 @@ export default defineConfig({
     "process.env.HOSTNAME": `"${
       process.env.VITE_APP_HOSTNAME ?? "https://tr.triple-lab.com"
     }"`,
+    "process.env.API_HOSTNAME": `"${
+      process.env.VITE_APP_API_HOSTNAME ?? "https://api.triple-lab.com"
+    }"`,
     "process.env.GOOGLE_CLIENT_ID": `"${
       process.env.REACT_APP_GAPI_CLIENT_ID ??
       "637944158863-o29na0kl0f8g3ll2nr2br7rc6srrrigb.apps.googleusercontent.com"
