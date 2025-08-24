@@ -57,24 +57,27 @@ export const saveData = async (data: INoteDataIO): Promise<void> => {
   // tx.objectStore("data").put(data.timestamp.toString(), "timestamp");
   await tx.done;
 };
-export const loadTeamData = async (): Promise<string> => {
+export const loadTeamData = async (): Promise<{ data: string; teamkey?: string }> => {
   const noteDataDB = await openDB<INoteDataDB>(
     idbNoteDataDBName,
     idbNoteDataDBVer
   );
   const tx = noteDataDB.transaction("trickcalnotedata", "readonly");
   const store = tx.objectStore("trickcalnotedata");
-  const data = await store.get("builderteam");
+  const data = (await store.get("builderteam")) ?? "";
+  const teamkey = (await store.get("teamkey")) || undefined;
   await tx.done;
-  return data ?? "";
+  return { data, teamkey };
 };
-export const saveTeamData = async (data: string): Promise<void> => {
+export const saveTeamData = async (d: { data: string; teamkey?: string }): Promise<void> => {
   const noteDataDB = await openDB<INoteDataDB>(
     idbNoteDataDBName,
     idbNoteDataDBVer
   );
   const tx = noteDataDB.transaction("trickcalnotedata", "readwrite");
   const store = tx.objectStore("trickcalnotedata");
+  const { data, teamkey } = d;
   await store.put(data, "builderteam");
+  await store.put(teamkey ?? "", "teamkey");
   await tx.done;
 };

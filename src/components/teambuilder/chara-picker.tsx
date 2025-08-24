@@ -29,6 +29,7 @@ interface CharaPickerProps {
   onChange: (chara: string) => void;
   onReset: () => void;
   position: Position;
+  readOnly?: boolean;
 }
 
 const STAR_NUMBER = [5, 3, 4];
@@ -45,6 +46,7 @@ const CharaPicker = ({
   onChange,
   onReset,
   position,
+  readOnly = false,
 }: CharaPickerProps) => {
   const { t } = useTranslation();
   const isAF = useIsAFActive();
@@ -75,6 +77,36 @@ const CharaPicker = ({
     onChange(selectedChara);
     filterResetHandler();
   }, [filterResetHandler, onChange, selectedChara]);
+
+  if (readOnly)
+    return (
+      <div
+        className={cn(
+          "w-full sm:w-7/8 md:w-3/4 sm:mx-auto aspect-square rounded-[27.5%] overflow-hidden",
+          currentChara ? personalityBG[charaPersonality] : "",
+          currentChara ? "ring-4 ring-background/25 ring-inset" : ""
+        )}
+      >
+        <img
+          src={
+            currentChara
+              ? getCharaImageUrl(
+                  currentCharaSkin
+                    ? `${currentChara}Skin${currentCharaSkin}`
+                    : `${currentChara}`,
+                  isAF && "af"
+                )
+              : "/ingameui/Ingame_Artifact_HeroEmpty.png"
+          }
+          alt={t(
+            currentChara
+              ? `chara.${currentChara}`
+              : "ui.teambuilder.emptyCharaSlot"
+          )}
+          className={cn("w-full aspect-square", isAF && "scale-125")}
+        />
+      </div>
+    );
 
   return (
     <Dialog>

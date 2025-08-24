@@ -25,9 +25,13 @@ export const saveData = async (data: INoteDataIO): Promise<void> => {
   localStorage.setItem("timestamp", data.timestamp.toString());
   localStorage.setItem("trn-migration", data.data);
 };
-export const loadTeamData = async (): Promise<string> => {
-  return localStorage.getItem("builderteam") ?? "";
+export const loadTeamData = async (): Promise<{ data: string; teamkey?: string }> => {
+  const data = localStorage.getItem("builderteam") ?? "";
+  const teamkey = localStorage.getItem("teamkey") || undefined;
+  return { data, teamkey };
 }
-export const saveTeamData = async (data: string): Promise<void> => {
+export const saveTeamData = async (d: { data: string; teamkey?: string }): Promise<void> => {
+  const { data, teamkey } = d;
   localStorage.setItem("builderteam", data);
+  localStorage.setItem("teamkey", teamkey ?? "");
 }

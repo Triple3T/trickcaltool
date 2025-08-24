@@ -24,6 +24,7 @@ interface ArtifactPickerProps {
   disableAll?: boolean;
   disableList?: number[];
   disableMinCost?: number | false;
+  readOnly?: boolean;
 }
 
 const ArtifactPicker = ({
@@ -35,6 +36,7 @@ const ArtifactPicker = ({
   disableAll,
   disableList,
   disableMinCost,
+  readOnly = false,
 }: ArtifactPickerProps) => {
   const { t } = useTranslation();
   const [selectedArtifact, setSelectedArtifact] = useState<number>(0);
@@ -65,6 +67,39 @@ const ArtifactPicker = ({
         alt="empty"
         className="w-8 h-8 min-[342px]:w-9 min-[342px]:h-9 sm:w-12 sm:h-12"
       />
+    );
+
+  if (readOnly)
+    return (
+      <div
+        className="w-8 h-8 min-[342px]:w-9 min-[342px]:h-9 sm:w-12 sm:h-12 flex items-center justify-center"
+        style={
+          currentArtifact
+            ? {
+                backgroundImage: `url(/ingameui/Ingame_ArtifactBase_Rarity_${
+                  card.a.l[currentArtifact]?.a?.t === targetChara
+                    ? "SignatureCard"
+                    : card.a.l[currentArtifact].r
+                }.png)`,
+                backgroundSize: "cover",
+              }
+            : undefined
+        }
+      >
+        <img
+          src={
+            currentArtifact
+              ? `/artifacts/ArtifactIcon_${currentArtifact}.png`
+              : "/ingameui/Ingame_ArtifactBase_Empty.png"
+          }
+          alt={t(
+            currentArtifact
+              ? `card.artifact.${currentArtifact}.title`
+              : "ui.teambuilder.emptyArtifactSlot"
+          )}
+          className="max-w-full max-h-full"
+        />
+      </div>
     );
 
   return (

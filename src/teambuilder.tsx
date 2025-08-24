@@ -1,6 +1,18 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Check, Copy, LinkIcon, SquarePen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ConfirmProvider, {
+  useConfirm,
+} from "./components/confirm-dialog-provider";
 import {
   Accordion,
   AccordionItem,
@@ -9,14 +21,19 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
 import Select from "@/components/common/combobox-select";
 import LazyInput from "@/components/common/lazy-input";
+import SubtitleBar from "@/components/parts/subtitlebar";
 import ArtifactPicker from "@/components/teambuilder/artifact-picker";
 import CharaPicker from "@/components/teambuilder/chara-picker";
 import CheerPicker from "@/components/teambuilder/cheer-picker";
+import MyTeamList from "@/components/teambuilder/my-team-list-dialog";
 import SpellPicker from "@/components/teambuilder/spell-picker";
 import CardSpecDialog from "@/components/teambuilder/card-spec-dialog";
 import chara from "@/data/chara";
@@ -34,6 +51,7 @@ import { personalityBG, personalityBGTranslucent } from "@/utils/personalityBG";
 import {
   useUserDataCharaInfo,
   useUserDataUsingIDB,
+  useUserToken,
 } from "@/stores/useUserDataStore";
 import {
   saveTeamData as saveTeamDataIdb,
@@ -52,7 +70,6 @@ import {
 // af
 // import { useIsAFActive } from "@/stores/useAFDataStore";
 import { getCharaImageUrl } from "@/utils/getImageUrl";
-import { Checkbox } from "./components/ui/checkbox";
 
 const FRONT_COLOR = "#e35a5b";
 const MID_COLOR = "#57bc3f";
@@ -114,10 +131,22 @@ Object.entries(chara).forEach(([key, value]) => {
   }
 });
 
-const TeamBuilder = () => {
+interface GetTeamResponseProps {
+  title: string;
+  teamdata: string;
+  teamtype: number;
+  owns: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+const TeamBuilderCore = () => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
+  const token = useUserToken();
   const userCharaInfo = useUserDataCharaInfo();
   const isUsingIdb = useUserDataUsingIDB();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [currentTeam, setCurrentTeam] = useState<CharaWithArtifact[]>([]);
   const [teamSpec, setTeamSpec] = useState<Record<string, number>>({});
   const [restrictType, setRestrictType] = useState<number>(0);
@@ -135,6 +164,14 @@ const TeamBuilder = () => {
     s: Object.fromEntries(card.s.o.map((v) => [v, 1])),
   });
   const [allIncludeFlag, setAllIncludeFlag] = useState<number>(1);
+
+  const [readonlymode, setReadonlymode] = useState<boolean>(true);
+  const [isChangingName, setIsChangingName] = useState<boolean>(false);
+  const [teamKey, setTeamKey] = useState<string | undefined>(undefined);
+  const [teamTitle, setTeamTitle] = useState<string>("");
+  const [teamTitleInputValue, setTeamTitleInputValue] = useState<string>("");
+  const [isDirty, setIsDirty] = useState<boolean>(true);
+  const [requestRunning, setRequestRunning] = useState<boolean>(false);
 
   // soloraid artifact count
   const artifactCount = useMemo(() => {
@@ -401,9 +438,7 @@ const TeamBuilder = () => {
     return aside3Values;
   }, [currentTeam, teamSpec]);
 
-  // save
-  const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
+  const exportTeamData = useCallback(() => {
     const restrictTypeB64 = numberIntoB64(restrictType, 4);
     const teamData = compressXorB64(
       JSON.stringify({
@@ -420,16 +455,57 @@ const TeamBuilder = () => {
         cardLevels,
       })
     );
+    const m = currentTeam.map((e) => e?.charaName || "");
+    // 0 1 2
+    // 3 4 5
+    // 6 7 8
+    const teamMembers = [m[5], m[2], m[8], m[4], m[1], m[7], m[3], m[0], m[6]];
     const dataToSave = `b0${restrictTypeB64}${teamData}`;
+    return { restrictType, dataToSave, teamMembers };
+  }, [
+    buyAuthority,
+    cardLevels,
+    currentTeam,
+    restrictType,
+    separateAllApplyEffect,
+    soloEndCoinLimit,
+    soloRaidResearchSlot,
+    soloRaidStep,
+    teamSpec,
+    usingCheers,
+    usingSpells,
+  ]);
+
+  // isDirty
+  useEffect(() => {
+    setIsDirty(true);
+  }, [
+    buyAuthority,
+    cardLevels,
+    currentTeam,
+    soloEndCoinLimit,
+    soloRaidResearchSlot,
+    soloRaidStep,
+    teamSpec,
+    usingCheers,
+    usingSpells,
+  ]);
+
+  // save
+  const saveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (readonlymode) return;
+    const { dataToSave } = exportTeamData();
     if (saveTimeout.current) {
       clearTimeout(saveTimeout.current);
     }
+    const d = { data: dataToSave, teamkey: teamKey };
     saveTimeout.current = setTimeout(() => {
       if (typeof isUsingIdb === "boolean") {
         if (isUsingIdb) {
-          saveTeamDataIdb(dataToSave);
+          saveTeamDataIdb(d);
         } else {
-          saveTeamDataLS(dataToSave);
+          saveTeamDataLS(d);
         }
       }
     }, 1000);
@@ -442,90 +518,623 @@ const TeamBuilder = () => {
     buyAuthority,
     cardLevels,
     currentTeam,
+    exportTeamData,
     isUsingIdb,
+    readonlymode,
     restrictType,
     separateAllApplyEffect,
     soloEndCoinLimit,
     soloRaidResearchSlot,
     soloRaidStep,
+    teamKey,
     teamSpec,
     usingCheers,
     usingSpells,
   ]);
   // load
-  useEffect(() => {
-    if (typeof isUsingIdb === "boolean") {
-      if (isUsingIdb) {
-        loadTeamDataIdb().then((data) => {
-          if (!data) return;
-          if (!data.startsWith("b0")) return;
-          const {
-            restrictType,
-            currentTeam,
-            teamSpec,
-            soloRaidStep,
-            soloRaidResearchSlot,
-            separateAllApplyEffect,
-            soloEndCoinLimit,
-            buyAuthority,
-            usingSpells,
-            usingCheers,
-            cardLevels,
-          } = JSON.parse(decompressXorB64(data.substring(6)));
-          if (restrictType) setRestrictType(restrictType);
-          if (currentTeam) setCurrentTeam(currentTeam);
-          if (teamSpec) setTeamSpec(teamSpec);
-          if (soloRaidStep) setSoloRaidStep(soloRaidStep);
-          if (soloRaidResearchSlot)
-            setSoloRaidResearchSlot(soloRaidResearchSlot);
-          if (typeof separateAllApplyEffect === "boolean")
-            setSeparateAllApplyEffect(separateAllApplyEffect);
-          if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
-          if (typeof buyAuthority === "boolean") setBuyAuthority(buyAuthority);
-          if (usingSpells) setUsingSpells(usingSpells);
-          if (usingCheers) setUsingCheers(usingCheers);
-          if (cardLevels)
-            setCardLevels((prev) => ({
-              a: { ...prev.a, ...cardLevels.a },
-              s: { ...prev.s, ...cardLevels.s },
-            }));
-        });
-      } else {
-        loadTeamDataLS().then((data) => {
-          if (!data) return;
-          if (!data.startsWith("b0")) return;
-          const {
-            restrictType,
-            currentTeam,
-            teamSpec,
-            soloRaidStep,
-            soloRaidResearchSlot,
-            separateAllApplyEffect,
-            soloEndCoinLimit,
-            buyAuthority,
-            usingSpells,
-            cardLevels,
-          } = JSON.parse(decompressXorB64(data.substring(6)));
-          if (restrictType) setRestrictType(restrictType);
-          if (currentTeam) setCurrentTeam(currentTeam);
-          if (teamSpec) setTeamSpec(teamSpec);
-          if (soloRaidStep) setSoloRaidStep(soloRaidStep);
-          if (soloRaidResearchSlot)
-            setSoloRaidResearchSlot(soloRaidResearchSlot);
-          if (typeof separateAllApplyEffect === "boolean")
-            setSeparateAllApplyEffect(separateAllApplyEffect);
-          if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
-          if (typeof buyAuthority === "boolean") setBuyAuthority(buyAuthority);
-          if (usingSpells) setUsingSpells(usingSpells);
-          if (cardLevels)
-            setCardLevels((prev) => ({
-              a: { ...prev.a, ...cardLevels.a },
-              s: { ...prev.s, ...cardLevels.s },
-            }));
-        });
+  const load = useCallback(() => {
+    const k = searchParams.get("k");
+    if (k) {
+      // view shared team
+      setReadonlymode(true);
+      setTeamKey(k);
+      fetch(
+        `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${k}`
+      ).then(async (response) => {
+        if (!response.ok) throw new Error(response.statusText);
+        const data = (await response.json()) as {
+          title: string;
+          teamdata: string;
+          teamtype: number;
+          created_at: string;
+          updated_at: string;
+        };
+        const {
+          restrictType,
+          currentTeam,
+          teamSpec,
+          soloRaidStep,
+          soloRaidResearchSlot,
+          separateAllApplyEffect,
+          soloEndCoinLimit,
+          buyAuthority,
+          usingSpells,
+          usingCheers,
+          cardLevels,
+        } = JSON.parse(decompressXorB64(data.teamdata.substring(6)));
+        if (restrictType) setRestrictType(restrictType);
+        if (currentTeam) setCurrentTeam(currentTeam);
+        if (teamSpec) setTeamSpec(teamSpec);
+        if (soloRaidStep) setSoloRaidStep(soloRaidStep);
+        if (soloRaidResearchSlot) setSoloRaidResearchSlot(soloRaidResearchSlot);
+        if (typeof separateAllApplyEffect === "boolean")
+          setSeparateAllApplyEffect(separateAllApplyEffect);
+        if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
+        if (typeof buyAuthority === "boolean") setBuyAuthority(buyAuthority);
+        if (usingSpells) setUsingSpells(usingSpells);
+        if (usingCheers) setUsingCheers(usingCheers);
+        if (cardLevels)
+          setCardLevels((prev) => ({
+            a: { ...prev.a, ...cardLevels.a },
+            s: { ...prev.s, ...cardLevels.s },
+          }));
+        toast.info(
+          `팀 이름: ${data.title}, 생성: ${new Date(
+            data.created_at
+          ).toLocaleString()}, 수정: ${new Date(
+            data.updated_at
+          ).toLocaleString()}`
+        );
+      });
+    } else {
+      setReadonlymode(false);
+      (async () => {})();
+      if (typeof isUsingIdb === "boolean") {
+        if (isUsingIdb) {
+          loadTeamDataIdb().then(({ data, teamkey }) => {
+            setTeamKey(teamkey);
+            if (teamkey)
+              fetch(
+                `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${teamkey}`
+              ).then((res) => {
+                if (res.ok) {
+                  res.json().then((orig: GetTeamResponseProps) => {
+                    setIsDirty(orig.teamdata !== data);
+                    setTeamTitle(orig.title);
+                    setTeamTitleInputValue(orig.title);
+                  });
+                }
+              });
+            if (!data) return;
+            if (!data.startsWith("b0")) return;
+            const {
+              restrictType,
+              currentTeam,
+              teamSpec,
+              soloRaidStep,
+              soloRaidResearchSlot,
+              separateAllApplyEffect,
+              soloEndCoinLimit,
+              buyAuthority,
+              usingSpells,
+              usingCheers,
+              cardLevels,
+            } = JSON.parse(decompressXorB64(data.substring(6)));
+            if (restrictType) setRestrictType(restrictType);
+            if (currentTeam) setCurrentTeam(currentTeam);
+            if (teamSpec) setTeamSpec(teamSpec);
+            if (soloRaidStep) setSoloRaidStep(soloRaidStep);
+            if (soloRaidResearchSlot)
+              setSoloRaidResearchSlot(soloRaidResearchSlot);
+            if (typeof separateAllApplyEffect === "boolean")
+              setSeparateAllApplyEffect(separateAllApplyEffect);
+            if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
+            if (typeof buyAuthority === "boolean")
+              setBuyAuthority(buyAuthority);
+            if (usingSpells) setUsingSpells(usingSpells);
+            if (usingCheers) setUsingCheers(usingCheers);
+            if (cardLevels)
+              setCardLevels((prev) => ({
+                a: { ...prev.a, ...cardLevels.a },
+                s: { ...prev.s, ...cardLevels.s },
+              }));
+          });
+        } else {
+          loadTeamDataLS().then(({ data, teamkey }) => {
+            setTeamKey(teamkey);
+            if (teamkey)
+              fetch(
+                `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${teamkey}`
+              ).then((res) => {
+                if (res.ok) {
+                  res.json().then((orig: GetTeamResponseProps) => {
+                    setIsDirty(orig.teamdata !== data);
+                    setTeamTitle(orig.title);
+                  });
+                }
+              });
+            if (!data) return;
+            if (!data.startsWith("b0")) return;
+            const {
+              restrictType,
+              currentTeam,
+              teamSpec,
+              soloRaidStep,
+              soloRaidResearchSlot,
+              separateAllApplyEffect,
+              soloEndCoinLimit,
+              buyAuthority,
+              usingSpells,
+              cardLevels,
+            } = JSON.parse(decompressXorB64(data.substring(6)));
+            if (restrictType) setRestrictType(restrictType);
+            if (currentTeam) setCurrentTeam(currentTeam);
+            if (teamSpec) setTeamSpec(teamSpec);
+            if (soloRaidStep) setSoloRaidStep(soloRaidStep);
+            if (soloRaidResearchSlot)
+              setSoloRaidResearchSlot(soloRaidResearchSlot);
+            if (typeof separateAllApplyEffect === "boolean")
+              setSeparateAllApplyEffect(separateAllApplyEffect);
+            if (soloEndCoinLimit) setSoloEndCoinLimit(soloEndCoinLimit);
+            if (typeof buyAuthority === "boolean")
+              setBuyAuthority(buyAuthority);
+            if (usingSpells) setUsingSpells(usingSpells);
+            if (cardLevels)
+              setCardLevels((prev) => ({
+                a: { ...prev.a, ...cardLevels.a },
+                s: { ...prev.s, ...cardLevels.s },
+              }));
+          });
+        }
       }
     }
-  }, [isUsingIdb]);
+  }, [isUsingIdb, searchParams]);
+
+  // 내 조합을 연 경우, readOnlyMode = false
+  const onlineSave = useCallback(() => {
+    // 이 팀을 서버에 저장
+    // network query -> toast
+    setRequestRunning(true);
+    if (teamKey) {
+      const {
+        restrictType: teamtype,
+        dataToSave: data,
+        teamMembers: members,
+      } = exportTeamData();
+      fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/save`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: teamKey,
+          data,
+          members,
+          teamtype,
+        }),
+      }).then((res) => {
+        setRequestRunning(false);
+        if (res.ok) {
+          setIsDirty(false);
+        } else {
+          toast.error(t("ui.error.api.networkFailed"));
+        }
+      });
+    }
+  }, [exportTeamData, t, teamKey, token]);
+  const onlineSaveAs = useCallback(() => {
+    // 다른 이름으로 서버에 저장
+    // network query -> toast
+    confirm({
+      title: "ui.teambuilder.saveTeamAs",
+      input: { placeholder: "ui.teambuilder.teamName", maxLength: 10 },
+      confirm: { textKey: "ui.common.yes", value: 1 },
+      cancel: { textKey: "ui.common.no", value: 2 },
+    }).then((title) => {
+      if (typeof title === "string" && title.length > 0) {
+        setRequestRunning(true);
+        const {
+          restrictType: teamtype,
+          dataToSave: data,
+          teamMembers: members,
+        } = exportTeamData();
+        fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/save`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data,
+            members,
+            teamtype,
+            title,
+          }),
+        }).then((res) => {
+          setRequestRunning(false);
+          if (res.ok) {
+            res.text().then((k) =>
+              setTimeout(() => {
+                setTeamKey(k);
+                setTeamTitle(title);
+                setTeamTitleInputValue(title);
+                setIsDirty(false);
+              }, 100)
+            );
+          } else {
+            toast.error(t("ui.error.api.networkFailed"));
+          }
+        });
+      }
+    });
+  }, [confirm, exportTeamData, t, token]);
+  const discardAll = useCallback(() => {
+    // 버리고 처음부터
+    confirm({
+      title: "ui.teambuilder.createNewTeam",
+      description: "ui.teambuilder.discardNotSavedAtCreateConfirm",
+      confirm: { textKey: "ui.common.yes", value: 1 },
+      cancel: { textKey: "ui.common.no", value: 2 },
+    }).then((value) => {
+      if (value === 1) {
+        setCurrentTeam([]);
+        setTeamSpec({});
+        setRestrictType(0);
+        setSoloRaidStep(1);
+        setSoloRaidResearchSlot(0);
+        setSeparateAllApplyEffect(false);
+        setSoloEndCoinLimit(0);
+        setBuyAuthority(true);
+        setUsingSpells({});
+        setUsingCheers({});
+        setCardLevels({
+          a: Object.fromEntries(card.a.o.map((v) => [v, 1])),
+          s: Object.fromEntries(card.s.o.map((v) => [v, 1])),
+        });
+        setTeamKey(undefined);
+        setTeamTitle("");
+        setTeamTitleInputValue("");
+      }
+    });
+  }, [confirm]);
+  const revertAll = useCallback(() => {
+    // 마지막으로 저장한 시점부터
+    confirm({
+      title: "ui.teambuilder.revertTeam",
+      description: "ui.teambuilder.discardNotSavedAtRevertConfirm",
+      confirm: { textKey: "ui.common.yes", value: 1 },
+      cancel: { textKey: "ui.common.no", value: 2 },
+    }).then((value) => {
+      if (value === 1) {
+        if (teamKey) {
+          setRequestRunning(true);
+          fetch(
+            `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${teamKey}`
+          ).then((res) => {
+            setRequestRunning(false);
+            if (res.ok) {
+              res.json().then((orig: GetTeamResponseProps) => {
+                const d = { data: orig.teamdata, teamkey: teamKey };
+                if (typeof isUsingIdb === "boolean") {
+                  if (isUsingIdb) {
+                    saveTeamDataIdb(d);
+                  } else {
+                    saveTeamDataLS(d);
+                  }
+                }
+                setTimeout(load, 100);
+              });
+            } else {
+              toast.error(t("ui.error.api.networkFailed"));
+            }
+          });
+        }
+      }
+    });
+  }, [confirm, isUsingIdb, load, t, teamKey]);
+  const rename = useCallback(() => {
+    // 이름 수정
+    // network query -> toast, 변경 실패 시 isChangingName 풀지 않음
+    if (teamTitle === teamTitleInputValue) {
+      setIsChangingName(false);
+      return;
+    }
+    setRequestRunning(true);
+    const {
+      restrictType: teamtype,
+      dataToSave: data,
+      teamMembers: members,
+    } = exportTeamData();
+    fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/save`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        key: teamKey,
+        data,
+        members,
+        teamtype,
+        title: teamTitleInputValue,
+      }),
+    }).then((res) => {
+      setRequestRunning(false);
+      if (res.ok) {
+        setTeamTitle(teamTitleInputValue);
+        setIsChangingName(false);
+      } else {
+        toast.error(t("ui.error.api.networkFailed"));
+      }
+    });
+  }, [exportTeamData, t, teamKey, teamTitle, teamTitleInputValue, token]);
+
+  // 공유 링크를 연 경우, readOnlyMode = true
+  const copyToLocal = useCallback(() => {
+    // 이 팀을 로컬에 복사
+    confirm({
+      title: "ui.teambuilder.overwriteLocal",
+      description: "ui.teambuilder.overwriteLocalConfirm",
+      confirm: { textKey: "ui.common.yes", value: 1 },
+      cancel: { textKey: "ui.common.no", value: 2 },
+    }).then((value) => {
+      if (value === 1) {
+        setTeamKey(undefined);
+        setReadonlymode(false);
+        setIsDirty(true);
+        setSearchParams((prev) => {
+          prev.delete("k");
+          return prev;
+        });
+      }
+    });
+  }, [confirm, setSearchParams]);
+  const copyToOnline = useCallback(() => {
+    // 이 팀을 다른 이름으로 서버에 저장
+    confirm({
+      title: "ui.teambuilder.saveTeamAs",
+      input: { placeholder: "ui.teambuilder.teamName", maxLength: 10 },
+      confirm: { textKey: "ui.common.yes", value: 1 },
+      cancel: { textKey: "ui.common.no", value: 2 },
+    }).then((title) => {
+      if (typeof title === "string" && title.length > 0) {
+        setRequestRunning(true);
+        const {
+          restrictType: teamtype,
+          dataToSave: data,
+          teamMembers: members,
+        } = exportTeamData();
+        fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/save`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data,
+            members,
+            teamtype,
+            title,
+          }),
+        }).then((res) => {
+          setRequestRunning(false);
+          if (res.ok) {
+            res.text().then((k) => setTeamKey(k));
+            setTeamTitle(title);
+            setIsDirty(false);
+            setReadonlymode(false);
+          } else {
+            toast.error(t("ui.error.api.networkFailed"));
+          }
+        });
+      }
+    });
+  }, [confirm, exportTeamData, t, token]);
+  const returnToLocal = useCallback(() => {
+    // 보고 있던 팀을 버리고 내 팀으로 복귀
+    // 그냥 현재 url을 변경하고 load를 다시 하면 됨
+    setSearchParams((prev) => {
+      prev.delete("k");
+      return prev;
+    });
+    setTeamKey(undefined);
+    setTimeout(load, 100);
+  }, [load, setSearchParams]);
+
+  // 리스트를 연 경우
+  const openFromTeamList = useCallback(
+    (targetKey: string) => {
+      // 내 팀 목록에서 로컬로 가져옴
+      // 현재 dirty면 confirm, 아니면 그냥 가져오면 됨
+      if (!targetKey) return;
+      const runRequest = () => {
+        setRequestRunning(true);
+        fetch(
+          `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${targetKey}`
+        ).then((res) => {
+          setRequestRunning(false);
+          if (res.ok) {
+            res.json().then((orig: GetTeamResponseProps) => {
+              const d = { data: orig.teamdata, teamkey: targetKey };
+              if (typeof isUsingIdb === "boolean") {
+                if (isUsingIdb) {
+                  saveTeamDataIdb(d);
+                } else {
+                  saveTeamDataLS(d);
+                }
+              }
+              setTimeout(load, 100);
+            });
+          } else {
+            toast.error(t("ui.error.api.networkFailed"));
+          }
+        });
+      };
+      if (isDirty) {
+        confirm({
+          title: "ui.teambuilder.openFromTeamList",
+          description: "ui.teambuilder.discardNotSavedAtOpenFromListConfirm",
+          confirm: { textKey: "ui.common.yes", value: 1 },
+          cancel: { textKey: "ui.common.no", value: 2 },
+        }).then((value) => {
+          if (value === 1) {
+            runRequest();
+          }
+        });
+      } else {
+        runRequest();
+      }
+    },
+    [confirm, isDirty, isUsingIdb, load, t]
+  );
+  const copyFromTeamList = useCallback(
+    (targetKey: string, callback: () => void) => {
+      // 내 팀 목록에서 새 슬롯으로 복사
+      if (!targetKey) return;
+      confirm({
+        title: "ui.teambuilder.copyFromTeamList",
+        input: { placeholder: "ui.teambuilder.teamName", maxLength: 10 },
+        confirm: { textKey: "ui.common.yes", value: 1 },
+        cancel: { textKey: "ui.common.no", value: 2 },
+      }).then(async (title) => {
+        if (typeof title === "string" && title.length > 0) {
+          setRequestRunning(true);
+          const res1 = await fetch(
+            `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${targetKey}`
+          );
+          const res1j = await res1.json();
+          const { teamdata: d, members: m, teamtype: t } = res1j;
+          fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/save`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: d,
+              members: m,
+              teamtype: t,
+              title,
+            }),
+          }).then((res) => {
+            setRequestRunning(false);
+            if (res.ok) {
+              callback();
+            } else {
+              toast.error(t("ui.error.api.networkFailed"));
+            }
+          });
+        }
+      });
+    },
+    [confirm, token]
+  );
+  const renameFromTeamList = useCallback(
+    (targetKey: string, callback: () => void) => {
+      // 내 팀 목록에서 이름 수정
+      if (!targetKey) return;
+      confirm({
+        title: "ui.teambuilder.editNameFromTeamList",
+        input: { placeholder: "ui.teambuilder.teamName", maxLength: 10 },
+        confirm: { textKey: "ui.common.yes", value: 1 },
+        cancel: { textKey: "ui.common.no", value: 2 },
+      }).then(async (title) => {
+        if (typeof title === "string" && title.length > 0) {
+          setRequestRunning(true);
+          const res1 = await fetch(
+            `${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/team?key=${targetKey}`
+          );
+          const res1j = await res1.json();
+          const { teamdata: d, members: m, teamtype: t } = res1j;
+          fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/save`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: d,
+              members: m,
+              teamtype: t,
+              title,
+              key: targetKey,
+            }),
+          }).then((res) => {
+            setRequestRunning(false);
+            if (res.ok) {
+              callback();
+            } else {
+              toast.error(t("ui.error.api.networkFailed"));
+            }
+          });
+        }
+      });
+    },
+    [confirm, token]
+  );
+  const copyLinkFromTeamList = useCallback(
+    (targetKey: string) => {
+      // 내 팀 목록에서 링크 복사
+      // 그냥 복사하고 토스트나 기타 다른 거 띄워주면 됨
+      if (!targetKey) return;
+      navigator.clipboard
+        .writeText(
+          `${window.location.origin}${window.location.pathname}?k=${targetKey}`
+        )
+        .then(() => {
+          toast.success(t("ui.common.copied"));
+        })
+        .catch(() => {
+          toast.error(t("ui.error.copyFailed"));
+        });
+    },
+    [t]
+  );
+  const deleteFromTeamList = useCallback(
+    (targetKey: string, callback: () => void) => {
+      // 내 팀 목록에 저장된 팀 삭제
+      if (!targetKey) return;
+      confirm({
+        title: "ui.teambuilder.deleteFromTeamList",
+        description: "ui.teambuilder.deleteFromTeamListConfirm",
+        confirm: { textKey: "ui.common.yes", value: 1 },
+        cancel: { textKey: "ui.common.no", value: 2 },
+      }).then((value) => {
+        if (value === 1) {
+          fetch(`${process.env.API_HOSTNAME}/api/v3/tr/teambuilder/rm`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              key: targetKey,
+            }),
+          }).then((res) => {
+            setRequestRunning(false);
+            if (res.ok) {
+              callback();
+            } else {
+              toast.error(t("ui.error.api.networkFailed"));
+            }
+          });
+        }
+      });
+    },
+    [confirm, t, token]
+  );
+
+  useEffect(() => {
+    if (load) load();
+  }, [load]);
 
   return (
     <div className="font-onemobile max-w-xl mx-auto">
@@ -572,7 +1181,7 @@ const TeamBuilder = () => {
                   <div className="flex p-1 gap-2 items-baseline">
                     <Select
                       value={soloRaidStep}
-                      setValue={setSoloRaidStep}
+                      setValue={readonlymode ? (_) => {} : setSoloRaidStep}
                       placeholder={t("ui.teambuilder.raidStep", { 0: "+1" })}
                       items={Array(3)
                         .fill(0)
@@ -585,7 +1194,11 @@ const TeamBuilder = () => {
                     />
                     <Select
                       value={soloRaidResearchSlot || -1}
-                      setValue={(v) => setSoloRaidResearchSlot(Math.max(v, 0))}
+                      setValue={
+                        readonlymode
+                          ? (_) => {}
+                          : (v) => setSoloRaidResearchSlot(Math.max(v, 0))
+                      }
                       placeholder={t("ui.teambuilder.raidExtraSlotNone")}
                       items={Array(4)
                         .fill(0)
@@ -633,6 +1246,7 @@ const TeamBuilder = () => {
                           )
                         )}`
                       }
+                      readOnly={readonlymode}
                       onValueChange={(e) => setSoloEndCoinLimit(Number(e))}
                       type="text"
                       inputMode="numeric"
@@ -705,9 +1319,10 @@ const TeamBuilder = () => {
                           checked={buyAuthority}
                           onCheckedChange={(v) => setBuyAuthority(!!v)}
                           disabled={
-                            soloEndCoinLimit > 0 &&
-                            !buyAuthority &&
-                            frontierLimit.usingCoin + 30 > soloEndCoinLimit
+                            readonlymode ||
+                            (soloEndCoinLimit > 0 &&
+                              !buyAuthority &&
+                              frontierLimit.usingCoin + 30 > soloEndCoinLimit)
                           }
                           className="inline align-middle mr-2"
                         />
@@ -776,20 +1391,22 @@ const TeamBuilder = () => {
                       </div>
                     </TabsContent>
                     <TabsContent value="2">
-                      <div className="mt-4 text-right -mb-1">
-                        <SpellPicker
-                          currentUsingSpells={usingSpells}
-                          spellLevels={cardLevels.s}
-                          onChange={setUsingSpells}
-                          onReset={() => setUsingSpells({})}
-                          disableAll={restrictType === 1}
-                          disableMinCost={
-                            restrictType === 2 &&
-                            soloEndCoinLimit > 0 &&
-                            soloEndCoinLimit - frontierLimit.usingCoin
-                          }
-                        />
-                      </div>
+                      {!readonlymode && (
+                        <div className="mt-4 text-right -mb-1">
+                          <SpellPicker
+                            currentUsingSpells={usingSpells}
+                            spellLevels={cardLevels.s}
+                            onChange={setUsingSpells}
+                            onReset={() => setUsingSpells({})}
+                            disableAll={restrictType === 1}
+                            disableMinCost={
+                              restrictType === 2 &&
+                              soloEndCoinLimit > 0 &&
+                              soloEndCoinLimit - frontierLimit.usingCoin
+                            }
+                          />
+                        </div>
+                      )}
                       <div className="text-xs text-left ml-2">
                         {t("ui.teambuilder.usingSpell")}
                       </div>
@@ -829,19 +1446,21 @@ const TeamBuilder = () => {
                       </div>
                     </TabsContent>
                     <TabsContent value="3">
-                      <div className="mt-4 text-right -mb-1">
-                        <CheerPicker
-                          currentUsingCheers={usingCheers}
-                          onChange={setUsingCheers}
-                          onReset={() => setUsingCheers({})}
-                          disableAll={restrictType === 1}
-                          disableMinCost={
-                            restrictType === 2 &&
-                            soloEndCoinLimit > 0 &&
-                            soloEndCoinLimit - frontierLimit.usingCoin
-                          }
-                        />
-                      </div>
+                      {!readonlymode && (
+                        <div className="mt-4 text-right -mb-1">
+                          <CheerPicker
+                            currentUsingCheers={usingCheers}
+                            onChange={setUsingCheers}
+                            onReset={() => setUsingCheers({})}
+                            disableAll={restrictType === 1}
+                            disableMinCost={
+                              restrictType === 2 &&
+                              soloEndCoinLimit > 0 &&
+                              soloEndCoinLimit - frontierLimit.usingCoin
+                            }
+                          />
+                        </div>
+                      )}
                       <div className="text-xs text-left ml-2">
                         {t("ui.teambuilder.usingCheer")}
                       </div>
@@ -931,6 +1550,7 @@ const TeamBuilder = () => {
                                 thisCharaSpec === 8 && "bg-accent"
                               )}
                               onClick={() => {
+                                if (readonlymode) return;
                                 const newTeamSpec = { ...teamSpec };
                                 newTeamSpec[charaName] = 8;
                                 setTeamSpec(newTeamSpec);
@@ -948,6 +1568,7 @@ const TeamBuilder = () => {
                                 thisCharaSpec === 7 && "bg-accent"
                               )}
                               onClick={() => {
+                                if (readonlymode) return;
                                 const newTeamSpec = { ...teamSpec };
                                 newTeamSpec[charaName] = 7;
                                 setTeamSpec(newTeamSpec);
@@ -964,6 +1585,7 @@ const TeamBuilder = () => {
                               thisCharaSpec < 6 && "bg-accent"
                             )}
                             onClick={() => {
+                              if (readonlymode) return;
                               const newTeamSpec = { ...teamSpec };
                               newTeamSpec[charaName] = 5;
                               setTeamSpec(newTeamSpec);
@@ -985,8 +1607,147 @@ const TeamBuilder = () => {
             <AccordionContent className="text-base">
               <CardSpecDialog
                 cardLevels={cardLevels}
-                onChange={setCardLevels}
+                onChange={readonlymode ? (_) => {} : setCardLevels}
               />
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger>
+              {t("ui.teambuilder.otherSettingsAccordion")}
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              {!readonlymode &&
+                teamKey &&
+                (isChangingName ? (
+                  <div className="flex justify-center items-center w-full">
+                    <Input
+                      className="text-lg max-w-48"
+                      value={teamTitleInputValue}
+                      maxLength={10}
+                      minLength={1}
+                      onChange={(e) => setTeamTitleInputValue(e.target.value)}
+                    />
+                    <Button
+                      size="icon"
+                      className="w-10 h-10 p-2 ml-2"
+                      disabled={requestRunning}
+                      onClick={() => {
+                        if (teamTitleInputValue.length > 0) {
+                          rename();
+                        } else {
+                          setTeamTitleInputValue(teamTitle);
+                          setIsChangingName(false);
+                        }
+                      }}
+                    >
+                      <Check className="w-6 h-6 inline-block" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-xl w-full">
+                    {teamTitle}
+                    <SquarePen
+                      className="w-6 h-6 inline-block ml-2"
+                      onClick={() => setIsChangingName(true)}
+                    />
+                  </div>
+                ))}
+              <SubtitleBar>{t("ui.teambuilder.shareLink")}</SubtitleBar>
+              <div className="flex justify-center items-center gap-2 px-2 mt-2">
+                <Label
+                  htmlFor="sharelink"
+                  // className="text-sm w-max flex-initial flex-shrink-0"
+                  className="w-10 h-10 p-3"
+                >
+                  <LinkIcon className="w-4 h-4" />
+                  {/* {t("ui.teambuilder.shareLink")} */}
+                </Label>
+                <Input
+                  type="text"
+                  id="sharelink"
+                  placeholder={t("ui.teambuilder.notSaved")}
+                  value={teamKey ?? ""}
+                  className="w-full max-w-sm text-center"
+                  readOnly
+                />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="aspect-square"
+                  disabled={!teamKey}
+                  onClick={
+                    teamKey ? () => copyLinkFromTeamList(teamKey) : undefined
+                  }
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+              {readonlymode ? (
+                <div className="text-sm text-red-600 dark:text-red-400 my-2">
+                  {t("ui.teambuilder.isReadOnlyMode")}
+                </div>
+              ): isDirty && (
+                <div className="text-sm text-red-600 dark:text-red-400 my-2">
+                  {t("ui.teambuilder.isDraft")}
+                </div>
+              )}
+              <SubtitleBar>{t("ui.teambuilder.teamMenu")}</SubtitleBar>
+              {readonlymode ? (
+                <div className="grid grid-cols-2 sm:grid-cols-4 p-2 gap-2">
+                  <Button
+                    disabled={!token || requestRunning}
+                    onClick={copyToOnline}
+                  >
+                    {t("ui.teambuilder.saveTeam")}
+                  </Button>
+                  <Button disabled={requestRunning} onClick={copyToLocal}>
+                    {t("ui.teambuilder.overwriteLocal")}
+                  </Button>
+                  <Button
+                    disabled={requestRunning}
+                    className="col-span-2"
+                    onClick={returnToLocal}
+                  >
+                    {t("ui.teambuilder.returnToLocal")}
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-6 p-2 gap-2">
+                  <Button
+                    onClick={teamKey ? onlineSave : onlineSaveAs}
+                    disabled={!token || requestRunning}
+                  >
+                    {t("ui.teambuilder.saveTeam")}
+                  </Button>
+                  <Button
+                    disabled={!teamKey || !token || requestRunning}
+                    className="col-span-2"
+                    onClick={onlineSaveAs}
+                  >
+                    {t("ui.teambuilder.saveTeamAs")}
+                  </Button>
+                  {!token || requestRunning ? (
+                    <Button disabled>{t("ui.teambuilder.listMyTeam")}</Button>
+                  ) : (
+                    <MyTeamList
+                      openFromTeamList={openFromTeamList}
+                      copyFromTeamList={copyFromTeamList}
+                      renameFromTeamList={renameFromTeamList}
+                      copyLinkFromTeamList={copyLinkFromTeamList}
+                      deleteFromTeamList={deleteFromTeamList}
+                    />
+                  )}
+                  <Button disabled={requestRunning} onClick={discardAll}>
+                    {t("ui.teambuilder.createNewTeam")}
+                  </Button>
+                  <Button
+                    onClick={revertAll}
+                    disabled={!teamKey || !token || requestRunning}
+                  >
+                    {t("ui.teambuilder.revertTeam")}
+                  </Button>
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -1352,6 +2113,7 @@ const TeamBuilder = () => {
                     setCurrentTeam(newTeam);
                   }}
                   position={pos}
+                  readOnly={readonlymode}
                 />
                 <div className="flex flex-row justify-around gap-x-0.5 gap-y-1 mt-2 flex-wrap">
                   {Array(3)
@@ -1402,6 +2164,7 @@ const TeamBuilder = () => {
                             soloEndCoinLimit > 0 &&
                             soloEndCoinLimit - frontierLimit.usingCoin
                           }
+                          readOnly={readonlymode}
                         />
                       );
                     })}
@@ -1411,6 +2174,14 @@ const TeamBuilder = () => {
           })}
       </div>
     </div>
+  );
+};
+
+const TeamBuilder = () => {
+  return (
+    <ConfirmProvider>
+      <TeamBuilderCore />
+    </ConfirmProvider>
   );
 };
 
