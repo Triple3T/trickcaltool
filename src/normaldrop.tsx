@@ -219,7 +219,7 @@ const NormalDrop = () => {
     }
   }, [selectedEquip]);
   const fetchDrop = useCallback(() => {
-    fetch("https://api.triple-lab.com/api/v3/tr/drop/normal")
+    fetch(`${process.env.API_HOSTNAME}/api/v3/tr/drop/normal`)
       .then((value) => {
         value
           .json()

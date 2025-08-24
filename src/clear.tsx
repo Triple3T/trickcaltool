@@ -15,7 +15,7 @@ const Clear = () => {
     setSuccess(false);
     setFailed(false);
     if (getNewToken) {
-      fetch("https://api.triple-lab.com/api/v3/tr/clear", {
+      fetch(`${process.env.API_HOSTNAME}/api/v3/tr/clear`, {
         method: "POST",
         credentials: "include",
       })

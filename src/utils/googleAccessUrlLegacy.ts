@@ -8,7 +8,7 @@ export default (() => {
   );
   accessurl.searchParams.set(
     "redirect_uri",
-    "https://api.triple-lab.com/api/v3/tr/legacy"
+    `${process.env.API_HOSTNAME}/api/v3/tr/legacy`
   );
   accessurl.searchParams.set("response_type", "code");
   accessurl.searchParams.set("scope", SCOPES.join(" "));

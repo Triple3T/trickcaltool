@@ -34,7 +34,7 @@ const Code = () => {
       setCodeTriggered(true);
       if (searchParams.get("code")) {
         const code = searchParams.get("code");
-        fetch(`https://api.triple-lab.com/api/v3/tr/code?code=${code}`, {
+        fetch(`${process.env.API_HOSTNAME}/api/v3/tr/code?code=${code}`, {
           credentials: "include",
         }).then((response) => {
           if (response.status === 429) {
@@ -94,7 +94,7 @@ const Code = () => {
     getNewToken
       .refetch()
       .then(({ data }) =>
-        fetch(`https://api.triple-lab.com/api/v3/tr/register`, {
+        fetch(`${process.env.API_HOSTNAME}/api/v3/tr/register`, {
           method: "POST",
           headers: { authorization: `Bearer ${data}` },
           credentials: "include",

@@ -42,7 +42,7 @@ const OnlineBackupListDialog = () => {
       // fetch backup datas
       (async () => {
         const res = await fetch(
-          "https://api.triple-lab.com/api/v3/tr/backuplist",
+          `${process.env.API_HOSTNAME}/api/v3/tr/backuplist`,
           {
             method: "GET",
             credentials: "include",

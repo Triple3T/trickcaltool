@@ -11,8 +11,8 @@ import { dataFileExport, dataFileImport, readIntoMemory } from "@/utils/dataRW";
 import { SyncStatus } from "@/types/enums";
 import { b64IntoNumber } from "@/utils/pakoB64Pack";
 
-const API_URL = "https://api.triple-lab.com/api/v3/tr";
-const TOKEN_URL = "https://api.triple-lab.com/api/v3/tr/token";
+const API_URL = `${process.env.API_HOSTNAME}/api/v3/tr`;
+const TOKEN_URL = `${process.env.API_HOSTNAME}/api/v3/tr/token`;
 
 const defaultHeader = {
   "Cache-Control": "no-cache",
